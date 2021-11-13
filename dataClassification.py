@@ -43,7 +43,7 @@ def generateEvents(Nsample, dsample=9):
         y[i][2]=y[i][2]/norm; y[i][3]=y[i][3]/norm; y[i][4]=y[i][4]/norm;
         norm=np.sqrt(y[i][5]**2+y[i][6]**2+y[i][7]**2)
         y[i][5]=y[i][5]/norm; y[i][6]=y[i][6]/norm; y[i][7]=y[i][7]/norm;
-        y[i][8]=np.dot([s1x,s1y,s1z],[s2x,s2y,s2z])/(np.dot([s1x,s1y,s1z],[s1x,s1y,s1z])*np.dot([s2x,s2y,s2z],[s2x,s2y,s2z]))  #angle between spins
+        y[i][8]=np.dot([s1x,s1y,s1z],[s2x,s2y,s2z])/(np.dot([s1x,s1y,s1z],[s1x,s1y,s1z])*np.dot([s2x,s2y,s2z],[s2x,s2y,s2z]))  #cos angle between spins
     #    y[i][9]=(y[i][0]*y[i][1])**(3.0/5)/(y[i][0]+y[i][1])**(1.0/5)   #chirp mass. Maybe we add it 
     return y
 
