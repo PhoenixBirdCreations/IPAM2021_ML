@@ -40,15 +40,11 @@ def generateEvents(Nsample, dsample=9):
         y[i][1]=m2
         y[i][2:8]=-1+2*np.random.random_sample((1,6))   #components of spins
         norm=np.sqrt(y[i][2]**2+y[i][3]**2+y[i][4]**2)
-        y[i][2]=y[i][2]/norm; 
-        y[i][3]=y[i][3]/norm; 
-        y[i][4]=y[i][4]/norm;
+        y[i][2]=y[i][2]/norm; y[i][3]=y[i][3]/norm; y[i][4]=y[i][4]/norm;
         norm=np.sqrt(y[i][5]**2+y[i][6]**2+y[i][7]**2)
-        y[i][5]=y[i][5]/norm; 
-        y[i][6]=y[i][6]/norm; 
-        y[i][7]=y[i][7]/norm;
-        s1x=y[i][2]; s1y=y[i][3]; s1z=y[i][4]; s2x=y[i][5]; s2y=y[i][6]; s2z=y[i][7];
-        y[i][8]=np.dot([s1x,s1y,s1z],[s2x,s2y,s2z])/(np.dot([s1x,s1y,s1z],[s1x,s1y,s1z])*np.dot([s2x,s2y,s2z],[s2x,s2y,s2z]))  #cos angle between spins
+        y[i][5]=y[i][5]/norm; y[i][6]=y[i][6]/norm; y[i][7]=y[i][7]/norm;
+        y[i][8]=np.dot([y[i][2],y[i][3],y[i][4]],[y[i][5],y[i][6],y[i][7]])/(np.dot([y[i][2],y[i][3],y[i][4]],[y[i][2],y[i][3],y[i][4]])*np.dot([y[i][5],y[i][6],y[i][7]],[y[i][5],y[i][6],y[i][7]]))  #angle between spins
+
     #    y[i][9]=(y[i][0]*y[i][1])**(3.0/5)/(y[i][0]+y[i][1])**(1.0/5)   #chirp mass. Maybe we add it 
     return y
 
@@ -169,3 +165,33 @@ def LoadData(dataset_name, Nsample=-1, test_ratio=0.3, Nfeatures=-1, seed=-1):
     dataset['Nclasses'] = len(ytrain)
     
     return dataset
+
+
+def readCSV(name):
+    data=[]
+    line=[]
+    with open(name, newline='') as csvfile:
+     spamreader = csv.reader(csvfile, delimiter=',')
+     for row in spamreader:
+         line=[]
+         for element in row:
+             line.append(float(element))
+         data.append(line)
+    return data
+
+def exportArrayCSV(data, name):
+    data.reshape(len(data),1)
+    with open(name, 'w') as f:
+        writer = csv.writer(f, delimiter=',')
+        for el in data:
+            writer.writerow(el)
+
+#%%
+#data0=readCSV('/home/IPAMNET/mberbel/Documents/ML/classify_v2_y.csv')
+#%%
+
+#y=categorize(data0)
+#%%
+#np.savetxt('/home/IPAMNET/mberbel/Documents/ML/class_v2.csv', y, delimiter=',')
+
+
