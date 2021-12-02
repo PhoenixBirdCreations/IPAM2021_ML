@@ -91,8 +91,22 @@ def plotting_feats(testing_data, predicted_data, kernel_type, setv, show_fig=Tru
         for i in np.arange(0,len(predicted_data)):
             axs[it[0],it[1]].plot(testing_data[i][q], predicted_data[i][q], 'ob', label="Prediction")
         axs[it[0],it[1]].plot(testing_data[:,q], testing_data[:,q], 'r-', lw=4.0, label="True value")
+        #if [it[0],it[1]] in [[1,0],[1,1],[2,0],[2,1],[3,0],[3,1],[4,0]]:
+        #    axs[it[0],it[1]].set_xlim([-1.1,1.1])
+        #else:
+            #axs[it[0],it[1]].set_xlim([0,100.1])
 
-    
+    #axs[0,0].set_xlim([0, 100.1]) 
+    #axs[0,1].set_xlim([0, 100.1]) 
+    #axs[1,0].set_xlim([-1.1, 1.1]) 
+    #axs[1,1].set_xlim([-1.1, 1.1]) 
+    #axs[2,0].set_xlim([-1.1, 1.1]) 
+    #axs[2,1].set_xlim([-1.1, 1.1]) 
+    #axs[3,0].set_xlim([-1.1, 1.1]) 
+    #axs[3,1].set_xlim([-1.1, 1.1]) 
+    #axs[4,0].set_xlim([-1.1, 1.1]) 
+    #axs[4,1].set_xlim([0, 100.1]) 
+    #axs[5,0].set_xlim([0, 100.1]) 
     fig.delaxes(axs[5,1])
     fig.tight_layout()
     if show_fig==True:
@@ -100,4 +114,4 @@ def plotting_feats(testing_data, predicted_data, kernel_type, setv, show_fig=Tru
     outfile = 'figures/GPR_'+kernel_type+setv+'.pdf'
     fig.savefig(outfile)
     print('Saved figure to {}'.format(outfile))
-
+    return fig, axs
