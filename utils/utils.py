@@ -31,9 +31,24 @@ def predictionPlots(ytest, ypredicted, labels):
         for j in range(0,3):
             ytest_1d      = ytest[:,param]
             ypredicted_1d = ypredicted[:,param]
-            axs[i,j].scatter(ytest_1d, ypredicted_1d)
-            axs[i,j].plot(ytest_1d, ytest_1d, 'r')
+            diff = np.abs(ytest_1d-ypredicted_1d)
+            axs[i,j].scatter(ytest_1d, ypredicted_1d, s=15, c=diff, cmap="gist_rainbow")
+            axs[i,j].plot(ytest_1d, ytest_1d, 'k')
+            #axs[i,j].set_title(labels[param])
+            ymax = max(ytest_1d)
+            xmin = min(ytest_1d)
+            if xmin<0:
+                xpos = xmin*0.7
+            else:
+                xpos = xmin*1.3
+
+            if ymax<0:
+                ypos = ymax*0.7
+            else:
+                ypos = ymax*1.3
             axs[i,j].set_title(labels[param])
+            axs[i,j].set_ylabel('predicted')
+            #axs[i,j].set_xlabel('injected')
             param+=1;
             if param>=Nfeatures:
                 break
