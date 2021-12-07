@@ -22,13 +22,6 @@ def writeResult(filename, data, verbose=False):
     if verbose:
         print(filename, 'saved')
             
-# functions for normalization
-def normalizeData(array, A, B, data_max, data_min):
-    return (B-A)/(data_max-data_min)*(array-data_max)+B
-    
-def removeNormalization(array_norm, A, B, data_max, data_min):
-    return (array_norm-B)*(data_max-data_min)/(B-A)+data_max
-
 # plot function
 def predictionPlots(ytest, ypredicted, labels):
     Nfeatures = len(labels) # Nfeatures<=12 hard-coded 
@@ -45,3 +38,8 @@ def predictionPlots(ytest, ypredicted, labels):
             if param>=Nfeatures:
                 break
     plt.show()
+
+def R2(y_true, y_pred):
+    SS_res = np.sum((y_true - y_pred )**2)
+    SS_tot = np.sum((y_true - np.mean(y_true))**2)
+    return 1-SS_res/SS_tot
