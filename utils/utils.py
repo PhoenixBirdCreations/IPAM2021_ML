@@ -54,7 +54,37 @@ def predictionPlots(ytest, ypredicted, labels):
                 break
     plt.show()
 
+def plotHistory(history): 
+    history_dict = history.history
+
+    acc      = history_dict['accuracy']
+    val_acc  = history_dict['val_accuracy']
+    loss     = history_dict['loss']
+    val_loss = history_dict['val_loss']
+
+    epochs_plot=range(1,len(acc)+1)   
+    plt.figure(figsize=(10,10))
+
+    ax1=plt.subplot(221)
+    ax1.plot(epochs_plot,acc,'b',label='Training acc')
+    ax1.plot(epochs_plot,loss,'r',label='Training loss')
+    ax1.set_title('loss and acc of Training')
+    ax1.set_xlabel('Epochs')
+    ax1.set_ylabel('Loss')
+    ax1.legend()
+
+    ax2=plt.subplot(222)
+    ax2.plot(epochs_plot,val_acc,'b',label='Validation acc')
+    ax2.plot(epochs_plot,val_loss,'r',label='Validation loss')
+    ax2.set_title('loss and acc of Validation')
+    ax2.set_xlabel('Epochs')
+    ax2.set_ylabel('Acc')
+    ax2.legend()
+    return
+
 def R2(y_true, y_pred):
     SS_res = np.sum((y_true - y_pred )**2)
     SS_tot = np.sum((y_true - np.mean(y_true))**2)
     return 1-SS_res/SS_tot
+
+ 
