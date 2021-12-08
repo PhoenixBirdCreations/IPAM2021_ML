@@ -29,6 +29,8 @@ def predictionPlots(ytest, ypredicted, labels):
     param     = 0
     for i in range(0,4):
         for j in range(0,3):
+            if param>=Nfeatures:
+                break
             ytest_1d      = ytest[:,param]
             ypredicted_1d = ypredicted[:,param]
             diff = np.abs(ytest_1d-ypredicted_1d)
@@ -50,8 +52,6 @@ def predictionPlots(ytest, ypredicted, labels):
             axs[i,j].set_ylabel('predicted')
             #axs[i,j].set_xlabel('injected')
             param+=1;
-            if param>=Nfeatures:
-                break
     plt.show()
 
 def plotHistory(history): 
@@ -87,4 +87,21 @@ def R2(y_true, y_pred):
     SS_tot = np.sum((y_true - np.mean(y_true))**2)
     return 1-SS_res/SS_tot
 
- 
+def RemoveSomeMassFromDataset(X0,Y0,labels,mass_cols):
+    X = np.delete(X0,mass_cols,1);
+    Y = np.delete(Y0,mass_cols,1);
+    Nfeatures = len(X[0,:]);
+    
+    labels_copy = labels.copy();
+    if type(mass_cols)==list:
+        for i in range(0,len(mass_cols)):
+            label2remove = labels[mass_cols[i]]
+            labels_copy.remove(label2remove)
+    else:
+        labels_copy.remove(labels[mass_cols])
+
+    return X,Y,labels_copy,Nfeatures
+
+
+
+
