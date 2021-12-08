@@ -113,16 +113,16 @@ def plot_all(testing_data, predicted_data, kernel_func, data_set):
     ax4 = plt.subplot(624, sharey=ax3, sharex=ax3); ax5 = plt.subplot(625, sharey=ax3, sharex=ax3)
     ax6 = plt.subplot(626, sharey=ax3, sharex=ax3); ax7 = plt.subplot(627, sharey=ax3, sharex=ax3)
     ax8 = plt.subplot(628, sharey=ax3, sharex=ax3); ax9 = plt.subplot(629, sharey=ax3, sharex=ax3)
-    ax10 = plt.subplot(6,2,10, sharey=ax1, sharex=ax1); ax11 = plt.subplot(6,2,11, sharey=ax1, sharex=ax1)
+    ax10 = plt.subplot(6,2,10, sharey=ax1, sharex=ax1)
     mpl.rcParams['xtick.labelsize'] = 30
     mpl.rcParams['ytick.labelsize'] = 30
     mpl.rcParams['figure.figsize'] = [55, 40]
     plt.rcParams["figure.autolayout"] = True
     
     features = ['$m_1$', '$m_2$', '$s_1^x$', '$s_1^y$', '$s_1^z$', '$s_2^x$', '$s_2^y$', 
-            '$s_2^z$', '$\cos(\phi)$', '$q$', '$\mathcal{M}_c$']
-    it = [0,1,2,3,4,5]
-    ejes = [ax1,ax2,ax3,ax4,ax5,ax6,ax7,ax8,ax9,ax10,ax11]
+            '$s_2^z$', '$\cos(\phi)$', '$q$']
+    it = [0,1,2,3,4]
+    ejes = [ax1,ax2,ax3,ax4,ax5,ax6,ax7,ax8,ax9,ax10]
     
     k = 0
     for eje in ejes:
