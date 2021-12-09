@@ -150,8 +150,6 @@ def regressionDatasetLoader(data_paths, labels, scaler_type="standard", remove_s
     out['ytrain']   = ytrain
     out['xtest']    = xtest
     out['ytest']    = ytest
-    out['xtrain_nm']   = xtrain_notnormalized
-    out['ytrain_nm']   = ytrain_notnormalized
     out['scaler_x'] = scaler_x
     out['scaler_y'] = scaler_y
     out['labels']   = labels
@@ -180,10 +178,10 @@ def evalutationMetricsDict(xtest,ytest,model,ypredicted=None):
     return metrics_dict
 
 def printMetrics(metrics_dict):
-    print('\nFinal loss     :', metrics_dict["loss"])
-    print('Final mse      :', metrics_dict["mean_squared_error"])
-    print('Final accuracy :', metrics_dict["accuracy"])
-    print('Final R2 mean  :', metrics_dict["R2mean"])
+    print('\nFinal loss     : {:.5f}'.format(metrics_dict["loss"]))
+    print('Final mse      : {:.5f}'.format(metrics_dict["mean_squared_error"]))
+    print('Final accuracy : {:.5f}'.format(metrics_dict["accuracy"]), '\n')
+    print('Final R2 mean  : {:.5f}'.format(metrics_dict["R2mean"]))
     i = 0
     R2_vec = metrics_dict["R2"]
     for R2 in metrics_dict["R2"]:
