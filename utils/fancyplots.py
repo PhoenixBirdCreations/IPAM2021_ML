@@ -140,5 +140,34 @@ def checkRegressionPlot(xtest0, ytest0, ypredicted0, labels, scaler_y=None, scal
     return
 
 
+def probLabelDensePlot(model, label_idx=0, mass_range=[1,2],  N=30000, idx_m1=0, idx_m2=1):
+    """
+    Scatter plot in the (m1,m2) plane with colorbar 
+    for the probability of a certain label
+    """
+    m1 = np.reshape(np.linspace(mass_range[0],mass_range[1],N), (N,1))
+    m2 = np.reshape(np.linspace(mass_range[0],mass_range[1],N), (N,1))
+    np.random.shuffle(m1)
+    np.random.shuffle(m2)
+    for i in range(0, N):
+        if m1[i]<m2[i]:
+            tmp   = m2[i];
+            m2[i] = m1[i];
+            m1[i] = tmp;
+    masses        = np.concatenate((m1,m2), axis=1)
+    proba_dense   = model.predict_proba(masses)
+    proba_dense1d = np.reshape(proba_dense[:,label_idx], (N,1))
+
+    plt.figure
+    sc=plt.scatter(m1, m2, c=proba_dense1d, vmin=0, vmax=1, s=50, cmap='viridis')
+    plt.colorbar(sc)
+    plt.show()
+    return
+
+
+
+
+
+
 
 
