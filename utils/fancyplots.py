@@ -140,13 +140,16 @@ def checkRegressionPlot(xtest0, ytest0, ypredicted0, labels, scaler_y=None, scal
     return
 
 
-def probLabelDensePlot(model, label_idx=0, mass_range=[1,2],  N=30000, idx_m1=0, idx_m2=1):
+def probLabelDensePlot(model, label_idx=0, mass_range=[1,3],  N=30000, idx_m1=0, idx_m2=1, example_dataset=None):
     """
     Scatter plot in the (m1,m2) plane with colorbar 
-    for the probability of a certain label
+    for the probability of a certain label.
+    If the model is trained on more than 2 features, then you 
+    have to pass also an example dataset so that the code can 
+    find the intervals when we need to generate the points.
     """
-    m1 = np.reshape(np.linspace(mass_range[0],mass_range[1],N), (N,1))
-    m2 = np.reshape(np.linspace(mass_range[0],mass_range[1],N), (N,1))
+    m1 = np.linspace(mass_range[0],mass_range[1],N)
+    m2 = np.linspace(mass_range[0],mass_range[1],N)
     np.random.shuffle(m1)
     np.random.shuffle(m2)
     for i in range(0, N):
@@ -154,8 +157,27 @@ def probLabelDensePlot(model, label_idx=0, mass_range=[1,2],  N=30000, idx_m1=0,
             tmp   = m2[i];
             m2[i] = m1[i];
             m1[i] = tmp;
-    masses        = np.concatenate((m1,m2), axis=1)
-    proba_dense   = model.predict_proba(masses)
+
+    if example_dataset is None:
+        m1 = np.reshape(m1, (N,1))
+        m2 = np.reshape(m2, (N,1))
+        X  = np.concatenate((m1,m2), axis=1)
+    else:
+        dataset   = example_dataset
+        Nfeatures = len(dataset[0,:])
+        X = np.zeros((N, Nfeatures))
+        print(np.shape(X))
+        for i in range(0, Nfeatures):
+            if i!=idx_m1 and i!=idx_m2:
+                tmp_max = max(dataset[:,i])
+                tmp_min = min(dataset[:,i])
+                X[:,i]  = np.linspace(tmp_min, tmp_max, N) 
+        X[:,idx_m1] = m1
+        X[:,idx_m2] = m2
+        m1 = np.reshape(m1, (N,1))
+        m2 = np.reshape(m2, (N,1))
+
+    proba_dense   = model.predict_proba(X)
     proba_dense1d = np.reshape(proba_dense[:,label_idx], (N,1))
 
     plt.figure
