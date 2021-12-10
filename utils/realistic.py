@@ -213,19 +213,28 @@ def massDistribution(x0=1.1,x1=100):
             count=count+1
     return x
 
+def massUniformDistribution(x0=1.1,x1=100):
+    s1=np.random.uniform(x0,x1)
+    s2=np.random.uniform(x0,x1)
+    return [s1,s2]
 
-def generateEvents(Nsample, cv,dsample=11):
+def generateEvents(Nsample, cv,dsample=11,verbose=True,mass_range=[1.1,100],distribution='not_uniform'):
     y=np.zeros((Nsample,dsample))
     tag=np.zeros(Nsample,dtype=int)
     third=int(Nsample/3)
     total0=third+(Nsample-third*3)
     total1=third
     total2=third
-    print(total0,total1,total2)
+    if verbose:
+        print(total0,total1,total2)
+    if distribution=='not_uniform':
+        myDistribution=massDistribution
+    elif distribution=='uniform':
+        myDistribution=massUniformDistribution
     count0=0; count1=0; count2=0
     i=0
     while(i<Nsample):
-        x=massDistribution()
+        x=myDistribution(mass_range[0], mass_range[1])
         m1=x[0]; m2=x[1]
         aux=np.maximum(m1,m2)
         m2=np.minimum(m1,m2)
@@ -452,138 +461,112 @@ def categorize_new(x,talk=False):
         print('Has NS, yes remnant: ', count_arr[2]/N*100,'%')
     return tags
 
+if __name__ == '__main__':
+    #%%
+    version='v2'
+    extra='c0'
+    purpose='test'
+    dic1=GenerateData(version,1,0,1000,0.0)
+    N=len(dic1['traintag'])
+    count_arr=np.bincount(dic1['traintag'])
+    print('No NS ', count_arr[0]/N*100,'%')
+    print('Has NS, no remnant: ', count_arr[1]/N*100,'%')
+    print('Has NS, yes remnant: ', count_arr[2]/N*100,'%')
 
-#%%
-version='v2'
-extra='c0'
-purpose='test'
-dic1=GenerateData(version,1,0,1000,0.0)
-N=len(dic1['traintag'])
-count_arr=np.bincount(dic1['traintag'])
-print('No NS ', count_arr[0]/N*100,'%')
-print('Has NS, no remnant: ', count_arr[1]/N*100,'%')
-print('Has NS, yes remnant: ', count_arr[2]/N*100,'%')
+    #%%
+    save=False
+    bins=[1.1,10,20,30,40,50,60,70,80,90,100]
+    plt.title('Mass1 distribution')
+    plt.hist(dic1['ytrain'][:,0],bins=bins);
+    if (save):
+        plt.savefig('/home/IPAMNET/mberbel/Documents/ML/NewRealistic/m1_hist'+version+extra+purpose+'.png',dpi=200,bbox_inches='tight')
+    plt.clf()
 
-#%%
-save=False
-bins=[1.1,10,20,30,40,50,60,70,80,90,100]
-plt.title('Mass1 distribution')
-plt.hist(dic1['ytrain'][:,0],bins=bins);
-if (save):
-    plt.savefig('/home/IPAMNET/mberbel/Documents/ML/NewRealistic/m1_hist'+version+extra+purpose+'.png',dpi=200,bbox_inches='tight')
-plt.clf()
+    plt.title('Mass2 distribution')
+    plt.hist(dic1['ytrain'][:,1],bins=bins);
+    if (save):    
+        plt.savefig('/home/IPAMNET/mberbel/Documents/ML/NewRealistic/m2_hist'+version+extra+purpose+'.png',dpi=200,bbox_inches='tight')
+    plt.clf()
 
-plt.title('Mass2 distribution')
-plt.hist(dic1['ytrain'][:,1],bins=bins);
-if (save):    
-    plt.savefig('/home/IPAMNET/mberbel/Documents/ML/NewRealistic/m2_hist'+version+extra+purpose+'.png',dpi=200,bbox_inches='tight')
-plt.clf()
+    plt.title('Binaries generated')
+    plt.xlabel('m1'); plt.ylabel('m2')
+    plt.scatter(dic1['ytrain'][:,0],dic1['ytrain'][:,1]);
+    if (save):
+        plt.savefig('/home/IPAMNET/mberbel/Documents/ML/NewRealistic/binaries'+version+extra+purpose+'.png',dpi=200,bbox_inches='tight')
+    plt.clf()
 
-plt.title('Binaries generated')
-plt.xlabel('m1'); plt.ylabel('m2')
-plt.scatter(dic1['ytrain'][:,0],dic1['ytrain'][:,1]);
-if (save):
-    plt.savefig('/home/IPAMNET/mberbel/Documents/ML/NewRealistic/binaries'+version+extra+purpose+'.png',dpi=200,bbox_inches='tight')
-plt.clf()
+    norm=np.sqrt(dic1['ytrain'][:,2]*dic1['ytrain'][:,2]+dic1['ytrain'][:,3]*dic1['ytrain'][:,3]+dic1['ytrain'][:,4]*dic1['ytrain'][:,4])
+    col=[]
+    for e in dic1['traintag']:
+        if (e==0):
+            col.append('green')
+        elif (e==1):
+            col.append('blue')
+        else:
+            col.append('red')
+    plt.title('Categories: 0-green 1-blue 2-red')
+    plt.xlabel('m1')
+    plt.ylabel('s1')
+    plt.scatter(dic1['ytrain'][:,0],norm,c=col,s=0.5)
+    if (save):
+        plt.savefig('/home/IPAMNET/mberbel/Documents/ML/NewRealistic/categories'+version+extra+'.png',dpi=200,bbox_inches='tight')
+    plt.clf()
 
-norm=np.sqrt(dic1['ytrain'][:,2]*dic1['ytrain'][:,2]+dic1['ytrain'][:,3]*dic1['ytrain'][:,3]+dic1['ytrain'][:,4]*dic1['ytrain'][:,4])
-col=[]
-for e in dic1['traintag']:
-    if (e==0):
-        col.append('green')
-    elif (e==1):
-        col.append('blue')
-    else:
-        col.append('red')
-plt.title('Categories: 0-green 1-blue 2-red')
-plt.xlabel('m1')
-plt.ylabel('s1')
-plt.scatter(dic1['ytrain'][:,0],norm,c=col,s=0.5)
-if (save):
-    plt.savefig('/home/IPAMNET/mberbel/Documents/ML/NewRealistic/categories'+version+extra+'.png',dpi=200,bbox_inches='tight')
-plt.clf()
+    plt.title('0');plt.plot(dic1['xtrain'][:,0]); plt.show(); plt.clf()
+    plt.title('1');plt.plot(dic1['xtrain'][:,1]); plt.show(); plt.clf()
+    plt.title('2');plt.plot(dic1['xtrain'][:,2]); plt.show(); plt.clf()
+    plt.title('3');plt.plot(dic1['xtrain'][:,3]); plt.show(); plt.clf()
+    plt.title('4');plt.plot(dic1['xtrain'][:,4]); plt.show(); plt.clf()
+    plt.title('5');plt.plot(dic1['xtrain'][:,5]); plt.show(); plt.clf()
+    plt.title('6');plt.plot(dic1['xtrain'][:,6]); plt.show(); plt.clf()
+    plt.title('7');plt.plot(dic1['xtrain'][:,7]); plt.show(); plt.clf()
+    plt.title('8');plt.plot(dic1['xtrain'][:,8]); plt.show(); plt.clf()
+    plt.title('9');plt.plot(dic1['xtrain'][:,9]); plt.show(); plt.clf()
+    plt.title('10');plt.plot(dic1['xtrain'][:,10]); plt.show(); plt.clf()
 
-plt.title('0');plt.plot(dic1['xtrain'][:,0]); plt.show(); plt.clf()
-plt.title('1');plt.plot(dic1['xtrain'][:,1]); plt.show(); plt.clf()
-plt.title('2');plt.plot(dic1['xtrain'][:,2]); plt.show(); plt.clf()
-plt.title('3');plt.plot(dic1['xtrain'][:,3]); plt.show(); plt.clf()
-plt.title('4');plt.plot(dic1['xtrain'][:,4]); plt.show(); plt.clf()
-plt.title('5');plt.plot(dic1['xtrain'][:,5]); plt.show(); plt.clf()
-plt.title('6');plt.plot(dic1['xtrain'][:,6]); plt.show(); plt.clf()
-plt.title('7');plt.plot(dic1['xtrain'][:,7]); plt.show(); plt.clf()
-plt.title('8');plt.plot(dic1['xtrain'][:,8]); plt.show(); plt.clf()
-plt.title('9');plt.plot(dic1['xtrain'][:,9]); plt.show(); plt.clf()
-plt.title('10');plt.plot(dic1['xtrain'][:,10]); plt.show(); plt.clf()
+    #%%
+    exportDictCSV(dic1,'/home/IPAMNET/mberbel/Documents/ML/NewRealistic/'+version+extra+purpose+'_x.csv', 'xtrain') 
+    exportDictCSV(dic1,'/home/IPAMNET/mberbel/Documents/ML/NewRealistic/'+ version+extra+purpose+'_y.csv', 'ytrain') 
+    np.savetxt('/home/IPAMNET/mberbel/Documents/ML/NewRealistic/'+ version+extra+purpose+'_tag.csv', dic1['traintag'], delimiter=',')
+    print('all exported')
+    #%%
+    #%%
 
-#%%
-exportDictCSV(dic1,'/home/IPAMNET/mberbel/Documents/ML/NewRealistic/'+version+extra+purpose+'_x.csv', 'xtrain') 
-exportDictCSV(dic1,'/home/IPAMNET/mberbel/Documents/ML/NewRealistic/'+ version+extra+purpose+'_y.csv', 'ytrain') 
-np.savetxt('/home/IPAMNET/mberbel/Documents/ML/NewRealistic/'+ version+extra+purpose+'_tag.csv', dic1['traintag'], delimiter=',')
-print('all exported')
-#%%
-#%%
+    plt.title('Binaries generated')
+    plt.xlabel('m1')
+    plt.ylabel('m2')
+    plt.scatter(dic1['ytrain'][:,0],dic1['ytrain'][:,1]);plt.show()
+    #%%
+    plt.plot(dic1['ytrain'][:,9],'o'); plt.show();plt.clf()
+    #%%
+    categnew=categorize(dic1['ytrain'],True)
+    #%%
 
+    #%%
 
+    #%%
 
+    s2=np.sqrt(dic1['ytrain'][:,5]*dic1['ytrain'][:,5]+dic1['ytrain'][:,6]*dic1['ytrain'][:,6]+dic1['ytrain'][:,7]*dic1['ytrain'][:,7])
+    s1=np.sqrt(dic1['ytrain'][:,2]*dic1['ytrain'][:,2]+dic1['ytrain'][:,3]*dic1['ytrain'][:,3]+dic1['ytrain'][:,4]*dic1['ytrain'][:,4])
 
+    plt.scatter(s1,s2,c=col,s=0.5)
 
+    #%%
+     
+    #%%
+    plt.xlabel('m')
+    plt.ylabel('probability')
+    plt.plot(np.arange(1.1,100,0.1),pm(np.arange(1.1,100,0.1)))
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-plt.title('Binaries generated')
-plt.xlabel('m1')
-plt.ylabel('m2')
-plt.scatter(dic1['ytrain'][:,0],dic1['ytrain'][:,1]);plt.show()
-#%%
-plt.plot(dic1['ytrain'][:,9],'o'); plt.show();plt.clf()
-#%%
-categnew=categorize(dic1['ytrain'],True)
-#%%
-
-#%%
-
-#%%
-
-s2=np.sqrt(dic1['ytrain'][:,5]*dic1['ytrain'][:,5]+dic1['ytrain'][:,6]*dic1['ytrain'][:,6]+dic1['ytrain'][:,7]*dic1['ytrain'][:,7])
-s1=np.sqrt(dic1['ytrain'][:,2]*dic1['ytrain'][:,2]+dic1['ytrain'][:,3]*dic1['ytrain'][:,3]+dic1['ytrain'][:,4]*dic1['ytrain'][:,4])
-
-plt.scatter(s1,s2,c=col,s=0.5)
-
-#%%
- 
-#%%
-plt.xlabel('m')
-plt.ylabel('probability')
-plt.plot(np.arange(1.1,100,0.1),pm(np.arange(1.1,100,0.1)))
-
-#%%
-plt.plot(dic1['ytrain'][:,3],dic1['xtrain'][:,3],'o');plt.show()
+    #%%
+    plt.plot(dic1['ytrain'][:,3],dic1['xtrain'][:,3],'o');plt.show()
 
 
-#%%
-N=len(dic1['traintag'])
-count_arr=np.bincount(dic1['traintag'])
-print('No NS ', count_arr[0]/N*100,'%')
-print('Has NS, no remnant: ', count_arr[1]/N*100,'%')
-print('Has NS, yes remnant: ', count_arr[2]/N*100,'%')
+    #%%
+    N=len(dic1['traintag'])
+    count_arr=np.bincount(dic1['traintag'])
+    print('No NS ', count_arr[0]/N*100,'%')
+    print('Has NS, no remnant: ', count_arr[1]/N*100,'%')
+    print('Has NS, yes remnant: ', count_arr[2]/N*100,'%')
 
 

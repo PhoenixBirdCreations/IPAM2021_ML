@@ -1,7 +1,8 @@
 import csv
 import numpy as np
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
-
+import realistic
+import sklearn
 # function for I/O files
 def extractData(filename, verbose=False):
     """ Reads data from csv file and returns it in array form.
@@ -131,3 +132,11 @@ def printMetrics(metrics_dict):
         print('R2[{:2d}]         : {:.5f}'.format(i,R2))
         i+=1
     return
+
+def generateUniformMassRange(N, mass_range, cv=0):
+    X, _ = realistic.generateEvents(N, cv, verbose=False, mass_range=mass_range, distribution='uniform')
+    return np.array(X)
+
+
+
+

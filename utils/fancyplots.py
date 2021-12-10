@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import sklearn.utils
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
+import utils as ut
 
 def regrPredictionPlots(ytest0, ypredicted0, labels, scaler=None):
     if (scaler is None):
@@ -140,56 +142,43 @@ def checkRegressionPlot(xtest0, ytest0, ypredicted0, labels, scaler_y=None, scal
     return
 
 
-def probLabelDensePlot(model, label_idx=0, mass_range=[1,3],  N=30000, idx_m1=0, idx_m2=1, example_dataset=None):
+def probLabelDensePlot(model, label_idx=0, mass_range=[1,3],  N=30000, idx_m1=0, idx_m2=1, \
+                       dataset='GSTLAL_2m', verbose=False, cv=0, title=None):
     """
     Scatter plot in the (m1,m2) plane with colorbar 
     for the probability of a certain label.
-    If the model is trained on more than 2 features, then you 
-    have to pass also an example dataset so that the code can 
-    find the intervals when we need to generate the points.
+    'dataset' can be: 'GSTLAL_2m' or 'NewRealistic'
+    'cv' is used only for dataset='NewRealistic' 
+    (cv is the flag for the f-function of the NewRealistic dataset,
+    cv=0 -> f_conditional, cv=1 -> f_new)
     """
-    m1 = np.linspace(mass_range[0],mass_range[1],N)
-    m2 = np.linspace(mass_range[0],mass_range[1],N)
-    np.random.shuffle(m1)
-    np.random.shuffle(m2)
-    for i in range(0, N):
-        if m1[i]<m2[i]:
-            tmp   = m2[i];
-            m2[i] = m1[i];
-            m1[i] = tmp;
-
-    if example_dataset is None:
+    if dataset=='GSTLAL_2m':
+        m1 = np.linspace(mass_range[0],mass_range[1],N)
+        m2 = np.linspace(mass_range[0],mass_range[1],N)
+        np.random.shuffle(m1)
+        np.random.shuffle(m2)
+        for i in range(0, N):
+            if m1[i]<m2[i]:
+                tmp   = m2[i];
+                m2[i] = m1[i];
+                m1[i] = tmp;
         m1 = np.reshape(m1, (N,1))
         m2 = np.reshape(m2, (N,1))
         X  = np.concatenate((m1,m2), axis=1)
-    else:
-        dataset   = example_dataset
-        Nfeatures = len(dataset[0,:])
-        X = np.zeros((N, Nfeatures))
-        print(np.shape(X))
-        for i in range(0, Nfeatures):
-            if i!=idx_m1 and i!=idx_m2:
-                tmp_max = max(dataset[:,i])
-                tmp_min = min(dataset[:,i])
-                X[:,i]  = np.linspace(tmp_min, tmp_max, N) 
-        X[:,idx_m1] = m1
-        X[:,idx_m2] = m2
-        m1 = np.reshape(m1, (N,1))
-        m2 = np.reshape(m2, (N,1))
-
+    
+    elif dataset=='NewRealistic':
+        X = ut.generateUniformMassRange(N, mass_range, cv=cv)
+    
+    m1 = np.reshape(X[:,idx_m1], (N,1))
+    m2 = np.reshape(X[:,idx_m2], (N,1))
     proba_dense   = model.predict_proba(X)
-    proba_dense1d = np.reshape(proba_dense[:,label_idx], (N,1))
-
+    proba_dense1d = np.reshape(proba_dense[:,label_idx],(N,1))
+    
     plt.figure
-    sc=plt.scatter(m1, m2, c=proba_dense1d, vmin=0, vmax=1, s=50, cmap='viridis')
+    sc=plt.scatter(m1, m2, c=proba_dense1d, vmin=0, vmax=1, s=40, cmap='viridis')
     plt.colorbar(sc)
+    if title is not None:
+        plt.title(title)
     plt.show()
     return
-
-
-
-
-
-
-
 
