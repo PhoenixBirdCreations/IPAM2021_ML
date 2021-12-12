@@ -180,6 +180,8 @@ def probLabelDensePlot(model, label_idx=0, mass_range=[1,3],  N=30000, idx_m1=0,
     plt.colorbar(sc)
     if title is not None:
         plt.title(title)
+    plt.xlabel("m1", fontsize=20)
+    plt.ylabel("m2", fontsize=20)
     plt.show()
     return
 
@@ -192,6 +194,8 @@ def plotROC(ytrue, prob_of_label):
     plt.figure
     sc=plt.scatter(fpr[1:-1], tpr[1:-1], c=thresholds[1:-1], cmap='viridis')
     plt.colorbar(sc)
+    plt.xlabel("false positive rate", fontsize=14)
+    plt.ylabel("true positive rate",  fontsize=14)
     return
 
 
