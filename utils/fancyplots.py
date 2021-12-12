@@ -1,8 +1,9 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import sklearn.utils
-from sklearn.preprocessing import StandardScaler, MinMaxScaler
 import utils as ut
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
+from sklearn.metrics import roc_curve
 
 def regrPredictionPlots(ytest0, ypredicted0, labels, scaler=None):
     if (scaler is None):
@@ -181,4 +182,16 @@ def probLabelDensePlot(model, label_idx=0, mass_range=[1,3],  N=30000, idx_m1=0,
         plt.title(title)
     plt.show()
     return
+
+def plotROC(ytrue, prob_of_label):
+    """
+    Improve me! prob_of_label is the probability of having a certain
+    label (i.e. is a 1D vector)
+    """
+    fpr, tpr, thresholds = roc_curve(ytrue, prob_of_label)
+    plt.figure
+    sc=plt.scatter(fpr[1:-1], tpr[1:-1], c=thresholds[1:-1], cmap='viridis')
+    plt.colorbar(sc)
+    return
+
 
