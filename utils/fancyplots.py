@@ -1,3 +1,4 @@
+import sys
 import matplotlib.pyplot as plt
 import numpy as np
 import sklearn.utils
@@ -5,7 +6,13 @@ import utils as ut
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from sklearn.metrics import roc_curve
 
+##################################################################
+# Regression plots
+#################################################################
 def regrPredictionPlots(ytest0, ypredicted0, labels, scaler=None):
+    """
+    the usual injected vs predicted plots
+    """
     if (scaler is None):
         ytest      = ytest0
         ypredicted = ypredicted0
@@ -25,10 +32,10 @@ def regrPredictionPlots(ytest0, ypredicted0, labels, scaler=None):
     
     rows = round(Nfeatures/plot_cols)
     if rows>1:
-        fig, axs  = plt.subplots(rows,plot_cols, figsize = (25,17))
+        fig, axs  = plt.subplots(rows, plot_cols, figsize = (25,17))
     else: 
-        fig, axs  = plt.subplots(rows,plot_cols, figsize = (22,9))
-    feature     = 0
+        fig, axs  = plt.subplots(rows, plot_cols, figsize = (22,9))
+    feature = 0
     for i in range(0,rows):
         for j in range(0,plot_cols):
             if feature>=Nfeatures:
@@ -39,7 +46,7 @@ def regrPredictionPlots(ytest0, ypredicted0, labels, scaler=None):
                 ax = axs[j]
             ytest_1d      = ytest[:,feature]
             ypredicted_1d = ypredicted[:,feature]
-            diff          = np.abs(ytest_1d-ypredicted_1d)
+            diff = np.abs(ytest_1d-ypredicted_1d)
             ax.scatter(ytest_1d, ypredicted_1d, s=15, c=diff, cmap="gist_rainbow")
             ax.plot(ytest_1d, ytest_1d, 'k')
             ymax = max(ytest_1d)
@@ -61,6 +68,9 @@ def regrPredictionPlots(ytest0, ypredicted0, labels, scaler=None):
     return
 
 def plotHistory(history): 
+    """
+    history is the ouput of model.compile in TensorFlow
+    """
     history_dict = history.history
     acc      = history_dict['accuracy']
     val_acc  = history_dict['val_accuracy']
@@ -85,9 +95,14 @@ def plotHistory(history):
     ax2.set_xlabel('Epochs')
     ax2.set_ylabel('Acc')
     ax2.legend()
+    
+    plt.show()
     return
 
 def checkRegressionPlot(xtest0, ytest0, ypredicted0, labels, scaler_y=None, scaler_x=None):
+    """
+    Plot recovered vs predicted
+    """
     if (scaler_y is None):
         ytest      = ytest0
         ypredicted = ypredicted0
@@ -140,9 +155,12 @@ def checkRegressionPlot(xtest0, ytest0, ypredicted0, labels, scaler_y=None, scal
             ax.plot(ytest_plot, ytest_plot, 'k')
             ax.legend(fontsize=fontsize_leg)
             feature+=1
+    plt.show()
     return
 
-
+##################################################################
+# Classification plots
+##################################################################
 def probLabelDensePlot(model, label_idx=0, mass_range=[1,3],  N=30000, idx_m1=0, idx_m2=1, \
                        dataset='GSTLAL_2m', verbose=False, cv=0, title=None):
     """
@@ -196,6 +214,7 @@ def plotROC(ytrue, prob_of_label):
     plt.colorbar(sc)
     plt.xlabel("false positive rate", fontsize=14)
     plt.ylabel("true positive rate",  fontsize=14)
+    plt.show()
     return
 
 

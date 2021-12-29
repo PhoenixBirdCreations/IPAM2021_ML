@@ -3,6 +3,7 @@ import numpy as np
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 import realistic
 import sklearn
+
 # function for I/O files
 def extractData(filename, verbose=False):
     """ Reads data from csv file and returns it in array form.
@@ -44,11 +45,6 @@ def writeResult(filename, data, verbose=False):
     if verbose:
         print(filename, 'saved')
             
-def R2(y_true, y_pred):
-    SS_res = np.sum((y_true - y_pred )**2)
-    SS_tot = np.sum((y_true - np.mean(y_true))**2)
-    return 1-SS_res/SS_tot
-
 def removeSomeMassFromDataset(X0,Y0,labels,mass_cols):
     X = np.delete(X0,mass_cols,1);
     Y = np.delete(Y0,mass_cols,1);
@@ -64,8 +60,7 @@ def removeSomeMassFromDataset(X0,Y0,labels,mass_cols):
 
     return X,Y,labels_copy,Nfeatures
 
-
-def regressionDatasetLoader(data_paths, labels, scaler_type="standard", remove_some_mass=False):
+def regressionDatasetLoader(data_paths, labels, scaler_type=None, remove_some_mass=False):
     # Load all the data for the specific version
     xtrain_notnormalized = extractData(data_paths['xtrain'], verbose=False)
     ytrain_notnormalized = extractData(data_paths['ytrain'], verbose=False)
@@ -77,8 +72,10 @@ def regressionDatasetLoader(data_paths, labels, scaler_type="standard", remove_s
             removeSomeMassFromDataset(xtrain_notnormalized, ytrain_notnormalized, labels, [1,9])
         xtest_notnormalized,  ytest_notnormalized , labels, Nfeatures = \
             removeSomeMassFromDataset(xtest_notnormalized,  ytest_notnormalized,  labels, [1,9])
-    # rescale
-    if scaler_type=="standard":
+    if scaler_type is None:
+        scaler_x = None
+        scaler_y = None
+    elif scaler_type=="standard":
         scaler_x = StandardScaler().fit(xtrain_notnormalized)
         scaler_y = StandardScaler().fit(ytrain_notnormalized)
     elif scaler_type=="minmax":
@@ -88,13 +85,19 @@ def regressionDatasetLoader(data_paths, labels, scaler_type="standard", remove_s
         scaler_x = StandardScaler().fit(xtrain_notnormalized)
         scaler_y = MinMaxScaler(feature_range=(-1, 1)).fit(ytrain_notnormalized)
     else:
-        print('scaler "',scaler_type,'" not recognized! Use standard, minmax or mixed.',sep='')
+        print("scaler '",scaler_type,"' not recognized! Use None, 'standard', 'minmax' or 'mixed'.",sep='')
         sys.exit()
-    # rescale and return    
-    xtrain   = scaler_x.transform(xtrain_notnormalized)
-    ytrain   = scaler_y.transform(ytrain_notnormalized)
-    xtest    = scaler_x.transform(xtest_notnormalized)
-    ytest    = scaler_y.transform(ytest_notnormalized)
+    # rescale and return 
+    if scaler_type is None:
+        xtrain = xtrain_notnormalized 
+        ytrain = ytrain_notnormalized 
+        xtest  = xtest_notnormalized 
+        ytest  = ytest_notnormalized 
+    else:
+        xtrain = scaler_x.transform(xtrain_notnormalized)
+        ytrain = scaler_y.transform(ytrain_notnormalized)
+        xtest  = scaler_x.transform(xtest_notnormalized)
+        ytest  = scaler_y.transform(ytest_notnormalized)
     out             = {}
     out['xtrain']   = xtrain
     out['ytrain']   = ytrain
@@ -105,7 +108,13 @@ def regressionDatasetLoader(data_paths, labels, scaler_type="standard", remove_s
     out['labels']   = labels
     return out
 
-def evalutationMetricsDict(xtest,ytest,model,ypredicted=None): 
+def R2(y_true, y_pred):
+    SS_res = np.sum((y_true - y_pred )**2)
+    SS_tot = np.sum((y_true - np.mean(y_true))**2)
+    return 1-SS_res/SS_tot
+
+def evalutationMetricsDict(xtest,ytest,model,ypredicted=None):
+    # xtest and ytest must be normalized! 
     Nfeatures = len(xtest[0,:])
     if (ypredicted is None):
         ypredicted = model.predict(xtest)
