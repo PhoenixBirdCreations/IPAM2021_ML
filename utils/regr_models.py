@@ -1,19 +1,19 @@
 import sys
 import numpy as np
 import tensorflow as tf
-from keras import backend as K
 import matplotlib.pyplot as plt
+import utils as ut
+from keras import backend as K
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.losses import MeanSquaredError
 from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.losses import MeanSquaredError
+from tensorflow.keras.losses import MeanSquaredError, LogCosh, MeanAbsoluteError
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from keras.utils.layer_utils import count_params
 
 #########################################################################
 # Neural Newtork with TensorFlow
 #########################################################################
-
 # define the ouput activation functions
 def output_activation_sigmoid(x):
     return K.sigmoid(x)*2-1
@@ -27,6 +27,10 @@ def output_activation_linear_cut(x):
 
 def output_activation_linear_cut_T3(x):
     return 2/(K.exp(-(2*x+2/3*x*x*x))+1)-1
+
+def output_activation_linear_cut_T5(x):
+    x3 = x*x*x
+    return 2/(K.exp(-2*(x+x3/3+x3*x*x/5))+1)-1
 
 def output_activation_linear_cut_lb(x):
     return K.switch(x>-1, x, -1+x*0)
@@ -51,6 +55,9 @@ def ArchitectureDenseNN(hlayers_sizes, Nfeatures, hidden_activation='relu', out_
     elif out_activation=="linear_cut_T3":
         out = Dense(Nfeatures, kernel_initializer='normal',\
                     activation=output_activation_linear_cut_T3)(x)
+    elif out_activation=="linear_cut_T5":
+        out = Dense(Nfeatures, kernel_initializer='normal',\
+                    activation=output_activation_linear_cut_T5)(x)
     elif out_activation=="linear_cut_lb":
         out = Dense(Nfeatures, kernel_initializer='normal',\
                     activation=output_activation_linear_cut_lb)(x)
@@ -79,6 +86,56 @@ def ArchitectureDenseNN(hlayers_sizes, Nfeatures, hidden_activation='relu', out_
 
     return tf.keras.Model(model_input, out)
 
+
+#########################################################################
+# Custom loss functions 
+#########################################################################
+# MEMO: cannot use sklearn-scalers in Keras' backend
+def minMaxScaler_vectorized(x,A,B,C,D):
+    """
+    Map [A,B] to [C,D]
+    Equivalent to sklearn.preprocessing.MinMaxScaler if A=min(x), B=max(x),
+    Used for qPenalty. Vectorized.
+    The input x must be a matrix with shape (Nsample, Nfeatures)
+    A, B, C, D must be vectors of shape (Nfeatures,1) or scalars
+    """
+    return np.transpose((D-C)*(np.transpose(x)-A)/(B-A)+C)
+
+def minMaxScaler_1d(x,A,B,C,D):
+    """
+    ad minMaxScaler_vectorized but not optimized
+    To use in the loss function since numpy is not supported
+    in Keras backend
+    Here A,B,C,D  must scalars and x an 1d array
+    """
+    return (D-C)*(x-A)/(B-A)+C
+
+def lossMSE_qPenalty(miny, maxy, Lambda_mse=1, Lambda_q=1, idx_m1=0, idx_m2=1):
+    def loss(y_true, y_pred):
+        mse = K.mean(K.square(y_pred - y_true), axis=-1)
+        m1_pred = minMaxScaler_1d(y_pred[:,idx_m1], -1, 1, miny[idx_m1], maxy[idx_m1])
+        m2_pred = minMaxScaler_1d(y_pred[:,idx_m2], -1, 1, miny[idx_m2], maxy[idx_m2])
+        m1_true = minMaxScaler_1d(y_true[:,idx_m1], -1, 1, miny[idx_m1], maxy[idx_m1])
+        m2_true = minMaxScaler_1d(y_true[:,idx_m2], -1, 1, miny[idx_m2], maxy[idx_m2])
+        qpenalty = K.mean(K.square(m2_pred/m1_pred - m2_true/m1_true))
+        return Lambda_mse*mse+Lambda_q*qpenalty
+    return loss
+
+def lossMSE_qMcPenalty(miny, maxy, Lambda_mse=1, Lambda_q=1, Lambda_Mc=1, idx_m1=0, idx_m2=1):
+    def loss(y_true, y_pred):
+        mse = K.mean(K.square(y_pred - y_true), axis=-1)
+        m1_pred = minMaxScaler_1d(y_pred[:,idx_m1], -1, 1, miny[idx_m1], maxy[idx_m1])
+        m2_pred = minMaxScaler_1d(y_pred[:,idx_m2], -1, 1, miny[idx_m2], maxy[idx_m2])
+        m1_true = minMaxScaler_1d(y_true[:,idx_m1], -1, 1, miny[idx_m1], maxy[idx_m1])
+        m2_true = minMaxScaler_1d(y_true[:,idx_m2], -1, 1, miny[idx_m2], maxy[idx_m2])
+        qPenalty  = K.mean(K.square(m2_pred/m1_pred - m2_true/m1_true))
+        Mc_pred   = ut.chirpMass(m1_pred, m2_pred) 
+        Mc_true   = ut.chirpMass(m1_true, m2_true) 
+        McPenalty = K.mean(K.square(Mc_pred - Mc_true))
+        return Lambda_mse*mse+Lambda_q*qPenalty+Lambda_Mc*McPenalty
+    return loss
+
+
 #########################################################################
 # Regression pipeline
 #########################################################################
@@ -90,7 +147,14 @@ by the scaler; scalers implemented: 'standard', 'minmax', 'mixed'
 def neuralNewtorkRegression(xtrain_notnormalized, ytrain_notnormalized, scaler_type='standard',\
                             epochs=10, batch_size=32, learning_rate=0.001,  \
                             validation_split=0.1, verbose=False, \
-                            hlayers_sizes=(100,), out_activation='linear', hidden_activation='relu'):
+                            hlayers_sizes=(100,), out_activation='linear', hidden_activation='relu', \
+                            loss_function='mse', Lambda_mse=1, Lambda_q=1, Lambda_Mc=1, \
+                            idx_m1=0, idx_m2=1):
+    # save minima and maxima of y before scaling (are used in some loss-functions)
+    Nfeatures = len(xtrain_notnormalized[0,:])
+    miny = np.reshape(ytrain_notnormalized.min(axis=0), (Nfeatures,1))
+    maxy = np.reshape(ytrain_notnormalized.max(axis=0), (Nfeatures,1))
+    
     # Fit the scaler and normalize data
     if scaler_type=="standard":
         scaler_x = StandardScaler().fit(xtrain_notnormalized)
@@ -105,13 +169,36 @@ def neuralNewtorkRegression(xtrain_notnormalized, ytrain_notnormalized, scaler_t
         print("scaler '",scaler_type,"' not recognized! Use 'standard', 'minmax' or 'mixed'.",sep="")
     xtrain = scaler_x.transform(xtrain_notnormalized)
     ytrain = scaler_y.transform(ytrain_notnormalized)
-    Nfeatures = len(xtrain[0,:])
+    
+    # define the loss function
+    if loss_function=='mse':
+        loss = MeanSquaredError()
+    elif loss_function=='logcosh':
+        loss = LogCosh()
+    elif loss_function=='mae':
+        loss = MeanAbsoluteError()
+    elif loss_function=='mse_q':
+        if scaler_type!="minmax":
+            print("The loss function 'mse_q' can be used only with scaler_type='minmax'.")
+            sys.exit()
+        loss = lossMSE_qPenalty(miny, maxy, Lambda_mse=Lambda_mse, Lambda_q=Lambda_q, idx_m1=idx_m1, idx_m2=idx_m2)
+    elif loss_function=='mse_qMc':
+        if scaler_type!="minmax":
+            print("The loss function 'mse_qMc' can be used only with scaler_type='minmax'.")
+            sys.exit()
+        if Nfeatures<3:
+            print('You are using only two features! Be sure that hose are m1 and m2')
+        loss = lossMSE_qMcPenalty(miny, maxy, Lambda_mse=Lambda_mse, Lambda_q=Lambda_q, Lambda_Mc=Lambda_Mc, \
+                                  idx_m1=idx_m1, idx_m2=idx_m2)
+    else:
+        print('Invalid option for the loss function! Options: mse, logcosh, mae, mse_q, mse_qMc')
+        sys.exit()
+    
     # build and compile the model
     model = ArchitectureDenseNN(hlayers_sizes, Nfeatures,\
         out_activation=out_activation,\
         hidden_activation=hidden_activation)
-    mse = MeanSquaredError()
-    model.compile(loss=mse, metrics=[mse, 'accuracy'], optimizer=Adam(learning_rate=learning_rate))
+    model.compile(loss=loss, metrics=[loss, R2metric], optimizer=Adam(learning_rate=learning_rate))
     if verbose:
         model.summary()
     # train the model and save history
@@ -120,6 +207,7 @@ def neuralNewtorkRegression(xtrain_notnormalized, ytrain_notnormalized, scaler_t
         batch_size       = batch_size,
         validation_split = validation_split,
         verbose          = verbose)
+    
     # save output in a dictionary
     output = {}
     output["model"]    = model
@@ -130,9 +218,21 @@ def neuralNewtorkRegression(xtrain_notnormalized, ytrain_notnormalized, scaler_t
     return output
 
 
+#########################################################################
+# Other things (very precise description)
+#########################################################################
+def R2metric(y_true, y_pred):
+    SS_res = K.sum(K.square(y_true - y_pred ))
+    SS_tot = K.sum(K.square(y_true - K.mean(y_true)))
+    r2 = 1-SS_res/SS_tot
+    if tf.math.is_nan(r2):
+        r2 = 0.
+    return r2
+
 def plotLayersCrossVal(models_dict, threshold=0.9, Npars_lim=1e+6, \
                       hidden_activation='relu',   \
                       out_activation='linear_cut_mod', \
+                      loss_function='mse', \
                       scaler_type='minmax', \
                       batch_size=256, epochs=250, \
                       metrics_idx=-1, labels=None):
@@ -174,9 +274,11 @@ def plotLayersCrossVal(models_dict, threshold=0.9, Npars_lim=1e+6, \
         ep = s.epochs
         nl = s.Nlayers
         Np = s.Npars
+        lf = s.loss_function
         add2list = ha==hidden_activation and oa==out_activation and \
                    bs==batch_size and ep==epochs and nl<=2 and \
-                   st==scaler_type and score>=threshold and Np<=Npars_lim
+                   st==scaler_type and score>=threshold and Np<=Npars_lim and \
+                   lf==loss_function
         if add2list:
             scores.append(score)
             Npars.append(s.Npars)

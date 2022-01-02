@@ -9,18 +9,15 @@ from sklearn.metrics import roc_curve
 ##################################################################
 # Regression plots
 #################################################################
-def regrPredictionPlots(ytest0, ypredicted0, labels, scaler=None):
+def regrPredictionPlots(ytest, ypredicted, labels, scaler=None):
     """
     the usual injected vs predicted plots
     """
-    if (scaler is None):
-        ytest      = ytest0
-        ypredicted = ypredicted0
-    else:
-        ytest      = scaler.inverse_transform(ytest0)
-        ypredicted = scaler.inverse_transform(ypredicted0)
+    if scaler is not None:
+        ytest      = scaler.inverse_transform(ytest)
+        ypredicted = scaler.inverse_transform(ypredicted)
     
-    Nfeatures = len(ytest0[0,:])
+    Nfeatures = len(ytest[0,:])
     if Nfeatures!=len(labels) or Nfeatures!=len(ypredicted[0,:]):
         print('Wrong input! Check shapes')
         sys.exit()
@@ -30,7 +27,7 @@ def regrPredictionPlots(ytest0, ypredicted0, labels, scaler=None):
     else:
         plot_cols = 3
     
-    rows = round(Nfeatures/plot_cols)
+    rows = max(round(Nfeatures/plot_cols),1)
     if rows>1:
         fig, axs  = plt.subplots(rows, plot_cols, figsize = (25,17))
     else: 
@@ -72,50 +69,42 @@ def plotHistory(history):
     history is the ouput of model.compile in TensorFlow
     """
     history_dict = history.history
-    acc      = history_dict['accuracy']
-    val_acc  = history_dict['val_accuracy']
+    acc      = history_dict['R2metric']
+    val_acc  = history_dict['val_R2metric']
     loss     = history_dict['loss']
     val_loss = history_dict['val_loss']
 
     epochs_plot=range(1,len(acc)+1)   
     plt.figure(figsize=(10,10))
-
     ax1=plt.subplot(221)
-    ax1.plot(epochs_plot,acc,'b',label='Training acc')
+    ax1.plot(epochs_plot,acc,'b',label='Training R2')
     ax1.plot(epochs_plot,loss,'r',label='Training loss')
-    ax1.set_title('loss and acc of Training')
+    ax1.set_title('loss and R2 of Training')
     ax1.set_xlabel('Epochs')
     ax1.set_ylabel('Loss')
     ax1.legend()
-
     ax2=plt.subplot(222)
-    ax2.plot(epochs_plot,val_acc,'b',label='Validation acc')
+    ax2.plot(epochs_plot,val_acc,'b',label='Validation R2')
     ax2.plot(epochs_plot,val_loss,'r',label='Validation loss')
-    ax2.set_title('loss and acc of Validation')
+    ax2.set_title('loss and R2 of Validation')
     ax2.set_xlabel('Epochs')
-    ax2.set_ylabel('Acc')
+    ax2.set_ylabel('R2')
     ax2.legend()
-    
     plt.show()
     return
 
-def checkRegressionPlot(xtest0, ytest0, ypredicted0, labels, scaler_y=None, scaler_x=None):
+def checkRegressionPlot(xtest, ytest, ypredicted, labels, scaler_y=None, scaler_x=None):
     """
     Plot recovered vs predicted
     """
-    if (scaler_y is None):
-        ytest      = ytest0
-        ypredicted = ypredicted0
-    else:
-        ytest      = scaler_y.inverse_transform(ytest0)
-        ypredicted = scaler_y.inverse_transform(ypredicted0)
+    if scaler_y is not None:
+        ytest      = scaler_y.inverse_transform(ytest)
+        ypredicted = scaler_y.inverse_transform(ypredicted)
     
-    if (scaler_x is None):
-        xtest      = xtest0
-    else:
-        xtest      = scaler_x.inverse_transform(xtest0)
+    if scaler_x is not None:
+        xtest      = scaler_x.inverse_transform(xtest)
     
-    Nfeatures = len(ytest0[0,:])
+    Nfeatures = len(ytest[0,:])
     if Nfeatures!=len(labels) or Nfeatures!=len(ypredicted[0,:]):
         print('Wrong input! Check shapes')
         sys.exit()
@@ -156,6 +145,98 @@ def checkRegressionPlot(xtest0, ytest0, ypredicted0, labels, scaler_y=None, scal
             ax.legend(fontsize=fontsize_leg)
             feature+=1
     plt.show()
+    return
+
+def plotInjRecPred(injected, recovered, predicted, idx_m1=0, idx_m2=1, idx_Mc=None, hide_recovered=False):
+    """
+    Check consistency on predicted masses
+    """
+    asterisks = '*'*80
+
+    m1_inj  = np.copy(injected[:,idx_m1])
+    m2_inj  = np.copy(injected[:,idx_m2])
+    m1_rec  = np.copy(recovered[:,idx_m1])
+    m2_rec  = np.copy(recovered[:,idx_m2])
+    m1_pred = np.copy(predicted[:,idx_m1])
+    m2_pred = np.copy(predicted[:,idx_m2])
+
+    # computed
+    q_comp  = m2_pred/m1_pred 
+    Mc_comp = (m2_pred*m1_pred)**(3/5)/((m1_pred+m2_pred)**(1/5))
+
+    print(asterisks,'m1 vs m2: injected, recovered, predicted',asterisks,sep='\n')
+    fig, axs = plt.subplots(1,3, figsize=(11, 3))
+    axs[0].scatter(m1_inj, m2_inj, color=[1,0.5,0])
+    axs[0].plot(m1_inj, m1_inj, 'r')
+    axs[0].set_xlabel('m1_inj')
+    axs[0].set_ylabel('m2_inj')
+    axs[1].scatter(m1_rec, m2_rec, color=[0.2,0.4,1])
+    axs[1].plot(m1_rec, m1_rec, 'r')
+    axs[1].set_xlabel('m1_rec')
+    axs[1].set_ylabel('m2_rec')
+    axs[2].scatter(m1_pred, m2_pred, color=[0,0.8,0.2])
+    axs[2].plot(m1_pred, m1_pred, 'r')
+    axs[2].set_xlabel('m1_pred')
+    axs[2].set_ylabel('m2_pred')
+    plt.subplots_adjust(wspace=0.4)
+    plt.show()
+
+    plt.figure
+    plt.figure(figsize=(4,5))
+    if not hide_recovered:
+        plt.scatter(m1_rec, m2_rec,   label='recovered', color=[0.2,0.4,1])
+    plt.scatter(m1_inj, m2_inj,   label='injected', marker='x', color=[1,0.5,0])
+    plt.scatter(m1_pred, m2_pred, label='predicted', color=[0,0.8,0.2])
+    plt.xlabel('m1')
+    plt.ylabel('m2')
+    plt.legend()
+    plt.show()
+
+    print(asterisks,'m1 vs q: injected, recovered, predicted (indirectly)',asterisks,sep='\n')
+    plt.figure(figsize=(4,5))
+    if not hide_recovered:
+        plt.scatter(m1_rec, m2_rec/m1_rec, label='recovered', color=[0.2,0.4,1])
+    plt.scatter(m1_inj, m2_inj/m1_inj, label='injected', color=[1,0.5,0])
+    plt.scatter(m1_pred, q_comp, label='predicted', color=[0,0.8,0.2])
+    plt.xlabel('m1')
+    plt.ylabel('q')
+    plt.legend()
+    plt.show()
+
+    if idx_Mc is not None:
+        Mc_inj  = np.copy(injected[:,idx_Mc])
+        Mc_rec  = np.copy(recovered[:,idx_Mc])
+        Mc_pred = np.copy(predicted[:,idx_Mc])
+
+        print(asterisks,'m1 vs Mc: injected, recovered, predicted',asterisks,sep='\n')
+        fig, axs = plt.subplots(1,3, figsize=(11, 3))
+        axs[0].scatter(m1_inj, Mc_inj, color=[1,0.5,0])
+        axs[0].set_xlabel('m1_inj')
+        axs[0].set_ylabel('Mc_inj')
+        axs[1].scatter(m1_rec, Mc_rec, color=[0.2,0.4,1])
+        axs[1].set_xlabel('m1_rec')
+        axs[1].set_ylabel('Mc_rec')
+        axs[2].scatter(m1_pred, Mc_pred, color=[0,0.8,0.2])
+        axs[2].set_xlabel('m1_pred')
+        axs[2].set_ylabel('Mc_pred')
+        plt.subplots_adjust(wspace=0.4)
+        plt.show()
+
+        plt.figure(figsize=(4,5))
+        if not hide_recovered:
+            plt.scatter(m1_rec, Mc_rec,   label='recovered', color=[0.2,0.4,1])
+        plt.scatter(m1_inj, Mc_inj,   label='injected', marker='x', color=[1,0.5,0])
+        plt.scatter(m1_pred, Mc_pred, label='predicted', color=[0,0.8,0.2])
+        #plt.scatter(m1_pred, ut.chirpMass(m1_pred, m2_pred), label='computed', color=[0.7,0.7,0.7])
+        plt.xlabel('m1')
+        plt.ylabel('Mc')
+        plt.legend()
+        plt.show()
+
+        #plt.figure
+        #plt.scatter(m1_pred, ut.chirpMass(m1_pred, m2_pred)-Mc_pred, label='diff')
+        #plt.legend()
+        #plt.show()
     return
 
 ##################################################################
@@ -216,5 +297,8 @@ def plotROC(ytrue, prob_of_label):
     plt.ylabel("true positive rate",  fontsize=14)
     plt.show()
     return
+
+
+
 
 

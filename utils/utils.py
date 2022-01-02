@@ -132,8 +132,6 @@ def evalutationMetricsDict(xtest,ytest,model,ypredicted=None):
 
 def printMetrics(metrics_dict):
     print('\nFinal loss     : {:.5f}'.format(metrics_dict["loss"]))
-    print('Final mse      : {:.5f}'.format(metrics_dict["mean_squared_error"]))
-    print('Final accuracy : {:.5f}'.format(metrics_dict["accuracy"]), '\n')
     print('Final R2 mean  : {:.5f}'.format(metrics_dict["R2mean"]))
     i = 0
     R2_vec = metrics_dict["R2"]
@@ -146,6 +144,27 @@ def generateUniformMassRange(N, mass_range, cv=0):
     X, _ = realistic.generateEvents(N, cv, verbose=False, mass_range=mass_range, distribution='uniform')
     return np.array(X)
 
+def chirpMass(m1, m2):
+    return (m1*m2)**(3/5)/(m1+m2)**(1/5)
 
+def findSecondMassFromMc(Mc, m):
+    """
+    Find analytically one mass from Mc and the other mass.
+    Mc and m can be vectors
+    """
+    if np.any(Mc<0) or np.any(m<0):
+        print('negative masses in input!')
+        sys.exit()
+    Mc5 = Mc**5
+    arg = 81*m**5-12*Mc5
+    mysqrt = np.where(arg<0, 1j*np.sqrt(-arg), np.sqrt(arg))
+    Mc5by3 = Mc5**(1/3)
+    croot  = (9*m**(5/2)+mysqrt)**(1/3)
+    num    = Mc5by3*(2*3**(1/3)*Mc5by3+2**(1/3)*croot**2)
+    den    = (6**(2/3)*m**(3/2)*croot)
+    out    = num/den
+    if np.any(out.imag>1e-14):
+        print('Warning: imaginary part bigger than 1e-14!')
+    return out.real
 
 
