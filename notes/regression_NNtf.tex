@@ -424,6 +424,17 @@ At this point I am starting to be pessimistic on the regression part of this pro
 (at least with NN, maybe GPR will save us), even if it is possible that using the final dataset
 will solve this problem since we will have more features that could help to overcome the problem
 of the degeneracy in the masses (or maybe will worsen it). 
+
+Another attempt could be to do the regression on $\nu$ and $M_c$ and then compute $m_i$
+from these two quantities. 
+In this case we could apply a constrained output function to $\nu$  in order to have a more
+consistent ouput
+(and in this case we should write a new class for the linear-scaler since the 
+\texttt{MinMaxScaler} that we are using now in the constrained output wouldn't be the best 
+choice for constraining a quantity like $\nu$). 
+However I don't think that this will solve all the problems that we have
+with this dataset.
+
 %
 \begin{figure*}[t]
   \center
@@ -458,11 +469,12 @@ of the degeneracy in the masses (or maybe will worsen it).
 %==========================================================
 \begin{itemize}
 \item The regression with NNs does not work properly on the GstLAL BNS dataset.
-Also Yanyan had some problems on this dataset (BTW I don't know if it is the exact same
-proble). Probably linked to the strong degeneracy in the recovery of the masses, 
+Also Yanyan had some problems on this dataset (but I don't know if this is the exact same
+problem). Probably this is linked to the strong degeneracy in the recovery of the masses, 
 but we need to (i) fully understand why this happens, (ii) fix it. 
 However it's possible that this problem won't be there
-with a dataset with masses in a much broader range (or maybe will be there anyway, who knows).
+with a dataset with masses in a much broader range 
+and with other features (or maybe will be there anyway, who knows). 
 
 \item NN and SVR have the same problem on the GstLAL BNS dataset and the only 
 similarity between the two algorithms is that they both minimize a loss function. 
