@@ -167,4 +167,37 @@ def findSecondMassFromMc(Mc, m):
         print('Warning: imaginary part bigger than 1e-14!')
     return out.real
 
+def findm1m2FrompMc(p,Mc):
+    p3 = p*p*p
+    p5 = p3*p*p
+    Mc5 = Mc**5
+    Mc10 = Mc5*Mc5
+    nu = Mc10/p5
+    m1 = p3*(1+np.sqrt(1-4*nu))/Mc5/2
+    m2 = p/m1
+    return m1,m2
+
+def findm1m2FrompMc_Mod(p,Mc):
+    p3 = p*p*p
+    p5 = p3*p*p
+    Mc5 = Mc**5
+    Mc10 = Mc5*Mc5
+    nu   = Mc10/p5
+    arg  = 1-4*nu
+    root = np.where(arg>0, np.sqrt(arg), 0)
+    m1 = p3*(1+root)/Mc5/2
+    m2 = p3*(1-root)/Mc5/2
+    return m1,m2
+
+def findm1m2FromsMc(s,Mc):
+    Mc5by3 = Mc**(5/3)
+    s1by3  = s**(1/3)
+    s2     = s*s
+    arg    = -4*Mc5by3*s1by3+s2
+    root   = np.sqrt(arg)
+    m1     = 0.5*(s+root)
+    m2     = 0.5*(s-root)
+    return m1,m2
+
+
 

@@ -69,8 +69,8 @@ bigger batch-size to speed-up the training (e.g. I used 128 for the cross-valida
 the \texttt{v0c0} dataset).
 \end{itemize}
 
-\item \textbf{Training}. Using  the dataset \texttt{v0c0}, \texttt{epochs=250} and 
-\texttt{batch{\_}size=128} the trainig
+\item \textbf{Training}. Using  the dataset \texttt{v0c0}, $N_{\rm epochs}=250$ and 
+$N_{\rm batch}=128$ the trainig
 takes from 60 to 90 seconds, depending on the architecture. During the training we also 
 use the $20\%$ of the training dataset for the validation so that
 we can monitor the loss and the $R^2$ coefficient (see definition below) at each epoch.
@@ -111,7 +111,8 @@ where
 \begin{equation}
 f^N(x)  = \sum_{n=odd}^{N} \frac{x^{n}}{n}.
 \end{equation}
-The function $f^N(x)$ is found requiring that $\sigma^N(x)=x+O(x^{N+2})$ for $x\rightarrow 0$.
+The function $f^N(x)$ is  simply found requiring that $\sigma^N(x)=x+O(x^{N+2})$ 
+for $x\rightarrow 0$.
 These activation functions are shown in the left panel of Fig.~\ref{fig:out_act_f}.
 %
 \begin{figure}[t]
@@ -122,7 +123,8 @@ These activation functions are shown in the left panel of Fig.~\ref{fig:out_act_
   output layer so that the output is constrained in the interval $[-1,1]$.
   \textbf{Right panel}: history of a NN with two hidden layers with 20 neurons 
   and $\sigma^5(x)$ as output function.
-  The drop in the accuracy at the 18th epoch is due to the presence of NaN.}
+  The drop in the accuracy at the 18th epoch is due to the presence of NaN.
+  That's why we use $\hat{\sigma}$ and not a smooth approximant $\sigma^N$.}
 \end{figure}
 %
 However, for $N\geq 3$ is possible that some NaN appear during the training, see e.g. the right
@@ -145,7 +147,7 @@ be better to use the upper constraint also for the masses, TBD.
 \begin{table}[t]
 \caption{\label{tab:some_results} Loss (Mean Squared Error) and $R^2$ coefficients
  	for the two datasets \texttt{v0c0}, \texttt{v1c0}.
-   	We used 2 hidden layers with 100 neurons, \texttt{batch{\_}size=64}, 250 epochs,  
+   	We used 2 hidden layers with 100 neurons, $N_{\rm batch}=64$, 250 epochs,  
    	constrained output. See Sec.~\ref{sec:some_results} for discussion.}
 \begin{center}
 \begin{ruledtabular}
@@ -183,7 +185,7 @@ $R^2 [M_c   ]$  & 0.9978 & 0.9938
   \includegraphics[width=0.95\textwidth]{./Figs/v0c0_regression.png}
   \includegraphics[width=0.95\textwidth]{./Figs/v0c0_regression_noise.png}
   \caption{\label{fig:v0c0_results} Results of the regression on the \texttt{v0c0}
-  dataset. We used 2 hidden layers with 100 neurons, \texttt{batch{\_}size=64}, 250 epochs,  
+  dataset. We used 2 hidden layers with 100 neurons, $N_{\rm batch}=64$, 250 epochs,  
   constrained output. See Sec.~\ref{sec:some_results} for discussion. 
   The colors in the first plots is related to the absolute difference between predicted 
   and injected. The black line is the bisector.}
@@ -194,7 +196,7 @@ $R^2 [M_c   ]$  & 0.9978 & 0.9938
   \includegraphics[width=0.95\textwidth]{./Figs/v1c0_regression.png}
   \includegraphics[width=0.95\textwidth]{./Figs/v1c0_regression_noise.png}
   \caption{\label{fig:v1c0_results} Results of the regression on the \texttt{v1c0}
-  dataset. We used 2 hidden layers with 100 neurons, \texttt{batch{\_}size=64}, 250 epochs,  
+  dataset. We used 2 hidden layers with 100 neurons, $N_{\rm batch}=64$, 250 epochs,  
   constrained output. See Sec.~\ref{sec:some_results} for discussion.
   The colors in the first plots is related to the absolute difference between predicted 
   and injected. The black line is the bisector.}
@@ -204,7 +206,7 @@ The regression with NN works pretty well on the \texttt{v0} datasets, while on
 the dataset \texttt{v1} the $R^2$ coefficients are smaller since there is more degeneracy.
 We use 2 hidden layers with 100 neurons (i.e. 12,411 trainable parameters, while
 $N_{\rm sample}=2\cdot 10^4$) and we train on 250 epochs using 
-\texttt{batch{\_}size=64}. Different architectures are discussed in Sec.~\ref{sec:crossval}
+$N_{\rm batch}=64$. Different architectures are discussed in Sec.~\ref{sec:crossval}
 but the results are more or less the same for complex-enough NNs.
 For the spin components we use $\hat{\sigma}$ as output 
 activation function, for the masses and the mass ratio we use $\hat{\sigma}_{\rm LB}$ and
@@ -225,7 +227,7 @@ that have physical meaning.
 In order to decide the architecture to use I did a cross validation on the 
 \texttt{v0c0} dataset (the reason why I have not cross-validated on the \texttt{GstLAL} dataset
 is explained in Sec.~\ref{sec:GstLAL}). I trained the models on 250 epochs using
-\texttt{batch{\_}sizes=128} for different architectures. The results are shown 
+$N_{\rm batch}=128$ for different architectures. The results are shown 
 in Fig.~\ref{fig:crossval_v0c0}. The plots show that NNs with 2 layers with $\sim 100$ 
 neurons each provide good enough scores and more complex NNs do not provide much better results. 
 After a certain number of trainable parameters the $R^2$ coefficient reaches a plateaux 
@@ -311,7 +313,7 @@ but the results are the same. Even SVR gives the same results (qualitatively).
   \includegraphics[width=0.31\textwidth]{./Figs/GstLAL_Mc.png}
   \includegraphics[width=0.31\textwidth]{./Figs/GstLAL_q.png}
   \caption{\label{fig:GstLAL_results} Results of the regression on the \texttt{GstLAL}
-  dataset. We used one hidden layer with 100 neurons, \texttt{batch{\_}size=64}, 50 epochs,  
+  dataset. We used one hidden layer with 100 neurons, $N_{\rm batch}=64$, 50 epochs,  
   unconstrained output.
   The colors in the first plots is related to the absolute difference between predicted 
   and injected. The black line is the bisector.
@@ -329,7 +331,7 @@ In order to fix the problem with $q$ in the \texttt{GstLAL} dataset,
 I tried to modify the loss function to minimize.
 The default function for regression tasks is the Mean Squared Error
 \begin{equation}
-J_{\rm mse} = {\rm mean}\left( \sum_i \left( y^{\rm true}_i - f(x_i) \right)^2 \right).
+J_{\rm mse} = {\rm mean} \sum_i \left( y^{\rm true}_i - f(x_i) \right)^2 .
 \end{equation}
 I tried to modify it including a $q$-penalty and a $M_c$-penalty:
 \begin{align}
@@ -338,11 +340,11 @@ J =  {\rm mean} & \left(  \sum_i \left( y^{\rm true}_i - f(x_i) \right)^2 \right
 \nonumber \\
 & \left. + \lambda_{\rm M_c} \sum_i \left( M_{c,i}^{\rm true} - M_{c,i}^{\rm pred} \right)^2 \right)
 \end{align}
-where 
+where (not surprisingly)
 \begin{align}
 q^{\rm pred}_i &  = \frac{m_{2,i}^{\rm pred}}{m_{1,i}^{\rm pred}}, \\
 M_{c,i}^{\rm pred} & = 
-\frac{\left(m_{1,i}^{\rm pred}m_{2,i}^{\rm pred} \right)^{3/5}}{\left(m_{1,i}^{\rm pred}+m_{2,i}^{\rm pred}\right)^{1/3}},
+\frac{\left(m_{1,i}^{\rm pred}m_{2,i}^{\rm pred} \right)^{3/5}}{\left(m_{1,i}^{\rm pred}+m_{2,i}^{\rm pred}\right)^{1/5}},
 \end{align}
 and $q^{\rm true}$, $M_c^{\rm true}$ are analogous. Note the $M_c$-term is not the same 
 in MSE since here the chirp mass is computed using $m_i$ while in the MSE part $M_c$ 
@@ -356,6 +358,100 @@ I tried to fit the data with different values for the hyperparameters $\lambda_q
 $\lambda_Mc$ but in every case I didn't find a solution to the issues of Sec.~\ref{sec:GstLAL}
 since the effect of these penalty is marginal, even if we use high values for $\lambda_i$.
 Maybe this is not the correct way to include penalties.
+
+%==========================================================
+\section{GstLAL BNS dataset - a different approach}
+%==========================================================
+\label{sec:GstLAL2}
+I also tried to do something different on the \texttt{GstLAL} dataset. 
+So the pipeline recovers $M_c$ perfectly (I am not even sure that make a regression on $M_c$
+makes sense), then I suppose that it recovers also one of the two masses 
+(I don't know which one) and compute the second one analytically. Therefore the degeneracy problem
+in one mass should be "specular" in the other masse, so maybe to remove the degeneracy problem
+in the regression we can consider suitable combinations of the two masses $m_i$ instead of 
+considering them separately. The using this quantity $g(m_1,m_2)$ and $M_c$ we can obtain 
+two masses $m_i$. It turns out that symmetric quantities are better, in particular 
+$p_k= (m_1 m_2)^k$ can be regressed very well if the exponent $k$ is not too high, 
+obtaining $R^2$ coefficients such that $1-R^2 \leq 10^{-4}$. Then the two masses can be
+obtained analytically from
+\begin{equation}
+\label{eq:m12frompMc}
+m_{1,2} = \frac{p^3}{2 M_c^5}\left( 1 \pm \sqrt{1-4\nu} \right),
+\end{equation}
+where $p=m_1 m_2$ (i.e. we omit the index $k=1$) and $\nu$ is the symmetric mass ratio
+\begin{equation}
+\nu \equiv \frac{M_c^{10}}{p^5} = \frac{m_1 m_2}{(m_1+m_2)^2}\in (0, \frac{1}{4}].
+\end{equation}
+However, note that the condition
+\begin{equation}
+\label{eq:nu_condition}
+\nu=M_c^{10}/p^5\leq \frac{1}{4}
+\end{equation} 
+is not enforced during the training (i.e. the predictions for $p_k$ and $M_c$ are independent), 
+then it is possible that~\eqref{eq:nu_condition} will be slightly violated, making
+the two masses complex. For this reason we recover the two masses with a modified version
+of Eq.~\eqref{eq:m12frompMc}
+\begin{equation}
+\label{eq:m12frompMc_mod}
+m_{1,2}^{\rm pred} = \frac{p_{\rm pred}^3}{2 M_{c, \rm pred}^5}\left( 1 \pm \sqrt{1-4 \min\left(\nu_{\rm pred}, \frac{1}{4}\right)} \right).
+\end{equation}
+Note that the condition~\eqref{eq:nu_condition} can be violated pretty often 
+if we have many equal-mass binaries in the dataset (and this is precisely our case).
+However note that with this approach the predictions for $m_i$ and $M_c$ can be not
+consistent, i.e. 
+$M_c^{\rm pred} \neq (m_1^{\rm pred} m_2^{\rm pred})^{3/5}/(m_1^{\rm pred} + m_2^{\rm pred})^{1/5}$.
+To enforce this condition we then compute $m_2^*$ requiring 
+\begin{equation}
+M_c^{\rm pred} \equiv \frac{(m_i^{\rm pred} m_j^*)^{3/5}}{(m_i^{\rm pred} + m_j^{*})^{1/5}},
+\end{equation}
+where $i\neq j=1,2$, explicitely (omitting the superscript 'pred' in the RHSs):
+\begin{align}
+m_j^* &= \frac{M_c^{5/3}\left(3^{1/3} 2 M_c^{5/3}+2^{1/3} S_i^2 \right) }{ 6^{2/3} m_i^{3/2} S_i },  \\
+S_i   &= \left(9 m_i^{5/2} + \sqrt{81 m_i^5 -12 M_c^5}\right)^{1/3}.
+\end{align}
+
+The results for this kind of regression using the features $p_2=(m_1 m_2)^2$ and $M_c$
+are shown in Fig.~\ref{fig:GstLAL2_results}. We use a NN with one hidden layer with 
+100 neurons and ReLU, linear activation function in the output layer (i.e. no constraints),
+MSE loss function and we train for 100 epochs using $N_{\rm batch}=128$. 
+While the regression on $p_2$ and $M_c$ is almost perfect ($R^2$ coefficients of 0.99995 and 
+1.00000, respectively), the other recovered quantities show some strange behavior and, most
+importantly, they are strongly dependent on the initial state on the NN, i.e. training the NN
+different times using always the same options leads to pretty different results for $m_i$ and $q$.
+Therefore, also this method doesn't seem to work properly on this dataset.
+
+At this point I am starting to be pessimistic on the regression part of this project 
+(at least with NN, maybe GPR will save us), even if it is possible that using the final dataset
+will solve this problem since we will have more features that could help to overcome the problem
+of the degeneracy in the masses (or maybe will worsen it). 
+%
+\begin{figure*}[t]
+  \center
+  \includegraphics[width=0.75\textwidth]{./Figs/GstLAL_p2_regression.png}
+  \includegraphics[width=0.75\textwidth]{./Figs/GstLAL_p2_regression_noise.png}
+  \includegraphics[width=0.31\textwidth]{./Figs/GstLAL_p2_m2.png}
+  \includegraphics[width=0.31\textwidth]{./Figs/GstLAL_p2_Mc.png}
+  \includegraphics[width=0.31\textwidth]{./Figs/GstLAL_p2_q.png}
+  \includegraphics[width=0.45\textwidth]{./Figs/GstLAL_p2_m1m2.png}
+  \hspace{1.3cm}
+  \includegraphics[width=0.45\textwidth]{./Figs/GstLAL_standard_m1m2.png}
+  \caption{\label{fig:GstLAL2_results} Results of the regression on the \texttt{GstLAL}
+  dataset using the approach of Sec.~\ref{sec:GstLAL2}. 
+  We used one hidden layer with 100 neurons, $N_{\rm batch}=128$, 100 epochs,  
+  unconstrained output.
+  The colors in the first plots is related to the absolute difference between predicted 
+  and injected. The black line is the bisector.
+  The final $R^2$ coefficients for $p_2=(m_1 m_2)^2$ and $M_c$ are 0.99995 and 1.00000,
+  respectively.
+  In the three panels in the middle we plot $m_2$, $M_c$ and $q$ over $m_1$ for 
+  the injected, recovered and predicted quantities.
+  Finally, in the first two panels of the last row we show the (indirectly) predicted masses 
+  with the ($p_2$, $M_c$) regression versus the injected masses, 
+  while in the last two panels of the last row we show the 
+  predicted masses obtained with the standard regression of Sec.~\ref{sec:GstLAL} versus 
+  the injected ones.}
+\end{figure*}
+
 
 %==========================================================
 \section{Things to discuss}
