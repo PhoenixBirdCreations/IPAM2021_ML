@@ -40,7 +40,7 @@ Some pros of NNs are:
 On the other hand, to fully exploit the NN we need a big dataset and the high number of tunable
 aspects makes the cross validation more difficult. In our case we will use at most 2 hidden layers.
 In principle more complex architectures could  be used but in our case 
-I don't think it would be worth since we do not have a huge traning sample. 
+I don't think it would be worth since we do not have a huge training sample. 
 For regression tasks, the activation function in the output layer generally is a linear function.
 
 Steps of the regression:
@@ -51,7 +51,7 @@ Nonetheless I prefer to use the
 linear map \texttt{MinMaxScaler} that maps the data in the interval $[-1,1]$. 
 This choice is linked to the constraints on the output, see Sec.~\ref{sec:constraints}. 
 
-\item \textbf{Inizialization of the model}. We decide the architecture and all the other aspects. 
+\item \textbf{Initialization of the model}. We decide the architecture and all the other aspects. 
 A typical configuration is:
 \begin{itemize}
 \item layers: two layers with 100 neurons, but e.g. on the \texttt{v0c0}
@@ -70,7 +70,7 @@ the \texttt{v0c0} dataset).
 \end{itemize}
 
 \item \textbf{Training}. Using  the dataset \texttt{v0c0}, $N_{\rm epochs}=250$ and 
-$N_{\rm batch}=128$ the trainig
+$N_{\rm batch}=128$ the training
 takes from 60 to 90 seconds, depending on the architecture. During the training we also 
 use the $20\%$ of the training dataset for the validation so that
 we can monitor the loss and the $R^2$ coefficient (see definition below) at each epoch.
@@ -231,14 +231,14 @@ $N_{\rm batch}=128$ for different architectures. The results are shown
 in Fig.~\ref{fig:crossval_v0c0}. The plots show that NNs with 2 layers with $\sim 100$ 
 neurons each provide good enough scores and more complex NNs do not provide much better results. 
 After a certain number of trainable parameters the $R^2$ coefficient reaches a plateaux 
-and doesn't increase anymore. 
+and doesn't increase any more. 
 The only exceptions are: (i) $M_c$: the best score is obtained with single-layer NNs 
-(the recovered quantity is obtained only adding random gaussian noise); 
+(the recovered quantity is obtained only adding random Gaussian noise); 
 (ii) $\theta$: this is the quantity with lowest score and the $R^2$ coefficient 
 continues to (slightly) increase without reaching a plateaux even for $\sim 300$
 neurons in each layer. 
 
-Finally note that many NNs have more parameters thant training samples, 
+Finally note that many NNs have more parameters than training samples, 
 $N_{\rm param}>N_{\rm train}$, since 
 $N_{\rm train}=2\cdot 10^4$ for the \texttt{v0v0} dataset. This shouldn't be a problem 
 for NN (and indeed the score is good also on the test-set that has 
@@ -387,7 +387,8 @@ However, note that the condition
 \label{eq:nu_condition}
 \nu=M_c^{10}/p^5\leq \frac{1}{4}
 \end{equation} 
-is not enforced during the training (i.e. the predictions for $p_k$ and $M_c$ are independent), 
+is not enforced during the training (i.e. the predictions for 
+$p_k$ and $M_c$ are not constrained in this sense), 
 then it is possible that~\eqref{eq:nu_condition} will be slightly violated, making
 the two masses complex. For this reason we recover the two masses with a modified version
 of Eq.~\eqref{eq:m12frompMc}
@@ -404,7 +405,7 @@ To enforce this condition we then compute $m_2^*$ requiring
 \begin{equation}
 M_c^{\rm pred} \equiv \frac{(m_i^{\rm pred} m_j^*)^{3/5}}{(m_i^{\rm pred} + m_j^{*})^{1/5}},
 \end{equation}
-where $i\neq j=1,2$, explicitely (omitting the superscript 'pred' in the RHSs):
+where $i\neq j=1,2$, explicitly (omitting the superscript 'pred' in the RHSs):
 \begin{align}
 m_j^* &= \frac{M_c^{5/3}\left(3^{1/3} 2 M_c^{5/3}+2^{1/3} S_i^2 \right) }{ 6^{2/3} m_i^{3/2} S_i },  \\
 S_i   &= \left(9 m_i^{5/2} + \sqrt{81 m_i^5 -12 M_c^5}\right)^{1/3}.
@@ -428,7 +429,7 @@ of the degeneracy in the masses (or maybe will worsen it).
 Another attempt could be to do the regression on $\nu$ and $M_c$ and then compute $m_i$
 from these two quantities. 
 In this case we could apply a constrained output function to $\nu$  in order to have a more
-consistent ouput
+consistent output
 (and in this case we should write a new class for the linear-scaler since the 
 \texttt{MinMaxScaler} that we are using now in the constrained output wouldn't be the best 
 choice for constraining a quantity like $\nu$). 
@@ -470,7 +471,7 @@ with this dataset.
 \begin{itemize}
 \item The regression with NNs does not work properly on the GstLAL BNS dataset.
 Also Yanyan had some problems on this dataset (but I don't know if this is the exact same
-problem). Probably this is linked to the strong degeneracy in the recovery of the masses, 
+problem). Probably this is linked to the recovery of the masses, 
 but we need to (i) fully understand why this happens, (ii) fix it. 
 However it's possible that this problem won't be there
 with a dataset with masses in a much broader range 
