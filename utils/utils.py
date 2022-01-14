@@ -163,7 +163,7 @@ def findSecondMassFromMc(Mc, m):
     num    = Mc5by3*(2*3**(1/3)*Mc5by3+2**(1/3)*croot**2)
     den    = (6**(2/3)*m**(3/2)*croot)
     out    = num/den
-    if np.any(out.imag>1e-14):
+    if np.any(np.abs(out.imag)>1e-14):
         print('Warning: imaginary part bigger than 1e-14!')
     return out.real
 

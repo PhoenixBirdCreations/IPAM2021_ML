@@ -411,20 +411,22 @@ m_j^* &= \frac{M_c^{5/3}\left(3^{1/3} 2 M_c^{5/3}+2^{1/3} S_i^2 \right) }{ 6^{2/
 S_i   &= \left(9 m_i^{5/2} + \sqrt{81 m_i^5 -12 M_c^5}\right)^{1/3}.
 \end{align}
 
-The results for this kind of regression using the features $p_2=(m_1 m_2)^2$ and $M_c$
+The results for this kind of regression using the features $p=m_1 m_2$ and $M_c$
 are shown in Fig.~\ref{fig:GstLAL2_results}. We use a NN with one hidden layer with 
 100 neurons and ReLU, linear activation function in the output layer (i.e. no constraints),
 MSE loss function and we train for 100 epochs using $N_{\rm batch}=128$. 
-While the regression on $p_2$ and $M_c$ is almost perfect ($R^2$ coefficients of 0.99995 and 
-1.00000, respectively), the other recovered quantities show some strange behavior and, most
+While the regression on $p$ and $M_c$ is almost perfect ($R^2$ coefficients of 0.99993 and 
+0.99997, respectively), the other recovered quantities show some strange behavior and, most
 importantly, they are strongly dependent on the initial state on the NN, i.e. training the NN
 different times using always the same options leads to pretty different results for $m_i$ and $q$.
-Therefore, also this method doesn't seem to work properly on this dataset.
+Moreover, the mean predicted/injected errors for $m_1$, $m_2$, $M_c$, and $q$ are slightly worse 
+since here we get $2.8\%$, $2.7\%$, $0.02\%$, and $5.4\%$ respectively, while with the standard 
+regression of Sec.~\ref{sec:GstLAL} we got $2.3\%$, $2.2\%$, $0.05\%$ and $4.6\%$.
 
 At this point I am starting to be pessimistic on the regression part of this project 
 (at least with NN, maybe GPR will save us), even if it is possible that using the final dataset
 will solve this problem since we will have more features that could help to overcome the problem
-of the degeneracy in the masses (or maybe will worsen it). 
+of the masses (or maybe will worsen it). 
 
 Another attempt could be to do the regression on $\nu$ and $M_c$ and then compute $m_i$
 from these two quantities. 
@@ -439,12 +441,12 @@ with this dataset.
 %
 \begin{figure*}[t]
   \center
-  \includegraphics[width=0.75\textwidth]{./Figs/GstLAL_p2_regression.png}
-  \includegraphics[width=0.75\textwidth]{./Figs/GstLAL_p2_regression_noise.png}
-  \includegraphics[width=0.31\textwidth]{./Figs/GstLAL_p2_m2.png}
-  \includegraphics[width=0.31\textwidth]{./Figs/GstLAL_p2_Mc.png}
-  \includegraphics[width=0.31\textwidth]{./Figs/GstLAL_p2_q.png}
-  \includegraphics[width=0.45\textwidth]{./Figs/GstLAL_p2_m1m2.png}
+  \includegraphics[width=0.75\textwidth]{./Figs/GstLAL_p_regression.png}
+  \includegraphics[width=0.75\textwidth]{./Figs/GstLAL_p_regression_noise.png}
+  \includegraphics[width=0.31\textwidth]{./Figs/GstLAL_p_m2.png}
+  \includegraphics[width=0.31\textwidth]{./Figs/GstLAL_p_Mc.png}
+  \includegraphics[width=0.31\textwidth]{./Figs/GstLAL_p_q.png}
+  \includegraphics[width=0.45\textwidth]{./Figs/GstLAL_p_m1m2.png}
   \hspace{1.3cm}
   \includegraphics[width=0.45\textwidth]{./Figs/GstLAL_standard_m1m2.png}
   \caption{\label{fig:GstLAL2_results} Results of the regression on the \texttt{GstLAL}
@@ -453,12 +455,12 @@ with this dataset.
   unconstrained output.
   The colors in the first plots is related to the absolute difference between predicted 
   and injected. The black line is the bisector.
-  The final $R^2$ coefficients for $p_2=(m_1 m_2)^2$ and $M_c$ are 0.99995 and 1.00000,
+  The final $R^2$ coefficients for $p=m_1 m_2$ and $M_c$ are 0.99993 and 0.99997,
   respectively.
   In the three panels in the middle we plot $m_2$, $M_c$ and $q$ over $m_1$ for 
   the injected, recovered and predicted quantities.
   Finally, in the first two panels of the last row we show the (indirectly) predicted masses 
-  with the ($p_2$, $M_c$) regression versus the injected masses, 
+  with the ($p$, $M_c$) regression versus the injected masses, 
   while in the last two panels of the last row we show the 
   predicted masses obtained with the standard regression of Sec.~\ref{sec:GstLAL} versus 
   the injected ones.}
