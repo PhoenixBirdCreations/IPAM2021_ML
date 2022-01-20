@@ -180,7 +180,7 @@ $R^2 [M_c   ]$  & 0.9978 & 0.9938
 %==========================================================
 \label{sec:some_results}
 %
-\begin{figure*}[t]
+\begin{figure*}[]
   \center
   \includegraphics[width=0.95\textwidth]{./Figs/v0c0_regression.png}
   \includegraphics[width=0.95\textwidth]{./Figs/v0c0_regression_noise.png}
@@ -191,7 +191,7 @@ $R^2 [M_c   ]$  & 0.9978 & 0.9938
   and injected. The black line is the bisector.}
 \end{figure*}
 %
-\begin{figure*}[t]
+\begin{figure*}[]
   \center
   \includegraphics[width=0.95\textwidth]{./Figs/v1c0_regression.png}
   \includegraphics[width=0.95\textwidth]{./Figs/v1c0_regression_noise.png}
@@ -248,7 +248,7 @@ For example in Fig.~\ref{fig:v0c0_results} and Fig.~\ref{fig:v1c0_results} I use
 two hidden layers with 100 neurons so that $N_{\rm param}=12411<N_{\rm sample}=2\cdot 10^4$.
 
 %
-\begin{figure*}[t]
+\begin{figure*}[]
   \center
   \includegraphics[width=0.45\textwidth]{./Figs/crossval_v0c0_R2mean.png}
   \hspace{0.3cm}
@@ -276,10 +276,18 @@ two hidden layers with 100 neurons so that $N_{\rm param}=12411<N_{\rm sample}=2
 \end{figure*}
 %
 
+\clearpage
 %==========================================================
 \section{GstLAL BNS dataset}
 %==========================================================
 \label{sec:GstLAL}
+\begin{figure}[]
+  \center
+  \includegraphics[width=0.45\textwidth]{./Figs/GstLAL_paperlike_m1m2.png}
+  \caption{\label{fig:GstLAL_paperlike} Compare with Fig.1 of Chatterjee-1911.00116.
+  Do the systematics in the waveform model matter?}
+\end{figure}
+
 We also have a dataset obtained with injected parameters of nonspinning 
 BNSs recovered with \texttt{GstLAL}.
 In this case we have only three features: $m_1$, $m_2$, $M_c$.
@@ -305,7 +313,7 @@ Therefore in this case the regression does not seem to work properly. I have als
 do the regression only on $m_{1,2}$ and $M_c$ and recovering the other mass analytically 
 but the results are the same. Even SVR gives the same results (qualitatively).
 %
-\begin{figure*}[t]
+\begin{figure*}[]
   \center
   \includegraphics[width=0.95\textwidth]{./Figs/GstLAL_regression.png}
   \includegraphics[width=0.95\textwidth]{./Figs/GstLAL_regression_noise.png}
@@ -439,7 +447,7 @@ However I don't think that this will solve all the problems that we have
 with this dataset.
 
 %
-\begin{figure*}[t]
+\begin{figure*}[]
   \center
   \includegraphics[width=0.75\textwidth]{./Figs/GstLAL_p_regression.png}
   \includegraphics[width=0.75\textwidth]{./Figs/GstLAL_p_regression_noise.png}
@@ -472,12 +480,14 @@ with this dataset.
 %==========================================================
 \begin{itemize}
 \item The regression with NNs does not work properly on the GstLAL BNS dataset.
-Also Yanyan had some problems on this dataset (but I don't know if this is the exact same
-problem). Probably this is linked to the recovery of the masses, 
+Also Yanyan had some problems on this dataset. 
+Probably this is linked to the recovery of the masses, 
 but we need to (i) fully understand why this happens, (ii) fix it. 
 However it's possible that this problem won't be there
 with a dataset with masses in a much broader range 
 and with other features (or maybe will be there anyway, who knows). 
+
+\item Does the waveform model matter a lot? 
 
 \item NN and SVR have the same problem on the GstLAL BNS dataset and the only 
 similarity between the two algorithms is that they both minimize a loss function. 
