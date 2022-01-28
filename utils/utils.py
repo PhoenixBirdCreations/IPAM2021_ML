@@ -199,5 +199,10 @@ def findm1m2FromsMc(s,Mc):
     m2     = 0.5*(s-root)
     return m1,m2
 
-
+def findMarinaMasses(p,s):
+    rootp=p**(1/3);
+    arg=s*s-4*rootp
+    m1 = np.where(arg>0, (s+np.sqrt(arg))*0.5, s*0.5)
+    m2=s-m1
+    return m1,m2
 

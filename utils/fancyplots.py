@@ -144,7 +144,7 @@ def checkRegressionPlot(xtest, ytest, ypredicted, labels, scaler_y=None, scaler_
             ax.plot(ytest_plot, ytest_plot, 'k')
             ax.legend(fontsize=fontsize_leg)
             feature+=1
-    plt.show()
+   # plt.show()
     return
 
 def plotInjRecPred(injected, recovered, predicted, idx_m1=0, idx_m2=1, idx_Mc=None, hide_recovered=False):
