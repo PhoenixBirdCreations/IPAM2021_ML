@@ -5,15 +5,17 @@
 \usepackage{amssymb}	
 \usepackage{graphicx}
 \usepackage{color}
+\usepackage{ulem}
 \allowdisplaybreaks
 
 \def\TODO{\textcolor{red}{TODO:}}
+\def\Mc{{\cal M}_c}
 
 \begin{document}
 
 \title{Regression with Dense Neural Network using TensorFlow}
 
-\author{Simone Albanesi (and now Marina Berbel)}
+\author{Simone Albanesi, Marina Berbel}
 
 \date{\today}
 
@@ -182,8 +184,8 @@ $R^2 [M_c   ]$  & 0.9978 & 0.9938
 %
 \begin{figure*}[]
   \center
-  \includegraphics[width=0.95\textwidth]{./Figs/v0c0_regression.png}
-  \includegraphics[width=0.95\textwidth]{./Figs/v0c0_regression_noise.png}
+  \includegraphics[width=0.9\textwidth]{./Figs/v0c0_regression.png}
+  \includegraphics[width=0.9\textwidth]{./Figs/v0c0_regression_noise.png}
   \caption{\label{fig:v0c0_results} Results of the regression on the \texttt{v0c0}
   dataset. We used 2 hidden layers with 100 neurons, $N_{\rm batch}=64$, 250 epochs,  
   constrained output. See Sec.~\ref{sec:some_results} for discussion. 
@@ -193,8 +195,8 @@ $R^2 [M_c   ]$  & 0.9978 & 0.9938
 %
 \begin{figure*}[]
   \center
-  \includegraphics[width=0.95\textwidth]{./Figs/v1c0_regression.png}
-  \includegraphics[width=0.95\textwidth]{./Figs/v1c0_regression_noise.png}
+  \includegraphics[width=0.9\textwidth]{./Figs/v1c0_regression.png}
+  \includegraphics[width=0.9\textwidth]{./Figs/v1c0_regression_noise.png}
   \caption{\label{fig:v1c0_results} Results of the regression on the \texttt{v1c0}
   dataset. We used 2 hidden layers with 100 neurons, $N_{\rm batch}=64$, 250 epochs,  
   constrained output. See Sec.~\ref{sec:some_results} for discussion.
@@ -284,8 +286,7 @@ two hidden layers with 100 neurons so that $N_{\rm param}=12411<N_{\rm sample}=2
 \begin{figure}[]
   \center
   \includegraphics[width=0.45\textwidth]{./Figs/GstLAL_paperlike_m1m2.png}
-  \caption{\label{fig:GstLAL_paperlike} Test-dataset, compare with Fig.1 of Chatterjee-1911.00116.
-  Do the systematics in the waveform model matter?}
+  \caption{\label{fig:GstLAL_paperlike} Test-dataset, compare with Fig.1 of Chatterjee-1911.00116.}
 \end{figure}
 
 We also have a dataset obtained with injected parameters of nonspinning 
@@ -327,12 +328,12 @@ but the results are the same. Even SVR gives the same results (qualitatively).
   and injected. The black line is the bisector.
   The final $R^2$ coefficients for $m_1$, $m_2$ and $M_c$ 
   are 0.7363, 0.7819, and 0.9999, respectively.
-  In the last three panels we plot $m_2$, $M_c$ and $q$ over $m_1$ for the injected, recovered
+  In the last three panels we plot $m_2$, $\Mc$ and $q$ over $m_1$ for the injected, recovered
   and predicted quantities.}
 \end{figure*}
 
 %==========================================================
-\section{Loss function}
+\section{\sout{Loss function} [wrong way of doing things, ignore me]}
 %==========================================================
 \label{sec:loss}
 In order to fix the problem with $q$ in the \texttt{GstLAL} dataset, 
@@ -341,12 +342,12 @@ The default function for regression tasks is the Mean Squared Error
 \begin{equation}
 J_{\rm mse} = {\rm mean} \sum_i \left( y^{\rm true}_i - f(x_i) \right)^2 .
 \end{equation}
-I tried to modify it including a $q$-penalty and a $M_c$-penalty:
+I tried to modify it including a $q$-penalty and a $\Mc$-penalty:
 \begin{align}
 J =  {\rm mean} & \left(  \sum_i \left( y^{\rm true}_i - f(x_i) \right)^2 \right.   \nonumber \\
 &  + \lambda_{\rm q} \sum_i \left( q^{\rm true}_i - q^{\rm pred}_i \right)^2
 \nonumber \\
-& \left. + \lambda_{\rm M_c} \sum_i \left( M_{c,i}^{\rm true} - M_{c,i}^{\rm pred} \right)^2 \right)
+& \left. + \lambda_{\rm \Mc} \sum_i \left( M_{c,i}^{\rm true} - M_{c,i}^{\rm pred} \right)^2 \right)
 \end{align}
 where (not surprisingly)
 \begin{align}
@@ -354,8 +355,8 @@ q^{\rm pred}_i &  = \frac{m_{2,i}^{\rm pred}}{m_{1,i}^{\rm pred}}, \\
 M_{c,i}^{\rm pred} & = 
 \frac{\left(m_{1,i}^{\rm pred}m_{2,i}^{\rm pred} \right)^{3/5}}{\left(m_{1,i}^{\rm pred}+m_{2,i}^{\rm pred}\right)^{1/5}},
 \end{align}
-and $q^{\rm true}$, $M_c^{\rm true}$ are analogous. Note the $M_c$-term is not the same 
-in MSE since here the chirp mass is computed using $m_i$ while in the MSE part $M_c$ 
+and $q^{\rm true}$, $\Mc^{\rm true}$ are analogous. Note the $\Mc$-term is not the same 
+in MSE since here the chirp mass is computed using $m_i$ while in the MSE part $\Mc$ 
 is the third feature.
 In order to have the predicted masses in the loss function we need to 
 rescale $x$ but since the loss function is defined using the Keras backend and 
@@ -365,38 +366,39 @@ We cannot use \texttt{numpy} in the Keras backend, so the loss function is not f
 I tried to fit the data with different values for the hyperparameters $\lambda_q$ and
 $\lambda_Mc$ but in every case I didn't find a solution to the issues of Sec.~\ref{sec:GstLAL}
 since the effect of these penalty is marginal, even if we use high values for $\lambda_i$.
-Maybe this is not the correct way to include penalties.
+Maybe this is not the correct way to include penalties. 
+UPDATE: indeed, this is wrong because the penalty is not included in the derivative.
 
 %==========================================================
 \section{GstLAL BNS dataset - a different approach}
 %==========================================================
 \label{sec:GstLAL2}
 I also tried to do something different on the \texttt{GstLAL} dataset. 
-So the pipeline recovers $M_c$ perfectly (I am not even sure that make a regression on $M_c$
+So the pipeline recovers $\Mc$ perfectly (I am not even sure that make a regression on $\Mc$
 makes sense), then I suppose that it recovers also one of the two masses 
 (I don't know which one) and compute the second one analytically. Therefore the degeneracy problem
 in one mass should be "specular" in the other masse, so maybe to remove the degeneracy problem
 in the regression we can consider suitable combinations of the two masses $m_i$ instead of 
-considering them separately. The using this quantity $g(m_1,m_2)$ and $M_c$ we can obtain 
+considering them separately. The using this quantity $g(m_1,m_2)$ and $\Mc$ we can obtain 
 two masses $m_i$. It turns out that symmetric quantities are better, in particular 
 $p_k= (m_1 m_2)^k$ can be regressed very well if the exponent $k$ is not too high, 
 obtaining $R^2$ coefficients such that $1-R^2 \leq 10^{-4}$. Then the two masses can be
 obtained analytically from
 \begin{equation}
 \label{eq:m12frompMc}
-m_{1,2} = \frac{p^3}{2 M_c^5}\left( 1 \pm \sqrt{1-4\nu} \right),
+m_{1,2} = \frac{p^3}{2 \Mc^5}\left( 1 \pm \sqrt{1-4\nu} \right),
 \end{equation}
 where $p=m_1 m_2$ (i.e. we omit the index $k=1$) and $\nu$ is the symmetric mass ratio
 \begin{equation}
-\nu \equiv \frac{M_c^{10}}{p^5} = \frac{m_1 m_2}{(m_1+m_2)^2}\in (0, \frac{1}{4}].
+\nu \equiv \frac{\Mc^{10}}{p^5} = \frac{m_1 m_2}{(m_1+m_2)^2}\in (0, \frac{1}{4}].
 \end{equation}
 However, note that the condition
 \begin{equation}
 \label{eq:nu_condition}
-\nu=M_c^{10}/p^5\leq \frac{1}{4}
+\nu=\Mc^{10}/p^5\leq \frac{1}{4}
 \end{equation} 
 is not enforced during the training (i.e. the predictions for 
-$p_k$ and $M_c$ are not constrained in this sense), 
+$p_k$ and $\Mc$ are not constrained in this sense), 
 then it is possible that~\eqref{eq:nu_condition} will be slightly violated, making
 the two masses complex. For this reason we recover the two masses with a modified version
 of Eq.~\eqref{eq:m12frompMc}
@@ -406,37 +408,32 @@ m_{1,2}^{\rm pred} = \frac{p_{\rm pred}^3}{2 M_{c, \rm pred}^5}\left( 1 \pm \sqr
 \end{equation}
 Note that the condition~\eqref{eq:nu_condition} can be violated pretty often 
 if we have many equal-mass binaries in the dataset (and this is precisely our case).
-However note that with this approach the predictions for $m_i$ and $M_c$ can be not
+However note that with this approach the predictions for $m_i$ and $\Mc$ can be not
 consistent, i.e. 
-$M_c^{\rm pred} \neq (m_1^{\rm pred} m_2^{\rm pred})^{3/5}/(m_1^{\rm pred} + m_2^{\rm pred})^{1/5}$.
+$\Mc^{\rm pred} \neq (m_1^{\rm pred} m_2^{\rm pred})^{3/5}/(m_1^{\rm pred} + m_2^{\rm pred})^{1/5}$.
 To enforce this condition we then compute $m_2^*$ requiring 
 \begin{equation}
-M_c^{\rm pred} \equiv \frac{(m_i^{\rm pred} m_j^*)^{3/5}}{(m_i^{\rm pred} + m_j^{*})^{1/5}},
+\Mc^{\rm pred} \equiv \frac{(m_i^{\rm pred} m_j^*)^{3/5}}{(m_i^{\rm pred} + m_j^{*})^{1/5}},
 \end{equation}
 where $i\neq j=1,2$, explicitly (omitting the superscript 'pred' in the RHSs):
 \begin{align}
-m_j^* &= \frac{M_c^{5/3}\left(3^{1/3} 2 M_c^{5/3}+2^{1/3} S_i^2 \right) }{ 6^{2/3} m_i^{3/2} S_i },  \\
-S_i   &= \left(9 m_i^{5/2} + \sqrt{81 m_i^5 -12 M_c^5}\right)^{1/3}.
+m_j^* &= \frac{\Mc^{5/3}\left(3^{1/3} 2 \Mc^{5/3}+2^{1/3} S_i^2 \right) }{ 6^{2/3} m_i^{3/2} S_i },  \\
+S_i   &= \left(9 m_i^{5/2} + \sqrt{81 m_i^5 -12 \Mc^5}\right)^{1/3}.
 \end{align}
 
-The results for this kind of regression using the features $p=m_1 m_2$ and $M_c$
+The results for this kind of regression using the features $p=m_1 m_2$ and $\Mc$
 are shown in Fig.~\ref{fig:GstLAL2_results}. We use a NN with one hidden layer with 
 100 neurons and ReLU, linear activation function in the output layer (i.e. no constraints),
 MSE loss function and we train for 100 epochs using $N_{\rm batch}=128$. 
-While the regression on $p$ and $M_c$ is almost perfect ($R^2$ coefficients of 0.99993 and 
+While the regression on $p$ and $\Mc$ is almost perfect ($R^2$ coefficients of 0.99993 and 
 0.99997, respectively), the other recovered quantities show some strange behavior and, most
 importantly, they are strongly dependent on the initial state on the NN, i.e. training the NN
 different times using always the same options leads to pretty different results for $m_i$ and $q$.
-Moreover, the mean predicted/injected errors for $m_1$, $m_2$, $M_c$, and $q$ are slightly worse 
+Moreover, the mean predicted/injected errors for $m_1$, $m_2$, $\Mc$, and $q$ are slightly worse 
 since here we get $2.8\%$, $2.7\%$, $0.02\%$, and $5.4\%$ respectively, while with the standard 
 regression of Sec.~\ref{sec:GstLAL} we got $2.3\%$, $2.2\%$, $0.05\%$ and $4.6\%$.
 
-At this point I am starting to be pessimistic on the regression part of this project 
-(at least with NN, maybe GPR will save us), even if it is possible that using the final dataset
-will solve this problem since we will have more features that could help to overcome the problem
-of the masses (or maybe will worsen it). 
-
-Another attempt could be to do the regression on $\nu$ and $M_c$ and then compute $m_i$
+Another attempt could be to do the regression on $\nu$ and $\Mc$ and then compute $m_i$
 from these two quantities. 
 In this case we could apply a constrained output function to $\nu$  in order to have a more
 consistent output
@@ -449,26 +446,26 @@ with this dataset.
 %
 \begin{figure*}[]
   \center
-  \includegraphics[width=0.75\textwidth]{./Figs/GstLAL_p_regression.png}
-  \includegraphics[width=0.75\textwidth]{./Figs/GstLAL_p_regression_noise.png}
-  \includegraphics[width=0.31\textwidth]{./Figs/GstLAL_p_m2.png}
-  \includegraphics[width=0.31\textwidth]{./Figs/GstLAL_p_Mc.png}
-  \includegraphics[width=0.31\textwidth]{./Figs/GstLAL_p_q.png}
-  \includegraphics[width=0.45\textwidth]{./Figs/GstLAL_p_m1m2.png}
-  \hspace{1.3cm}
-  \includegraphics[width=0.45\textwidth]{./Figs/GstLAL_standard_m1m2.png}
+  \includegraphics[width=0.7\textwidth]{./Figs/GstLAL_p_regression.png}
+  \includegraphics[width=0.7\textwidth]{./Figs/GstLAL_p_regression_noise.png}\\
+  \includegraphics[width=0.27\textwidth]{./Figs/GstLAL_p_m2.png}
+  \includegraphics[width=0.27\textwidth]{./Figs/GstLAL_p_Mc.png}
+  \includegraphics[width=0.27\textwidth]{./Figs/GstLAL_p_q.png}\\
+  \includegraphics[width=0.3\textwidth]{./Figs/GstLAL_p_m1m2.png}
+  \hspace{0.3cm}
+  \includegraphics[width=0.3\textwidth]{./Figs/GstLAL_standard_m1m2.png}
   \caption{\label{fig:GstLAL2_results} Results of the regression on the \texttt{GstLAL}
   dataset using the approach of Sec.~\ref{sec:GstLAL2}. 
   We used one hidden layer with 100 neurons, $N_{\rm batch}=128$, 100 epochs,  
   unconstrained output.
   The colors in the first plots is related to the absolute difference between predicted 
   and injected. The black line is the bisector.
-  The final $R^2$ coefficients for $p=m_1 m_2$ and $M_c$ are 0.99993 and 0.99997,
+  The final $R^2$ coefficients for $p=m_1 m_2$ and $\Mc$ are 0.99993 and 0.99997,
   respectively.
-  In the three panels in the middle we plot $m_2$, $M_c$ and $q$ over $m_1$ for 
+  In the three panels in the middle we plot $m_2$, $\Mc$ and $q$ over $m_1$ for 
   the injected, recovered and predicted quantities.
   Finally, in the first two panels of the last row we show the (indirectly) predicted masses 
-  with the ($p$, $M_c$) regression versus the injected masses, 
+  with the ($p$, $\Mc$) regression versus the injected masses, 
   while in the last two panels of the last row we show the 
   predicted masses obtained with the standard regression of Sec.~\ref{sec:GstLAL} versus 
   the injected ones.}
@@ -492,7 +489,7 @@ m_1=\frac{s+\sqrt{s^2-4\sqrt[3]{p}}}{2} \hspace{1cm} m_2=s-m1.
 
 If we analyze the content of the square root we can see that $s^2-4\sqrt[3]{p}=(m_1+m_2)^2-4m_1m_2=(m1-m_2)^2$ and therefore it would be always positive. This is also why we take its the positive sign. In practice and as the regression is not perfect, the content of the square root can be slightly negative $(\mathcal{O}(10^{-3})$, and then we will take it as zero and both masses would be equal. With this definition there are no conditions of further restrictions.
 
-For the moment, we consider the lost function just \textit{MSE}. Training with 20 epochs, more than enough to saturate the training, we try with different number of hidden layers getting the mean errors that can be seen in figure \ref{fig:error_with_layers}. The two masses and the mass ratio reach the minimum error wtih 100 layers, while the chirp mass has a lower error at 80 layers. We can conclude that we always prefer a high number of layers, above 60.
+For the moment, we consider the loss function just \textit{MSE}. Training with 20 epochs, more than enough to saturate the training, we try with different number of hidden layers getting the mean errors that can be seen in figure \ref{fig:error_with_layers}. The two masses and the mass ratio reach the minimum error with 100 layers, while the chirp mass has a lower error at 80 layers. We can conclude that we always prefer a high number of layers, above 60.
 
 \begin{figure*}[]
   \center
@@ -541,9 +538,9 @@ The loss function is very important for the NN, but not only its value, but its 
 
 I propose the loss function 
 \begin{equation}
-J_{\rm mse} = {\rm mean} \sum_i \left( y_i - \hat{y}_i \right)^2 \cdot(1+\lambda(\mathcal{M}_c-\hat{\mathcal{M}}_c))\cdot SNR
+J_{\rm mse} = {\rm mean} \sum_i \left( y_i - \hat{y}_i \right)^2 \cdot(1+\lambda(\mathcal{M}_c-\hat{\mathcal{M}}_c))\cdot \rm{SNR}
 \end{equation}
-where the hat is the computed value with current parameters and the value without the hat is the true one. The multiplication by the $SNR$ is just to add information. I guess that a higher SNR would lead to a better reconstructed value of the parameters by GstLAL, and so misleading them would be worse. If this does not make sense, just remove the SNR term.
+where the hat is the computed value with current parameters and the value without the hat is the true one. The multiplication by the SNR is just to add information. I guess that a higher SNR would lead to a better reconstructed value of the parameters by GstLAL, and so misleading them would be worse. If this does not make sense, just remove the SNR term.
 
 This shape should work better, because when deriving from respect $\hat{y}$ the penalty is included in the gradient.
 
