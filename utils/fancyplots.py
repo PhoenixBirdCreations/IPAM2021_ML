@@ -9,7 +9,7 @@ from sklearn.metrics import roc_curve
 ##################################################################
 # Regression plots
 #################################################################
-def regrPredictionPlots(ytest, ypredicted, labels, scaler=None):
+def regrPredictionPlots(ytest, ypredicted, labels, scaler=None, show=True, save=False, figname='injVSpred.png'):
     """
     the usual injected vs predicted plots
     """
@@ -61,10 +61,15 @@ def regrPredictionPlots(ytest, ypredicted, labels, scaler=None):
             ax.set_ylabel('predicted - '+label, fontsize=25)
             ax.set_xlabel('injected - '+label, fontsize=25)
             feature+=1;
-    plt.show()
+            
+    if save:
+        plt.savefig(figname,dpi=200,bbox_inches='tight')
+    if show:
+        plt.show()
+    
     return
 
-def plotHistory(history): 
+def plotHistory(history, show=True, save=False, figname='history.png'): 
     """
     history is the ouput of model.compile in TensorFlow
     """
@@ -90,10 +95,15 @@ def plotHistory(history):
     ax2.set_xlabel('Epochs')
     ax2.set_ylabel('R2')
     ax2.legend()
-    plt.show()
+    
+    if save:
+        plt.savefig(figname,dpi=200,bbox_inches='tight')
+    if show:
+        plt.show()
+        
     return
 
-def checkRegressionPlot(xtest, ytest, ypredicted, labels, scaler_y=None, scaler_x=None):
+def checkRegressionPlot(xtest, ytest, ypredicted, labels, scaler_y=None, scaler_x=None, show=True, save=False, figname='checkRegression.png'):
     """
     Plot recovered vs predicted
     """
@@ -144,10 +154,15 @@ def checkRegressionPlot(xtest, ytest, ypredicted, labels, scaler_y=None, scaler_
             ax.plot(ytest_plot, ytest_plot, 'k')
             ax.legend(fontsize=fontsize_leg)
             feature+=1
-    plt.show()
+    
+    if save:
+        plt.savefig(figname,dpi=200,bbox_inches='tight')
+    if show:
+        plt.show()
+        
     return
 
-def plotInjRecPred(injected, recovered, predicted, idx_m1=0, idx_m2=1, idx_Mc=None, hide_recovered=False):
+def plotInjRecPred(injected, recovered, predicted, idx_m1=0, idx_m2=1, idx_Mc=None, hide_recovered=False, show=True, save=False, figname='injrecpred_'):
     """
     Check consistency on predicted masses
     """
@@ -179,7 +194,11 @@ def plotInjRecPred(injected, recovered, predicted, idx_m1=0, idx_m2=1, idx_Mc=No
     axs[2].set_xlabel('m1_pred')
     axs[2].set_ylabel('m2_pred')
     plt.subplots_adjust(wspace=0.4)
-    plt.show()
+    
+    if save:
+        plt.savefig(figname+'m1m2.png',dpi=200,bbox_inches='tight')
+    if show:
+        plt.show()
 
     plt.figure
     plt.figure(figsize=(4,5))
@@ -190,7 +209,11 @@ def plotInjRecPred(injected, recovered, predicted, idx_m1=0, idx_m2=1, idx_Mc=No
     plt.xlabel('m1')
     plt.ylabel('m2')
     plt.legend()
-    plt.show()
+    
+    if save:
+        plt.savefig(figname+'m1m2all.png',dpi=200,bbox_inches='tight')
+    if show:
+        plt.show()
 
     print(asterisks,'m1 vs q: injected, recovered, predicted (indirectly)',asterisks,sep='\n')
     plt.figure(figsize=(4,5))
@@ -201,7 +224,11 @@ def plotInjRecPred(injected, recovered, predicted, idx_m1=0, idx_m2=1, idx_Mc=No
     plt.xlabel('m1')
     plt.ylabel('q')
     plt.legend()
-    plt.show()
+    
+    if save:
+        plt.savefig(figname+'q.png',dpi=200,bbox_inches='tight')
+    if show:
+        plt.show()
 
     if idx_Mc is not None:
         Mc_inj  = np.copy(injected[:,idx_Mc])
@@ -220,23 +247,26 @@ def plotInjRecPred(injected, recovered, predicted, idx_m1=0, idx_m2=1, idx_Mc=No
         axs[2].set_xlabel('m1_pred')
         axs[2].set_ylabel('Mc_pred')
         plt.subplots_adjust(wspace=0.4)
-        plt.show()
+        
+        if save:
+            plt.savefig(figname+'m1Mc.png',dpi=200,bbox_inches='tight')
+        if show:
+            plt.show()
 
         plt.figure(figsize=(4,5))
         if not hide_recovered:
             plt.scatter(m1_rec, Mc_rec,   label='recovered', color=[0.2,0.4,1])
         plt.scatter(m1_inj, Mc_inj,   label='injected', marker='x', color=[1,0.5,0])
         plt.scatter(m1_pred, Mc_pred, label='predicted', color=[0,0.8,0.2])
-        #plt.scatter(m1_pred, ut.chirpMass(m1_pred, m2_pred), label='computed', color=[0.7,0.7,0.7])
         plt.xlabel('m1')
         plt.ylabel('Mc')
         plt.legend()
-        plt.show()
+        
+        if save:
+            plt.savefig(figname+'m1Mcall.png',dpi=200,bbox_inches='tight')
+        if show:
+            plt.show()
 
-        #plt.figure
-        #plt.scatter(m1_pred, ut.chirpMass(m1_pred, m2_pred)-Mc_pred, label='diff')
-        #plt.legend()
-        #plt.show()
     return
 
 ##################################################################
