@@ -5,6 +5,7 @@
 \usepackage{amssymb}	
 \usepackage{graphicx}
 \usepackage{color}
+\usepackage[hidelinks]{hyperref}
 \usepackage{ulem}
 \allowdisplaybreaks
 
@@ -489,7 +490,7 @@ m_1=\frac{s+\sqrt{s^2-4\sqrt[3]{p}}}{2} \hspace{1cm} m_2=s-m1.
 
 If we analyze the content of the square root we can see that $s^2-4\sqrt[3]{p}=(m_1+m_2)^2-4m_1m_2=(m1-m_2)^2$ and therefore it would be always positive. This is also why we take its the positive sign. In practice and as the regression is not perfect, the content of the square root can be slightly negative $(\mathcal{O}(10^{-3})$, and then we will take it as zero and both masses would be equal. With this definition there are no conditions of further restrictions.
 
-For the moment, we consider the loss function just \textit{MSE}. Training with 20 epochs, more than enough to saturate the training, we try with different number of hidden layers getting the mean errors that can be seen in figure \ref{fig:error_with_layers}. The two masses and the mass ratio reach the minimum error with 100 layers, while the chirp mass has a lower error at 80 layers. We can conclude that we always prefer a high number of layers, above 60.
+For the moment, we consider the loss function just \textit{MSE}. Training with 20 epochs, more than enough to saturate the training, we try with different number of hidden layers getting the mean errors that can be seen in figure \ref{fig:error_with_layers}. All the quantities reduce the error with the number of layers but in an oscillatory way. For this study, the minimum error is obtained with 290 layers.
 
 \begin{figure*}[]
   \center
@@ -499,24 +500,27 @@ For the moment, we consider the loss function just \textit{MSE}. Training with 2
   \caption{\label{fig:error_with_layers} Errors obtained for different hidden layer size using the regression data $p$ and $s$ from Sec. \ref{sec:GstLAL3}}
 \end{figure*}
 
-Then we compare results for 80 and 100 hidden layers in figures  \ref{fig:approach3_comparison1}-\ref{fig:approach3_comparison3}. Both obtain a high accuracy in the computed parameters ($>0.99$). A new test was done in figure \ref{fig:approach3_comparison2}: on the one hand we plot the values that $m_1$ gets (this is actually not necessary, we can see it later, it was because some problem I saw before and this was a check). We can see that are within the range of neutron stars and they do not get negative or too high, without any constraint of the output in the NN. Then a very necessary test: we can compute $m_2$ from the value of $s$ once we calculate $m_1$. But we can calculate it also from the injected chirp mass once we have $m_1$. If these two values are different, there is something very wrong with the regression. In this plot we show the difference between the two, and we can observe that it is very small: this is very good for our regression approach.
+Then we compare results for 80, 100 and 290 hidden layers in figures  \ref{fig:approach3_comparison1}-\ref{fig:approach3_comparison3}. We use these two lower numbers to illustrate how a NN with less parameters behave, and then the optimal one from the nets tried. All  obtain a high accuracy in the computed parameters ($>0.99$). 
 
-Finally in \ref{fig:approach3_comparison3} we can see that this approach covers much more of the injected values region that previous models, although it can still be improved. Finally notice that with 100 layers we cover much more orange area than with 80 layers. Maybe with 150 layers we improve even more. (and we have a M shape, because I did it, and it knows it).
+Some tests where implemented to control the behaviour of the predicted masses from the parameters $s$ and $p$ proposed: first we control that mass1 is always below the threshold of 3 solar masses to consider it a NS. 
+
+Then we can recover mass2 either from the injected chirp mass or from the algebraic relation using $s$ and $m_1$. So we calculate the difference of the values obtained through these two methods, and show a warning if the difference is bigger than 0.02 (arbitrary reasonably low number). We never get an alert, and some examples of the errors obtained can be seen in figure \ref{fig:approach3_comparison2}.
+
+Finally in figure \ref{fig:approach3_comparison3} we compare the recovered, injected and predicted values for $m_2$, $\mathcal{M}_c$ and $q$ as a function of $m_1$. We can see that the predicted values are always over the region of injected values, and not in the region of wrongly recovered ones; I would suggest this is good. But during an interval of $m_1$ it covers a narrower parameter space that it should. Also it is curious that with 80 and 290 layers we have a very similar behaviour in the plots, but with 100 the results look better.  My theory: for $m_1\in(1.5,1.75)$ and mass ratio $q<0.9$ (approximate values from the plots) the regression is more difficult. So when we have less layers the error is bigger, then there is an appropriate number of layers around 100 that performs the best. And finally a very high number of layers overfits the data in the ``easier" region getting a better score, but performs equally bad in the complicated region.
 
 \begin{figure*}[]
   \center
   \includegraphics[width=0.8\textwidth]{./Figs/80_resultReg}
   \includegraphics[width=0.8\textwidth]{./Figs/100_resultReg}
-  \caption{\label{fig:approach3_comparison1} Results from the regression for 80 hidden layers (top) and 100 (bottom) with approach (s,p).}
+  \includegraphics[width=0.67\textwidth]{./Figs/290_}
+  \caption{\label{fig:approach3_comparison1} Results from the regression for 80, 100 and 290 hidden layers top to bottom, with approach (s,p).}
 \end{figure*}
 
 \begin{figure*}[]
   \center
-  \includegraphics[width=0.45\textwidth]{./Figs/80_m1_rec}
-  \includegraphics[width=0.45\textwidth]{./Figs/80_m2_dif}
-  \includegraphics[width=0.45\textwidth]{./Figs/100_m1_rec}
-  \includegraphics[width=0.45\textwidth]{./Figs/100_m2_dif}
-  \caption{\label{fig:approach3_comparison2} Values for mass1 predicted (left) and difference between two ways of obtaining mass2 (right) for 80 hidden layers (top) and 100 (bottom) with approach (s,p).}
+  \includegraphics[width=0.4\textwidth]{./Figs/80_m2_dif}
+  \includegraphics[width=0.4\textwidth]{./Figs/100_m2_dif}
+  \caption{\label{fig:approach3_comparison2} Difference between two ways of obtaining mass2 for 80 hidden layers (left) and 100 (right) with approach (s,p).}
 \end{figure*}
 
 \begin{figure*}[]
@@ -527,9 +531,11 @@ Finally in \ref{fig:approach3_comparison3} we can see that this approach covers 
   \includegraphics[width=0.3\textwidth]{./Figs/100_masses}
   \includegraphics[width=0.3\textwidth]{./Figs/100_Mc}
   \includegraphics[width=0.3\textwidth]{./Figs/100_q}
-  \caption{\label{fig:approach3_comparison3} predicted vs recovered vs injected quantities, for 80 hidden layers (top) and 100 (bottom) with approach (s,p).}
+  \includegraphics[width=0.3\textwidth]{./Figs/290_m1m2all}
+    \includegraphics[width=0.3\textwidth]{./Figs/290_m1Mcall}
+  \includegraphics[width=0.3\textwidth]{./Figs/290_q}
+  \caption{\label{fig:approach3_comparison3} predicted vs recovered vs injected quantities, 80, 100 and 290 hidden layers top to bottom, with approach (s,p).}
 \end{figure*}
-
 %==========================================================
 \section{The loss-function strikes back}
 %==========================================================
@@ -544,28 +550,47 @@ where the hat is the computed value with current parameters and the value withou
 
 This shape should work better, because when deriving from respect $\hat{y}$ the penalty is included in the gradient.
 
+
+
+%==========================================================
+\section{GstLAL BNS dataset - analysis}
+%==========================================================
+\label{sec:GstLALanalysis}
+The results from regression have the same problems even using different variables. So here I study if the problem is related to the data itself, and no the NN. Here we focus just on the raw data.
+
+In section \ref{sec:GstLAL3} we get to the conclusion that there is trouble predicting good quantities for $m1\in(1.5,1.75)$, $m_2\in(1.1,1.4)$ and $q>0.9$ (approximately). The limits for the problematic region were less clear in previous attempts, e.g. Sec. \ref{sec:GstLAL2}, so this indicates that maybe there is some problem with the data, but also the way of doing the regression is key.
+
+In figure \ref{fig:analysisGstLAL} there are the histograms of the data used for training, validating and testing. Although the problematic region of $m_2$ is full of data, that is not true for $m_1$ and the mass ratio. In numbers, around 73\% of data for every step has $q>0.9$. And around 76\% of the values of mass1 lay out of the signalled interval for all steps. 
+
+The result is that the training is done mostly in binaries with $q>0.9$ such that $m_1<1.5$. That is why in that region of the parameter space, and with an optimal configuration of the NN, we can predict values very close to the injected ones. At the rest of the domain, we perform poorly, but best with an intermediate number of layers: not enough layers do not have the power to extrapolate, and too much overfit the data and cannot extrapolate correctly.
+
+This small analysis already indicates the problems of our dataset: it is not equally sampled over all the parameter space. From here we should consider:
+\begin{itemize}
+\item If with this information we see our results as bad as before, or much better now
+\item Maybe new metrics that measure the performance related to similar data available for training: like penalizing errors in a populated region, but forgiving bad extrapolations (Is this a thing???)
+\end{itemize}
+
+\begin{figure*}[]
+  \center
+  \includegraphics[width=0.95\textwidth]{./Figs/hists_data}
+  \caption{\label{fig:analysisGstLAL} Histograms of the data used for training, validating and testing. For the masses, the red lines enclose the problematic region, and for the mass ratio, we put the division at 0.9.}
+\end{figure*}
+
+
+
+
+
 %==========================================================
 \section{Things to discuss}
 %==========================================================
 \begin{itemize}
-\item The regression with NNs does not work properly on the GstLAL BNS dataset.
-Also Yanyan had some problems on this dataset. 
-Probably this is linked to the recovery of the masses, 
-but we need to (i) fully understand why this happens, (ii) fix it. 
-However it's possible that this problem won't be there
-with a dataset with masses in a much broader range 
-and with other features (or maybe will be there anyway, who knows).  UPDATE: New approach made. What do you think? I think is better. Maybe we can find even a better one. 
+\item The regression with NNs does not work properly on the GstLAL BNS dataset. SOLVED: this is a mix of  data not sampled uniformly and bad design of the NN.
 
-\item Improve the loss function. See section \ref{sec:loss_new}. Simone can you implement this?
+\item Improve the loss function. We can add information even if it is not a parameter to do regression to. See section \ref{sec:loss_new}. Simone can you implement this?
 
-\item NN and SVR have the same problem on the GstLAL BNS dataset and the only 
-similarity between the two algorithms is that they both minimize a loss function. 
-To my understanding GPR has a completely different approach: how does it work on this dataset? 
-Does it have the same issues? 
+\item Does GPR face the same issues? Try with $m1,m2$, and the approach with parameters $p$ and $s$. If it performs better than the NN, then it is a matter of the loss function for the NN now. 
 
-\item Maybe we could try to simulate the \texttt{GstLAL}'s noise in a more realistic way
-for \texttt{v0c0} and \texttt{v1c0}, but I am not sure that this would be useful since 
-we already have a GstLAL dataset (even if only with BNS). UPDATE: let's ignore this for now
+\item Improve fake-fake data? Not at the moment.
 
 \item Since we are starting to use more complex NNs (at least for \texttt{NewRealistic} 
 datasets, i.e. \texttt{v0c0} and \texttt{v1c0}), should we try to use some dropout?
