@@ -147,6 +147,12 @@ def generateUniformMassRange(N, mass_range, cv=0):
 def chirpMass(m1, m2):
     return (m1*m2)**(3/5)/(m1+m2)**(1/5)
 
+def symmetricMass(m1,m2):
+    return m1*m2/(m1+m2)**2
+
+def reducedMass(m1,m2):
+    return m1*m2/(m1+m2)
+
 def findSecondMassFromMc(Mc, m):
     """
     Find analytically one mass from Mc and the other mass.
@@ -204,5 +210,36 @@ def findm1m2Fromps(p,s):
     arg=s*s-4*rootp
     m1 = np.where(arg>0, (s+np.sqrt(arg))*0.5, s*0.5)
     m2=s-m1
+    return m1,m2
+
+def findm1m2FromMcTm(Mc,s):
+    C=(s*Mc**5)**(1.0/3)
+    arg=s*s-4*C;
+    m2 = np.where(arg>0, (s-np.sqrt(arg))*0.5, s*0.5)
+    m1=s-m2
+    return m1,m2
+
+def findm1m2FromMcq(Mc,q):
+    m1=Mc*((1+q)/q**3)**1.0/5
+    m2=q*m1
+    return m1,m2
+
+def findm1m2FromMcSymm(Mc,nu):
+    arg=Mc**2/nu**(1.0/5)*(1/nu-4)
+    m1= np.where(arg>0, (Mc/nu**(3.0/5)+np.sqrt(arg))*0.5, (Mc/nu**(3.0/5))*0.5)
+    m2=(Mc**10/nu)**(1.0/5)/m1
+    return m1,m2
+
+def findm1m2FromMcmu(Mc,mu):
+    A=np.sqrt(Mc**5/mu**3)
+    arg=A*A-4*A*mu
+    m1 = np.where(arg>0, (A+np.sqrt(arg))*0.5, A*0.5)
+    m2=m1*mu/(m1-mu)
+    return m1,m2
+
+def findm1m2Fromsmu(s,mu):
+    arg=s*s-4*mu*s;
+    m2 = np.where(arg>0, (s-np.sqrt(arg))*0.5, s*0.5)
+    m1=mu*s/m2
     return m1,m2
 
