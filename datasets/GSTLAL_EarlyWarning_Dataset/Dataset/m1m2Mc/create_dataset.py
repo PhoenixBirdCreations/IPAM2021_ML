@@ -36,6 +36,7 @@ plt.show()
 
 inj = np.copy(X[:,2:5])
 rec = np.copy(X[:,11:14])
+SNR = np.copy(np.reshape(X[:,20], (N,1)))
 
 split = 0.33
 
@@ -46,10 +47,13 @@ inj_train = inj[:Ntrain,:]
 inj_test  = inj[Ntrain:,:]
 rec_train = rec[:Ntrain,:]
 rec_test  = rec[Ntrain:,:]
+SNR_train = SNR[:Ntrain]
+#SNR_test  = SNR[Ntrain:]
 
 ut.writeResult('xtrain.csv', rec_train)
 ut.writeResult('ytrain.csv', inj_train)
 ut.writeResult('xtest.csv',  rec_test)
 ut.writeResult('ytest.csv',  inj_test)
-
+ut.writeResult('SNRtrain.csv', SNR_train)
+#ut.writeResult('SNRtest.csv', SNR_test)
 

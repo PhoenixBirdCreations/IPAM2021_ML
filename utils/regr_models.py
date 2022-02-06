@@ -110,31 +110,63 @@ def minMaxScaler_1d(x,A,B,C,D):
     """
     return (D-C)*(x-A)/(B-A)+C
 
+def lossMSE_test():
+    def loss(y_true, y_pred):
+        return K.mean(K.sum(K.square(y_pred - y_true), axis=1))
+    return loss
+
 def lossMSE_qPenalty(miny, maxy, Lambda_mse=1, Lambda_q=1, idx_m1=0, idx_m2=1):
     def loss(y_true, y_pred):
-        mse = K.mean(K.square(y_pred - y_true), axis=-1)
+        ysum    = K.sum(K.square(y_pred - y_true), axis=1)
         m1_pred = minMaxScaler_1d(y_pred[:,idx_m1], -1, 1, miny[idx_m1], maxy[idx_m1])
         m2_pred = minMaxScaler_1d(y_pred[:,idx_m2], -1, 1, miny[idx_m2], maxy[idx_m2])
         m1_true = minMaxScaler_1d(y_true[:,idx_m1], -1, 1, miny[idx_m1], maxy[idx_m1])
         m2_true = minMaxScaler_1d(y_true[:,idx_m2], -1, 1, miny[idx_m2], maxy[idx_m2])
-        qpenalty = K.mean(K.square(m2_pred/m1_pred - m2_true/m1_true))
-        return Lambda_mse*mse+Lambda_q*qpenalty
+        qpenalty = K.square(m2_pred/m1_pred - m2_true/m1_true)
+        return K.mean(Lambda_mse*ysum+Lambda_q*qpenalty)
     return loss
 
 def lossMSE_qMcPenalty(miny, maxy, Lambda_mse=1, Lambda_q=1, Lambda_Mc=1, idx_m1=0, idx_m2=1):
     def loss(y_true, y_pred):
-        mse = K.mean(K.square(y_pred - y_true), axis=-1)
+        ysum    = K.sum(K.square(y_pred - y_true), axis=1)
         m1_pred = minMaxScaler_1d(y_pred[:,idx_m1], -1, 1, miny[idx_m1], maxy[idx_m1])
         m2_pred = minMaxScaler_1d(y_pred[:,idx_m2], -1, 1, miny[idx_m2], maxy[idx_m2])
         m1_true = minMaxScaler_1d(y_true[:,idx_m1], -1, 1, miny[idx_m1], maxy[idx_m1])
         m2_true = minMaxScaler_1d(y_true[:,idx_m2], -1, 1, miny[idx_m2], maxy[idx_m2])
-        qPenalty  = K.mean(K.square(m2_pred/m1_pred - m2_true/m1_true))
+        qPenalty  = K.square(m2_pred/m1_pred - m2_true/m1_true)
         Mc_pred   = ut.chirpMass(m1_pred, m2_pred) 
         Mc_true   = ut.chirpMass(m1_true, m2_true) 
-        McPenalty = K.mean(K.square(Mc_pred - Mc_true))
-        return Lambda_mse*mse+Lambda_q*qPenalty+Lambda_Mc*McPenalty
+        McPenalty = K.square(Mc_pred - Mc_true)
+        return K.sum(Lambda_mse*ysum+Lambda_q*qPenalty+Lambda_Mc*McPenalty)
     return loss
 
+def lossMSE_v1(miny,maxy,Lambda_Mc, SNR=None, idx_m1=0, idx_m2=1):
+    if SNR is None:
+        SNR = 1
+    def loss(y_true, y_pred):
+        m1_pred = minMaxScaler_1d(y_pred[:,idx_m1], -1, 1, miny[idx_m1], maxy[idx_m1])
+        m2_pred = minMaxScaler_1d(y_pred[:,idx_m2], -1, 1, miny[idx_m2], maxy[idx_m2])
+        m1_true = minMaxScaler_1d(y_true[:,idx_m1], -1, 1, miny[idx_m1], maxy[idx_m1])
+        m2_true = minMaxScaler_1d(y_true[:,idx_m2], -1, 1, miny[idx_m2], maxy[idx_m2])
+        Mc_pred = ut.chirpMass(m1_pred, m2_pred) 
+        Mc_true = ut.chirpMass(m1_true, m2_true)
+        ysum    = K.sum(K.square(y_pred-y_true), axis=1) # sum on columns
+        return K.mean( ysum*(1+Lambda_Mc*K.square(Mc_pred-Mc_true))*SNR )
+    return loss
+
+def lossMSE_v2(miny,maxy,Lambda_q, SNR=None, idx_m1=0, idx_m2=1):
+    if SNR is None:
+        SNR = 1
+    def loss(y_true, y_pred):
+        m1_pred = minMaxScaler_1d(y_pred[:,idx_m1], -1, 1, miny[idx_m1], maxy[idx_m1])
+        m2_pred = minMaxScaler_1d(y_pred[:,idx_m2], -1, 1, miny[idx_m2], maxy[idx_m2])
+        m1_true = minMaxScaler_1d(y_true[:,idx_m1], -1, 1, miny[idx_m1], maxy[idx_m1])
+        m2_true = minMaxScaler_1d(y_true[:,idx_m2], -1, 1, miny[idx_m2], maxy[idx_m2])
+        q_pred  = m2_pred/m1_pred 
+        q_true  = m2_true/m1_true
+        ysum    = K.sum(K.square(y_pred-y_true), axis=1) # sum on columns
+        return K.mean( ysum*(1+Lambda_q*K.square(q_pred-q_true))*SNR )
+    return loss
 
 #########################################################################
 # Regression pipeline
@@ -149,7 +181,7 @@ def neuralNewtorkRegression(xtrain_notnormalized, ytrain_notnormalized, scaler_t
                             validation_split=0.1, verbose=False, \
                             hlayers_sizes=(100,), out_activation='linear', hidden_activation='relu', \
                             loss_function='mse', Lambda_mse=1, Lambda_q=1, Lambda_Mc=1, \
-                            idx_m1=0, idx_m2=1):
+                            idx_m1=0, idx_m2=1, SNR=None):
     # save minima and maxima of y before scaling (are used in some loss-functions)
     Nfeatures = len(xtrain_notnormalized[0,:])
     miny = np.reshape(ytrain_notnormalized.min(axis=0), (Nfeatures,1))
@@ -172,7 +204,8 @@ def neuralNewtorkRegression(xtrain_notnormalized, ytrain_notnormalized, scaler_t
     
     # define the loss function
     if loss_function=='mse':
-        loss = MeanSquaredError()
+        #loss = MeanSquaredError()
+        loss = lossMSE_test()
     elif loss_function=='logcosh':
         loss = LogCosh()
     elif loss_function=='mae':
@@ -186,12 +219,20 @@ def neuralNewtorkRegression(xtrain_notnormalized, ytrain_notnormalized, scaler_t
         if scaler_type!="minmax":
             print("The loss function 'mse_qMc' can be used only with scaler_type='minmax'.")
             sys.exit()
-        if Nfeatures<3:
-            print('You are using only two features! Be sure that hose are m1 and m2')
         loss = lossMSE_qMcPenalty(miny, maxy, Lambda_mse=Lambda_mse, Lambda_q=Lambda_q, Lambda_Mc=Lambda_Mc, \
                                   idx_m1=idx_m1, idx_m2=idx_m2)
+    elif loss_function=='mse_v1':
+        if scaler_type!="minmax":
+            print("The loss function 'mse_v1' can be used only with scaler_type='minmax'.")
+            sys.exit()
+        loss = lossMSE_v1(miny, maxy, Lambda_Mc=Lambda_Mc, SNR=SNR, idx_m1=idx_m1, idx_m2=idx_m2)
+    elif loss_function=='mse_v2':
+        if scaler_type!="minmax":
+            print("The loss function 'mse_v2' can be used only with scaler_type='minmax'.")
+            sys.exit()
+        loss = lossMSE_v2(miny, maxy, Lambda_q=Lambda_q, SNR=SNR, idx_m1=idx_m1, idx_m2=idx_m2)
     else:
-        print('Invalid option for the loss function! Options: mse, logcosh, mae, mse_q, mse_qMc')
+        print('Invalid option for the loss function! Options: mse, logcosh, mae, mse_q, mse_qMc, mse_v1, mse_v2')
         sys.exit()
     
     # build and compile the model
