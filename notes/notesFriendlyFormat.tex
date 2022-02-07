@@ -1,4 +1,4 @@
-\documentclass[prd,aps,twocolumn,a4paper,showkeys,nofootinbib]{article}
+\documentclass[prd,aps,twocolumn,a4paper,showkeys,nofootinbib]{revtex4-1}
 
 \usepackage{amsmath}
 \usepackage{amsfonts}
@@ -6,7 +6,6 @@
 \usepackage{graphicx}
 \usepackage{color}
 \usepackage[hidelinks]{hyperref}
-\usepackage{ulem}
 \allowdisplaybreaks
 
 \def\TODO{\textcolor{red}{TODO:}}
@@ -179,31 +178,26 @@ $R^2 [M_c   ]$  & 0.9978 & 0.9938
 \end{table}
 
 %==========================================================
-\section{Some results}
+\section{fake-fake data}
+%==========================================================
+Section dedicated to the fake-fake data. Things work
+properly on these datasets.
+
+%==========================================================
+\subsection{Some results}
 %==========================================================
 \label{sec:some_results}
 %
-\begin{figure*}[]
+\begin{figure}[]
   \center
-  \includegraphics[width=0.9\textwidth]{./Figs/v0c0_regression.png}
-  \includegraphics[width=0.9\textwidth]{./Figs/v0c0_regression_noise.png}
+  \includegraphics[width=0.45\textwidth]{./Figs/v0c0_regression.png}\\
+  \includegraphics[width=0.45\textwidth]{./Figs/v0c0_regression_noise.png}
   \caption{\label{fig:v0c0_results} Results of the regression on the \texttt{v0c0}
   dataset. We used 2 hidden layers with 100 neurons, $N_{\rm batch}=64$, 250 epochs,  
   constrained output. See Sec.~\ref{sec:some_results} for discussion. 
   The colors in the first plots is related to the absolute difference between predicted 
   and injected. The black line is the bisector.}
-\end{figure*}
-%
-\begin{figure*}[]
-  \center
-  \includegraphics[width=0.9\textwidth]{./Figs/v1c0_regression.png}
-  \includegraphics[width=0.9\textwidth]{./Figs/v1c0_regression_noise.png}
-  \caption{\label{fig:v1c0_results} Results of the regression on the \texttt{v1c0}
-  dataset. We used 2 hidden layers with 100 neurons, $N_{\rm batch}=64$, 250 epochs,  
-  constrained output. See Sec.~\ref{sec:some_results} for discussion.
-  The colors in the first plots is related to the absolute difference between predicted 
-  and injected. The black line is the bisector.}
-\end{figure*}
+\end{figure}
 %
 The regression with NN works pretty well on the \texttt{v0} datasets, while on 
 the dataset \texttt{v1} the $R^2$ coefficients are smaller since there is more degeneracy.
@@ -222,9 +216,21 @@ physically consistent but it is ok since the main goal at this point
 is to see if a neural network is able to 
 recover the original quantities. The relevant thing is that we are able to predict values
 that have physical meaning.
+%
+\begin{figure}[]
+  \center
+  \includegraphics[width=0.45\textwidth]{./Figs/v1c0_regression.png}\\
+  \includegraphics[width=0.45\textwidth]{./Figs/v1c0_regression_noise.png}
+  \caption{\label{fig:v1c0_results} Results of the regression on the \texttt{v1c0}
+  dataset. We used 2 hidden layers with 100 neurons, $N_{\rm batch}=64$, 250 epochs,  
+  constrained output. See Sec.~\ref{sec:some_results} for discussion.
+  The colors in the first plots is related to the absolute difference between predicted 
+  and injected. The black line is the bisector.}
+\end{figure}
+%
 
 %==========================================================
-\section{Cross validation on layers}
+\subsection{Cross validation on layers}
 %==========================================================
 \label{sec:crossval}
 In order to decide the architecture to use I did a cross validation on the 
@@ -278,8 +284,8 @@ two hidden layers with 100 neurons so that $N_{\rm param}=12411<N_{\rm sample}=2
   the green circle marks the highest $R^2$ coefficient. }
 \end{figure*}
 %
-
 \clearpage
+
 %==========================================================
 \section{GstLAL BNS dataset}
 %==========================================================
@@ -315,13 +321,13 @@ Therefore in this case the regression does not seem to work properly. I have als
 do the regression only on $m_{1,2}$ and $M_c$ and recovering the other mass analytically 
 but the results are the same. Even SVR gives the same results (qualitatively).
 %
-\begin{figure*}[]
+\begin{figure}[]
   \center
-  \includegraphics[width=0.95\textwidth]{./Figs/GstLAL_regression.png}
-  \includegraphics[width=0.95\textwidth]{./Figs/GstLAL_regression_noise.png}
-  \includegraphics[width=0.31\textwidth]{./Figs/GstLAL_m2.png}
-  \includegraphics[width=0.31\textwidth]{./Figs/GstLAL_Mc.png}
-  \includegraphics[width=0.31\textwidth]{./Figs/GstLAL_q.png}
+  \includegraphics[width=0.47\textwidth]{./Figs/GstLAL_regression.png}
+  \includegraphics[width=0.47\textwidth]{./Figs/GstLAL_regression_noise.png}
+  \includegraphics[width=0.15\textwidth]{./Figs/GstLAL_m2.png}
+  \includegraphics[width=0.15\textwidth]{./Figs/GstLAL_Mc.png}
+  \includegraphics[width=0.15\textwidth]{./Figs/GstLAL_q.png}
   \caption{\label{fig:GstLAL_results} Results of the regression on the \texttt{GstLAL}
   dataset. We used one hidden layer with 100 neurons, $N_{\rm batch}=64$, 50 epochs,  
   unconstrained output.
@@ -331,10 +337,10 @@ but the results are the same. Even SVR gives the same results (qualitatively).
   are 0.7363, 0.7819, and 0.9999, respectively.
   In the last three panels we plot $m_2$, $\Mc$ and $q$ over $m_1$ for the injected, recovered
   and predicted quantities.}
-\end{figure*}
+\end{figure}
 
 %==========================================================
-\section{Loss function, attempt 1}
+\subsection{Loss function, attempt 1}
 %==========================================================
 \label{sec:loss}
 In order to fix the problem with $q$ in the \texttt{GstLAL} dataset, 
@@ -370,9 +376,37 @@ since the effect of these penalty is marginal, even if we use high values for $\
 Maybe this is not the correct way to include penalties. 
 
 %==========================================================
-\section{GstLAL BNS dataset - a different approach}
+\subsection{GstLAL BNS dataset - a different approach}
 %==========================================================
 \label{sec:GstLAL2}
+%
+\begin{figure}[]
+  \center
+  \includegraphics[width=0.43\textwidth]{./Figs/GstLAL_p_regression.png}
+  \includegraphics[width=0.43\textwidth]{./Figs/GstLAL_p_regression_noise.png}\\
+  \includegraphics[width=0.15\textwidth]{./Figs/GstLAL_p_m2.png}
+  \includegraphics[width=0.15\textwidth]{./Figs/GstLAL_p_Mc.png}
+  \includegraphics[width=0.15\textwidth]{./Figs/GstLAL_p_q.png}\\
+  \includegraphics[width=0.22\textwidth]{./Figs/GstLAL_p_m1m2.png}
+  %\hspace{0.3cm}
+  \includegraphics[width=0.22\textwidth]{./Figs/GstLAL_standard_m1m2.png}
+  \caption{\label{fig:GstLAL2_results} Results of the regression on the \texttt{GstLAL}
+  dataset using the approach of Sec.~\ref{sec:GstLAL2}. 
+  We used one hidden layer with 100 neurons, $N_{\rm batch}=128$, 100 epochs,  
+  unconstrained output.
+  The colors in the first plots is related to the absolute difference between predicted 
+  and injected. The black line is the bisector.
+  The final $R^2$ coefficients for $p=m_1 m_2$ and $\Mc$ are 0.99993 and 0.99997,
+  respectively.
+  In the three panels in the middle we plot $m_2$, $\Mc$ and $q$ over $m_1$ for 
+  the injected, recovered and predicted quantities.
+  Finally, in the first two panels of the last row we show the (indirectly) predicted masses 
+  with the ($p$, $\Mc$) regression versus the injected masses, 
+  while in the last two panels of the last row we show the 
+  predicted masses obtained with the standard regression of Sec.~\ref{sec:GstLAL} versus 
+  the injected ones.}
+\end{figure}
+%
 I also tried to do something different on the \texttt{GstLAL} dataset. 
 So the pipeline recovers $\Mc$ perfectly (I am not even sure that make a regression on $\Mc$
 makes sense), then I suppose that it recovers also one of the two masses 
@@ -443,38 +477,28 @@ choice for constraining a quantity like $\nu$).
 However I don't think that this will solve all the problems that we have
 with this dataset.
 
+%==========================================================
+\subsection{GstLAL BNS dataset - the return of the different approach}
+%==========================================================
+\label{sec:GstLAL3}
+%
+\begin{figure}[]
+  \center
+  \includegraphics[width=0.48\textwidth]{./Figs/80_resultReg}\\
+  \includegraphics[width=0.48\textwidth]{./Figs/100_resultReg}\\
+  \includegraphics[width=0.43\textwidth]{./Figs/290_}
+  \caption{\label{fig:approach3_comparison1} Results from the regression 
+  for 80, 100 and 290 hidden layers top to bottom, with approach (s,p).}
+\end{figure}
 %
 \begin{figure*}[]
   \center
-  \includegraphics[width=0.7\textwidth]{./Figs/GstLAL_p_regression.png}
-  \includegraphics[width=0.7\textwidth]{./Figs/GstLAL_p_regression_noise.png}\\
-  \includegraphics[width=0.27\textwidth]{./Figs/GstLAL_p_m2.png}
-  \includegraphics[width=0.27\textwidth]{./Figs/GstLAL_p_Mc.png}
-  \includegraphics[width=0.27\textwidth]{./Figs/GstLAL_p_q.png}\\
-  \includegraphics[width=0.3\textwidth]{./Figs/GstLAL_p_m1m2.png}
-  \hspace{0.3cm}
-  \includegraphics[width=0.3\textwidth]{./Figs/GstLAL_standard_m1m2.png}
-  \caption{\label{fig:GstLAL2_results} Results of the regression on the \texttt{GstLAL}
-  dataset using the approach of Sec.~\ref{sec:GstLAL2}. 
-  We used one hidden layer with 100 neurons, $N_{\rm batch}=128$, 100 epochs,  
-  unconstrained output.
-  The colors in the first plots is related to the absolute difference between predicted 
-  and injected. The black line is the bisector.
-  The final $R^2$ coefficients for $p=m_1 m_2$ and $\Mc$ are 0.99993 and 0.99997,
-  respectively.
-  In the three panels in the middle we plot $m_2$, $\Mc$ and $q$ over $m_1$ for 
-  the injected, recovered and predicted quantities.
-  Finally, in the first two panels of the last row we show the (indirectly) predicted masses 
-  with the ($p$, $\Mc$) regression versus the injected masses, 
-  while in the last two panels of the last row we show the 
-  predicted masses obtained with the standard regression of Sec.~\ref{sec:GstLAL} versus 
-  the injected ones.}
+  \includegraphics[width=0.32\textwidth]{./Figs/merrorwlayers}
+  \includegraphics[width=0.32\textwidth]{./Figs/mcerrorwlayers}
+  \includegraphics[width=0.32\textwidth]{./Figs/qerrorwlayers}
+  \caption{\label{fig:error_with_layers} Errors obtained for different hidden layer size using the regression data $p$ and $s$ from Sec. \ref{sec:GstLAL3}}
 \end{figure*}
-
-%==========================================================
-\section{GstLAL BNS dataset - the return of the different approach}
-%==========================================================
-\label{sec:GstLAL3}
+%
 Marina thinks (hello) that using different variables constructed from $m_1$ and $m_2$ may be a good approach, along the modified loss function to add information without regressing more variables. Also it is true that a NN constructs within new variables that are (non)linear combinations of the input ones, so ideally the NN should do that step for us. Guessing that it does not do so, I propose the following:
 
 Instead of considering just one \textit{made-up} quantity, let's consider two such that
@@ -491,14 +515,6 @@ If we analyze the content of the square root we can see that $s^2-4\sqrt[3]{p}=(
 
 For the moment, we consider the loss function just \textit{MSE}. Training with 20 epochs, more than enough to saturate the training, we try with different number of hidden layers getting the mean errors that can be seen in figure \ref{fig:error_with_layers}. All the quantities reduce the error with the number of layers but in an oscillatory way. For this study, the minimum error is obtained with 290 layers.
 
-\begin{figure*}[]
-  \center
-  \includegraphics[width=0.45\textwidth]{./Figs/merrorwlayers}
-  \includegraphics[width=0.45\textwidth]{./Figs/mcerrorwlayers}
-  \includegraphics[width=0.45\textwidth]{./Figs/qerrorwlayers}
-  \caption{\label{fig:error_with_layers} Errors obtained for different hidden layer size using the regression data $p$ and $s$ from Sec. \ref{sec:GstLAL3}}
-\end{figure*}
-
 Then we compare results for 80, 100 and 290 hidden layers in figures  \ref{fig:approach3_comparison1}-\ref{fig:approach3_comparison3}. We use these two lower numbers to illustrate how a NN with less parameters behave, and then the optimal one from the nets tried. All  obtain a high accuracy in the computed parameters ($>0.99$). 
 
 Some tests where implemented to control the behaviour of the predicted masses from the parameters $s$ and $p$ proposed: first we control that mass1 is always below the threshold of 3 solar masses to consider it a NS. 
@@ -506,54 +522,54 @@ Some tests where implemented to control the behaviour of the predicted masses fr
 Then we can recover mass2 either from the injected chirp mass or from the algebraic relation using $s$ and $m_1$. So we calculate the difference of the values obtained through these two methods, and show a warning if the difference is bigger than 0.02 (arbitrary reasonably low number). We never get an alert, and some examples of the errors obtained can be seen in figure \ref{fig:approach3_comparison2}.
 
 Finally in figure \ref{fig:approach3_comparison3} we compare the recovered, injected and predicted values for $m_2$, $\mathcal{M}_c$ and $q$ as a function of $m_1$. We can see that the predicted values are always over the region of injected values, and not in the region of wrongly recovered ones; I would suggest this is good. But during an interval of $m_1$ it covers a narrower parameter space that it should. Also it is curious that with 80 and 290 layers we have a very similar behaviour in the plots, but with 100 the results look better.  My theory: for $m_1\in(1.5,1.75)$ and mass ratio $q<0.9$ (approximate values from the plots) the regression is more difficult. So when we have less layers the error is bigger, then there is an appropriate number of layers around 100 that performs the best. And finally a very high number of layers overfits the data in the ``easier" region getting a better score, but performs equally bad in the complicated region.
-
-\begin{figure*}[]
+%
+\begin{figure}[]
   \center
-  \includegraphics[width=0.8\textwidth]{./Figs/80_resultReg}
-  \includegraphics[width=0.8\textwidth]{./Figs/100_resultReg}
-  \includegraphics[width=0.67\textwidth]{./Figs/290_}
-  \caption{\label{fig:approach3_comparison1} Results from the regression for 80, 100 and 290 hidden layers top to bottom, with approach (s,p).}
-\end{figure*}
-
-\begin{figure*}[]
-  \center
-  \includegraphics[width=0.4\textwidth]{./Figs/80_m2_dif}
-  \includegraphics[width=0.4\textwidth]{./Figs/100_m2_dif}
+  \includegraphics[width=0.23\textwidth]{./Figs/80_m2_dif}
+  \includegraphics[width=0.23\textwidth]{./Figs/100_m2_dif}
   \caption{\label{fig:approach3_comparison2} Difference between two ways of obtaining mass2 for 80 hidden layers (left) and 100 (right) with approach (s,p).}
-\end{figure*}
-
+\end{figure}
+%
+\begin{figure}[]
+  \center
+  \includegraphics[width=0.15\textwidth]{./Figs/80_masses}
+  \includegraphics[width=0.15\textwidth]{./Figs/80_Mc}
+  \includegraphics[width=0.15\textwidth]{./Figs/80_q}
+  \includegraphics[width=0.15\textwidth]{./Figs/100_masses}
+  \includegraphics[width=0.15\textwidth]{./Figs/100_Mc}
+  \includegraphics[width=0.15\textwidth]{./Figs/100_q}
+  \includegraphics[width=0.15\textwidth]{./Figs/290_m1m2all}
+  \includegraphics[width=0.15\textwidth]{./Figs/290_m1Mcall}
+  \includegraphics[width=0.15\textwidth]{./Figs/290_q}
+  \caption{\label{fig:approach3_comparison3} predicted vs recovered vs injected quantities, 80, 100 and 290 hidden layers top to bottom, with approach (s,p).}
+\end{figure}
+%
+%==========================================================
+\subsection{The loss-function strikes back}
+%==========================================================
+%
 \begin{figure*}[]
   \center
-  \includegraphics[width=0.3\textwidth]{./Figs/80_masses}
-  \includegraphics[width=0.3\textwidth]{./Figs/80_Mc}
-  \includegraphics[width=0.3\textwidth]{./Figs/80_q}
-  \includegraphics[width=0.3\textwidth]{./Figs/100_masses}
-  \includegraphics[width=0.3\textwidth]{./Figs/100_Mc}
-  \includegraphics[width=0.3\textwidth]{./Figs/100_q}
-  \includegraphics[width=0.3\textwidth]{./Figs/290_m1m2all}
-    \includegraphics[width=0.3\textwidth]{./Figs/290_m1Mcall}
-  \includegraphics[width=0.3\textwidth]{./Figs/290_q}
-  \caption{\label{fig:approach3_comparison3} predicted vs recovered vs injected quantities, 80, 100 and 290 hidden layers top to bottom, with approach (s,p).}
+  \includegraphics[width=0.95\textwidth]{./Figs/hists_data}
+  \caption{\label{fig:analysisGstLAL} Histograms of the data used for training, validating and testing. For the masses, the red lines enclose the problematic region, and for the mass ratio, we put the division at 0.9.}
 \end{figure*}
-%==========================================================
-\section{The loss-function strikes back}
-%==========================================================
+%
 \label{sec:loss_new}
 The loss function is very important for the NN, but not only its value, but its shape. This is because for updating the parameters in each iteration it does a (kind of) gradient descent, so it is not only the value, but the derivative, what we have to tune. I think that the losses proposed up there are not good because of this.
 
 I propose the loss function 
 \begin{equation}
-J_{\rm mse} = {\rm mean} \sum_i \left( y_i - \hat{y}_i \right)^2 \cdot(1+\lambda(\mathcal{M}_c-\hat{\mathcal{M}}_c)^2)\cdot \rm{SNR}
+J_{\rm mse} = {\rm mean} \Bigg[ \left( \sum_i \left( y_i - \hat{y}_i \right)^2 \right) \cdot(1+\lambda(\mathcal{M}_c-\hat{\mathcal{M}}_c)^2)\cdot \rm{SNR} \Bigg]
 \end{equation}
 where the hat is the computed value with current parameters and the value without the hat is the true one. The multiplication by the SNR is just to add information. I guess that a higher SNR would lead to a better reconstructed value of the parameters by GstLAL, and so misleading them would be worse. If this does not make sense, just remove the SNR term.
 
 This shape should work better, because when deriving from respect $\hat{y}$ the penalty is included in the gradient. 
-UPDATE: added square in the $\Mc$ difference.
+Simone: added square in the $\Mc$ difference (is this correct?), added parenthesis.
 
 
 
 %==========================================================
-\section{GstLAL BNS dataset - analysis}
+\subsection{GstLAL BNS dataset - analysis}
 %==========================================================
 \label{sec:GstLALanalysis}
 The results from regression have the same problems even using different variables. So here I study if the problem is related to the data itself, and no the NN. Here we focus just on the raw data.
@@ -570,14 +586,8 @@ This small analysis already indicates the problems of our dataset: it is not equ
 \item Maybe new metrics that measure the performance related to similar data available for training: like penalizing errors in a populated region, but forgiving bad extrapolations (Is this a thing???)
 \end{itemize}
 
-\begin{figure*}[]
-  \center
-  \includegraphics[width=0.95\textwidth]{./Figs/hists_data}
-  \caption{\label{fig:analysisGstLAL} Histograms of the data used for training, validating and testing. For the masses, the red lines enclose the problematic region, and for the mass ratio, we put the division at 0.9.}
-\end{figure*}
-
 %==========================================================
-\section{Epochs}
+\subsection{Epochs}
 %==========================================================
 \label{sec:epochs}
 \begin{figure*}[]
@@ -642,17 +652,17 @@ except the random initial state of the NN), so the methods do
 not seem solid. However the restriction of the coverage and the decreasing 
 of the mean errors with the number of epochs seems (more or less) a global trend.  
 
-\section{Is the $q$-distribution in the injected data a problem?}
+\subsection{Is the $q$-distribution in the injected data a problem?}
 \label{sec:epochs_quniform}
 %
-\begin{figure*}[]
+\begin{figure}[]
   \center
-  \includegraphics[width=0.98\textwidth]{./Figs/quniform_histo_inj.png}
-  \rule[1ex]{14cm}{0.5pt}\\
-  \includegraphics[width=0.98\textwidth]{./Figs/quniform_histo_rec.png}
+  \includegraphics[width=0.47\textwidth]{./Figs/quniform_histo_inj.png}
+  \rule[1ex]{7cm}{0.5pt}\\
+  \includegraphics[width=0.47\textwidth]{./Figs/quniform_histo_rec.png}
   \caption{\label{fig:histo_quniform} Histogram for the $q$-uniform dataset.
   First row: injected, second row: recovered. }
-\end{figure*}
+\end{figure}
 %
 \begin{figure*}[]
   \center
