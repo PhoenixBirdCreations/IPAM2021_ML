@@ -334,7 +334,7 @@ but the results are the same. Even SVR gives the same results (qualitatively).
 \end{figure*}
 
 %==========================================================
-\section{\sout{Loss function} [wrong way of doing things, ignore me]}
+\section{Loss function, attempt 1}
 %==========================================================
 \label{sec:loss}
 In order to fix the problem with $q$ in the \texttt{GstLAL} dataset, 
@@ -368,7 +368,6 @@ I tried to fit the data with different values for the hyperparameters $\lambda_q
 $\lambda_Mc$ but in every case I didn't find a solution to the issues of Sec.~\ref{sec:GstLAL}
 since the effect of these penalty is marginal, even if we use high values for $\lambda_i$.
 Maybe this is not the correct way to include penalties. 
-UPDATE: indeed, this is wrong because the penalty is not included in the derivative.
 
 %==========================================================
 \section{GstLAL BNS dataset - a different approach}
@@ -544,11 +543,12 @@ The loss function is very important for the NN, but not only its value, but its 
 
 I propose the loss function 
 \begin{equation}
-J_{\rm mse} = {\rm mean} \sum_i \left( y_i - \hat{y}_i \right)^2 \cdot(1+\lambda(\mathcal{M}_c-\hat{\mathcal{M}}_c))\cdot \rm{SNR}
+J_{\rm mse} = {\rm mean} \sum_i \left( y_i - \hat{y}_i \right)^2 \cdot(1+\lambda(\mathcal{M}_c-\hat{\mathcal{M}}_c)^2)\cdot \rm{SNR}
 \end{equation}
 where the hat is the computed value with current parameters and the value without the hat is the true one. The multiplication by the SNR is just to add information. I guess that a higher SNR would lead to a better reconstructed value of the parameters by GstLAL, and so misleading them would be worse. If this does not make sense, just remove the SNR term.
 
-This shape should work better, because when deriving from respect $\hat{y}$ the penalty is included in the gradient.
+This shape should work better, because when deriving from respect $\hat{y}$ the penalty is included in the gradient. 
+UPDATE: added square in the $\Mc$ difference.
 
 
 
@@ -576,15 +576,80 @@ This small analysis already indicates the problems of our dataset: it is not equ
   \caption{\label{fig:analysisGstLAL} Histograms of the data used for training, validating and testing. For the masses, the red lines enclose the problematic region, and for the mass ratio, we put the division at 0.9.}
 \end{figure*}
 
-
-
+%==========================================================
+\section{Epochs}
+%==========================================================
+\label{sec:epochs}
+\begin{figure*}[]
+  \center
+  \includegraphics[width=0.28\textwidth]{./Figs/grey_m1m2.png}
+  \includegraphics[width=0.28\textwidth]{./Figs/grey_m1Mc.png}
+  \includegraphics[width=0.28\textwidth]{./Figs/grey_m1q.png} \\
+  \rule[1ex]{14cm}{0.5pt}\\
+  \includegraphics[width=0.28\textwidth]{./Figs/muMc_rainbow_m1m2.png}
+  \includegraphics[width=0.28\textwidth]{./Figs/muMc_rainbow_m1Mc.png}
+  \includegraphics[width=0.28\textwidth]{./Figs/muMc_rainbow_m1q.png} \\
+  \includegraphics[width=0.28\textwidth]{./Figs/muMc_err_m1m2.png}
+  \includegraphics[width=0.28\textwidth]{./Figs/muMc_err_Mc.png}
+  \includegraphics[width=0.28\textwidth]{./Figs/muMc_err_q.png} \\
+  \rule[1ex]{14cm}{0.5pt}\\
+  \includegraphics[width=0.28\textwidth]{./Figs/p3Mc_rainbow_m1m2.png}
+  \includegraphics[width=0.28\textwidth]{./Figs/p3Mc_rainbow_m1Mc.png}
+  \includegraphics[width=0.28\textwidth]{./Figs/p3Mc_rainbow_m1q.png} \\
+  \includegraphics[width=0.28\textwidth]{./Figs/p3Mc_err_m1m2.png}
+  \includegraphics[width=0.28\textwidth]{./Figs/p3Mc_err_Mc.png}
+  \includegraphics[width=0.28\textwidth]{./Figs/p3Mc_err_q.png} \\
+  \rule[1ex]{14cm}{0.5pt}\\
+  \includegraphics[width=0.28\textwidth]{./Figs/p3s_rainbow_m1m2.png}
+  \includegraphics[width=0.28\textwidth]{./Figs/p3s_rainbow_m1Mc.png}
+  \includegraphics[width=0.28\textwidth]{./Figs/p3s_rainbow_m1q.png} \\
+  \includegraphics[width=0.28\textwidth]{./Figs/p3s_err_m1m2.png}
+  \includegraphics[width=0.28\textwidth]{./Figs/p3s_err_Mc.png}
+  \includegraphics[width=0.28\textwidth]{./Figs/p3s_err_q.png} \\
+  \caption{\label{fig:epochs} Results for different epochs. Order:
+  $(m_1, m_2)$, $(\mu, \Mc)$, $(p^3, \Mc)$, $(p^3, s)$, where
+  $p=m_1 m_2$ and $s=m_1+m_2$. Layer (100,), $N_{\rm batch}=128$. 
+  See Sec.~\ref{sec:epochs} for discussion. }
+\end{figure*}
+%
+In this section we analyze the impact of the number of epochs used during the train. See the notebook \texttt{NN{\_}GSTLAL{\_}epochs.ipynb} for details.
+The results using $N_{\rm batch}´ = 128$ and one hidden
+layer with 100 neurons (502 trainable parameters) are shown in Fig.~\ref{fig:epochs}.
+In the first row we show the usual plots for the standard regression $(m_1, m_2)$, 
+nothing new except the very elegant choice of colors for injected (black), recovered (grey),
+and predicted (green). We train the NN for 50 epochs (with $(m_1, m_2)$
+the number of epochs doesn't seem to matter a lot, 50 is well beyond the saturation). 
+In the next three blocks we show the results of different regressions:
+$(\mu, \Mc)$, $(p^3, \Mc)$, and $(p^3, s)$, where $p=m_1 m_2$ and $s=m_1+m_2$.
+For each choice of features, we train the model for a different
+number of epochs: 10, 25, 50, 100, 150, 200, 250, and 300.
+The 'rainbow' plots are the usual plots of $m_2$, $\Mc$, and $q$ against $m_1$, 
+but here each color is obtained training the NN for a different number of epochs;
+the red point corresponds to 300 epochs. Below the 'rainbow' plots we
+show the mean errors for $m_1$, $m_2$, $\Mc$, and $q$. The horizontal lines
+mark the mean errors that correspond to the standard regression
+on $(m_1, m_2)$ with 50 epochs. The regression with 
+$(\mu, \Mc)$ does not seem to solve the $q$-problem, so it is ruled out\footnote{If we
+care about $m_1$ and $m_2$!}.
+$(p^3, \Mc)$ and $(p^3, s)$ are more promising, however in both cases 
+the coverage seems to decrease with the number of epochs and the 
+mean errors of $m_1$, $m_2$, and $q$ are bigger than in the $(m_1, m_2)$ regression. 
+This could be an overfit-problem,
+but on the other hand the mean error decrease with the number of epochs. 
+However, considering Sec.~\ref{sec:GstLALanalysis}, it could be that
+the mean errors are not very significant. 
+In any case, the coverages of the parameter space are weird. 
+Moreover, the final states are different from run to run (without changing anything
+except the random initial state of the NN), so the methods do
+not seem solid. However the restriction of the coverage and the decreasing 
+of the mean errors with the number of epochs seems (more or less) a global trend.  
 
 
 %==========================================================
 \section{Things to discuss}
 %==========================================================
 \begin{itemize}
-\item The regression with NNs does not work properly on the GstLAL BNS dataset. SOLVED: this is a mix of  data not sampled uniformly and bad design of the NN.
+\item The regression with NNs does not work properly on the GstLAL BNS dataset. SOLVED: this is a mix of  data not sampled uniformly and bad design of the NN (Simone: is this really solved?).
 
 \item Improve the loss function. We can add information even if it is not a parameter to do regression to. See section \ref{sec:loss_new}. Simone can you implement this?
 
