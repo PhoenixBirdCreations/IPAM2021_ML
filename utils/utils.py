@@ -1,4 +1,5 @@
 import csv
+import sys
 import numpy as np
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 import realistic
@@ -153,6 +154,13 @@ def symmetricMass(m1,m2):
 def reducedMass(m1,m2):
     return m1*m2/(m1+m2)
 
+def sqrtOrZero(a):
+    mask = (a>0)
+    b = np.empty_like(a)
+    b[mask]  = np.sqrt(a[mask])
+    b[~mask] = 0
+    return b
+
 def findSecondMassFromMc(Mc, m):
     """
     Find analytically one mass from Mc and the other mass.
@@ -164,13 +172,15 @@ def findSecondMassFromMc(Mc, m):
     Mc5 = Mc**5
     arg = 81*m**5-12*Mc5
     mysqrt = np.where(arg<0, 1j*np.sqrt(-arg), np.sqrt(arg))
+    #mysqrt_abs = np.sqrt(np.abs(arg))
+    #mysqrt = np.where(arg<0, 1j*mysqrt_abs, mysqrt_abs)
     Mc5by3 = Mc5**(1/3)
     croot  = (9*m**(5/2)+mysqrt)**(1/3)
     num    = Mc5by3*(2*3**(1/3)*Mc5by3+2**(1/3)*croot**2)
     den    = (6**(2/3)*m**(3/2)*croot)
     out    = num/den
     if np.any(np.abs(out.imag)>1e-14):
-        print('Warning: imaginary part bigger than 1e-14!')
+        print('Warning! Imaginary part bigger than 1e-14: ', max(np.abs(out.imag)) )
     return out.real
 
 def findm1m2FrompMc(p,Mc):
@@ -190,7 +200,8 @@ def findm1m2FrompMc_Mod(p,Mc):
     Mc10 = Mc5*Mc5
     nu   = Mc10/p5
     arg  = 1-4*nu
-    root = np.where(arg>0, np.sqrt(arg), 0)
+    #root = np.where(arg>0, np.sqrt(arg), 0)
+    root = sqrtOrZero(arg)
     m1 = p3*(1+root)/Mc5/2
     m2 = p3*(1-root)/Mc5/2
     return m1,m2
@@ -208,14 +219,18 @@ def findm1m2FromsMc(s,Mc):
 def findm1m2Fromps(p,s):
     rootp=p**(1/3);
     arg=s*s-4*rootp
-    m1 = np.where(arg>0, (s+np.sqrt(arg))*0.5, s*0.5)
+    #m1 = np.where(arg>0, (s+np.sqrt(arg))*0.5, s*0.5)
+    sqrt_arg = sqrtOrZero(arg)
+    m1 = (s+sqrt_arg)*0.5
     m2=s-m1
     return m1,m2
 
 def findm1m2FromMcTm(Mc,s):
     C=(s*Mc**5)**(1.0/3)
     arg=s*s-4*C;
-    m2 = np.where(arg>0, (s-np.sqrt(arg))*0.5, s*0.5)
+    #m2 = np.where(arg>0, (s-np.sqrt(arg))*0.5, s*0.5)
+    sqrt_arg = sqrtOrZero(arg)
+    m2 = (s-sqrt_arg)*0.5
     m1=s-m2
     return m1,m2
 
@@ -226,20 +241,26 @@ def findm1m2FromMcq(Mc,q):
 
 def findm1m2FromMcSymm(Mc,nu):
     arg=Mc**2/nu**(1.0/5)*(1/nu-4)
-    m1= np.where(arg>0, (Mc/nu**(3.0/5)+np.sqrt(arg))*0.5, (Mc/nu**(3.0/5))*0.5)
+    #m1= np.where(arg>0, (Mc/nu**(3.0/5)+np.sqrt(arg))*0.5, (Mc/nu**(3.0/5))*0.5)
+    sqrt_arg = sqrtOrZero(arg)
+    m1= (Mc/nu**(3.0/5)+sqrt_arg)*0.5
     m2=(Mc**10/nu)**(1.0/5)/m1
     return m1,m2
 
 def findm1m2FromMcmu(Mc,mu):
     A=np.sqrt(Mc**5/mu**3)
     arg=A*A-4*A*mu
-    m1 = np.where(arg>0, (A+np.sqrt(arg))*0.5, A*0.5)
+    #m1 = np.where(arg>0, (A+np.sqrt(arg))*0.5, A*0.5)
+    sqrt_arg = sqrtOrZero(arg)
+    m1 = (A+sqrt_arg)*0.5
     m2=m1*mu/(m1-mu)
     return m1,m2
 
 def findm1m2Fromsmu(s,mu):
     arg=s*s-4*mu*s;
-    m2 = np.where(arg>0, (s-np.sqrt(arg))*0.5, s*0.5)
+    #m2 = np.where(arg>0, (s-np.sqrt(arg))*0.5, s*0.5)
+    sqrt_arg = sqrtOrZero(arg)
+    m2 = (s-sqrt_arg)*0.5
     m1=mu*s/m2
     return m1,m2
 
