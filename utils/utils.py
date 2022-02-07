@@ -171,9 +171,9 @@ def findSecondMassFromMc(Mc, m):
         sys.exit()
     Mc5 = Mc**5
     arg = 81*m**5-12*Mc5
-    mysqrt = np.where(arg<0, 1j*np.sqrt(-arg), np.sqrt(arg))
-    #mysqrt_abs = np.sqrt(np.abs(arg))
-    #mysqrt = np.where(arg<0, 1j*mysqrt_abs, mysqrt_abs)
+    #mysqrt = np.where(arg<0, 1j*np.sqrt(-arg), np.sqrt(arg))
+    mysqrt_abs = np.sqrt(np.abs(arg))
+    mysqrt = np.where(arg<0, 1j*mysqrt_abs, mysqrt_abs)
     Mc5by3 = Mc5**(1/3)
     croot  = (9*m**(5/2)+mysqrt)**(1/3)
     num    = Mc5by3*(2*3**(1/3)*Mc5by3+2**(1/3)*croot**2)
