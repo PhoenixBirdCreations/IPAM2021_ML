@@ -616,7 +616,7 @@ In this section we analyze the impact of the number of epochs used during the tr
 The results using $N_{\rm batch}´ = 128$ and one hidden
 layer with 100 neurons (502 trainable parameters) are shown in Fig.~\ref{fig:epochs}.
 In the first row we show the usual plots for the standard regression $(m_1, m_2)$, 
-nothing new except the very elegant choice of colors for injected (black), recovered (grey),
+nothing new except the very cool choice of colors for injected (black), recovered (grey),
 and predicted (green). We train the NN for 50 epochs (with $(m_1, m_2)$
 the number of epochs doesn't seem to matter a lot, 50 is well beyond the saturation). 
 In the next three blocks we show the results of different regressions:
@@ -636,13 +636,66 @@ the coverage seems to decrease with the number of epochs and the
 mean errors of $m_1$, $m_2$, and $q$ are bigger than in the $(m_1, m_2)$ regression. 
 This could be an overfit-problem,
 but on the other hand the mean error decrease with the number of epochs. 
-However, considering Sec.~\ref{sec:GstLALanalysis}, it could be that
-the mean errors are not very significant. 
 In any case, the coverages of the parameter space are weird. 
 Moreover, the final states are different from run to run (without changing anything
 except the random initial state of the NN), so the methods do
 not seem solid. However the restriction of the coverage and the decreasing 
 of the mean errors with the number of epochs seems (more or less) a global trend.  
+
+\section{Is the $q$-distribution in the injected data a problem?}
+\label{sec:epochs_quniform}
+%
+\begin{figure*}[]
+  \center
+  \includegraphics[width=0.98\textwidth]{./Figs/quniform_histo_inj.png}
+  \rule[1ex]{14cm}{0.5pt}\\
+  \includegraphics[width=0.98\textwidth]{./Figs/quniform_histo_rec.png}
+  \caption{\label{fig:histo_quniform} Histogram for the $q$-uniform dataset.
+  First row: injected, second row: recovered. }
+\end{figure*}
+%
+\begin{figure*}[]
+  \center
+  \includegraphics[width=0.28\textwidth]{./Figs/quniform_grey_m1m2.png}
+  \includegraphics[width=0.28\textwidth]{./Figs/quniform_grey_m1Mc.png}
+  \includegraphics[width=0.28\textwidth]{./Figs/quniform_grey_m1q.png} \\
+  \rule[1ex]{14cm}{0.5pt}\\
+  \includegraphics[width=0.28\textwidth]{./Figs/quniform_muMc_rainbow_m1m2.png}
+  \includegraphics[width=0.28\textwidth]{./Figs/quniform_muMc_rainbow_m1Mc.png}
+  \includegraphics[width=0.28\textwidth]{./Figs/quniform_muMc_rainbow_m1q.png} \\
+  \includegraphics[width=0.28\textwidth]{./Figs/quniform_muMc_err_m1m2.png}
+  \includegraphics[width=0.28\textwidth]{./Figs/quniform_muMc_err_Mc.png}
+  \includegraphics[width=0.28\textwidth]{./Figs/quniform_muMc_err_q.png} \\
+  \rule[1ex]{14cm}{0.5pt}\\
+  \includegraphics[width=0.28\textwidth]{./Figs/quniform_p3Mc_rainbow_m1m2.png}
+  \includegraphics[width=0.28\textwidth]{./Figs/quniform_p3Mc_rainbow_m1Mc.png}
+  \includegraphics[width=0.28\textwidth]{./Figs/quniform_p3Mc_rainbow_m1q.png} \\
+  \includegraphics[width=0.28\textwidth]{./Figs/quniform_p3Mc_err_m1m2.png}
+  \includegraphics[width=0.28\textwidth]{./Figs/quniform_p3Mc_err_Mc.png}
+  \includegraphics[width=0.28\textwidth]{./Figs/quniform_p3Mc_err_q.png} \\
+  \rule[1ex]{14cm}{0.5pt}\\
+  \includegraphics[width=0.28\textwidth]{./Figs/quniform_p3s_rainbow_m1m2.png}
+  \includegraphics[width=0.28\textwidth]{./Figs/quniform_p3s_rainbow_m1Mc.png}
+  \includegraphics[width=0.28\textwidth]{./Figs/quniform_p3s_rainbow_m1q.png} \\
+  \includegraphics[width=0.28\textwidth]{./Figs/quniform_p3s_err_m1m2.png}
+  \includegraphics[width=0.28\textwidth]{./Figs/quniform_p3s_err_Mc.png}
+  \includegraphics[width=0.28\textwidth]{./Figs/quniform_p3s_err_q.png} \\
+  \caption{\label{fig:epochs_quniform} Results for different epochs on q-uniform dataset. Order:
+  $(m_1, m_2)$, $(\mu, \Mc)$, $(p^3, \Mc)$, $(p^3, s)$, where
+  $p=m_1 m_2$ and $s=m_1+m_2$. Layer (100,), $N_{\rm batch}=128$. 
+  See Sec.~\ref{sec:epochs} and Sec.~\ref{sec:epochs_quniform} for discussion. }
+\end{figure*}
+%
+In Sec.~\ref{sec:GstLALanalysis} we saw that the distribution of $q$ in
+the injected data is not uniform. Is this a problem?
+Short answer: not much. 
+Long answer: we created a new dataset with uniform q-sampling in the injected data, 
+the resulting mass distrubtions are shown in Fig.~\ref{fig:histo_quniform}.
+Then using this dataset we run again the test on the epochs, obtaining 
+Fig.~\ref{fig:epochs_quniform}. Now the mean errors are closer to the ones
+obtained with the standard regression $(m_1, m_2)$, but be aware that
+the latter are bigger than with the full dataset (not uniform in $q$).
+In any case, the coverage of the parameter space is still an issue. 
 
 
 %==========================================================
