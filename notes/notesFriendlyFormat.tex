@@ -338,6 +338,13 @@ but the results are the same. Even SVR gives the same results (qualitatively).
   In the last three panels we plot $m_2$, $\Mc$ and $q$ over $m_1$ for the injected, recovered
   and predicted quantities.}
 \end{figure}
+%
+\begin{figure}[]
+  \center
+  \includegraphics[width=0.47\textwidth]{./Figs/Mc_pred_errors_m1m2.png}
+  \caption{\label{fig:Mc_pred_errors} Last minute figure}
+\end{figure}
+
 
 %==========================================================
 \subsection{Loss function, attempt 1}
@@ -690,7 +697,7 @@ of the mean errors with the number of epochs seems (more or less) a global trend
   \includegraphics[width=0.28\textwidth]{./Figs/quniform_p3s_err_m1m2.png}
   \includegraphics[width=0.28\textwidth]{./Figs/quniform_p3s_err_Mc.png}
   \includegraphics[width=0.28\textwidth]{./Figs/quniform_p3s_err_q.png} \\
-  \caption{\label{fig:epochs_quniform} Results for different epochs on q-uniform dataset. Order:
+  \caption{\label{fig:epochs_quniform} Results for different epochs on $q$-uniform dataset. Order:
   $(m_1, m_2)$, $(\mu, \Mc)$, $(p^3, \Mc)$, $(p^3, s)$, where
   $p=m_1 m_2$ and $s=m_1+m_2$. Layer (100,), $N_{\rm batch}=128$. 
   See Sec.~\ref{sec:epochs} and Sec.~\ref{sec:epochs_quniform} for discussion. }
