@@ -1,16 +1,23 @@
+import sys
 import matplotlib.pyplot as plt
 import numpy as np
+import sklearn.utils
+import utils as ut
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
+from sklearn.metrics import roc_curve
 
-def regrPredictionPlots(ytest0, ypredicted0, labels, scaler=None):
-    if (scaler is None):
-        ytest      = ytest0
-        ypredicted = ypredicted0
-    else:
-        ytest      = scaler.inverse_transform(ytest0)
-        ypredicted = scaler.inverse_transform(ypredicted0)
+##################################################################
+# Regression plots
+#################################################################
+def regrPredictionPlots(ytest, ypredicted, labels, scaler=None, show=True, save=False, figname='injVSpred.png'):
+    """
+    the usual injected vs predicted plots
+    """
+    if scaler is not None:
+        ytest      = scaler.inverse_transform(ytest)
+        ypredicted = scaler.inverse_transform(ypredicted)
     
-    Nfeatures = len(ytest0[0,:])
+    Nfeatures = len(ytest[0,:])
     if Nfeatures!=len(labels) or Nfeatures!=len(ypredicted[0,:]):
         print('Wrong input! Check shapes')
         sys.exit()
@@ -20,12 +27,12 @@ def regrPredictionPlots(ytest0, ypredicted0, labels, scaler=None):
     else:
         plot_cols = 3
     
-    rows = round(Nfeatures/plot_cols)
+    rows = max(round(Nfeatures/plot_cols),1)
     if rows>1:
-        fig, axs  = plt.subplots(rows,plot_cols, figsize = (25,17))
+        fig, axs  = plt.subplots(rows, plot_cols, figsize = (25,17))
     else: 
-        fig, axs  = plt.subplots(rows,plot_cols, figsize = (22,9))
-    feature     = 0
+        fig, axs  = plt.subplots(rows, plot_cols, figsize = (22,9))
+    feature = 0
     for i in range(0,rows):
         for j in range(0,plot_cols):
             if feature>=Nfeatures:
@@ -36,7 +43,7 @@ def regrPredictionPlots(ytest0, ypredicted0, labels, scaler=None):
                 ax = axs[j]
             ytest_1d      = ytest[:,feature]
             ypredicted_1d = ypredicted[:,feature]
-            diff          = np.abs(ytest_1d-ypredicted_1d)
+            diff = np.abs(ytest_1d-ypredicted_1d)
             ax.scatter(ytest_1d, ypredicted_1d, s=15, c=diff, cmap="gist_rainbow")
             ax.plot(ytest_1d, ytest_1d, 'k')
             ymax = max(ytest_1d)
@@ -54,50 +61,60 @@ def regrPredictionPlots(ytest0, ypredicted0, labels, scaler=None):
             ax.set_ylabel('predicted - '+label, fontsize=25)
             ax.set_xlabel('injected - '+label, fontsize=25)
             feature+=1;
-    plt.show()
+            
+    if save:
+        plt.savefig(figname,dpi=200,bbox_inches='tight')
+    if show:
+        plt.show()
+    
     return
 
-def plotHistory(history): 
+def plotHistory(history, show=True, save=False, figname='history.png'): 
+    """
+    history is the ouput of model.compile in TensorFlow
+    """
     history_dict = history.history
-    acc      = history_dict['accuracy']
-    val_acc  = history_dict['val_accuracy']
+    acc      = history_dict['R2metric']
+    val_acc  = history_dict['val_R2metric']
     loss     = history_dict['loss']
     val_loss = history_dict['val_loss']
 
     epochs_plot=range(1,len(acc)+1)   
     plt.figure(figsize=(10,10))
-
     ax1=plt.subplot(221)
-    ax1.plot(epochs_plot,acc,'b',label='Training acc')
+    ax1.plot(epochs_plot,acc,'b',label='Training R2')
     ax1.plot(epochs_plot,loss,'r',label='Training loss')
-    ax1.set_title('loss and acc of Training')
+    ax1.set_title('loss and R2 of Training')
     ax1.set_xlabel('Epochs')
     ax1.set_ylabel('Loss')
     ax1.legend()
-
     ax2=plt.subplot(222)
-    ax2.plot(epochs_plot,val_acc,'b',label='Validation acc')
+    ax2.plot(epochs_plot,val_acc,'b',label='Validation R2')
     ax2.plot(epochs_plot,val_loss,'r',label='Validation loss')
-    ax2.set_title('loss and acc of Validation')
+    ax2.set_title('loss and R2 of Validation')
     ax2.set_xlabel('Epochs')
-    ax2.set_ylabel('Acc')
+    ax2.set_ylabel('R2')
     ax2.legend()
+    
+    if save:
+        plt.savefig(figname,dpi=200,bbox_inches='tight')
+    if show:
+        plt.show()
+        
     return
 
-def checkRegressionPlot(xtest0, ytest0, ypredicted0, labels, scaler_y=None, scaler_x=None):
-    if (scaler_y is None):
-        ytest      = ytest0
-        ypredicted = ypredicted0
-    else:
-        ytest      = scaler_y.inverse_transform(ytest0)
-        ypredicted = scaler_y.inverse_transform(ypredicted0)
+def checkRegressionPlot(xtest, ytest, ypredicted, labels, scaler_y=None, scaler_x=None, show=True, save=False, figname='checkRegression.png'):
+    """
+    Plot recovered vs predicted
+    """
+    if scaler_y is not None:
+        ytest      = scaler_y.inverse_transform(ytest)
+        ypredicted = scaler_y.inverse_transform(ypredicted)
     
-    if (scaler_x is None):
-        xtest      = xtest0
-    else:
-        xtest      = scaler_x.inverse_transform(xtest0)
+    if scaler_x is not None:
+        xtest      = scaler_x.inverse_transform(xtest)
     
-    Nfeatures = len(ytest0[0,:])
+    Nfeatures = len(ytest[0,:])
     if Nfeatures!=len(labels) or Nfeatures!=len(ypredicted[0,:]):
         print('Wrong input! Check shapes')
         sys.exit()
@@ -137,57 +154,179 @@ def checkRegressionPlot(xtest0, ytest0, ypredicted0, labels, scaler_y=None, scal
             ax.plot(ytest_plot, ytest_plot, 'k')
             ax.legend(fontsize=fontsize_leg)
             feature+=1
+    
+    if save:
+        plt.savefig(figname,dpi=200,bbox_inches='tight')
+    if show:
+        plt.show()
+        
     return
 
+def plotInjRecPred(injected, recovered, predicted, idx_m1=0, idx_m2=1, idx_Mc=None, hide_recovered=False, show=True, save=False, figname='injrecpred_'):
+    """
+    Check consistency on predicted masses
+    """
+    asterisks = '*'*80
 
-def probLabelDensePlot(model, label_idx=0, mass_range=[1,3],  N=30000, idx_m1=0, idx_m2=1, example_dataset=None):
+    m1_inj  = np.copy(injected[:,idx_m1])
+    m2_inj  = np.copy(injected[:,idx_m2])
+    m1_rec  = np.copy(recovered[:,idx_m1])
+    m2_rec  = np.copy(recovered[:,idx_m2])
+    m1_pred = np.copy(predicted[:,idx_m1])
+    m2_pred = np.copy(predicted[:,idx_m2])
+
+    # computed
+    q_comp  = m2_pred/m1_pred 
+    Mc_comp = (m2_pred*m1_pred)**(3/5)/((m1_pred+m2_pred)**(1/5))
+
+    print(asterisks,'m1 vs m2: injected, recovered, predicted',asterisks,sep='\n')
+    fig, axs = plt.subplots(1,3, figsize=(11, 3))
+    axs[0].scatter(m1_inj, m2_inj, color=[1,0.5,0])
+    axs[0].plot(m1_inj, m1_inj, 'r')
+    axs[0].set_xlabel('m1_inj')
+    axs[0].set_ylabel('m2_inj')
+    axs[1].scatter(m1_rec, m2_rec, color=[0.2,0.4,1])
+    axs[1].plot(m1_rec, m1_rec, 'r')
+    axs[1].set_xlabel('m1_rec')
+    axs[1].set_ylabel('m2_rec')
+    axs[2].scatter(m1_pred, m2_pred, color=[0,0.8,0.2])
+    axs[2].plot(m1_pred, m1_pred, 'r')
+    axs[2].set_xlabel('m1_pred')
+    axs[2].set_ylabel('m2_pred')
+    plt.subplots_adjust(wspace=0.4)
+    
+    if save:
+        plt.savefig(figname+'m1m2.png',dpi=200,bbox_inches='tight')
+    if show:
+        plt.show()
+
+    plt.figure
+    plt.figure(figsize=(4,5))
+    if not hide_recovered:
+        plt.scatter(m1_rec, m2_rec,   label='recovered', color=[0.2,0.4,1])
+    plt.scatter(m1_inj, m2_inj,   label='injected', marker='x', color=[1,0.5,0])
+    plt.scatter(m1_pred, m2_pred, label='predicted', color=[0,0.8,0.2])
+    plt.xlabel('m1')
+    plt.ylabel('m2')
+    plt.legend()
+    
+    if save:
+        plt.savefig(figname+'m1m2all.png',dpi=200,bbox_inches='tight')
+    if show:
+        plt.show()
+
+    print(asterisks,'m1 vs q: injected, recovered, predicted (indirectly)',asterisks,sep='\n')
+    plt.figure(figsize=(4,5))
+    if not hide_recovered:
+        plt.scatter(m1_rec, m2_rec/m1_rec, label='recovered', color=[0.2,0.4,1])
+    plt.scatter(m1_inj, m2_inj/m1_inj, label='injected', color=[1,0.5,0])
+    plt.scatter(m1_pred, q_comp, label='predicted', color=[0,0.8,0.2])
+    plt.xlabel('m1')
+    plt.ylabel('q')
+    plt.legend()
+    
+    if save:
+        plt.savefig(figname+'q.png',dpi=200,bbox_inches='tight')
+    if show:
+        plt.show()
+
+    if idx_Mc is not None:
+        Mc_inj  = np.copy(injected[:,idx_Mc])
+        Mc_rec  = np.copy(recovered[:,idx_Mc])
+        Mc_pred = np.copy(predicted[:,idx_Mc])
+
+        print(asterisks,'m1 vs Mc: injected, recovered, predicted',asterisks,sep='\n')
+        fig, axs = plt.subplots(1,3, figsize=(11, 3))
+        axs[0].scatter(m1_inj, Mc_inj, color=[1,0.5,0])
+        axs[0].set_xlabel('m1_inj')
+        axs[0].set_ylabel('Mc_inj')
+        axs[1].scatter(m1_rec, Mc_rec, color=[0.2,0.4,1])
+        axs[1].set_xlabel('m1_rec')
+        axs[1].set_ylabel('Mc_rec')
+        axs[2].scatter(m1_pred, Mc_pred, color=[0,0.8,0.2])
+        axs[2].set_xlabel('m1_pred')
+        axs[2].set_ylabel('Mc_pred')
+        plt.subplots_adjust(wspace=0.4)
+        
+        if save:
+            plt.savefig(figname+'m1Mc.png',dpi=200,bbox_inches='tight')
+        if show:
+            plt.show()
+
+        plt.figure(figsize=(4,5))
+        if not hide_recovered:
+            plt.scatter(m1_rec, Mc_rec,   label='recovered', color=[0.2,0.4,1])
+        plt.scatter(m1_inj, Mc_inj,   label='injected', marker='x', color=[1,0.5,0])
+        plt.scatter(m1_pred, Mc_pred, label='predicted', color=[0,0.8,0.2])
+        plt.xlabel('m1')
+        plt.ylabel('Mc')
+        plt.legend()
+        
+        if save:
+            plt.savefig(figname+'m1Mcall.png',dpi=200,bbox_inches='tight')
+        if show:
+            plt.show()
+
+    return
+
+##################################################################
+# Classification plots
+##################################################################
+def probLabelDensePlot(model, label_idx=0, mass_range=[1,3],  N=30000, idx_m1=0, idx_m2=1, \
+                       dataset='GSTLAL_2m', verbose=False, cv=0, title=None):
     """
     Scatter plot in the (m1,m2) plane with colorbar 
     for the probability of a certain label.
-    If the model is trained on more than 2 features, then you 
-    have to pass also an example dataset so that the code can 
-    find the intervals when we need to generate the points.
+    'dataset' can be: 'GSTLAL_2m' or 'NewRealistic'
+    'cv' is used only for dataset='NewRealistic' 
+    (cv is the flag for the f-function of the NewRealistic dataset,
+    cv=0 -> f_conditional, cv=1 -> f_new)
     """
-    m1 = np.linspace(mass_range[0],mass_range[1],N)
-    m2 = np.linspace(mass_range[0],mass_range[1],N)
-    np.random.shuffle(m1)
-    np.random.shuffle(m2)
-    for i in range(0, N):
-        if m1[i]<m2[i]:
-            tmp   = m2[i];
-            m2[i] = m1[i];
-            m1[i] = tmp;
-
-    if example_dataset is None:
+    if dataset=='GSTLAL_2m':
+        m1 = np.linspace(mass_range[0],mass_range[1],N)
+        m2 = np.linspace(mass_range[0],mass_range[1],N)
+        np.random.shuffle(m1)
+        np.random.shuffle(m2)
+        for i in range(0, N):
+            if m1[i]<m2[i]:
+                tmp   = m2[i];
+                m2[i] = m1[i];
+                m1[i] = tmp;
         m1 = np.reshape(m1, (N,1))
         m2 = np.reshape(m2, (N,1))
         X  = np.concatenate((m1,m2), axis=1)
-    else:
-        dataset   = example_dataset
-        Nfeatures = len(dataset[0,:])
-        X = np.zeros((N, Nfeatures))
-        print(np.shape(X))
-        for i in range(0, Nfeatures):
-            if i!=idx_m1 and i!=idx_m2:
-                tmp_max = max(dataset[:,i])
-                tmp_min = min(dataset[:,i])
-                X[:,i]  = np.linspace(tmp_min, tmp_max, N) 
-        X[:,idx_m1] = m1
-        X[:,idx_m2] = m2
-        m1 = np.reshape(m1, (N,1))
-        m2 = np.reshape(m2, (N,1))
-
+    
+    elif dataset=='NewRealistic':
+        X = ut.generateUniformMassRange(N, mass_range, cv=cv)
+    
+    m1 = np.reshape(X[:,idx_m1], (N,1))
+    m2 = np.reshape(X[:,idx_m2], (N,1))
     proba_dense   = model.predict_proba(X)
-    proba_dense1d = np.reshape(proba_dense[:,label_idx], (N,1))
-
+    proba_dense1d = np.reshape(proba_dense[:,label_idx],(N,1))
+    
     plt.figure
-    sc=plt.scatter(m1, m2, c=proba_dense1d, vmin=0, vmax=1, s=50, cmap='viridis')
+    sc=plt.scatter(m1, m2, c=proba_dense1d, vmin=0, vmax=1, s=40, cmap='viridis')
     plt.colorbar(sc)
+    if title is not None:
+        plt.title(title)
+    plt.xlabel("m1", fontsize=20)
+    plt.ylabel("m2", fontsize=20)
     plt.show()
     return
 
-
-
+def plotROC(ytrue, prob_of_label):
+    """
+    Improve me! prob_of_label is the probability of having a certain
+    label (i.e. is a 1D vector)
+    """
+    fpr, tpr, thresholds = roc_curve(ytrue, prob_of_label)
+    plt.figure
+    sc=plt.scatter(fpr[1:-1], tpr[1:-1], c=thresholds[1:-1], cmap='viridis')
+    plt.colorbar(sc)
+    plt.xlabel("false positive rate", fontsize=14)
+    plt.ylabel("true positive rate",  fontsize=14)
+    plt.show()
+    return
 
 
 
