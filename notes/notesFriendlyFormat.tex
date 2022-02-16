@@ -342,7 +342,10 @@ but the results are the same. Even SVR gives the same results (qualitatively).
 \begin{figure}[]
   \center
   \includegraphics[width=0.47\textwidth]{./Figs/Mc_pred_errors_m1m2.png}
-  \caption{\label{fig:Mc_pred_errors} Last minute figure}
+  \caption{\label{fig:Mc_pred_errors} Relative errors of $\Mc$ in absolute value 
+  plotted against $\Mc$ for the regression done using $(m_1, m_2, \Mc)$. 
+  The blued dots are obtained using the prediction of $m_1$ and $m_2$ for computing
+  $\Mc$, while the green ones are obtained considering the prediction of $\Mc$.}
 \end{figure}
 
 
@@ -646,8 +649,7 @@ the red point corresponds to 300 epochs. Below the 'rainbow' plots we
 show the mean errors for $m_1$, $m_2$, $\Mc$, and $q$. The horizontal lines
 mark the mean errors that correspond to the standard regression
 on $(m_1, m_2)$ with 50 epochs. The regression with 
-$(\mu, \Mc)$ does not seem to solve the $q$-problem, so it is ruled out\footnote{If we
-care about $m_1$ and $m_2$!}.
+$(\mu, \Mc)$ does not seem to solve the $q$-problem, so it is ruled out.
 $(p^3, \Mc)$ and $(p^3, s)$ are more promising, however in both cases 
 the coverage seems to decrease with the number of epochs and the 
 mean errors of $m_1$, $m_2$, and $q$ are bigger than in the $(m_1, m_2)$ regression. 
