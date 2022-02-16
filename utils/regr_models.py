@@ -168,6 +168,26 @@ def lossMSE_v2(miny,maxy,Lambda_q, SNR=None, idx_m1=0, idx_m2=1):
         return K.mean( ysum*(1+Lambda_q*K.square(q_pred-q_true))*SNR )
     return loss
 
+def lossMSE_qFromp3s(miny,maxy,Lambda_q, SNR=None, idx_m1=0, idx_m2=1):
+    if SNR is None:
+        SNR = 1
+    def loss(y_true, y_pred):    
+        p3_pred = minMaxScaler_1d(y_pred[:,idx_m1], -1, 1, miny[idx_m1], maxy[idx_m1])
+        s_pred = minMaxScaler_1d(y_pred[:,idx_m2], -1, 1, miny[idx_m2], maxy[idx_m2])
+        p3_true = minMaxScaler_1d(y_true[:,idx_m1], -1, 1, miny[idx_m1], maxy[idx_m1])
+        s_true = minMaxScaler_1d(y_true[:,idx_m2], -1, 1, miny[idx_m2], maxy[idx_m2])
+        
+        rootp_pred=p3_pred**(1.0/3); arg_pred=s_pred*s_pred-4*rootp_pred
+        rootp_true=p3_true**(1.0/3); arg_true=s_true*s_true-4*rootp_true
+        m1_pred = (s_pred+K.sqrt(K.abs(arg_pred)))*0.5
+        m1_true = (s_true+K.sqrt(K.abs(arg_true)))*0.5
+        
+        q_pred  = (s_pred-m1_pred)/m1_pred 
+        q_true  = (s_true-m1_true)/m1_true
+        ysum    = K.sum(K.square(y_pred-y_true), axis=1) # sum on columns
+        return K.mean( ysum*(1+Lambda_q*K.square(q_pred-q_true))*SNR )
+    return loss
+
 #########################################################################
 # Regression pipeline
 #########################################################################
@@ -231,6 +251,11 @@ def neuralNewtorkRegression(xtrain_notnormalized, ytrain_notnormalized, scaler_t
             print("The loss function 'mse_v2' can be used only with scaler_type='minmax'.")
             sys.exit()
         loss = lossMSE_v2(miny, maxy, Lambda_q=Lambda_q, SNR=SNR, idx_m1=idx_m1, idx_m2=idx_m2)
+    elif loss_function=='mse_q_p3s':
+        if scaler_type!="minmax":
+            print("The loss function 'mse_q_p3s' can be used only with scaler_type='minmax'.")
+            sys.exit()
+        loss = lossMSE_qFromp3s(miny, maxy, Lambda_q=Lambda_q, SNR=SNR, idx_m1=idx_m1, idx_m2=idx_m2)
     else:
         print('Invalid option for the loss function! Options: mse, logcosh, mae, mse_q, mse_qMc, mse_v1, mse_v2')
         sys.exit()
