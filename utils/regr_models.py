@@ -1,4 +1,5 @@
-import sys
+import sys, os
+import time
 import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
@@ -201,7 +202,8 @@ def neuralNewtorkRegression(xtrain_notnormalized, ytrain_notnormalized, scaler_t
                             validation_split=0.1, verbose=False, \
                             hlayers_sizes=(100,), out_activation='linear', hidden_activation='relu', \
                             loss_function='mse', Lambda_mse=1, Lambda_q=1, Lambda_Mc=1, \
-                            idx_m1=0, idx_m2=1, SNR=None):
+                            idx_m1=0, idx_m2=1, SNR=None, \
+                            use_checkpoints=False, checkpoints_freq=10):
     # save minima and maxima of y before scaling (are used in some loss-functions)
     Nfeatures = len(xtrain_notnormalized[0,:])
     miny = np.reshape(ytrain_notnormalized.min(axis=0), (Nfeatures,1))
@@ -267,12 +269,35 @@ def neuralNewtorkRegression(xtrain_notnormalized, ytrain_notnormalized, scaler_t
     model.compile(loss=loss, metrics=[loss, R2metric], optimizer=Adam(learning_rate=learning_rate))
     if verbose:
         model.summary()
-    # train the model and save history
-    history = model.fit(xtrain, ytrain, 
-        epochs           = epochs, 
-        batch_size       = batch_size,
-        validation_split = validation_split,
-        verbose          = verbose)
+   
+    if use_checkpoints:
+        # Include the epoch in the file name (uses `str.format`)
+        checkpoint_path = "training_NN_"+str(time.monotonic())+"/cp-{epoch:06d}.ckpt"
+        checkpoint_dir = os.path.dirname(checkpoint_path)
+
+        # Create a callback that saves the model's weights
+        cp_callback = tf.keras.callbacks.ModelCheckpoint(
+            filepath=checkpoint_path,
+            verbose=verbose,
+            save_weights_only=True,
+            save_freq='epoch',
+            period=checkpoints_freq)
+
+        # train the model and save history
+        history = model.fit(xtrain, ytrain, 
+            epochs           = epochs, 
+            batch_size       = batch_size,
+            validation_split = validation_split,
+            verbose          = verbose, 
+            callbacks        = [cp_callback])
+
+    else:
+        # train the model and save history
+        history = model.fit(xtrain, ytrain, 
+            epochs           = epochs, 
+            batch_size       = batch_size,
+            validation_split = validation_split,
+            verbose          = verbose)
     
     # save output in a dictionary
     output = {}
@@ -281,8 +306,11 @@ def neuralNewtorkRegression(xtrain_notnormalized, ytrain_notnormalized, scaler_t
     output["scaler_y"] = scaler_y
     output["history"]  = history
     output["Npars"]    = count_params(model.trainable_weights)
+    if use_checkpoints:
+        output["checkpoints_dir"] = checkpoint_dir
+    else:
+        output["checkpoints_dir"] = None
     return output
-
 
 #########################################################################
 # Other things (very precise description)
