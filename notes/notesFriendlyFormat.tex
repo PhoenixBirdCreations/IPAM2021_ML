@@ -629,7 +629,8 @@ This small analysis already indicates the problems of our dataset: it is not equ
   \caption{\label{fig:epochs} Results for different epochs. Order:
   $(m_1, m_2)$, $(\mu, \Mc)$, $(p^3, \Mc)$, $(p^3, s)$, where
   $p=m_1 m_2$ and $s=m_1+m_2$. Layer (100,), $N_{\rm batch}=128$. 
-  See Sec.~\ref{sec:epochs} for discussion. }
+  See Sec.~\ref{sec:epochs} for discussion. The errors are computed as
+  $\frac{1}{N} \sum\limits_i |f_i^{\rm pred/rec} - f_i^{\rm inj}|/f_i^{\rm inj}$. }
 \end{figure*}
 %
 In this section we analyze the impact of the number of epochs used during the train. See the notebook \texttt{NN{\_}GSTLAL{\_}epochs.ipynb} for details.
@@ -646,8 +647,10 @@ number of epochs: 10, 25, 50, 100, 150, 200, 250, and 300.
 The 'rainbow' plots are the usual plots of $m_2$, $\Mc$, and $q$ against $m_1$, 
 but here each color is obtained training the NN for a different number of epochs;
 the red point corresponds to 300 epochs. Below the 'rainbow' plots we
-show the mean errors for $m_1$, $m_2$, $\Mc$, and $q$. The horizontal lines
-mark the mean errors that correspond to the standard regression
+show the mean errors for $m_1$, $m_2$, $\Mc$, and $q$ (with mean errors
+we mean the average of the absolute value of the errors, i.e. 
+$\frac{1}{N} \sum\limits_i |f_i^{\rm pred/rec} - f_i^{\rm inj}|/f_i^{\rm inj}$). 
+The horizontal lines mark the mean errors that correspond to the standard regression
 on $(m_1, m_2)$ with 50 epochs. The regression with 
 $(\mu, \Mc)$ does not seem to solve the $q$-problem, so it is ruled out.
 $(p^3, \Mc)$ and $(p^3, s)$ are more promising, however in both cases 
@@ -660,6 +663,18 @@ Moreover, the final states are different from run to run (without changing anyth
 except the random initial state of the NN), so the methods do
 not seem solid. However the restriction of the coverage and the decreasing 
 of the mean errors with the number of epochs seems (more or less) a global trend.  
+The errors with sign are shown in Fig.~\ref{fig:errhisto} for the cases
+$(m_1,m_2)$ and $(p^3, \Mc)$.
+%
+\begin{figure}[]
+  \center
+  \includegraphics[width=0.47\textwidth]{./Figs/errhisto_m1m2.png}
+  \rule[1ex]{8cm}{0.5pt}\\
+  \includegraphics[width=0.47\textwidth]{./Figs/errhisto_p3Mc.png}
+  \caption{\label{fig:errhisto} Relative error histograms for regressions with $(m_1,m_2)$ and 
+  $(p^3, \Mc)$ on the whole GstLAL dataset. The vertical dashed lines are the means.}
+\end{figure}
+%
 
 \subsection{Is the $q$-distribution in the injected data a problem?}
 \label{sec:epochs_quniform}
@@ -702,7 +717,9 @@ of the mean errors with the number of epochs seems (more or less) a global trend
   \caption{\label{fig:epochs_quniform} Results for different epochs on $q$-uniform dataset. Order:
   $(m_1, m_2)$, $(\mu, \Mc)$, $(p^3, \Mc)$, $(p^3, s)$, where
   $p=m_1 m_2$ and $s=m_1+m_2$. Layer (100,), $N_{\rm batch}=128$. 
-  See Sec.~\ref{sec:epochs} and Sec.~\ref{sec:epochs_quniform} for discussion. }
+  See Sec.~\ref{sec:epochs} and Sec.~\ref{sec:epochs_quniform} for discussion. 
+  The errors are computed as
+  $\frac{1}{N} \sum\limits_i |f_i^{\rm pred/rec} - f_i^{\rm inj}|/f_i^{\rm inj}$.}
 \end{figure*}
 %
 In Sec.~\ref{sec:GstLALanalysis} we saw that the distribution of $q$ in
@@ -715,7 +732,6 @@ Fig.~\ref{fig:epochs_quniform}. Now the mean errors are closer to the ones
 obtained with the standard regression $(m_1, m_2)$, but be aware that
 the latter are bigger than with the full dataset (not uniform in $q$).
 In any case, the coverage of the parameter space is still an issue. 
-
 
 %==========================================================
 \section{Things to discuss}
