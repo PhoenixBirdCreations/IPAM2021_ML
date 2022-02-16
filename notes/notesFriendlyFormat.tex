@@ -630,7 +630,7 @@ This small analysis already indicates the problems of our dataset: it is not equ
   $(m_1, m_2)$, $(\mu, \Mc)$, $(p^3, \Mc)$, $(p^3, s)$, where
   $p=m_1 m_2$ and $s=m_1+m_2$. Layer (100,), $N_{\rm batch}=128$. 
   See Sec.~\ref{sec:epochs} for discussion. The errors are computed as
-  $\frac{1}{N} \sum\limits_i |f_i^{\rm pred/rec} - f_i^{\rm inj}|/f_i^{\rm inj}$. }
+  $\frac{1}{N} \sum\limits_i |f_i^{\rm inj} - f_i^{\rm pred/rec}|/f_i^{\rm inj}$. }
 \end{figure*}
 %
 In this section we analyze the impact of the number of epochs used during the train. See the notebook \texttt{NN{\_}GSTLAL{\_}epochs.ipynb} for details.
@@ -671,7 +671,9 @@ $(m_1,m_2)$ and $(p^3, \Mc)$.
   \includegraphics[width=0.47\textwidth]{./Figs/errhisto_m1m2.png}
   \rule[1ex]{8cm}{0.5pt}\\
   \includegraphics[width=0.47\textwidth]{./Figs/errhisto_p3Mc.png}
-  \caption{\label{fig:errhisto} Relative error histograms for regressions with $(m_1,m_2)$ and 
+  \caption{\label{fig:errhisto} Relative error
+  ($\frac{1}{N} \sum\limits_i (f_i^{\rm inj} - f_i^{\rm pred/rec})/f_i^{\rm inj}$) 
+  histograms for regressions with $(m_1,m_2)$ and 
   $(p^3, \Mc)$ on the whole GstLAL dataset. The vertical dashed lines are the means.}
 \end{figure}
 %
@@ -719,7 +721,7 @@ $(m_1,m_2)$ and $(p^3, \Mc)$.
   $p=m_1 m_2$ and $s=m_1+m_2$. Layer (100,), $N_{\rm batch}=128$. 
   See Sec.~\ref{sec:epochs} and Sec.~\ref{sec:epochs_quniform} for discussion. 
   The errors are computed as
-  $\frac{1}{N} \sum\limits_i |f_i^{\rm pred/rec} - f_i^{\rm inj}|/f_i^{\rm inj}$.}
+  $\frac{1}{N} \sum\limits_i |f_i^{\rm inj} - f_i^{\rm pred/rec}|/f_i^{\rm inj}$.}
 \end{figure*}
 %
 In Sec.~\ref{sec:GstLALanalysis} we saw that the distribution of $q$ in
