@@ -678,6 +678,45 @@ $(m_1,m_2)$ and $(p^3, \Mc)$.
 \end{figure}
 %
 
+\subsection{Linear fit}
+\begin{figure}[]
+  \center
+  \includegraphics[width=0.15\textwidth]{./Figs/linear_fit.png}
+  \includegraphics[width=0.15\textwidth]{./Figs/linear_checkm1.png}
+  \includegraphics[width=0.15\textwidth]{./Figs/linear_checkm2.png} \\
+  \includegraphics[width=0.4\textwidth]{./Figs/linear_histo.png} \\
+  \includegraphics[width=0.2\textwidth]{./Figs/linear_thenNN_m2.png}
+  \includegraphics[width=0.2\textwidth]{./Figs/linear_thenNN_q.png}
+  \caption{\label{fig:linear} 
+  Linear fit on the $m_1$ error and comparisons of recovered and linearly-corrected
+  recovered masses with corresponding histograms. We also show the results
+  of the NN regression using the linearly-corrected recovered masses.}
+\end{figure}
+In this section we discuss a different approach that it is not better than the ML
+model tested so far, but I find it interesting by itself. 
+The method is very simple: 
+\begin{itemize}
+\item compute the relative error on $m_1$, 
+$\delta m_1 = (m_1^{\rm inj}-m_1^{\rm rec})/m_1^{\rm inj}$;
+\item do a linear fit of $(m_1^{\rm inj}, \delta m_1)$, i.e. find
+$\delta m_1^{\rm fit}(m_1^{\rm rec}) = A m_1^{\rm rec} + B$
+\item use the linear fit to correct the recovered mass: 
+$m_1^{\rm rec, new} = m_1^{\rm rec} + \delta m_1^{\rm fit}(m_1^{\rm rec})$
+\item compute $m_2^{\rm rec, new}$ using $m_1^{\rm rec, new}$ and $\Mc^{\rm rec}$. 
+\end{itemize} 
+That's it, no complicated ML stuff. 
+In Fig.~\ref{fig:linear} there is the linear fit and the histograms for 
+the error of the original recovered quantities and the new recovered quantities. There 
+is a clear improvement, but with more sophisticated ML method we get something better 
+(see e.g Fig.~\ref{fig:errhisto}).
+If we apply the NN to the new recovered quantities we get something similar 
+to the usual regression on the recovered masses, this is not a surprise
+since NN are in some sense highly sophisticated nonlinear fit (ML people don't kill me
+for this sentence); see e.g. the last two panels of Fig.~\ref{fig:linear}.
+Note that the coverage of the recovered quantities is quite good (but the histograms 
+of the errors are not).
+However the interesting thing here is that the error of $m_1$ seems almost linear w.r.t $m_1$.
+
 \subsection{Is the $q$-distribution in the injected data a problem?}
 \label{sec:epochs_quniform}
 %
@@ -734,6 +773,9 @@ Fig.~\ref{fig:epochs_quniform}. Now the mean errors are closer to the ones
 obtained with the standard regression $(m_1, m_2)$, but be aware that
 the latter are bigger than with the full dataset (not uniform in $q$).
 In any case, the coverage of the parameter space is still an issue. 
+
+
+
 
 %==========================================================
 \section{Things to discuss}
