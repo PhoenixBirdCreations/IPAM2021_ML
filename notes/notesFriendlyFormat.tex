@@ -774,25 +774,31 @@ obtained with the standard regression $(m_1, m_2)$, but be aware that
 the latter are bigger than with the full dataset (not uniform in $q$).
 In any case, the coverage of the parameter space is still an issue. 
 
+\subsection{Cross-validation on architectures}
+In the end it seems that the simple regression with $(m_1, m_2)$ 
+is the best one. So with this choice, we can cross-validate the architecture.
+We do not expect to see better results with more complex NNs for the reasons
+discussed in the previous section. In any case, we verify this and 
+the result can be found in Fig.~\ref{fig:crossval_GstLAL}.
+We used 100 epochs (well beyond the saturation of the training), $N_{\rm batch}=128$,
+learning rate $\alpha =0.001$, \texttt{MinMaxScaler}, no constraints on the 
+output, MSE loss function and ReLU in the hidden layer(s).
+We conclude that the architecture is not relevant for this regression.
+%
+\begin{figure*}[]
+  \center
+  \includegraphics[width=0.97\textwidth]{./Figs/crossval_GstLAL_R2mean.png}
+  \includegraphics[width=0.97\textwidth]{./Figs/crossval_GstLAL_R2m1.png}
+  \includegraphics[width=0.97\textwidth]{./Figs/crossval_GstLAL_R2m2.png}
+  \caption{\label{fig:crossval_GstLAL} Cross validation on the 
+  GstLAL dataset using 100 epochs (well beyond the saturation of the training), $N_{\rm batch}=128$,
+  learning rate $\alpha =0.001$, \texttt{MinMaxScaler}, no constraints on the 
+  output, MSE loss function and ReLU in the hidden layer(s). The architecture
+  does not seem to be relevant for the $R^2$ coefficient. 
+  The green circle marks the highest score.}
+\end{figure*}
 
 
-
-%==========================================================
-\section{Things to discuss}
-%==========================================================
-\begin{itemize}
-\item The regression with NNs does not work properly on the GstLAL BNS dataset. SOLVED: this is a mix of  data not sampled uniformly and bad design of the NN (Simone: is this really solved?).
-
-\item Improve the loss function. We can add information even if it is not a parameter to do regression to. See section \ref{sec:loss_new}. Simone can you implement this?
-
-\item Does GPR face the same issues? Try with $m1,m2$, and the approach with parameters $p$ and $s$. If it performs better than the NN, then it is a matter of the loss function for the NN now. 
-
-\item Improve fake-fake data? Not at the moment.
-
-\item Since we are starting to use more complex NNs (at least for \texttt{NewRealistic} 
-datasets, i.e. \texttt{v0c0} and \texttt{v1c0}), should we try to use some dropout?
-[not a first order priority in any case]
-\end{itemize}
 %==========================================================
 \bibliography{refs,local}
 %==========================================================

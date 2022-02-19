@@ -397,8 +397,9 @@ def plotLayersCrossVal(models_dict, threshold=0.9, Npars_lim=1e+6, \
                 max_score_l2 = neurons_l2
             i += 1
     if i==0:
-        print('no models found!')
+        print('no models found (or threshold too big)!')
         sys.exit()
+
     fig, axs = plt.subplots(1,2, figsize=(12, 4))
     sc=axs[0].scatter(layer1_size, layer2_size, c=scores, cmap='gist_rainbow')
     cbar = plt.colorbar(sc,ax=axs[0])
