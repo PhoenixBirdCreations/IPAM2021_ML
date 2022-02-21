@@ -1,0 +1,16 @@
+data2use     = 'GSTLAL_m1m2Mc' # 'NewRealistic', 'GSTLAL_2m' or 'GSTLAL_m1m2Mc'
+                               # in the latter case, the regression is done only on m1,m2, Mc is not considered
+                               # even if it is in the dataset
+
+# training options
+write_output     = True
+remove_some_mass = False
+epochs           = 50
+validation_split = 0.2
+batch_size       = 128
+verbose_training = False
+hlayers_sizes    = (100,);
+learning_rate    = 0.001
+scaler_type      = 'minmax'  # standard, minmax, mixed
+hidden_activation= 'relu'
+out_activation   = 'linear' # sigmoid, linear, linear_cut, linear_cut_T3, linear_cut_lb, linear_cut_mod
