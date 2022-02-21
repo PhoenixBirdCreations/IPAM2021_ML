@@ -1,19 +1,14 @@
-epochs           = 10
-validation_split = 0.1
-batch_size       = 64
-verbose_training = True
-hlayers_sizes    = [10];
-learning_rate    = 0.01
-scaler_type      = 'mixed' 
-activation       = 'relu'
-out_activation   = 'linear_cut'
+data2use         = 'GSTLAL_2m' # 'NewRealistic' or 'GSTLAL_2m'
 
-
-Final loss     : 0.02118
-Final mse      : 0.02118
-Final accuracy : 0.86174 
-
-Final R2 mean  : 0.73336
-R2[ 0]         : 0.71019
-R2[ 1]         : 0.75653
-
+# training options
+write_output     = True
+remove_some_mass = False
+epochs           = 50
+validation_split = 0.2
+batch_size       = 128
+verbose_training = False
+hlayers_sizes    = (100,);
+learning_rate    = 0.001
+scaler_type      = 'minmax'  # standard, minmax, mixed
+hidden_activation= 'relu'
+out_activation   = 'linear' # sigmoid, linear, linear_cut, linear_cut_T3, linear_cut_lb, linear_cut_mod
