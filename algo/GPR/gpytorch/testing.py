@@ -1,92 +1,92 @@
+import sys
+
 import math
 from matplotlib import pyplot as plt
 import torch
 import gpytorch
+from sklearn import preprocessing
 
-# Generating the data
-# The training data is 15 equally-spaced points from [0,1] 
-x_train = torch.linspace(0, 1, 15)
-# The true function is sin(2*pi*x) with Gaussian noise N(0, 0.04)
-y_train = torch.sin(x_train * (2 * math.pi)) + torch.randn(x_train.size()) * math.sqrt(0.04)
-# Plot training data as black stars
-plt.plot(x_train.numpy(), y_train.numpy(), 'k*')
+sys.path.insert(0, '/ddn/home1/r2566/IPAM2021_ML/utils')
+from utils import *
 
-# Building a GP model with constant mean function and spectral mixture (SM) kernel
-class SpectralMixtureGP(gpytorch.models.ExactGP):
-    def __init__(self, x_train, y_train, likelihood):
-        super(SpectralMixtureGP, self).__init__(x_train, y_train, likelihood)
-        self.mean = gpytorch.means.ConstantMean() # Construct the mean function
-        self.cov = gpytorch.kernels.SpectralMixtureKernel(num_mixtures=4) # Construct the kernel function
-        self.cov.initialize_from_data(x_train, y_train) # Initialize the hyperparameters from data
-        
+
+# Read data files
+xtrain = extractData('../../../datasets/GSTLAL_EarlyWarning_Dataset/Dataset/train_recover.csv')
+ytrain = extractData('../../../datasets/GSTLAL_EarlyWarning_Dataset/Dataset/train_inject.csv')
+xtest = extractData('../../../datasets/GSTLAL_EarlyWarning_Dataset/Dataset/test_recover.csv')
+ytest = extractData('../../../datasets/GSTLAL_EarlyWarning_Dataset/Dataset/test_inject.csv')
+
+# Standardize the data
+xtrain_scaler = preprocessing.StandardScaler().fit(xtrain)
+xtrain_scaled = xtrain_scaler.transform(xtrain)
+ytrain_scaler = preprocessing.StandardScaler().fit(ytrain)
+ytrain_scaled = ytrain_scaler.transform(ytrain)
+
+xtest_scaler = preprocessing.StandardScaler().fit(xtest)
+xtest_scaled = xtest_scaler.transform(xtest)
+ytest_scaler = preprocessing.StandardScaler().fit(ytest)
+ytest_scaled = ytest_scaler.transform(ytest)
+
+# Reshape data into correct tensor form
+train_x = torch.from_numpy(xtrain_scaled).float()
+train_y = torch.from_numpy(ytrain_scaled).float()
+test_x = torch.from_numpy(xtest_scaled).float()
+test_y = torch.from_numpy(ytest_scaled).float()
+
+train_x = train_x.unsqueeze(0).repeat(2, 1, 1)
+train_y = train_y.transpose(-2, -1)
+
+# Define GP model
+class MultitaskGPModel(gpytorch.models.ExactGP):
+    def __init__(self, train_x, train_y, likelihood):
+        super(MultitaskGPModel, self).__init__(train_x, train_y, likelihood)
+        self.mean_module = gpytorch.means.ZeroMean()
+        self.covar_module = gpytorch.kernels.AdditiveKernel(gpytorch.kernels.PolynomialKernel(power=2)+gpytorch.kernels.RBFKernel(ard_num_dims=2))
     def forward(self, x):
-        # Evaluate the mean and kernel function at x
-        mean_x = self.mean(x)
-        cov_x = self.cov(x)
-        # Return the multivariate normal distribution using the evaluated mean and kernel function
-        return gpytorch.distributions.MultivariateNormal(mean_x, cov_x) 
-        
-# Initialize the likelihood and model
-likelihood = gpytorch.likelihoods.GaussianLikelihood()
-model = SpectralMixtureGP(x_train, y_train, likelihood)
+        mean_x = self.mean_module(x)
+        covar_x = self.covar_module(x)
+        return gpytorch.distributions.MultivariateNormal(mean_x, covar_x)
 
-# Training the model 
-# Put the model into training mode
+
+likelihood = gpytorch.likelihoods.GaussianLikelihood(num_tasks=2)
+model = MultitaskGPModel(train_x, train_y, likelihood)
+
+# Find optimal model hyperparameters
+print('finding hyperparameters...')
 model.train()
 likelihood.train()
 
-# Use the Adam optimizer, with learning rate set to 0.1
-optimizer = torch.optim.Adam(model.parameters(), lr=0.1)
+print('optimizing...')
+# Use the adam optimizer
+optimizer = torch.optim.Adam([
+{'params': model.parameters()},  # Includes GaussianLikelihood parameters
+], lr=0.1)
 
-# Use the negative marginal log-likelihood as the loss function
+# "Loss" for GPs - the marginal log likelihood
 mll = gpytorch.mlls.ExactMarginalLogLikelihood(likelihood, model)
 
-# Set the number of training iterations
 n_iter = 50
-
 for i in range(n_iter):
-    # Set the gradients from previous iteration to zero
     optimizer.zero_grad()
-    # Output from model
-    output = model(x_train)
-    # Compute loss and backprop gradients
-    loss = -mll(output, y_train)
+    output = model(train_x)
+    loss = -mll(output, train_y).sum()
     loss.backward()
-    #print('Iter %d/%d - Loss: %.3f' % (i + 1, n_iter, loss.item()))
+    print('Iter %d/%d - Loss: %.3f' % (i + 1, n_iter, loss.item()))
     optimizer.step()
 
-# Making predictions with the model
-# The test data is 50 equally-spaced points from [0,5]
-x_test = torch.linspace(0, 5, 50)
-
-# Put the model into evaluation mode
+# Set into eval mode
 model.eval()
 likelihood.eval()
 
-# The gpytorch.settings.fast_pred_var flag activates LOVE (for fast variances)
-# See https://arxiv.org/abs/1803.06058
+# Make predictions
 with torch.no_grad(), gpytorch.settings.fast_pred_var():
-    # Obtain the predictive mean and covariance matrix
-    f_preds = model(x_test)
-    f_mean = f_preds.mean
-    f_cov = f_preds.covariance_matrix
-    
-    # Make predictions by feeding model through likelihood
-    observed_pred = likelihood(model(x_test))
-    
-    # Initialize plot
-    f, ax = plt.subplots(1, 1, figsize=(8, 6))
-    # Get upper and lower confidence bounds
-    lower, upper = observed_pred.confidence_region()
-    # Plot training data as black stars
-    ax.plot(x_train.numpy(), y_train.numpy(), 'k*')
-    # Plot predictive means as blue line
-    ax.plot(x_test.numpy(), observed_pred.mean.numpy(), 'b')
-    # Shade between the lower and upper confidence bounds
-    ax.fill_between(x_test.numpy(), lower.numpy(), upper.numpy(), alpha=0.5)
-    ax.set_ylim([-3, 3])
-    ax.legend(['Observed Data', 'Mean', 'Confidence'])
+    predictions = likelihood(model(test_x))
+    mean = predictions.mean
+    lower, upper = predictions.confidence_region()
 
+test_results_gpytorch = np.median((test_y.transpose(-2, -1) - mean) / test_y.transpose(-2, -1), axis=1)
+print(test_results_gpytorch)
 
-
-
+# Save model 
+db = {'model': model.state_dict(), 'pred': predictions, 'mean': mean, 'lower': lower, 'upper': upper, 'res': test_results_gpytorch}
+torch.save(db, 'testing_tensors.pt')

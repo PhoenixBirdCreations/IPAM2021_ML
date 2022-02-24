@@ -1,4 +1,3 @@
-#!/bin/bash
 #PBS -N testing
 #PBS -j oe
 #PBS -l ncpus=1
@@ -6,11 +5,10 @@
 #PBS -m abe
 #PBS -M lmaganaz@go.olemiss.edu
 
-LORENA_ENV=/ddn/home1/r2566/.conda/envs/ipam
 module load python
-source activate ${LORENA_ENV}
 
-cd ${PBS_O_WORKDIR}
+cd $PBS_O_WORKDIR/
+source activate ipam
 
-time ./testing.py
+python testing.py
 
