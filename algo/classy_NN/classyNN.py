@@ -7,8 +7,7 @@ For testing, plots and stuff see the notebooks
 in the folder algo/NN_tf/
 """
 
-# TODO: - add checks
-#       - save/load model
+# TODO: - save/load model
 #       - add mean errors and maybe a simple histo-plot
 
 import os, sys, time, csv
@@ -61,7 +60,7 @@ def R2metric(y_true, y_pred):
 # Linear Scaler, slightly more general than MinMaxScaler
 #######################################################################
 class LinearScaler:
-    """ Linear map between [A,B] <--> [C,D] 
+    """ Linear (vectorized) map between [A,B] <--> [C,D] 
     """
     def __init__(self, A, B, C, D):
         self.A = A
@@ -113,10 +112,9 @@ class RegressionNN:
         self.hidden_activation = 'relu'
         self.model             = self.build_architecture()
 
-    #----------------------------------------------------
-    # Build the architecture of the NeuralNewtork
-    #----------------------------------------------------
     def build_architecture(self):
+        """ Build the architecture of the NeuralNewtork
+        """
         def output_activation_lin_constraint(x):
             signs = K.switch(x>0, 1+x*0, -1+x*0) # x*0 in order to broadcast to correct dimension
             return K.switch(abs(x)<1, x, signs)
@@ -135,10 +133,17 @@ class RegressionNN:
         self.model.summary()
         return
 
-    #----------------------------------------------------
-    # Load datasets in CSV format 
-    #----------------------------------------------------
+    def __check_attributes(self, attr_list):
+        for i in range(0, len(attr_list)):
+            attr = attr_list[i]
+            if not hasattr(self, attr):
+                raise ValueError ('Error: '+attr+' is not defined')
+        return
+
     def load_train_dataset(self, path, fname_x='xtrain.csv', fname_y='ytrain.csv'):
+        """ Load datasets in CSV format 
+        """
+        self.__check_attributes(['Nfeatures'])
         xtrain_notnormalized = extractData(path+fname_x, verbose=False)
         ytrain_notnormalized = extractData(path+fname_y, verbose=False)
         Nfeatures = self.Nfeatures
@@ -168,6 +173,7 @@ class RegressionNN:
         return
         
     def load_test_dataset(self, path, fname_x='xtest.csv', fname_y='ytest.csv'):
+        self.__check_attributes(['scaler_x', 'scaler_y'])
         xtest_notnormalized = extractData(path+fname_x, verbose=False)
         ytest_notnormalized = extractData(path+fname_y, verbose=False)
         xtest               = self.scaler_x.transform(xtest_notnormalized)
@@ -178,10 +184,10 @@ class RegressionNN:
         self.ytest_notnorm  = ytest_notnormalized
         return
     
-    #----------------------------------------------------
-    # Train the model with the option given input
-    #----------------------------------------------------
-    def training(self, verbose=False, epochs=100, batch_size=64, learning_rate=0.001, validation_split=0.1):
+    def train(self, verbose=False, epochs=100, batch_size=64, learning_rate=0.001, validation_split=0.1):
+        """ Train the model with the option given input
+        """
+        self.__check_attributes(['xtrain', 'ytrain'])
         self.verbose          = verbose
         self.epochs           = epochs
         self.batch_size       = batch_size 
@@ -199,16 +205,15 @@ class RegressionNN:
         self.history = fit_out.history
         return
     
-    #----------------------------------------------------
-    # Prediction, can be used only after training
-    # If you want to remove the normalization, i.e. 
-    # to have the prediction in physical units, then use 
-    # transform_output=True (default is False, so that 
-    # NN.compute_prediction() is equivalent to model.prediction())
-    # If the input (i.e. x) is not already normalized, use
-    # transform_input = True
-    #----------------------------------------------------
     def compute_prediction(self, x, transform_output=False, transform_input=False):
+        """ Prediction, can be used only after training
+        If you want to remove the normalization, i.e. 
+        to have the prediction in physical units, then use 
+        transform_output=True (default is False, so that 
+        NN.compute_prediction() is equivalent to model.prediction())
+        If the input (i.e. x) is not already normalized, use
+        transform_input = True
+        """
         x = np.array(x)
         # if the input is given as a 1d-array...
         if len(x.shape)==1:
@@ -218,24 +223,26 @@ class RegressionNN:
                 raise ValueError('Wrong input-dimension')
 
         if transform_input:
+            self.__check_attributes(['scaler_x'])
             x = self.scaler_x.transform(x)
         
         prediction = self.model.predict(x) 
         
         if transform_output:
+            self.__check_attributes(['scaler_y'])
             out = self.scaler_y.inverse_transform(prediction)
         else:
             out = prediction
         return out
 
-    #----------------------------------------------------
-    # Compute and print evaluation metrics 
-    #----------------------------------------------------
-    def compute_metrics_dict(self):
+    def __compute_metrics_dict(self):
+        """ Compute evaluation metrics 
+        """
         def R2_numpy(y_true, y_pred):
             SS_res = np.sum((y_true - y_pred )**2)
             SS_tot = np.sum((y_true - np.mean(y_true))**2)
             return 1-SS_res/SS_tot
+        self.__check_attributes(['Nfeatures', 'model', 'xtest', 'ytest'])
         Nfeatures  = self.Nfeatures
         model      = self.model
         xtest      = self.xtest
@@ -255,6 +262,10 @@ class RegressionNN:
         return
 
     def print_metrics(self):
+        """ Print (and eventually compute) evaluation metrics 
+        """
+        if not hasattr(self, 'metrics_dict'):
+            self.__compute_metrics_dict()
         metrics_dict = self.metrics_dict
         print('\nFinal loss     : {:.5f}'.format(metrics_dict["loss"]))
         print('Final R2 mean  : {:.5f}'.format(metrics_dict["R2mean"]))
@@ -265,12 +276,12 @@ class RegressionNN:
             i+=1
         return
 
-    #----------------------------------------------------
-    # Simple plots. For more 'elaborate' plots we rely
-    # on other modules (i.e. let's not overcomplicate 
-    # this code with useless graphical functions)
-    #----------------------------------------------------
     def plot_predictions(self, x):
+        """ Simple plot. For more 'elaborate' plots we rely
+        on other modules (i.e. let's not overcomplicate 
+        this code with useless graphical functions)
+        """
+        self.__check_attributes(['Nfeatures', 'ytest_notnorm'])
         Nfeatures     = self.Nfeatures
         ytest_notnorm = self.ytest_notnorm
         prediction    = self.compute_prediction(x, transform_output=True)
@@ -315,7 +326,10 @@ class RegressionNN:
         return 
     
     def plot_history(self): 
-        #history is the ouput of model.compile in TensorFlow
+        """ History plot
+        history is one attribute of the ouput of model.compile in TensorFlow
+        """
+        self.__check_attributes(['history'])
         history_dict = self.history
         acc      = history_dict['R2metric']
         val_acc  = history_dict['val_R2metric']
@@ -350,10 +364,9 @@ if __name__ == '__main__':
 
     NN.print_info()
 
-    NN.training(verbose=True, epochs=10)
+    NN.train(verbose=True, epochs=10)
 
     NN.load_test_dataset(path, fname_x='xtest.csv', fname_y='ytest.csv') 
-    NN.compute_metrics_dict()
     NN.print_metrics()
 
     #NN.plot_predictions(NN.xtest)
