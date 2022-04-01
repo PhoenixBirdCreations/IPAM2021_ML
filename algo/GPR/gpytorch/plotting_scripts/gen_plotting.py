@@ -89,11 +89,64 @@ if __name__ == '__main__':
     ax[1].set_xlabel(r'$m_2$ injected', fontsize=14)
     ax[1].set_ylabel(r'$m_2$ GSTLAL', fontsize=14)
     ax[1].legend(fontsize=12)
-    
     outfile = '../figs/m1_m2_comparisons.pdf'
     plt.savefig(outfile, bbox_inches="tight")
 
     # Figure 3
+    f, ax = plt.subplots(1, 2, figsize=(16, 6))
+    ax[0].plot(xtest[:,0], rec_rel_err[:,0], 'b*', label='Recovered')
+    ax[1].plot(xtest[:,1], rec_rel_err[:,1], 'b*', label='Recovered')
+
+    z = np.polyfit(xtest[:,0], rec_rel_err[:,0], 1)
+    p = np.poly1d(z)
+    ax[0].plot(xtest[:,0], p(xtest[:,0]), 'r', label='Linear fit')
+
+    z2 = np.polyfit(xtest[:,1], rec_rel_err[:,1], 1)
+    p2 = np.poly1d(z2)
+    ax[1].plot(xtest[:,1], p2(xtest[:,1]), 'r', label='Linear fit')
+
+    ax[0].set_xlabel(r'$m_1$ GSTLAL', fontsize=14)
+    ax[0].set_ylabel(r'$(m_1^{\mathrm{inj}}-m_1^{\mathrm{GSTLAL}})/m_1^{\mathrm{inj}}$', fontsize=14)
+    ax[0].legend(fontsize=12)
+    ax[1].set_xlabel(r'$m_2$ injected', fontsize=14)
+    ax[1].set_ylabel(r'$(m_2^{\mathrm{inj}}-m_2^{\mathrm{GSTLAL}})/m_2^{\mathrm{inj}}$', fontsize=14)
+    ax[1].legend(fontsize=12)
+    outfile = '../figs/m1_m2_rec_errors_and_fits.pdf'
+    plt.savefig(outfile, bbox_inches="tight")
+
+    # Figure 4
+    f, ax = plt.subplots(1, 2, figsize=(16, 6))
+    ax[0].plot(xtest[:,0], rec_rel_err[:,0], 'b*', label='Recovered')
+    ax[1].plot(xtest[:,1], rec_rel_err[:,1], 'b*', label='Recovered')
+    ax[0].plot(xtest[:,0], rel_err[:,0], 'g*', label='Predicted')
+    ax[1].plot(xtest[:,1], rel_err[:,1], 'g*', label='Predicted')
+
+    z = np.polyfit(xtest[:,0], rec_rel_err[:,0], 1)
+    p = np.poly1d(z)
+    ax[0].plot(xtest[:,0], p(xtest[:,0]), 'r', label='Linear fit')
+
+    z2 = np.polyfit(xtest[:,0], rel_err[:,0], 1)
+    p2 = np.poly1d(z2)
+    ax[0].plot(xtest[:,0], p2(xtest[:,0]), 'r')
+
+    z3 = np.polyfit(xtest[:,1], rec_rel_err[:,1], 1)
+    p3 = np.poly1d(z3)
+    ax[1].plot(xtest[:,1], p3(xtest[:,1]), 'r', label='Linear fit')
+
+    z4 = np.polyfit(xtest[:,1], rel_err[:,1], 1)
+    p4 = np.poly1d(z4)
+    ax[1].plot(xtest[:,1], p4(xtest[:,1]), 'r')
+
+    ax[0].set_xlabel(r'$m_1$ GSTLAL', fontsize=14)
+    ax[0].set_ylabel(r'$(m_1^{\mathrm{inj}}-m_1^{\mathrm{X}})/m_1^{\mathrm{inj}}$', fontsize=14)
+    ax[0].legend(fontsize=12)
+    ax[1].set_xlabel(r'$m_2$ injected', fontsize=14)
+    ax[1].set_ylabel(r'$(m_2^{\mathrm{inj}}-m_2^{\mathrm{X}})/m_2^{\mathrm{inj}}$', fontsize=14)
+    ax[1].legend(fontsize=12)
+    outfile = '../figs/m1_m2_errors_and_fits.pdf'
+    plt.savefig(outfile, bbox_inches="tight")
+
+    # Figure 5 
     fig, axis = plt.subplots(1, 1, figsize=(7,6))
     combined_epsilons = [abs_rel_err[:,0], abs_rel_err[:,1]]
     hist, bins, _ = axis.hist(combined_epsilons, 20)
@@ -117,7 +170,7 @@ if __name__ == '__main__':
     outfile = '../figs/m1m2_absolute_errors.pdf'
     plt.savefig(outfile, bbox_inches="tight")
 
-    # Figure 4
+    # Figure 6
     fig, axis = plt.subplots(1, 1, figsize=(7,6))
     combined_epsilons = [rel_err[:,0], rel_err[:,1]]
     hist, bins, _ = axis.hist(combined_epsilons, 20)
@@ -139,7 +192,7 @@ if __name__ == '__main__':
     outfile = '../figs/m1m2_errors.pdf'
     plt.savefig(outfile, bbox_inches="tight")
     
-    #Figure 5
+    #Figure 7
     fig, axis = plt.subplots(1,2, figsize=(15,5.25))
     combined_epsilons = [rel_err[:,0], rec_rel_err[:,0]]
     hist, bins, _ = axis[0].hist(combined_epsilons, 20)
