@@ -9,6 +9,7 @@ in the folder algo/NN_tf/
 
 # TODO: - save/load model
 #       - add mean errors and maybe a simple histo-plot
+#       - maybe change logic for test-data 
 
 import os, sys, time, csv
 import numpy as np
@@ -44,17 +45,6 @@ def writeResult(filename, data, verbose=False):
             spamwriter.writerow(row)
     if verbose:
         print(filename, 'saved')
-
-#######################################################################
-# R2 metric: to use as metric in TF regressions models
-#######################################################################
-def R2metric(y_true, y_pred):
-    SS_res = K.sum(K.square(y_true - y_pred ))
-    SS_tot = K.sum(K.square(y_true - K.mean(y_true)))
-    r2 = 1-SS_res/SS_tot
-    #if tf.math.is_nan(r2):
-    #    r2 = 0.
-    return r2
 
 #######################################################################
 # Linear Scaler, slightly more general than MinMaxScaler
@@ -140,7 +130,7 @@ class RegressionNN:
                 raise ValueError ('Error: '+attr+' is not defined')
         return
 
-    def load_train_dataset(self, path, fname_x='xtrain.csv', fname_y='ytrain.csv'):
+    def load_train_dataset(self, path='', fname_x='xtrain.csv', fname_y='ytrain.csv'):
         """ Load datasets in CSV format 
         """
         self.__check_attributes(['Nfeatures'])
@@ -187,7 +177,14 @@ class RegressionNN:
     def train(self, verbose=False, epochs=100, batch_size=64, learning_rate=0.001, validation_split=0.1):
         """ Train the model with the option given input
         """
-        self.__check_attributes(['xtrain', 'ytrain'])
+        def R2metric(y_true, y_pred):
+            SS_res = K.sum(K.square(y_true - y_pred ))
+            SS_tot = K.sum(K.square(y_true - K.mean(y_true)))
+            r2 = 1-SS_res/SS_tot
+            #if tf.math.is_nan(r2):
+            #    r2 = 0.
+            return r2
+        self.__check_attributes(['xtrain', 'ytrain', 'model'])
         self.verbose          = verbose
         self.epochs           = epochs
         self.batch_size       = batch_size 
@@ -214,6 +211,7 @@ class RegressionNN:
         If the input (i.e. x) is not already normalized, use
         transform_input = True
         """
+        self.__check_attributes(['Nfeatures', 'model'])
         x = np.array(x)
         # if the input is given as a 1d-array...
         if len(x.shape)==1:
@@ -278,7 +276,7 @@ class RegressionNN:
 
     def plot_predictions(self, x):
         """ Simple plot. For more 'elaborate' plots we rely
-        on other modules (i.e. let's not overcomplicate 
+        on other modules (i.e. do not overcomplicate 
         this code with useless graphical functions)
         """
         self.__check_attributes(['Nfeatures', 'ytest_notnorm'])
@@ -327,7 +325,7 @@ class RegressionNN:
     
     def plot_history(self): 
         """ History plot
-        history is one attribute of the ouput of model.compile in TensorFlow
+        history is one attribute of the ouput of model.compile() in TensorFlow
         """
         self.__check_attributes(['history'])
         history_dict = self.history
@@ -336,21 +334,22 @@ class RegressionNN:
         loss     = history_dict['loss']
         val_loss = history_dict['val_loss']
         epochs_plot=range(1,len(acc)+1)   
-        plt.figure(figsize=(10,10))
-        ax1=plt.subplot(221)
+        plt.figure(figsize=(10,5))
+        ax1=plt.subplot(121)
         ax1.plot(epochs_plot,acc,'b',label='Training R2')
         ax1.plot(epochs_plot,loss,'r',label='Training loss')
         ax1.set_title('loss and R2 of Training')
         ax1.set_xlabel('Epochs')
         ax1.set_ylabel('Loss')
         ax1.legend()
-        ax2=plt.subplot(222)
+        ax2=plt.subplot(122)
         ax2.plot(epochs_plot,val_acc,'b',label='Validation R2')
         ax2.plot(epochs_plot,val_loss,'r',label='Validation loss')
         ax2.set_title('loss and R2 of Validation')
         ax2.set_xlabel('Epochs')
         ax2.set_ylabel('R2')
         ax2.legend()
+        plt.show()
         return 
             
 
@@ -360,7 +359,7 @@ if __name__ == '__main__':
     NN = RegressionNN(Nfeatures=3, hlayers_sizes=(100,), out_intervals=out_intervals)
     
     path = "/home/simone/repos/IPAM2021_ML/datasets/GSTLAL_EarlyWarning_Dataset/Dataset/m1m2Mc/"
-    NN.load_train_dataset(path, fname_x='xtrain.csv', fname_y='ytrain.csv')
+    NN.load_train_dataset(path=path, fname_x='xtrain.csv', fname_y='ytrain.csv')
 
     NN.print_info()
 
@@ -370,5 +369,5 @@ if __name__ == '__main__':
     NN.print_metrics()
 
     #NN.plot_predictions(NN.xtest)
-
+    NN.plot_history()
 
