@@ -10,7 +10,7 @@ in the folder algo/NN_tf/
 # TODO: - add mean errors and maybe a simple histo-plot
 #       - maybe change logic for test-data 
 
-import os, sys, csv, pickle, types
+import os, sys, csv, types, dill
 import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
@@ -19,6 +19,7 @@ from keras import backend as K
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.losses import MeanSquaredError
 from tensorflow.keras.optimizers import Adam
+from keras.utils.layer_utils import count_params
 
 #######################################################################
 # Usual I/O functiony by Marina
@@ -45,6 +46,31 @@ def writeResult(filename, data, verbose=False):
             spamwriter.writerow(row)
     if verbose:
         print(filename, 'saved')
+    
+#######################################################################
+# Save/load dictionary that eventually contains lambda-objects
+#######################################################################
+def save_dill(fname, mydict, verbose=False):
+    out_dict_dir = './'
+    dict_name = out_dict_dir+fname
+    dill.dump(mydict, open(dict_name, 'wb'))
+    if verbose:
+        print(dict_name, 'saved') 
+    return 
+
+def load_dill(fname, verbose=False):
+    out_dict_dir = './'
+    dict_name = out_dict_dir+fname
+    if os.path.exists(dict_name):
+        loaded_dict = dill.load(open(dict_name, 'rb'))
+        if verbose:
+            print(dict_name, 'loaded')
+    else:
+        loaded_dict = {}
+        if verbose:
+            print(dict_name, 'not found, returning empty dictionary')
+    return loaded_dict    
+
 
 #######################################################################
 # Linear Scaler, slightly more general than MinMaxScaler
@@ -165,16 +191,6 @@ class RegressionNN:
         self.model.compile(loss=loss, metrics=metrics, optimizer=Adam(learning_rate=self.learning_rate))
         return
     
-    def __save_pickle(self, fname, mydict):
-        with open(fname, 'wb') as f:
-            pickle.dump(mydict, f)
-        return
-    
-    def __load_pickle(self, fname):
-        with open(fname, 'rb') as f:
-            mydict = pickle.load(f)
-        return mydict
-
     def save_model(self, model_name=None, verbose=False, overwrite=True):
         """ Save weights of the model, scalers and fit options
         """
@@ -200,9 +216,9 @@ class RegressionNN:
             train_info[a] = getattr(self, a)
         scaler_x_dict = self.scaler_x.return_dict() 
         scaler_y_dict = self.scaler_y.return_dict() 
-        self.__save_pickle(model_name+'/scaler_x.pkl'  , scaler_x_dict)
-        self.__save_pickle(model_name+'/scaler_y.pkl'  , scaler_y_dict)
-        self.__save_pickle(model_name+'/train_info.pkl', train_info)
+        save_dill(model_name+'/scaler_x.pkl'  , scaler_x_dict)
+        save_dill(model_name+'/scaler_y.pkl'  , scaler_y_dict)
+        save_dill(model_name+'/train_info.pkl', train_info)
         if verbose:
             print(model_name, 'saved')
         return
@@ -212,9 +228,9 @@ class RegressionNN:
         """
         if not os.path.isdir(model_name):
             raise ValueError(model_name+' not found!')
-        scaler_x_dict = self.__load_pickle(model_name+'/scaler_x.pkl')
-        scaler_y_dict = self.__load_pickle(model_name+'/scaler_y.pkl')
-        train_info    = self.__load_pickle(model_name+'/train_info.pkl')
+        scaler_x_dict = load_dill(model_name+'/scaler_x.pkl')
+        scaler_y_dict = load_dill(model_name+'/scaler_y.pkl')
+        train_info    = load_dill(model_name+'/train_info.pkl')
         Ax = scaler_x_dict['A']
         Bx = scaler_x_dict['B']
         Cx = scaler_x_dict['C']
@@ -248,7 +264,8 @@ class RegressionNN:
             raise ValueError('Incompatible data size')
         # create scalers
         if self.out_intervals is None:
-            print('No output-intervals specified, using MinMaxScaler')
+            if verbose:
+                print('No output-intervals specified, using MinMaxScaler')
             self.out_intervals      = np.zeros((Nfeatures,2))
             self.out_intervals[:,0] = xtrain_notnormalized.min(axis=0)
             self.out_intervals[:,1] = xtrain_notnormalized.max(axis=0)
@@ -351,7 +368,7 @@ class RegressionNN:
                     print('{:20s}: {:}'.format(attr, value))
         return
 
-    def __compute_metrics_dict(self):
+    def compute_metrics_dict(self):
         """ Compute evaluation metrics 
         """
         def R2_numpy(y_true, y_pred):
@@ -381,7 +398,7 @@ class RegressionNN:
         """ Print (and eventually compute) evaluation metrics 
         """
         if not hasattr(self, 'metrics_dict'):
-            self.__compute_metrics_dict()
+            self.compute_metrics_dict()
         metrics_dict = self.metrics_dict
         #print('\nFinal loss     : {:.5f}'.format(metrics_dict["loss"])) # problems with loaded model: loss is not defined
         print('Final R2 mean  : {:.5f}'.format(metrics_dict["R2mean"]))
@@ -475,24 +492,206 @@ class RegressionNN:
         plt.show()
         return 
             
+#######################################################################
+# Cross-validator (on layers/architecture)
+#######################################################################
+class CrossValidator:
+    def __init__(self, Nfeatures=3, dict_name=None, Nneurons_max=300, neurons_step=50, out_intervals=None,
+                 epochs=100, batch_size=64, learning_rate=0.001, verbose=False,
+                 fname_xtrain=None, fname_ytrain=None, fname_xtest=None, fname_ytest=None):
+        Nlayers_max        = 2 # hard-coded for now, but should be ok (i.e. no NN with >2 layers needed)
+        self.Nfeatures     = Nfeatures
+        self.Nlayers_max   = Nlayers_max
+        self.Nneurons_max  = Nneurons_max
+        self.neurons_step  = neurons_step
+        self.out_intervals = np.array(out_intervals)
+        self.epochs        = epochs
+        self.batch_size    = batch_size
+        self.learning_rate = learning_rate
 
+        if fname_xtrain is None or fname_ytrain is None or fname_xtest is None or fname_ytest is None:
+            raise ValueError('Incomplete data-input! Specifiy fname_xtrain, fname_ytrain, fname_xtest, fname_ytest')
+        
+        self.fname_xtrain = fname_xtrain
+        self.fname_ytrain = fname_ytrain
+        self.fname_xtest  = fname_xtest
+        self.fname_ytest  = fname_ytest
+        
+        hlayers_sizes_list = []
+        for i in range(neurons_step, Nneurons_max, neurons_step):
+            for j in range(0, Nneurons_max, neurons_step):
+                if j>0:
+                    hlayers_size = (i,j)
+                else:
+                    hlayers_size = (i,)
+                hlayers_sizes_list.append(hlayers_size)
+        self.hlayers_sizes_list = hlayers_sizes_list
+        
+        if dict_name is None:
+            dict_name = 'dict_Nfeatures'+str(Nfeatures)+'.dict'
+        self.dict_name = dict_name
+        
+        cv_dict = load_dill(dict_name, verbose=verbose)
+        self.cv_dict = cv_dict 
+    
+    def __param_to_key(self, hlayers_sizes):
+        epochs        = self.epochs
+        batch_size    = self.batch_size
+        learning_rate = self.learning_rate
+        out_intervals = self.out_intervals
+        Nlayers = len(hlayers_sizes)
+        key  = str(epochs)+'-'+str(batch_size)+'-'+'alpha'+str(learning_rate)+'-'+str(hlayers_sizes)
+        if out_intervals is not None:
+            key += '-'+str(out_intervals) #TODO: works, but ugly. Fix
+        key += str(Nlayers) + 'layers:'
+        for i in range(0, Nlayers):
+            key += str(hlayers_sizes[i])
+            if i<Nlayers-1:
+                key += '+'
+        return key
+
+    def crossval(self, verbose=False):
+        Nfeatures          = self.Nfeatures
+        epochs             = self.epochs
+        batch_size         = self.batch_size
+        learning_rate      = self.learning_rate
+        out_intervals      = self.out_intervals
+        hlayers_sizes_list = self.hlayers_sizes_list 
+        fname_xtrain = self.fname_xtrain
+        fname_ytrain = self.fname_ytrain
+        fname_xtest  = self.fname_xtest
+        fname_ytest  = self.fname_ytest
+        for hlayers_sizes in hlayers_sizes_list:
+            key = self.__param_to_key(hlayers_sizes)
+            if key in self.cv_dict:
+                print(key, 'already saved in dict!')
+            else:
+                NN = RegressionNN(Nfeatures=Nfeatures, hlayers_sizes=hlayers_sizes)
+                NN.load_train_dataset(fname_x=fname_xtrain, fname_y=fname_ytrain)
+                NN.training(epochs=epochs, batch_size=batch_size, learning_rate=learning_rate)
+                NN.load_test_dataset(fname_x=fname_xtest, fname_y=fname_ytest)
+                NN.compute_metrics_dict()                 
+                prediction   = NN.compute_prediction(NN.xtest_notnorm, transform_output=True, transform_input=True) 
+                metrics_dict = NN.metrics_dict
+                Npars        = count_params(NN.model.trainable_weights) 
+                del NN
+                
+                struct               = lambda:0
+                struct.metrics       = metrics_dict
+                struct.hlayers_sizes = hlayers_sizes
+                struct.prediction    = prediction
+                struct.Npars         = Npars
+                struct.Nlayers       = len(hlayers_sizes)
+                struct.epochs        = epochs
+                struct.batch_size    = batch_size 
+                struct.out_intervals = self.out_intervals
+                struct.learning_rate = self.learning_rate
+
+                self.cv_dict[key] = struct 
+                cv_dict           = self.cv_dict
+                save_dill(self.dict_name, cv_dict)
+                print(key, 'saved')
+        return
+
+    def plot(self, threshold=0.6, Npars_lim=1e+6, feature_idx=-1):
+        """
+        Plots to check which NN-architecture produces the best results
+        The metric used is R2
+        Use feature_idx=-1 to plot the mean of R2
+        """
+        cv_dict   = self.cv_dict
+        dict_keys = cv_dict.keys()
+        i = 0
+        max_neurons_l1 = 0
+        max_neurons_l2 = 0
+        max_score_l1   = 0
+        max_score_l2   = 0
+        max_score      = 0
+        scores  = []
+        Npars   = []
+        hlayers = []
+        layer1_size = []
+        layer2_size = []
+        tot_neurons = []
+        for key in dict_keys:
+            s = cv_dict[key]
+            if feature_idx<0:
+                score = s.metrics["R2mean"]
+                mytitle = "mean of R2"
+            else:
+                score = s.metrics["R2"][feature_idx]
+                mytitle = "R2 of feature n."+str(feature_idx)
+            mytitle += ", threshold: "+str(threshold)
+            
+            # TODO: add check on the dict here
+            add2list = True
+
+            if add2list:
+                scores.append(score)
+                Npars.append(s.Npars)
+                hlayers.append(s.hlayers_sizes)
+                neurons_l1 = s.hlayers_sizes[0]
+                layer1_size.append(neurons_l1)
+                tot_neurons_tmp = neurons_l1
+                if s.Nlayers>1:
+                    neurons_l2 = s.hlayers_sizes[1]
+                else:
+                    neurons_l2 = 0
+                layer2_size.append(neurons_l2)
+                tot_neurons_tmp += neurons_l2
+                tot_neurons.append(tot_neurons_tmp)
+                if neurons_l1>max_neurons_l1:
+                    max_neurons_l1 = neurons_l1
+                if neurons_l2>max_neurons_l2:
+                    max_neurons_l2 = neurons_l2
+                if score>max_score:
+                    max_score = score
+                    max_score_l1 = neurons_l1
+                    max_score_l2 = neurons_l2
+                i += 1
+        if i==0:
+            print('no models found (or threshold too big)!')
+            sys.exit()
+
+        fig, axs = plt.subplots(1,2, figsize=(12, 4))
+        sc=axs[0].scatter(layer1_size, layer2_size, c=scores, cmap='gist_rainbow')
+        cbar = plt.colorbar(sc,ax=axs[0])
+        cbar.set_label('score')
+        axs[0].scatter(max_score_l1, max_score_l2, linewidth=2, s=150, facecolor='none', edgecolor=(0, 1, 0))
+        axs[0].title.set_text(mytitle)
+        axs[0].set_xlabel('n. neurons - layer 1')
+        axs[0].set_ylabel('n. neurons - layer 2')
+        axs[0].set_xlim(-5,max_neurons_l1+5)
+        axs[0].set_ylim(-5,max_neurons_l2+5)
+
+        sc=axs[1].scatter(Npars, scores, c=tot_neurons, cmap='viridis')
+        cbar = plt.colorbar(sc,ax=axs[1])
+        cbar.set_label('total n. neurons')
+        axs[1].title.set_text(mytitle)
+        axs[1].set_xlabel('n. parameters')
+        axs[1].set_ylabel('score')
+        axs[1].set_ylim(threshold, min(np.max(scores)*1.005, 1)) 
+        plt.subplots_adjust(wspace=0.4)
+        plt.show()
+        return
+
+#######################################################################
+# Example
+#######################################################################
 if __name__ == '__main__':
 
     out_intervals = [[1,2.2],[1,1.8],[0.9,1.6]]
-    NN = RegressionNN(Nfeatures=3, hlayers_sizes=(100,), out_intervals=out_intervals)
 
     path = "/home/simone/repos/IPAM2021_ML/datasets/GSTLAL_EarlyWarning_Dataset/Dataset/m1m2Mc/"
     xtrain = path+'xtrain.csv'
     ytrain = path+'ytrain.csv'
     xtest  = path+'xtest.csv'
     ytest  = path+'ytest.csv'
-    
+   
+    NN = RegressionNN(Nfeatures=3, hlayers_sizes=(100,), out_intervals=out_intervals)
     NN.load_train_dataset(fname_x=xtrain, fname_y=ytrain)
-
     NN.print_summary()
-
     NN.training(verbose=True, epochs=10, validation_split=0.)
-
     NN.load_test_dataset(fname_x=xtest, fname_y=ytest) 
     NN.print_metrics()
 
@@ -509,3 +708,11 @@ if __name__ == '__main__':
     NN.print_info()
     print(dashes)
     NN2.print_info()
+    
+    CV = CrossValidator(neurons_step=100, fname_xtrain=xtrain, fname_ytrain=ytrain, fname_xtest=xtest, \
+                        fname_ytest=ytest, epochs=10, batch_size=128, out_intervals=out_intervals)
+    CV.crossval()
+    CV.plot(feature_idx=-1, threshold=0.82)
+    #CV.plot(feature_idx=0)
+    #CV.plot(feature_idx=1)
+    #CV.plot(feature_idx=2)
