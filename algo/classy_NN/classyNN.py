@@ -10,7 +10,7 @@ in the folder algo/NN_tf/
 # TODO: - add mean errors and maybe a simple histo-plot
 #       - maybe change logic for test-data 
 
-import os, sys, csv, types, dill
+import os, sys, csv, types, dill, time
 import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
@@ -20,6 +20,16 @@ from tensorflow.keras.layers import Dense
 from tensorflow.keras.losses import MeanSquaredError
 from tensorflow.keras.optimizers import Adam
 from keras.utils.layer_utils import count_params
+
+#######################################################################
+# Default values used in the classes RegressionNN and CrossValidator
+#######################################################################
+NFEATURES        = 3
+EPOCHS           = 25
+BATCH_SIZE       = 64
+HLAYERS_SIZES    = (100,)
+LEARNING_RATE    = 0.001
+VALIDATION_SPLIT = 0.
 
 #######################################################################
 # Usual I/O functiony by Marina
@@ -126,7 +136,7 @@ class RegressionNN:
     otherwise build a new model according to Nfeatures and hlayers_sizes.
     The scalers will be defined when loading the train dataset.
     """
-    def __init__(self, Nfeatures=3, hlayers_sizes=(100,), out_intervals=None, load_model=None, verbose=False):
+    def __init__(self, Nfeatures=NFEATURES, hlayers_sizes=HLAYERS_SIZES, out_intervals=None, load_model=None, verbose=False):
         # input
         self.Nfeatures        = Nfeatures
         self.hlayers_sizes    = hlayers_sizes
@@ -197,7 +207,6 @@ class RegressionNN:
         attr2save = ['Nfeatures', 'hlayers_sizes', 'batch_size', 'epochs', 'validation_split', \
                      'learning_rate', 'Ntrain', 'out_intervals']
         self.__check_attributes(['model', 'scaler_x', 'scaler_y']+attr2save)
-        
         if model_name is None:
             model_name = 'model_Nfeatures'+str(self.Nfeatures)+'_'+datetime.today().strftime('%Y-%m-%d')
             if not overwrite:
@@ -209,7 +218,6 @@ class RegressionNN:
                 if i>1:
                     print('+++ warning +++: ', model_name_v0, ' already exists and overwrite is False.\n',
                           'Renaming the new model as ', model_name, sep='')
-
         self.model.save_weights(model_name+'/checkpoint')
         train_info = {}
         for a in attr2save:
@@ -251,14 +259,14 @@ class RegressionNN:
             print(model_name, 'loaded')
         return
 
-    def load_train_dataset(self, fname_x='xtrain.csv', fname_y='ytrain.csv', verbose=False):
+    def load_train_dataset(self, fname_xtrain='xtrain.csv', fname_ytrain='ytrain.csv', verbose=False):
         """ Load datasets in CSV format 
         """
         self.__check_attributes(['Nfeatures'])
         if hasattr(self, 'scaler_x'):
             raise RuntimeError('scaler_x is already defined, i.e. the train dataset has been already loaded.')
-        xtrain_notnormalized = extractData(fname_x, verbose=verbose)
-        ytrain_notnormalized = extractData(fname_y, verbose=verbose)
+        xtrain_notnormalized = extractData(fname_xtrain, verbose=verbose)
+        ytrain_notnormalized = extractData(fname_ytrain, verbose=verbose)
         Nfeatures = self.Nfeatures
         if Nfeatures!=len(xtrain_notnormalized[0,:]):
             raise ValueError('Incompatible data size')
@@ -285,10 +293,10 @@ class RegressionNN:
         self.ytrain_notnorm = ytrain_notnormalized
         return
         
-    def load_test_dataset(self, fname_x='xtest.csv', fname_y='ytest.csv', verbose=False):
+    def load_test_dataset(self, fname_xtest='xtest.csv', fname_ytest='ytest.csv', verbose=False):
         self.__check_attributes(['scaler_x', 'scaler_y'])
-        xtest_notnormalized = extractData(fname_x, verbose=verbose)
-        ytest_notnormalized = extractData(fname_y, verbose=verbose)
+        xtest_notnormalized = extractData(fname_xtest, verbose=verbose)
+        ytest_notnormalized = extractData(fname_ytest, verbose=verbose)
         xtest               = self.scaler_x.transform(xtest_notnormalized)
         ytest               = self.scaler_y.transform(ytest_notnormalized)
         self.xtest          = xtest
@@ -297,7 +305,8 @@ class RegressionNN:
         self.ytest_notnorm  = ytest_notnormalized
         return
     
-    def training(self, verbose=False, epochs=100, batch_size=64, learning_rate=0.001, validation_split=0.):
+    def training(self, verbose=False, epochs=EPOCHS, batch_size=BATCH_SIZE, 
+                 learning_rate=LEARNING_RATE, validation_split=VALIDATION_SPLIT):
         """ Train the model with the options given in input
         """
         self.__check_attributes(['xtrain', 'ytrain', 'model'])
@@ -306,14 +315,16 @@ class RegressionNN:
         self.learning_rate    = learning_rate
         self.validation_split = validation_split
         self.__compile_model()
+        t0 = time.perf_counter()
         fit_output = self.model.fit(self.xtrain, self.ytrain, 
             epochs           = epochs, 
             batch_size       = batch_size,
             validation_split = validation_split,
             verbose          = verbose) 
+        self.training_time = time.perf_counter()-t0
         self.fit_output = fit_output
         return
-    
+        
     def compute_prediction(self, x, transform_output=False, transform_input=False):
         """ Prediction, can be used only after training
         If you want to remove the normalization, i.e. 
@@ -325,19 +336,16 @@ class RegressionNN:
         """
         self.__check_attributes(['Nfeatures', 'model'])
         x = np.array(x)
-        # if the input is given as a 1d-array...
         if len(x.shape)==1:
+            # if the input is given as a 1d-array...
             if len(x)==self.Nfeatures:
                 x = x.reshape((1,self.Nfeatures)) # ...transform as row-vec
             else:
                 raise ValueError('Wrong input-dimension')
-
         if transform_input:
             self.__check_attributes(['scaler_x'])
             x = self.scaler_x.transform(x)
-        
         prediction = self.model.predict(x) 
-        
         if transform_output:
             self.__check_attributes(['scaler_y'])
             out = self.scaler_y.inverse_transform(prediction)
@@ -376,21 +384,24 @@ class RegressionNN:
             SS_tot = np.sum((y_true - np.mean(y_true))**2)
             return 1-SS_res/SS_tot
         self.__check_attributes(['Nfeatures', 'model', 'xtest', 'ytest'])
-        Nfeatures  = self.Nfeatures
-        model      = self.model
-        xtest      = self.xtest
-        ytest      = self.ytest
-        prediction = self.compute_prediction(xtest)
-        R2_vec     = np.zeros((Nfeatures,))
+        Nfeatures   = self.Nfeatures
+        model       = self.model
+        xtest       = self.xtest
+        ytest       = self.ytest
+        prediction  = self.compute_prediction(xtest)
+        R2_vec      = np.zeros((Nfeatures,))
+        #mean_errors = np.zeros((len(xtest[:,0]),Nfeatures))
         for i in range(0,Nfeatures):
-             R2_vec[i]  = R2_numpy(ytest[:,i], prediction[:,i])
+             R2_vec[i]        = R2_numpy(ytest[:,i], prediction[:,i])
+             #mean_errors[:,i] = (ytest[:,i]-prediction[:,i])/ytest[:,i]
         metrics         = model.metrics # this is empty for loaded models, not a big issue
         metrics_results = model.evaluate(xtest, ytest, verbose=0)
         metrics_dict    = {};
         for i in range(0, len(metrics)):
             metrics_dict[metrics[i].name] = metrics_results[i]
-        metrics_dict["R2"]     = R2_vec
-        metrics_dict["R2mean"] = np.mean(R2_vec)
+        metrics_dict["R2"]          = R2_vec
+        metrics_dict["R2mean"]      = np.mean(R2_vec)
+        #metrics_dict["mean_errors"] = mean_errors
         self.metrics_dict = metrics_dict
         return
 
@@ -424,9 +435,9 @@ class RegressionNN:
             plot_cols = 3
         rows = max(round(Nfeatures/plot_cols),1)
         if rows>1:
-            fig, axs  = plt.subplots(rows, plot_cols, figsize = (25,17))
+            fig, axs = plt.subplots(rows, plot_cols, figsize = (25,17))
         else: 
-            fig, axs  = plt.subplots(rows, plot_cols, figsize = (22,9))
+            fig, axs = plt.subplots(rows, plot_cols, figsize = (22,9))
         feature = 0
         for i in range(0,rows):
             for j in range(0,plot_cols):
@@ -491,32 +502,68 @@ class RegressionNN:
             ax2.legend()
         plt.show()
         return 
-            
+    
+    def plot_err_histogram(self, feature_idx=0, color_rec=[0.8,0.8,0.8], color_pred=[0,1,0], nbins=30, 
+                           logscale=False, name=None):
+        """ Plot error-histogram for one feature. 
+        The feature is chosen by feature_idx
+        """
+        self.__check_attributes(['fit_output', 'ytest_notnorm', 'xtest_notnorm'])
+        xtest_notnorm = self.xtest_notnorm
+        ytest_notnorm = self.ytest_notnorm
+        prediction = self.compute_prediction(xtest_notnorm, transform_output=True, transform_input=True)  
+        inj  = ytest_notnorm[:,feature_idx]
+        rec  = xtest_notnorm[:,feature_idx]
+        pred =    prediction[:,feature_idx]
+        errors_rec  = (inj- rec)/inj
+        errors_pred = (inj-pred)/inj
+        min_rec     = min(errors_rec)
+        max_rec     = max(errors_rec)
+        min_pred    = min(errors_pred)
+        max_pred    = max(errors_pred)
+        fmax  = max(max_rec, max_pred)
+        fmin  = min(min_rec, min_pred)
+        fstep = (fmax-fmin)/nbins
+        plt.figure
+        plt.hist(errors_rec , bins=np.arange(fmin, fmax, fstep), alpha=1  , color=color_rec, label='rec')
+        plt.hist(errors_pred, bins=np.arange(fmin, fmax, fstep), alpha=0.7, color=color_pred, label='pred')
+        plt.legend(fontsize=20)
+        plt.xlabel(r'$\Delta y/y$', fontsize=15)
+        if logscale:
+            plt.yscale('log', nonposy='clip')
+        if name is not None:
+            plt.title(name, fontsize=20)
+        plt.show() 
+        return
+
 #######################################################################
 # Cross-validator (on layers/architecture)
 #######################################################################
 class CrossValidator:
-    def __init__(self, Nfeatures=3, dict_name=None, Nneurons_max=300, neurons_step=50, out_intervals=None,
-                 epochs=100, batch_size=64, learning_rate=0.001, verbose=False,
+    """ Cross validation on architecture.
+    Consider 1 and 2 layer(s) architectures and do a cross-val on the number of neurons
+    for each layer.
+    """
+    def __init__(self, Nfeatures=NFEATURES, dict_name=None, Nneurons_max=300, neurons_step=50, out_intervals=None,
+                 epochs=EPOCHS, batch_size=BATCH_SIZE, learning_rate=LEARNING_RATE, verbose=False,
                  fname_xtrain=None, fname_ytrain=None, fname_xtest=None, fname_ytest=None):
         Nlayers_max        = 2 # hard-coded for now, but should be ok (i.e. no NN with >2 layers needed)
         self.Nfeatures     = Nfeatures
         self.Nlayers_max   = Nlayers_max
         self.Nneurons_max  = Nneurons_max
         self.neurons_step  = neurons_step
-        self.out_intervals = np.array(out_intervals)
+        if out_intervals is not None:
+            out_intervals = np.array(out_intervals)
+        self.out_intervals = out_intervals
         self.epochs        = epochs
         self.batch_size    = batch_size
         self.learning_rate = learning_rate
-
         if fname_xtrain is None or fname_ytrain is None or fname_xtest is None or fname_ytest is None:
             raise ValueError('Incomplete data-input! Specifiy fname_xtrain, fname_ytrain, fname_xtest, fname_ytest')
-        
         self.fname_xtrain = fname_xtrain
         self.fname_ytrain = fname_ytrain
         self.fname_xtest  = fname_xtest
         self.fname_ytest  = fname_ytest
-        
         hlayers_sizes_list = []
         for i in range(neurons_step, Nneurons_max, neurons_step):
             for j in range(0, Nneurons_max, neurons_step):
@@ -526,56 +573,66 @@ class CrossValidator:
                     hlayers_size = (i,)
                 hlayers_sizes_list.append(hlayers_size)
         self.hlayers_sizes_list = hlayers_sizes_list
-        
         if dict_name is None:
             dict_name = 'dict_Nfeatures'+str(Nfeatures)+'.dict'
         self.dict_name = dict_name
-        
         cv_dict = load_dill(dict_name, verbose=verbose)
         self.cv_dict = cv_dict 
-    
+        return 
+
     def __param_to_key(self, hlayers_sizes):
         epochs        = self.epochs
         batch_size    = self.batch_size
         learning_rate = self.learning_rate
         out_intervals = self.out_intervals
+        Nfeatures     = self.Nfeatures
         Nlayers = len(hlayers_sizes)
-        key  = str(epochs)+'-'+str(batch_size)+'-'+'alpha'+str(learning_rate)+'-'+str(hlayers_sizes)
-        if out_intervals is not None:
-            key += '-'+str(out_intervals) #TODO: works, but ugly. Fix
+        key  = 'e:'+str(epochs)+'-'+'bs:'+str(batch_size)+'-'+'alpha:'+str(learning_rate)+'-'
         key += str(Nlayers) + 'layers:'
         for i in range(0, Nlayers):
             key += str(hlayers_sizes[i])
             if i<Nlayers-1:
                 key += '+'
+        key += '-'
+        if out_intervals is not None:
+            key += 'oc:['
+            for i in range(0, Nfeatures):
+                key += '['+str(out_intervals[i][0])+','+str(out_intervals[i][1])+']'
+                if i<Nfeatures-1:
+                    key += ','
+            key += ']'
+        else:
+            key += 'no_oc'
         return key
 
     def crossval(self, verbose=False):
+        """ Do cross-validation
+        """
         Nfeatures          = self.Nfeatures
         epochs             = self.epochs
         batch_size         = self.batch_size
         learning_rate      = self.learning_rate
         out_intervals      = self.out_intervals
         hlayers_sizes_list = self.hlayers_sizes_list 
-        fname_xtrain = self.fname_xtrain
-        fname_ytrain = self.fname_ytrain
-        fname_xtest  = self.fname_xtest
-        fname_ytest  = self.fname_ytest
+        fname_xtrain       = self.fname_xtrain
+        fname_ytrain       = self.fname_ytrain
+        fname_xtest        = self.fname_xtest
+        fname_ytest        = self.fname_ytest
         for hlayers_sizes in hlayers_sizes_list:
             key = self.__param_to_key(hlayers_sizes)
             if key in self.cv_dict:
-                print(key, 'already saved in dict!')
+                if verbose:
+                    print('{:75s} already saved in the dict'.format(key))
             else:
                 NN = RegressionNN(Nfeatures=Nfeatures, hlayers_sizes=hlayers_sizes)
-                NN.load_train_dataset(fname_x=fname_xtrain, fname_y=fname_ytrain)
+                NN.load_train_dataset(fname_xtrain=fname_xtrain, fname_ytrain=fname_ytrain)
                 NN.training(epochs=epochs, batch_size=batch_size, learning_rate=learning_rate)
-                NN.load_test_dataset(fname_x=fname_xtest, fname_y=fname_ytest)
+                NN.load_test_dataset(fname_xtest=fname_xtest, fname_ytest=fname_ytest)
                 NN.compute_metrics_dict()                 
                 prediction   = NN.compute_prediction(NN.xtest_notnorm, transform_output=True, transform_input=True) 
                 metrics_dict = NN.metrics_dict
                 Npars        = count_params(NN.model.trainable_weights) 
                 del NN
-                
                 struct               = lambda:0
                 struct.metrics       = metrics_dict
                 struct.hlayers_sizes = hlayers_sizes
@@ -586,19 +643,19 @@ class CrossValidator:
                 struct.batch_size    = batch_size 
                 struct.out_intervals = self.out_intervals
                 struct.learning_rate = self.learning_rate
-
                 self.cv_dict[key] = struct 
                 cv_dict           = self.cv_dict
                 save_dill(self.dict_name, cv_dict)
-                print(key, 'saved')
+                if verbose:
+                    print('{:75s} saved'.format(key))
         return
 
     def plot(self, threshold=0.6, Npars_lim=1e+6, feature_idx=-1):
+        """ Plots to check which NN-architecture produces the best results
+        The metric used is R2. Use feature_idx=-1 to plot the mean of R2
         """
-        Plots to check which NN-architecture produces the best results
-        The metric used is R2
-        Use feature_idx=-1 to plot the mean of R2
-        """
+        if not hasattr(self, 'cv_dict'):
+            raise ValueError('cross-val dict not defined! Call self.crossval() befor self.plot()')
         cv_dict   = self.cv_dict
         dict_keys = cv_dict.keys()
         i = 0
@@ -607,12 +664,12 @@ class CrossValidator:
         max_score_l1   = 0
         max_score_l2   = 0
         max_score      = 0
-        scores  = []
-        Npars   = []
-        hlayers = []
-        layer1_size = []
-        layer2_size = []
-        tot_neurons = []
+        scores         = []
+        Npars          = []
+        hlayers        = []
+        layer1_size    = []
+        layer2_size    = []
+        tot_neurons    = []
         for key in dict_keys:
             s = cv_dict[key]
             if feature_idx<0:
@@ -623,9 +680,18 @@ class CrossValidator:
                 mytitle = "R2 of feature n."+str(feature_idx)
             mytitle += ", threshold: "+str(threshold)
             
-            # TODO: add check on the dict here
-            add2list = True
-
+            add2list = s.epochs==self.epochs and s.batch_size==self.batch_size \
+                       and np.isclose(s.learning_rate,self.learning_rate)
+            if (s.out_intervals is not None) and (self.out_intervals is not None):
+                for i in range(0,self.Nfeatures):
+                    for j in range(0,2):
+                        self_ij = self.out_intervals[i][j]
+                        s_ij    = s.out_intervals[i][j]
+                        if not np.isclose(self_ij, s_ij):
+                            add2list = False
+                            break
+            elif not (s.out_intervals is None and self.out_intervals is None):
+               add2list = False 
             if add2list:
                 scores.append(score)
                 Npars.append(s.Npars)
@@ -652,7 +718,6 @@ class CrossValidator:
         if i==0:
             print('no models found (or threshold too big)!')
             sys.exit()
-
         fig, axs = plt.subplots(1,2, figsize=(12, 4))
         sc=axs[0].scatter(layer1_size, layer2_size, c=scores, cmap='gist_rainbow')
         cbar = plt.colorbar(sc,ax=axs[0])
@@ -663,7 +728,6 @@ class CrossValidator:
         axs[0].set_ylabel('n. neurons - layer 2')
         axs[0].set_xlim(-5,max_neurons_l1+5)
         axs[0].set_ylim(-5,max_neurons_l2+5)
-
         sc=axs[1].scatter(Npars, scores, c=tot_neurons, cmap='viridis')
         cbar = plt.colorbar(sc,ax=axs[1])
         cbar.set_label('total n. neurons')
@@ -689,30 +753,26 @@ if __name__ == '__main__':
     ytest  = path+'ytest.csv'
    
     NN = RegressionNN(Nfeatures=3, hlayers_sizes=(100,), out_intervals=out_intervals)
-    NN.load_train_dataset(fname_x=xtrain, fname_y=ytrain)
+    NN.load_train_dataset(fname_xtrain=xtrain, fname_ytrain=ytrain)
     NN.print_summary()
     NN.training(verbose=True, epochs=10, validation_split=0.)
-    NN.load_test_dataset(fname_x=xtest, fname_y=ytest) 
+    NN.load_test_dataset(fname_xtest=xtest, fname_ytest=ytest) 
     NN.print_metrics()
 
-    #NN.plot_predictions(NN.xtest)
-    #NN.plot_history()
     dashes = '-'*60
     print(dashes, 'Save and load test:', dashes, sep='\n')
     NN.save_model(verbose=True, overwrite=True)
     NN2 = RegressionNN(load_model='model_Nfeatures3_'+datetime.today().strftime('%Y-%m-%d'), verbose=True)
-    NN2.load_test_dataset(fname_x=xtest, fname_y=ytest) 
+    NN2.load_test_dataset(fname_xtest=xtest, fname_ytest=ytest) 
     NN2.print_metrics() 
     
     print(dashes)
     NN.print_info()
     print(dashes)
     NN2.print_info()
+    print(dashes)
     
     CV = CrossValidator(neurons_step=100, fname_xtrain=xtrain, fname_ytrain=ytrain, fname_xtest=xtest, \
                         fname_ytest=ytest, epochs=10, batch_size=128, out_intervals=out_intervals)
     CV.crossval()
     CV.plot(feature_idx=-1, threshold=0.82)
-    #CV.plot(feature_idx=0)
-    #CV.plot(feature_idx=1)
-    #CV.plot(feature_idx=2)
