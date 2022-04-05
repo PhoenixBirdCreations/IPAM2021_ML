@@ -7,9 +7,6 @@ For testing, plots and stuff see the notebooks
 in the folder algo/NN_tf/
 """
 
-# TODO: - add mean errors and maybe a simple histo-plot
-#       - maybe change logic for test-data 
-
 import os, sys, csv, types, dill, time
 import numpy as np
 import tensorflow as tf
@@ -20,6 +17,7 @@ from tensorflow.keras.layers import Dense
 from tensorflow.keras.losses import MeanSquaredError
 from tensorflow.keras.optimizers import Adam
 from keras.utils.layer_utils import count_params
+from keras.initializers import RandomNormal
 
 #######################################################################
 # Default values used in the classes RegressionNN and CrossValidator
@@ -30,6 +28,7 @@ BATCH_SIZE       = 64
 HLAYERS_SIZES    = (100,)
 LEARNING_RATE    = 0.001
 VALIDATION_SPLIT = 0.
+SEED             = None
 
 #######################################################################
 # Usual I/O functiony by Marina
@@ -136,7 +135,8 @@ class RegressionNN:
     otherwise build a new model according to Nfeatures and hlayers_sizes.
     The scalers will be defined when loading the train dataset.
     """
-    def __init__(self, Nfeatures=NFEATURES, hlayers_sizes=HLAYERS_SIZES, out_intervals=None, load_model=None, verbose=False):
+    def __init__(self, Nfeatures=NFEATURES, hlayers_sizes=HLAYERS_SIZES, out_intervals=None, load_model=None, verbose=False,
+                 seed=SEED):
         # input
         self.Nfeatures        = Nfeatures
         self.hlayers_sizes    = hlayers_sizes
@@ -145,6 +145,9 @@ class RegressionNN:
         self.out_intervals = out_intervals
         self.hidden_activation = 'relu'
         
+        if seed is None:
+            seed = np.random.randint(1,10000)
+        self.seed = seed
         if load_model is not None:
             self.__load_model(load_model, verbose=verbose)
             if Nfeatures!=self.Nfeatures or hlayers_sizes!=self.hlayers_sizes:
@@ -154,6 +157,7 @@ class RegressionNN:
                 raise ValueError(error_message)
         else:
             self.__build_model()
+        
 
     def __check_attributes(self, attr_list):
         """ Check that all the attributes in the list
@@ -177,12 +181,14 @@ class RegressionNN:
         hlayers_sizes     = self.hlayers_sizes
         Nfeatures         = self.Nfeatures
         hidden_activation = self.hidden_activation
+        seed              = self.seed
         model_input       = tf.keras.Input(shape=(Nfeatures))
         # hidden layers
-        x = Dense(hlayers_sizes[0], kernel_initializer='normal', activation=hidden_activation)(model_input)
-        for i in range(1, len(hlayers_sizes)):
-            x = Dense(hlayers_sizes[i], kernel_initializer='normal', activation=hidden_activation)(x)
-        out = Dense(Nfeatures, kernel_initializer='normal',activation=output_activation_lin_constraint)(x)
+        x = Dense(hlayers_sizes[0], kernel_initializer=RandomNormal(seed=seed), activation=hidden_activation)(model_input)
+        Nlayers = len(hlayers_sizes)
+        for i in range(1, Nlayers):
+            x = Dense(hlayers_sizes[i], kernel_initializer=RandomNormal(seed=seed+i), activation=hidden_activation)(x)
+        out = Dense(Nfeatures, kernel_initializer=RandomNormal(seed=seed+Nlayers),activation=output_activation_lin_constraint)(x)
         self.model = tf.keras.Model(model_input, out)
         return
     
@@ -205,7 +211,7 @@ class RegressionNN:
         """ Save weights of the model, scalers and fit options
         """
         attr2save = ['Nfeatures', 'hlayers_sizes', 'batch_size', 'epochs', 'validation_split', \
-                     'learning_rate', 'Ntrain', 'out_intervals']
+                     'learning_rate', 'Ntrain', 'out_intervals', 'seed', 'training_time']
         self.__check_attributes(['model', 'scaler_x', 'scaler_y']+attr2save)
         if model_name is None:
             model_name = 'model_Nfeatures'+str(self.Nfeatures)+'_'+datetime.today().strftime('%Y-%m-%d')
@@ -309,11 +315,12 @@ class RegressionNN:
                  learning_rate=LEARNING_RATE, validation_split=VALIDATION_SPLIT):
         """ Train the model with the options given in input
         """
-        self.__check_attributes(['xtrain', 'ytrain', 'model'])
+        self.__check_attributes(['xtrain', 'ytrain', 'model', 'seed'])
         self.epochs           = epochs
         self.batch_size       = batch_size 
         self.learning_rate    = learning_rate
         self.validation_split = validation_split
+        tf.random.set_seed(self.seed)
         self.__compile_model()
         t0 = time.perf_counter()
         fit_output = self.model.fit(self.xtrain, self.ytrain, 
@@ -546,7 +553,7 @@ class CrossValidator:
     """
     def __init__(self, Nfeatures=NFEATURES, dict_name=None, Nneurons_max=300, neurons_step=50, out_intervals=None,
                  epochs=EPOCHS, batch_size=BATCH_SIZE, learning_rate=LEARNING_RATE, verbose=False,
-                 fname_xtrain=None, fname_ytrain=None, fname_xtest=None, fname_ytest=None):
+                 fname_xtrain=None, fname_ytrain=None, fname_xtest=None, fname_ytest=None, seed=SEED):
         Nlayers_max        = 2 # hard-coded for now, but should be ok (i.e. no NN with >2 layers needed)
         self.Nfeatures     = Nfeatures
         self.Nlayers_max   = Nlayers_max
@@ -558,6 +565,8 @@ class CrossValidator:
         self.epochs        = epochs
         self.batch_size    = batch_size
         self.learning_rate = learning_rate
+        self.seed          = seed
+        
         if fname_xtrain is None or fname_ytrain is None or fname_xtest is None or fname_ytest is None:
             raise ValueError('Incomplete data-input! Specifiy fname_xtrain, fname_ytrain, fname_xtest, fname_ytest')
         self.fname_xtrain = fname_xtrain
@@ -581,13 +590,14 @@ class CrossValidator:
         return 
 
     def __param_to_key(self, hlayers_sizes):
+        seed          = self.seed
         epochs        = self.epochs
         batch_size    = self.batch_size
         learning_rate = self.learning_rate
         out_intervals = self.out_intervals
         Nfeatures     = self.Nfeatures
         Nlayers = len(hlayers_sizes)
-        key  = 'e:'+str(epochs)+'-'+'bs:'+str(batch_size)+'-'+'alpha:'+str(learning_rate)+'-'
+        key  = 'e:'+str(epochs)+'-bs:'+str(batch_size)+'-alpha:'+str(learning_rate)+'-'
         key += str(Nlayers) + 'layers:'
         for i in range(0, Nlayers):
             key += str(hlayers_sizes[i])
@@ -603,12 +613,14 @@ class CrossValidator:
             key += ']'
         else:
             key += 'no_oc'
+        key += '-seed:'+str(self.seed)
         return key
 
     def crossval(self, verbose=False):
         """ Do cross-validation
         """
         Nfeatures          = self.Nfeatures
+        seed               = self.seed
         epochs             = self.epochs
         batch_size         = self.batch_size
         learning_rate      = self.learning_rate
@@ -622,9 +634,9 @@ class CrossValidator:
             key = self.__param_to_key(hlayers_sizes)
             if key in self.cv_dict:
                 if verbose:
-                    print('{:75s} already saved in the dict'.format(key))
+                    print('{:85s} already saved in {:}'.format(key,self.dict_name))
             else:
-                NN = RegressionNN(Nfeatures=Nfeatures, hlayers_sizes=hlayers_sizes)
+                NN = RegressionNN(Nfeatures=Nfeatures, hlayers_sizes=hlayers_sizes, seed=seed)
                 NN.load_train_dataset(fname_xtrain=fname_xtrain, fname_ytrain=fname_ytrain)
                 NN.training(epochs=epochs, batch_size=batch_size, learning_rate=learning_rate)
                 NN.load_test_dataset(fname_xtest=fname_xtest, fname_ytest=fname_ytest)
@@ -643,11 +655,12 @@ class CrossValidator:
                 struct.batch_size    = batch_size 
                 struct.out_intervals = self.out_intervals
                 struct.learning_rate = self.learning_rate
+                struct.seed          = seed
                 self.cv_dict[key] = struct 
                 cv_dict           = self.cv_dict
                 save_dill(self.dict_name, cv_dict)
                 if verbose:
-                    print('{:75s} saved'.format(key))
+                    print('{:85s} saved'.format(key))
         return
 
     def plot(self, threshold=0.6, Npars_lim=1e+6, feature_idx=-1):
@@ -692,6 +705,10 @@ class CrossValidator:
                             break
             elif not (s.out_intervals is None and self.out_intervals is None):
                add2list = False 
+            if self.seed is not None and s.seed!=self.seed:
+                add2list = False
+            if self.seed is None and not 'seed:None' in key:
+                add2list = False
             if add2list:
                 scores.append(score)
                 Npars.append(s.Npars)
@@ -752,14 +769,14 @@ if __name__ == '__main__':
     xtest  = path+'xtest.csv'
     ytest  = path+'ytest.csv'
    
-    NN = RegressionNN(Nfeatures=3, hlayers_sizes=(100,), out_intervals=out_intervals)
+    NN = RegressionNN(Nfeatures=3, hlayers_sizes=(100,), out_intervals=out_intervals, seed=None)
     NN.load_train_dataset(fname_xtrain=xtrain, fname_ytrain=ytrain)
     NN.print_summary()
     NN.training(verbose=True, epochs=10, validation_split=0.)
     NN.load_test_dataset(fname_xtest=xtest, fname_ytest=ytest) 
     NN.print_metrics()
 
-    dashes = '-'*60
+    dashes = '-'*80
     print(dashes, 'Save and load test:', dashes, sep='\n')
     NN.save_model(verbose=True, overwrite=True)
     NN2 = RegressionNN(load_model='model_Nfeatures3_'+datetime.today().strftime('%Y-%m-%d'), verbose=True)
@@ -773,6 +790,6 @@ if __name__ == '__main__':
     print(dashes)
     
     CV = CrossValidator(neurons_step=100, fname_xtrain=xtrain, fname_ytrain=ytrain, fname_xtest=xtest, \
-                        fname_ytest=ytest, epochs=10, batch_size=128, out_intervals=out_intervals)
-    CV.crossval()
+                        fname_ytest=ytest, epochs=10, batch_size=128, out_intervals=out_intervals, seed=None)
+    CV.crossval(verbose=True)
     CV.plot(feature_idx=-1, threshold=0.82)
