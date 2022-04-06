@@ -132,13 +132,13 @@ class RegressionNN:
     """ Class to do regression using a NN from Tensorflow 
     and Keras backend.
     If load_model='cool_model', load the model and the scalers saved in cool_model/ by save_model(),
-    otherwise build a new model according to Nfeatures and hlayers_sizes.
+    otherwise build a new model according to nfeatures and hlayers_sizes.
     The scalers will be defined when loading the train dataset.
     """
-    def __init__(self, Nfeatures=NFEATURES, hlayers_sizes=HLAYERS_SIZES, out_intervals=None, load_model=None, verbose=False,
+    def __init__(self, nfeatures=NFEATURES, hlayers_sizes=HLAYERS_SIZES, out_intervals=None, load_model=None, verbose=False,
                  seed=SEED):
         # input
-        self.Nfeatures        = Nfeatures
+        self.nfeatures        = nfeatures
         self.hlayers_sizes    = hlayers_sizes
         if out_intervals is not None:
             out_intervals = np.array(out_intervals)
@@ -150,10 +150,10 @@ class RegressionNN:
         self.seed = seed
         if load_model is not None:
             self.__load_model(load_model, verbose=verbose)
-            if Nfeatures!=self.Nfeatures or hlayers_sizes!=self.hlayers_sizes:
+            if nfeatures!=self.nfeatures or hlayers_sizes!=self.hlayers_sizes:
                 error_message  = 'Trying to load model that is incosistent with input!\n'
-                error_message += 'instance input: Nfeatures={:}, hlayers_sizes={:}\n'.format(Nfeatures, hlayers_sizes)
-                error_message += 'loaded model  : Nfeatures={:}, hlayers_sizes={:}\n'.format(self.Nfeatures, self.hlayers_sizes)
+                error_message += 'instance input: nfeatures={:}, hlayers_sizes={:}\n'.format(nfeatures, hlayers_sizes)
+                error_message += 'loaded model  : nfeatures={:}, hlayers_sizes={:}\n'.format(self.nfeatures, self.hlayers_sizes)
                 raise ValueError(error_message)
         else:
             self.__build_model()
@@ -179,16 +179,16 @@ class RegressionNN:
             signs = K.switch(x>0, 1+x*0, -1+x*0) # x*0 in order to broadcast to correct dimension
             return K.switch(abs(x)<1, x, signs)
         hlayers_sizes     = self.hlayers_sizes
-        Nfeatures         = self.Nfeatures
+        nfeatures         = self.nfeatures
         hidden_activation = self.hidden_activation
         seed              = self.seed
-        model_input       = tf.keras.Input(shape=(Nfeatures))
+        model_input       = tf.keras.Input(shape=(nfeatures))
         # hidden layers
         x = Dense(hlayers_sizes[0], kernel_initializer=RandomNormal(seed=seed), activation=hidden_activation)(model_input)
-        Nlayers = len(hlayers_sizes)
-        for i in range(1, Nlayers):
+        nlayers = len(hlayers_sizes)
+        for i in range(1, nlayers):
             x = Dense(hlayers_sizes[i], kernel_initializer=RandomNormal(seed=seed+i), activation=hidden_activation)(x)
-        out = Dense(Nfeatures, kernel_initializer=RandomNormal(seed=seed+Nlayers),activation=output_activation_lin_constraint)(x)
+        out = Dense(nfeatures, kernel_initializer=RandomNormal(seed=seed+nlayers),activation=output_activation_lin_constraint)(x)
         self.model = tf.keras.Model(model_input, out)
         return
     
@@ -210,11 +210,11 @@ class RegressionNN:
     def save_model(self, model_name=None, verbose=False, overwrite=True):
         """ Save weights of the model, scalers and fit options
         """
-        attr2save = ['Nfeatures', 'hlayers_sizes', 'batch_size', 'epochs', 'validation_split', \
-                     'learning_rate', 'Ntrain', 'out_intervals', 'seed', 'training_time']
+        attr2save = ['nfeatures', 'hlayers_sizes', 'batch_size', 'epochs', 'validation_split', \
+                     'learning_rate', 'ntrain', 'out_intervals', 'seed', 'training_time']
         self.__check_attributes(['model', 'scaler_x', 'scaler_y']+attr2save)
         if model_name is None:
-            model_name = 'model_Nfeatures'+str(self.Nfeatures)+'_'+datetime.today().strftime('%Y-%m-%d')
+            model_name = 'model_nfeatures'+str(self.nfeatures)+'_'+datetime.today().strftime('%Y-%m-%d')
             if not overwrite:
                 i = 1
                 model_name_v0 = model_name
@@ -268,25 +268,25 @@ class RegressionNN:
     def load_train_dataset(self, fname_xtrain='xtrain.csv', fname_ytrain='ytrain.csv', verbose=False):
         """ Load datasets in CSV format 
         """
-        self.__check_attributes(['Nfeatures'])
+        self.__check_attributes(['nfeatures'])
         if hasattr(self, 'scaler_x'):
             raise RuntimeError('scaler_x is already defined, i.e. the train dataset has been already loaded.')
         xtrain_notnormalized = extractData(fname_xtrain, verbose=verbose)
         ytrain_notnormalized = extractData(fname_ytrain, verbose=verbose)
-        Nfeatures = self.Nfeatures
-        if Nfeatures!=len(xtrain_notnormalized[0,:]):
+        nfeatures = self.nfeatures
+        if nfeatures!=len(xtrain_notnormalized[0,:]):
             raise ValueError('Incompatible data size')
         # create scalers
         if self.out_intervals is None:
             if verbose:
                 print('No output-intervals specified, using MinMaxScaler')
-            self.out_intervals      = np.zeros((Nfeatures,2))
+            self.out_intervals      = np.zeros((nfeatures,2))
             self.out_intervals[:,0] = xtrain_notnormalized.min(axis=0)
             self.out_intervals[:,1] = xtrain_notnormalized.max(axis=0)
-        Ax = np.reshape(xtrain_notnormalized.min(axis=0), (Nfeatures,1))
-        Bx = np.reshape(xtrain_notnormalized.max(axis=0), (Nfeatures,1))
-        Ay = np.reshape(self.out_intervals[:,0], (Nfeatures,1)) 
-        By = np.reshape(self.out_intervals[:,1], (Nfeatures,1)) 
+        Ax = np.reshape(xtrain_notnormalized.min(axis=0), (nfeatures,1))
+        Bx = np.reshape(xtrain_notnormalized.max(axis=0), (nfeatures,1))
+        Ay = np.reshape(self.out_intervals[:,0], (nfeatures,1)) 
+        By = np.reshape(self.out_intervals[:,1], (nfeatures,1)) 
         ones = np.ones(np.shape(Ax))
         self.scaler_x = LinearScaler(Ax,Bx,-1*ones, ones)
         self.scaler_y = LinearScaler(Ay,By,-1*ones, ones)
@@ -294,7 +294,7 @@ class RegressionNN:
         ytrain              = self.scaler_y.transform(ytrain_notnormalized)
         self.xtrain         = xtrain
         self.ytrain         = ytrain
-        self.Ntrain         = len(xtrain[:,0])
+        self.ntrain         = len(xtrain[:,0])
         self.xtrain_notnorm = xtrain_notnormalized
         self.ytrain_notnorm = ytrain_notnormalized
         return
@@ -341,12 +341,12 @@ class RegressionNN:
         If the input (i.e. x) is not already normalized, use
         transform_input = True
         """
-        self.__check_attributes(['Nfeatures', 'model'])
+        self.__check_attributes(['nfeatures', 'model'])
         x = np.array(x)
         if len(x.shape)==1:
             # if the input is given as a 1d-array...
-            if len(x)==self.Nfeatures:
-                x = x.reshape((1,self.Nfeatures)) # ...transform as row-vec
+            if len(x)==self.nfeatures:
+                x = x.reshape((1,self.nfeatures)) # ...transform as row-vec
             else:
                 raise ValueError('Wrong input-dimension')
         if transform_input:
@@ -374,9 +374,9 @@ class RegressionNN:
                 if attr=='out_intervals':
                     out_intervals = self.out_intervals
                     print('{:20s}: ['.format(attr),end='')
-                    for i in range(0,self.Nfeatures):
+                    for i in range(0,self.nfeatures):
                         print('[{:},{:}]'.format(out_intervals[i][0],out_intervals[i][1]),end='')
-                        if i<self.Nfeatures-1:
+                        if i<self.nfeatures-1:
                             print(',',end='')
                     print(']')
                 else:
@@ -390,15 +390,15 @@ class RegressionNN:
             SS_res = np.sum((y_true - y_pred )**2)
             SS_tot = np.sum((y_true - np.mean(y_true))**2)
             return 1-SS_res/SS_tot
-        self.__check_attributes(['Nfeatures', 'model', 'xtest', 'ytest'])
-        Nfeatures   = self.Nfeatures
+        self.__check_attributes(['nfeatures', 'model', 'xtest', 'ytest'])
+        nfeatures   = self.nfeatures
         model       = self.model
         xtest       = self.xtest
         ytest       = self.ytest
         prediction  = self.compute_prediction(xtest)
-        R2_vec      = np.zeros((Nfeatures,))
-        #mean_errors = np.zeros((len(xtest[:,0]),Nfeatures))
-        for i in range(0,Nfeatures):
+        R2_vec      = np.zeros((nfeatures,))
+        #mean_errors = np.zeros((len(xtest[:,0]),nfeatures))
+        for i in range(0,nfeatures):
              R2_vec[i]        = R2_numpy(ytest[:,i], prediction[:,i])
              #mean_errors[:,i] = (ytest[:,i]-prediction[:,i])/ytest[:,i]
         metrics         = model.metrics # this is empty for loaded models, not a big issue
@@ -432,15 +432,15 @@ class RegressionNN:
         on other modules (i.e. do not overcomplicate 
         this code with useless graphical functions)
         """
-        self.__check_attributes(['Nfeatures', 'ytest_notnorm'])
-        Nfeatures     = self.Nfeatures
+        self.__check_attributes(['nfeatures', 'ytest_notnorm'])
+        nfeatures     = self.nfeatures
         ytest_notnorm = self.ytest_notnorm
         prediction    = self.compute_prediction(x, transform_output=True)
-        if Nfeatures<3:
-            plot_cols = Nfeatures
+        if nfeatures<3:
+            plot_cols = nfeatures
         else:
             plot_cols = 3
-        rows = max(round(Nfeatures/plot_cols),1)
+        rows = max(round(nfeatures/plot_cols),1)
         if rows>1:
             fig, axs = plt.subplots(rows, plot_cols, figsize = (25,17))
         else: 
@@ -448,7 +448,7 @@ class RegressionNN:
         feature = 0
         for i in range(0,rows):
             for j in range(0,plot_cols):
-                if feature>=Nfeatures:
+                if feature>=nfeatures:
                     break
                 if rows>1:
                     ax = axs[i,j]
@@ -551,13 +551,13 @@ class CrossValidator:
     Consider 1 and 2 layer(s) architectures and do a cross-val on the number of neurons
     for each layer.
     """
-    def __init__(self, Nfeatures=NFEATURES, dict_name=None, Nneurons_max=300, neurons_step=50, out_intervals=None,
+    def __init__(self, nfeatures=NFEATURES, dict_name=None, neurons_max=300, neurons_step=50, out_intervals=None,
                  epochs=EPOCHS, batch_size=BATCH_SIZE, learning_rate=LEARNING_RATE, verbose=False,
                  fname_xtrain=None, fname_ytrain=None, fname_xtest=None, fname_ytest=None, seed=SEED):
-        Nlayers_max        = 2 # hard-coded for now, but should be ok (i.e. no NN with >2 layers needed)
-        self.Nfeatures     = Nfeatures
-        self.Nlayers_max   = Nlayers_max
-        self.Nneurons_max  = Nneurons_max
+        nlayers_max        = 2 # hard-coded for now, but should be ok (i.e. no NN with >2 layers needed)
+        self.nfeatures     = nfeatures
+        self.nlayers_max   = nlayers_max
+        self.neurons_max  = neurons_max
         self.neurons_step  = neurons_step
         if out_intervals is not None:
             out_intervals = np.array(out_intervals)
@@ -574,8 +574,8 @@ class CrossValidator:
         self.fname_xtest  = fname_xtest
         self.fname_ytest  = fname_ytest
         hlayers_sizes_list = []
-        for i in range(neurons_step, Nneurons_max, neurons_step):
-            for j in range(0, Nneurons_max, neurons_step):
+        for i in range(neurons_step, neurons_max, neurons_step):
+            for j in range(0, neurons_max, neurons_step):
                 if j>0:
                     hlayers_size = (i,j)
                 else:
@@ -583,7 +583,7 @@ class CrossValidator:
                 hlayers_sizes_list.append(hlayers_size)
         self.hlayers_sizes_list = hlayers_sizes_list
         if dict_name is None:
-            dict_name = 'dict_Nfeatures'+str(Nfeatures)+'.dict'
+            dict_name = 'dict_nfeatures'+str(nfeatures)+'.dict'
         self.dict_name = dict_name
         cv_dict = load_dill(dict_name, verbose=verbose)
         self.cv_dict = cv_dict 
@@ -595,20 +595,20 @@ class CrossValidator:
         batch_size    = self.batch_size
         learning_rate = self.learning_rate
         out_intervals = self.out_intervals
-        Nfeatures     = self.Nfeatures
-        Nlayers = len(hlayers_sizes)
+        nfeatures     = self.nfeatures
+        nlayers = len(hlayers_sizes)
         key  = 'e:'+str(epochs)+'-bs:'+str(batch_size)+'-alpha:'+str(learning_rate)+'-'
-        key += str(Nlayers) + 'layers:'
-        for i in range(0, Nlayers):
+        key += str(nlayers) + 'layers:'
+        for i in range(0, nlayers):
             key += str(hlayers_sizes[i])
-            if i<Nlayers-1:
+            if i<nlayers-1:
                 key += '+'
         key += '-'
         if out_intervals is not None:
             key += 'oc:['
-            for i in range(0, Nfeatures):
+            for i in range(0, nfeatures):
                 key += '['+str(out_intervals[i][0])+','+str(out_intervals[i][1])+']'
-                if i<Nfeatures-1:
+                if i<nfeatures-1:
                     key += ','
             key += ']'
         else:
@@ -619,7 +619,7 @@ class CrossValidator:
     def crossval(self, verbose=False):
         """ Do cross-validation
         """
-        Nfeatures          = self.Nfeatures
+        nfeatures          = self.nfeatures
         seed               = self.seed
         epochs             = self.epochs
         batch_size         = self.batch_size
@@ -634,23 +634,23 @@ class CrossValidator:
             key = self.__param_to_key(hlayers_sizes)
             if key in self.cv_dict:
                 if verbose:
-                    print('{:85s} already saved in {:}'.format(key,self.dict_name))
+                    print('{:90s} already saved in {:}'.format(key,self.dict_name))
             else:
-                NN = RegressionNN(Nfeatures=Nfeatures, hlayers_sizes=hlayers_sizes, seed=seed)
+                NN = RegressionNN(nfeatures=nfeatures, hlayers_sizes=hlayers_sizes, seed=seed)
                 NN.load_train_dataset(fname_xtrain=fname_xtrain, fname_ytrain=fname_ytrain)
                 NN.training(epochs=epochs, batch_size=batch_size, learning_rate=learning_rate)
                 NN.load_test_dataset(fname_xtest=fname_xtest, fname_ytest=fname_ytest)
                 NN.compute_metrics_dict()                 
                 prediction   = NN.compute_prediction(NN.xtest_notnorm, transform_output=True, transform_input=True) 
                 metrics_dict = NN.metrics_dict
-                Npars        = count_params(NN.model.trainable_weights) 
+                npars        = count_params(NN.model.trainable_weights) 
                 del NN
                 struct               = lambda:0
                 struct.metrics       = metrics_dict
                 struct.hlayers_sizes = hlayers_sizes
                 struct.prediction    = prediction
-                struct.Npars         = Npars
-                struct.Nlayers       = len(hlayers_sizes)
+                struct.npars         = npars
+                struct.nlayers       = len(hlayers_sizes)
                 struct.epochs        = epochs
                 struct.batch_size    = batch_size 
                 struct.out_intervals = self.out_intervals
@@ -660,10 +660,10 @@ class CrossValidator:
                 cv_dict           = self.cv_dict
                 save_dill(self.dict_name, cv_dict)
                 if verbose:
-                    print('{:85s} saved'.format(key))
+                    print('{:90s} saved in {:}'.format(key,self.dict_name))
         return
 
-    def plot(self, threshold=0.6, Npars_lim=1e+6, feature_idx=-1):
+    def plot(self, threshold=0.6, npars_lim=1e+6, feature_idx=-1):
         """ Plots to check which NN-architecture produces the best results
         The metric used is R2. Use feature_idx=-1 to plot the mean of R2
         """
@@ -678,7 +678,7 @@ class CrossValidator:
         max_score_l2   = 0
         max_score      = 0
         scores         = []
-        Npars          = []
+        npars          = []
         hlayers        = []
         layer1_size    = []
         layer2_size    = []
@@ -693,30 +693,14 @@ class CrossValidator:
                 mytitle = "R2 of feature n."+str(feature_idx)
             mytitle += ", threshold: "+str(threshold)
             
-            add2list = s.epochs==self.epochs and s.batch_size==self.batch_size \
-                       and np.isclose(s.learning_rate,self.learning_rate)
-            if (s.out_intervals is not None) and (self.out_intervals is not None):
-                for i in range(0,self.Nfeatures):
-                    for j in range(0,2):
-                        self_ij = self.out_intervals[i][j]
-                        s_ij    = s.out_intervals[i][j]
-                        if not np.isclose(self_ij, s_ij):
-                            add2list = False
-                            break
-            elif not (s.out_intervals is None and self.out_intervals is None):
-               add2list = False 
-            if self.seed is not None and s.seed!=self.seed:
-                add2list = False
-            if self.seed is None and not 'seed:None' in key:
-                add2list = False
-            if add2list:
+            if self.__param_to_key(s.hlayers_sizes)==key:
                 scores.append(score)
-                Npars.append(s.Npars)
+                npars.append(s.npars)
                 hlayers.append(s.hlayers_sizes)
                 neurons_l1 = s.hlayers_sizes[0]
                 layer1_size.append(neurons_l1)
                 tot_neurons_tmp = neurons_l1
-                if s.Nlayers>1:
+                if s.nlayers>1:
                     neurons_l2 = s.hlayers_sizes[1]
                 else:
                     neurons_l2 = 0
@@ -745,7 +729,7 @@ class CrossValidator:
         axs[0].set_ylabel('n. neurons - layer 2')
         axs[0].set_xlim(-5,max_neurons_l1+5)
         axs[0].set_ylim(-5,max_neurons_l2+5)
-        sc=axs[1].scatter(Npars, scores, c=tot_neurons, cmap='viridis')
+        sc=axs[1].scatter(npars, scores, c=tot_neurons, cmap='viridis')
         cbar = plt.colorbar(sc,ax=axs[1])
         cbar.set_label('total n. neurons')
         axs[1].title.set_text(mytitle)
@@ -769,7 +753,7 @@ if __name__ == '__main__':
     xtest  = path+'xtest.csv'
     ytest  = path+'ytest.csv'
    
-    NN = RegressionNN(Nfeatures=3, hlayers_sizes=(100,), out_intervals=out_intervals, seed=None)
+    NN = RegressionNN(nfeatures=3, hlayers_sizes=(100,), out_intervals=out_intervals, seed=None)
     NN.load_train_dataset(fname_xtrain=xtrain, fname_ytrain=ytrain)
     NN.print_summary()
     NN.training(verbose=True, epochs=10, validation_split=0.)
@@ -779,7 +763,7 @@ if __name__ == '__main__':
     dashes = '-'*80
     print(dashes, 'Save and load test:', dashes, sep='\n')
     NN.save_model(verbose=True, overwrite=True)
-    NN2 = RegressionNN(load_model='model_Nfeatures3_'+datetime.today().strftime('%Y-%m-%d'), verbose=True)
+    NN2 = RegressionNN(load_model='model_nfeatures3_'+datetime.today().strftime('%Y-%m-%d'), verbose=True)
     NN2.load_test_dataset(fname_xtest=xtest, fname_ytest=ytest) 
     NN2.print_metrics() 
     
@@ -788,7 +772,7 @@ if __name__ == '__main__':
     print(dashes)
     NN2.print_info()
     print(dashes)
-    
+    out_intervals = None 
     CV = CrossValidator(neurons_step=100, fname_xtrain=xtrain, fname_ytrain=ytrain, fname_xtest=xtest, \
                         fname_ytest=ytest, epochs=10, batch_size=128, out_intervals=out_intervals, seed=None)
     CV.crossval(verbose=True)
