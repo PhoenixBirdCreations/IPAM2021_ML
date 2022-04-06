@@ -33,7 +33,7 @@ SEED             = None
 #######################################################################
 # Usual I/O functiony by Marina
 #######################################################################
-def extractData(filename, verbose=False):
+def extract_data(filename, verbose=False, skip_header=False):
     """ Reads data from csv file and returns it in array form.
     """
     lst=[]
@@ -41,12 +41,14 @@ def extractData(filename, verbose=False):
         csv_reader = csv.reader(csv_file, delimiter=',')
         for row in csv_reader:
             lst.append(row)
+    if skip_header:
+        lst = lst[1:]
     data=np.array(lst, dtype=float)
     if verbose:
         print(filename, 'loaded')
     return data
 
-def writeResult(filename, data, verbose=False):
+def write_result(filename, data, verbose=False):
     """ Writes data predicted by trained algorithm into a csv file.
     """
     with open(filename, 'w') as csvfile:
@@ -265,14 +267,22 @@ class RegressionNN:
             print(model_name, 'loaded')
         return
 
-    def load_train_dataset(self, fname_xtrain='xtrain.csv', fname_ytrain='ytrain.csv', verbose=False):
+    def load_train_dataset(self, fname_xtrain='xtrain.csv', fname_ytrain='ytrain.csv', xtrain_data=None, ytrain_data=None, verbose=False):
         """ Load datasets in CSV format 
         """
         self.__check_attributes(['nfeatures'])
         if hasattr(self, 'scaler_x'):
             raise RuntimeError('scaler_x is already defined, i.e. the train dataset has been already loaded.')
-        xtrain_notnormalized = extractData(fname_xtrain, verbose=verbose)
-        ytrain_notnormalized = extractData(fname_ytrain, verbose=verbose)
+
+        if xtrain_data is None:
+            xtrain_notnormalized = extract_data(fname_xtrain, verbose=verbose)
+        else:
+            xtrain_notnormalized = xtrain_data
+        if ytrain_data is None:
+            ytrain_notnormalized = extract_data(fname_ytrain, verbose=verbose)
+        else:
+            ytrain_notnormalized = ytrain_data
+
         nfeatures = self.nfeatures
         if nfeatures!=len(xtrain_notnormalized[0,:]):
             raise ValueError('Incompatible data size')
@@ -299,10 +309,16 @@ class RegressionNN:
         self.ytrain_notnorm = ytrain_notnormalized
         return
         
-    def load_test_dataset(self, fname_xtest='xtest.csv', fname_ytest='ytest.csv', verbose=False):
+    def load_test_dataset(self, fname_xtest='xtest.csv', fname_ytest='ytest.csv', xtest_data=None, ytest_data=None, verbose=False):
         self.__check_attributes(['scaler_x', 'scaler_y'])
-        xtest_notnormalized = extractData(fname_xtest, verbose=verbose)
-        ytest_notnormalized = extractData(fname_ytest, verbose=verbose)
+        if xtest_data is None:
+            xtest_notnormalized = extract_data(fname_xtest, verbose=verbose)
+        else:
+            xtest_notnormalized = xtest_data
+        if ytest_data is None:
+            ytest_notnormalized = extract_data(fname_ytest, verbose=verbose)
+        else:
+            ytest_notnormalized = ytest_data
         xtest               = self.scaler_x.transform(xtest_notnormalized)
         ytest               = self.scaler_y.transform(ytest_notnormalized)
         self.xtest          = xtest
@@ -383,42 +399,34 @@ class RegressionNN:
                     print('{:20s}: {:}'.format(attr, value))
         return
 
-    def compute_metrics_dict(self):
+    def compute_metrics_dict(self,x,y):
         """ Compute evaluation metrics 
         """
         def R2_numpy(y_true, y_pred):
             SS_res = np.sum((y_true - y_pred )**2)
             SS_tot = np.sum((y_true - np.mean(y_true))**2)
             return 1-SS_res/SS_tot
-        self.__check_attributes(['nfeatures', 'model', 'xtest', 'ytest'])
+        self.__check_attributes(['nfeatures', 'model'])
         nfeatures   = self.nfeatures
         model       = self.model
-        xtest       = self.xtest
-        ytest       = self.ytest
-        prediction  = self.compute_prediction(xtest)
+        prediction  = self.compute_prediction(x)
         R2_vec      = np.zeros((nfeatures,))
-        #mean_errors = np.zeros((len(xtest[:,0]),nfeatures))
         for i in range(0,nfeatures):
-             R2_vec[i]        = R2_numpy(ytest[:,i], prediction[:,i])
-             #mean_errors[:,i] = (ytest[:,i]-prediction[:,i])/ytest[:,i]
+             R2_vec[i]        = R2_numpy(y[:,i], prediction[:,i])
         metrics         = model.metrics # this is empty for loaded models, not a big issue
-        metrics_results = model.evaluate(xtest, ytest, verbose=0)
+        metrics_results = model.evaluate(x, y, verbose=0)
         metrics_dict    = {};
         for i in range(0, len(metrics)):
             metrics_dict[metrics[i].name] = metrics_results[i]
         metrics_dict["R2"]          = R2_vec
         metrics_dict["R2mean"]      = np.mean(R2_vec)
-        #metrics_dict["mean_errors"] = mean_errors
-        self.metrics_dict = metrics_dict
-        return
+        return metrics_dict
 
     def print_metrics(self):
         """ Print (and eventually compute) evaluation metrics 
         """
-        if not hasattr(self, 'metrics_dict'):
-            self.compute_metrics_dict()
-        metrics_dict = self.metrics_dict
-        #print('\nFinal loss     : {:.5f}'.format(metrics_dict["loss"])) # problems with loaded model: loss is not defined
+        self.__check_attributes(['xtest', 'ytest'])
+        metrics_dict = self.compute_metrics_dict(self.xtest,self.ytest)
         print('Final R2 mean  : {:.5f}'.format(metrics_dict["R2mean"]))
         i = 0
         R2_vec = metrics_dict["R2"]
@@ -440,7 +448,7 @@ class RegressionNN:
             plot_cols = nfeatures
         else:
             plot_cols = 3
-        rows = max(round(nfeatures/plot_cols),1)
+        rows = int(np.ceil(nfeatures/plot_cols))
         if rows>1:
             fig, axs = plt.subplots(rows, plot_cols, figsize = (25,17))
         else: 
@@ -459,21 +467,10 @@ class RegressionNN:
                 diff = np.abs(ytest_notnorm_1d-prediction_1d)
                 ax.scatter(ytest_notnorm_1d, prediction_1d, s=15, c=diff, cmap="gist_rainbow")
                 ax.plot(ytest_notnorm_1d, ytest_notnorm_1d, 'k')
-                ymax = max(ytest_notnorm_1d)
-                xmin = min(ytest_notnorm_1d)
-                if xmin<0:
-                    xpos = xmin*0.7
-                else:
-                    xpos = xmin*1.3
-
-                if ymax<0:
-                    ypos = ymax*0.7
-                else:
-                    ypos = ymax*1.3
                 ax.set_ylabel('predicted - '+str(feature), fontsize=25)
                 ax.set_xlabel('injected - '+str(feature), fontsize=25)
                 feature+=1;
-            plt.show()
+        plt.show()
         return 
     
     def plot_history(self): 
@@ -510,8 +507,9 @@ class RegressionNN:
         plt.show()
         return 
     
-    def plot_err_histogram(self, feature_idx=0, color_rec=[0.8,0.8,0.8], color_pred=[0,1,0], nbins=30, 
-                           logscale=False, name=None):
+    def plot_err_histogram(self, feature_idx=0, color_rec=[0.7,0.7,0.7], color_pred=[0,1,0], nbins=30, 
+                           logscale=False, name=None, abs_diff=False, fmin=None, fmax=None, verbose=False,
+                           alpha_rec=1, alpha_pred=0.5):
         """ Plot error-histogram for one feature. 
         The feature is chosen by feature_idx
         """
@@ -522,20 +520,53 @@ class RegressionNN:
         inj  = ytest_notnorm[:,feature_idx]
         rec  = xtest_notnorm[:,feature_idx]
         pred =    prediction[:,feature_idx]
-        errors_rec  = (inj- rec)/inj
-        errors_pred = (inj-pred)/inj
-        min_rec     = min(errors_rec)
-        max_rec     = max(errors_rec)
-        min_pred    = min(errors_pred)
-        max_pred    = max(errors_pred)
-        fmax  = max(max_rec, max_pred)
-        fmin  = min(min_rec, min_pred)
+        if abs_diff:
+            errors_rec  = (inj- rec)/inj
+            errors_pred = (inj-pred)/inj
+            xlab        = r'$\Delta y$'
+        else:
+            errors_rec  = (inj- rec)
+            errors_pred = (inj-pred)
+            xlab        = r'$\Delta y/y$'
+        
+        if fmin is None:
+            min_rec  = min(errors_rec)
+            min_pred = min(errors_pred)
+            fmin     = min(min_rec, min_pred)
+        if fmax is None:
+            max_rec  = max(errors_rec)
+            max_pred = max(errors_pred)
+            fmax     = max(max_rec, max_pred)
+        
+        pred_min_outliers = 0
+        pred_max_outliers = 0
+        for i in range(len(errors_pred)):
+            if errors_pred[i]<fmin:
+                pred_min_outliers += 1
+        for i in range(len(errors_pred)):
+            if errors_pred[i]>fmax:
+                pred_max_outliers += 1 
+        rec_min_outliers = 0
+        rec_max_outliers = 0
+        for i in range(len(errors_rec)):
+            if errors_rec[i]<fmin:
+                rec_min_outliers += 1
+        for i in range(len(errors_rec)):
+            if errors_rec[i]>fmax:
+                rec_max_outliers += 1 
+        
+        if verbose:
+            print('prediction below fmin={:6.2f}: {:d}'.format(fmin, pred_min_outliers))
+            print('recovery   below fmin={:6.2f}: {:d}'.format(fmin,  rec_min_outliers))
+            print('prediction above fmax={:6.2f}: {:d}'.format(fmax, pred_max_outliers))
+            print('recovery   above fmax={:6.2f}: {:d}'.format(fmax,  rec_max_outliers))
+
         fstep = (fmax-fmin)/nbins
         plt.figure
-        plt.hist(errors_rec , bins=np.arange(fmin, fmax, fstep), alpha=1  , color=color_rec, label='rec')
-        plt.hist(errors_pred, bins=np.arange(fmin, fmax, fstep), alpha=0.7, color=color_pred, label='pred')
+        plt.hist(errors_rec , bins=np.arange(fmin, fmax, fstep), alpha=alpha_rec,  color=color_rec, label='rec')
+        plt.hist(errors_pred, bins=np.arange(fmin, fmax, fstep), alpha=alpha_pred, color=color_pred, label='pred')
         plt.legend(fontsize=20)
-        plt.xlabel(r'$\Delta y/y$', fontsize=15)
+        plt.xlabel(xlab, fontsize=15)
         if logscale:
             plt.yscale('log', nonposy='clip')
         if name is not None:
@@ -626,23 +657,23 @@ class CrossValidator:
         learning_rate      = self.learning_rate
         out_intervals      = self.out_intervals
         hlayers_sizes_list = self.hlayers_sizes_list 
-        fname_xtrain       = self.fname_xtrain
-        fname_ytrain       = self.fname_ytrain
-        fname_xtest        = self.fname_xtest
-        fname_ytest        = self.fname_ytest
+        xtrain_data = extract_data(self.fname_xtrain,verbose=verbose)
+        ytrain_data = extract_data(self.fname_ytrain,verbose=verbose)
+        xtest_data  = extract_data(self.fname_xtest,verbose=verbose)
+        ytest_data  = extract_data(self.fname_ytest,verbose=verbose)
         for hlayers_sizes in hlayers_sizes_list:
             key = self.__param_to_key(hlayers_sizes)
             if key in self.cv_dict:
                 if verbose:
-                    print('{:90s} already saved in {:}'.format(key,self.dict_name))
+                    #print('{:90s} already saved in {:}'.format(key,self.dict_name))
+                    print('key already present:',key)
             else:
                 NN = RegressionNN(nfeatures=nfeatures, hlayers_sizes=hlayers_sizes, seed=seed)
-                NN.load_train_dataset(fname_xtrain=fname_xtrain, fname_ytrain=fname_ytrain)
+                NN.load_train_dataset(xtrain_data=xtrain_data, ytrain_data=ytrain_data)
                 NN.training(epochs=epochs, batch_size=batch_size, learning_rate=learning_rate)
-                NN.load_test_dataset(fname_xtest=fname_xtest, fname_ytest=fname_ytest)
-                NN.compute_metrics_dict()                 
+                NN.load_test_dataset(xtest_data=xtest_data, ytest_data=ytest_data)
+                metrics_dict = NN.compute_metrics_dict(NN.xtest, NN.ytest)
                 prediction   = NN.compute_prediction(NN.xtest_notnorm, transform_output=True, transform_input=True) 
-                metrics_dict = NN.metrics_dict
                 npars        = count_params(NN.model.trainable_weights) 
                 del NN
                 struct               = lambda:0
@@ -660,7 +691,8 @@ class CrossValidator:
                 cv_dict           = self.cv_dict
                 save_dill(self.dict_name, cv_dict)
                 if verbose:
-                    print('{:90s} saved in {:}'.format(key,self.dict_name))
+                    #print('{:90s} saved in {:}'.format(key,self.dict_name))
+                    print('saving key:',key)
         return
 
     def plot(self, threshold=0.6, npars_lim=1e+6, feature_idx=-1):
