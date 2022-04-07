@@ -5,6 +5,8 @@ The idea here is to have a short and clea{r,n} code.
 Here we only implement the state-of-the-art NN.
 For testing, plots and stuff see the notebooks
 in the folder algo/NN_tf/
+
+Update: The plan failed. The code is not short and clear.
 """
 
 import os, sys, csv, types, dill, time
@@ -18,6 +20,9 @@ from tensorflow.keras.losses import MeanSquaredError
 from tensorflow.keras.optimizers import Adam
 from keras.utils.layer_utils import count_params
 from keras.initializers import RandomNormal
+from scipy import stats
+
+# TODO: understand why Box-Cox gives NaNs during training
 
 #######################################################################
 # Default values used in the classes RegressionNN and CrossValidator
@@ -31,7 +36,7 @@ VALIDATION_SPLIT = 0.
 SEED             = None
 
 #######################################################################
-# Usual I/O functiony by Marina
+# Usual I/O functions by Marina
 #######################################################################
 def extract_data(filename, verbose=False, skip_header=False):
     """ Reads data from csv file and returns it in array form.
@@ -82,20 +87,61 @@ def load_dill(fname, verbose=False):
             print(dict_name, 'not found, returning empty dictionary')
     return loaded_dict    
 
-
 #######################################################################
-# Linear Scaler, slightly more general than MinMaxScaler
+# Scaler
 #######################################################################
-class LinearScaler:
-    """ Linear (vectorized) map between [A,B] <--> [C,D] 
+class CustomScaler:
+    """ Linear (vectorized) map between [A,B] <--> [C,D]
+    There is also implemented a Box-Cox transformation (i.e. linear+Box-Cox), but gives NaNs
+    during the training, so it is switched-off
+    Lambdas and shifts for Box-Cox eventually computed at the first call if not given in input.
+    If lmbdas(shifts) is not None and shifts(lmbdas) is None, then the 
+    lmbdas(shifts)-value are ignored and compute at the first call of transform()
     """
-    def __init__(self, A, B, C, D):
+    def __init__(self, A, B, C, D, boxcox=False, lmbdas=None, shifts=None):
         self.A = A
         self.B = B 
         self.C = C
         self.D = D
-        
+        self.boxcox = boxcox
+        self.lmbdas = lmbdas
+        self.shifts = shifts
+    
     def transform(self,x):
+        if self.boxcox and (self.lmbdas is None or self.shifts is None):
+            ncols  = len(x[0,:])
+            nrows  = len(x[:,0])
+            lmbdas = np.zeros((ncols,)) 
+            shifts = np.zeros((ncols,)) 
+            A_new  = np.zeros((ncols,)) 
+            B_new  = np.zeros((ncols,)) 
+            y      = np.zeros((nrows, ncols))
+            for i in range(ncols):
+                x1d = x[:,i]
+                minx = min(x1d)
+                if minx==0:
+                    shift = 0.1
+                elif minx<0:
+                    shift = -minx*1.1
+                else:
+                    shift = 0
+                xs = x1d + shift
+                y1d, lmbda = stats.boxcox(xs)
+                shifts[i] = shift
+                lmbdas[i] = lmbda
+                y[:,i]    = y1d.reshape((nrows,))
+                if lmbda==0:
+                    A_new[i] = np.log(self.A[i]+shift)
+                    B_new[i] = np.log(self.B[i]+shift)
+                    print('HERE WE ARE')
+                else:
+                    A_new[i] = ((self.A[i]+shift)**lmbda-1)/lmbda
+                    B_new[i] = ((self.B[i]+shift)**lmbda-1)/lmbda
+            self.lmbdas = lmbdas
+            self.shifts = shifts
+            self.A = A_new.reshape((ncols,1))
+            self.B = B_new.reshape((ncols,1))
+            x      = y
         A = self.A
         B = self.B
         C = self.C
@@ -107,7 +153,23 @@ class LinearScaler:
         B = self.B
         C = self.C
         D = self.D
-        return np.transpose((B-A)*(np.transpose(x)-C)/(D-C)+A)
+        y = np.transpose((B-A)*(np.transpose(x)-C)/(D-C)+A)
+        if self.boxcox and (self.lmbdas is None or self.shifts is None):
+            raise ValueError('Cannot invert the Box-Cox transformation, lambdas and shifts not determined!')
+        elif self.boxcox:
+            ncols  = len(x[0,:])
+            nrows  = len(x[:,0])
+            for i in range(ncols):
+                lmbda = self.lmbdas[i]
+                shift = self.shifts[i]
+                y1d   = y[:,i]
+                if lmbda!=0:
+                    xs = (y1d*lmbda+1)**(1/lmbda)
+                else:
+                    xs = np.exp(y1d)
+                y1d    = xs - shift 
+                y[:,i] = y1d.reshape((nrows,))
+        return y
     
     def print_info(self):
         for i in range(0,len(self.A)): 
@@ -117,6 +179,15 @@ class LinearScaler:
             print('B: ', self.B[i])
             print('C: ', self.C[i])
             print('D: ', self.D[i])
+        print('----------------------')
+        print('Box-Cox:', self.boxcox)
+        if self.boxcox:
+            if self.lmbdas is not None:
+                for i in range(0,len(self.A)): 
+                   print('lmbdas[{:2d}]: {:9.6f}'.format(i,self.lmbdas[i])) 
+                   print('shifts[{:2d}]: {:9.6f}'.format(i,self.shifts[i]))
+            else:
+                print('lmbdas: None\nshifts: None')
         return
 
     def return_dict(self):
@@ -125,6 +196,9 @@ class LinearScaler:
         scaler_dict['B'] = self.B
         scaler_dict['C'] = self.C
         scaler_dict['D'] = self.D
+        scaler_dict['boxcox'] = self.boxcox
+        scaler_dict['lmbdas'] = self.lmbdas
+        scaler_dict['shifts'] = self.shifts
         return scaler_dict 
 
 #######################################################################
@@ -232,9 +306,9 @@ class RegressionNN:
             train_info[a] = getattr(self, a)
         scaler_x_dict = self.scaler_x.return_dict() 
         scaler_y_dict = self.scaler_y.return_dict() 
-        save_dill(model_name+'/scaler_x.pkl'  , scaler_x_dict)
-        save_dill(model_name+'/scaler_y.pkl'  , scaler_y_dict)
-        save_dill(model_name+'/train_info.pkl', train_info)
+        save_dill(model_name+'/scaler_x.dill'  , scaler_x_dict)
+        save_dill(model_name+'/scaler_y.dill'  , scaler_y_dict)
+        save_dill(model_name+'/train_info.dill', train_info)
         if verbose:
             print(model_name, 'saved')
         return
@@ -244,19 +318,25 @@ class RegressionNN:
         """
         if not os.path.isdir(model_name):
             raise ValueError(model_name+' not found!')
-        scaler_x_dict = load_dill(model_name+'/scaler_x.pkl')
-        scaler_y_dict = load_dill(model_name+'/scaler_y.pkl')
-        train_info    = load_dill(model_name+'/train_info.pkl')
+        scaler_x_dict = load_dill(model_name+'/scaler_x.dill')
+        scaler_y_dict = load_dill(model_name+'/scaler_y.dill')
+        train_info    = load_dill(model_name+'/train_info.dill')
         Ax = scaler_x_dict['A']
         Bx = scaler_x_dict['B']
         Cx = scaler_x_dict['C']
         Dx = scaler_x_dict['D']
-        self.scaler_x = LinearScaler(Ax, Bx, Cx, Dx)
+        boxcox_x = scaler_x_dict['boxcox']
+        lmbdas_x = scaler_x_dict['lmbdas']
+        shifts_x = scaler_x_dict['shifts']
+        self.scaler_x = CustomScaler(Ax, Bx, Cx, Dx, boxcox=boxcox_x, lmbdas=lmbdas_x, shifts=shifts_x)
         Ay = scaler_y_dict['A']
         By = scaler_y_dict['B']
         Cy = scaler_y_dict['C']
         Dy = scaler_y_dict['D']
-        self.scaler_y = LinearScaler(Ay, By, Cy, Dy)
+        boxcox_y = scaler_y_dict['boxcox']
+        lmbdas_y = scaler_y_dict['lmbdas']
+        shifts_y = scaler_y_dict['shifts']
+        self.scaler_y = CustomScaler(Ay, By, Cy, Dy, boxcox=boxcox_y, lmbdas=lmbdas_y, shifts=shifts_y)
         train_info_keys = list(train_info.keys())
         for key in train_info_keys:
             setattr(self, key, train_info[key])
@@ -267,7 +347,8 @@ class RegressionNN:
             print(model_name, 'loaded')
         return
 
-    def load_train_dataset(self, fname_xtrain='xtrain.csv', fname_ytrain='ytrain.csv', xtrain_data=None, ytrain_data=None, verbose=False):
+    def load_train_dataset(self, fname_xtrain='xtrain.csv', fname_ytrain='ytrain.csv', xtrain_data=None, ytrain_data=None, 
+                           verbose=False, boxcox=False):
         """ Load datasets in CSV format 
         """
         self.__check_attributes(['nfeatures'])
@@ -298,8 +379,8 @@ class RegressionNN:
         Ay = np.reshape(self.out_intervals[:,0], (nfeatures,1)) 
         By = np.reshape(self.out_intervals[:,1], (nfeatures,1)) 
         ones = np.ones(np.shape(Ax))
-        self.scaler_x = LinearScaler(Ax,Bx,-1*ones, ones)
-        self.scaler_y = LinearScaler(Ay,By,-1*ones, ones)
+        self.scaler_x       = CustomScaler(Ax,Bx,-1*ones, ones, boxcox=boxcox)
+        self.scaler_y       = CustomScaler(Ay,By,-1*ones, ones, boxcox=boxcox)
         xtrain              = self.scaler_x.transform(xtrain_notnormalized)
         ytrain              = self.scaler_y.transform(ytrain_notnormalized)
         self.xtrain         = xtrain
@@ -507,7 +588,7 @@ class RegressionNN:
         plt.show()
         return 
     
-    def plot_err_histogram(self, feature_idx=0, color_rec=[0.7,0.7,0.7], color_pred=[0,1,0], nbins=30, 
+    def plot_err_histogram(self, feature_idx=0, color_rec=[0.7,0.7,0.7], color_pred=[0,1,0], nbins=31, 
                            logscale=False, name=None, abs_diff=False, fmin=None, fmax=None, verbose=False,
                            alpha_rec=1, alpha_pred=0.5):
         """ Plot error-histogram for one feature. 
@@ -580,7 +661,9 @@ class RegressionNN:
 class CrossValidator:
     """ Cross validation on architecture.
     Consider 1 and 2 layer(s) architectures and do a cross-val on the number of neurons
-    for each layer.
+    for each layer. 
+    Options for Box-Cox not implemented here (also because for some reason Box-Cox gives NaN
+    during training)
     """
     def __init__(self, nfeatures=NFEATURES, dict_name=None, neurons_max=300, neurons_step=50, out_intervals=None,
                  epochs=EPOCHS, batch_size=BATCH_SIZE, learning_rate=LEARNING_RATE, verbose=False,
@@ -786,11 +869,12 @@ if __name__ == '__main__':
     ytest  = path+'ytest.csv'
    
     NN = RegressionNN(nfeatures=3, hlayers_sizes=(100,), out_intervals=out_intervals, seed=None)
-    NN.load_train_dataset(fname_xtrain=xtrain, fname_ytrain=ytrain)
+    NN.load_train_dataset(fname_xtrain=xtrain, fname_ytrain=ytrain, boxcox=False)
     NN.print_summary()
     NN.training(verbose=True, epochs=10, validation_split=0.)
     NN.load_test_dataset(fname_xtest=xtest, fname_ytest=ytest) 
     NN.print_metrics()
+    NN.plot_predictions(NN.xtest)
 
     dashes = '-'*80
     print(dashes, 'Save and load test:', dashes, sep='\n')
@@ -798,12 +882,13 @@ if __name__ == '__main__':
     NN2 = RegressionNN(load_model='model_nfeatures3_'+datetime.today().strftime('%Y-%m-%d'), verbose=True)
     NN2.load_test_dataset(fname_xtest=xtest, fname_ytest=ytest) 
     NN2.print_metrics() 
-    
+     
     print(dashes)
     NN.print_info()
     print(dashes)
     NN2.print_info()
     print(dashes)
+
     out_intervals = None 
     CV = CrossValidator(neurons_step=100, fname_xtrain=xtrain, fname_ytrain=ytrain, fname_xtest=xtest, \
                         fname_ytest=ytest, epochs=10, batch_size=128, out_intervals=out_intervals, seed=None)
