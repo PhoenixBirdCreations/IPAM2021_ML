@@ -44,6 +44,13 @@ COMMENTS ON EFFECTS OF THIS IN THE REGRESSION?
   \caption{\label{fig:relative_erros} Relative error in the recovery of each quantity, independent and derived. Top picture: in train dataset. Bottom picture: in test dataset.}
 \end{figure}
 
+I also tried to color the plots by SNR, but the range of values is huge (from 8 to 800). In figure \ref{fig:relative_snr} we can see the error of $m_1$ colored by a small range of SNR so we can actually see different colors. It shows that the error does not look dependent on the SNR.
+
+\begin{figure}[]
+  \center
+  \includegraphics[width=0.45\textwidth]{./FigNS/example_snr}
+  \caption{\label{fig:relative_snr} Relative error in the recovery of $m_1$ colored by SNR in a small range to be able to see the different colors.}
+\end{figure}
 
 \subsection{Distribution of the label}
 We can draw in the $m_1-m_2$ plane the events in the data, colored by their label. This gives us the idea of the function used for labelling and if it will be easy or more difficult to classify the events. Also we can later compare the probability distribution given by the classifier with the actual distribution of the label.
@@ -67,7 +74,14 @@ The error in the recovery of $m_2$ will highly affect the classification of even
   \caption{\label{fig:label_recovered} From the test dataset, recovered masses colored by their label. Second picture is a zoom of the first one. The sharp cut is lost in the error of the recovery.}
 \end{figure}
 
+Then we also plot the events by the spins of the two bodies, see figure \ref{fig:label_x}. We see that there is another condition here: it is not classified as \textit{hasNS} if $|\chi_2|>0.5$ approximately. This constraint if of course lost in the recovered quantities.
 
+\begin{figure}[]
+  \center
+  \includegraphics[width=0.3\textwidth]{./FigNS/label_xinjected}
+  \includegraphics[width=0.3\textwidth]{./FigNS/label_xrecovered}
+  \caption{\label{fig:label_x} From the test dataset, injected and recovered spins colored by their label.}
+\end{figure}
 
 
 
