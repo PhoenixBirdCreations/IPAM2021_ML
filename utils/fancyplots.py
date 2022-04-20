@@ -44,7 +44,7 @@ def regrPredictionPlots(ytest, ypredicted, labels, scaler=None, show=True, save=
             ytest_1d      = ytest[:,feature]
             ypredicted_1d = ypredicted[:,feature]
             diff = np.abs(ytest_1d-ypredicted_1d)
-            ax.scatter(ytest_1d, ypredicted_1d, s=15, c=diff, cmap="gist_rainbow")
+            ax.scatter(ytest_1d, ypredicted_1d, s=2, c=diff, cmap="gist_rainbow")
             ax.plot(ytest_1d, ytest_1d, 'k')
             ymax = max(ytest_1d)
             xmin = min(ytest_1d)
@@ -147,8 +147,8 @@ def checkRegressionPlot(xtest, ytest, ypredicted, labels, scaler_y=None, scaler_
             xtest_plot = xtest[:,feature]
             ypred_plot = ypredicted[:,feature]
             
-            ax.scatter(ytest_plot, xtest_plot, label='recovered', s=50)
-            ax.scatter(ytest_plot, ypred_plot, label='predicted', marker='x', s=80)
+            ax.scatter(ytest_plot, xtest_plot, label='recovered', s=1)
+            ax.scatter(ytest_plot, ypred_plot, label='predicted', s=1)
             ax.set_xlabel('injected - '+labels[feature], fontsize=fontsize_lab)
             ax.set_ylabel(labels[feature], fontsize=fontsize_lab)
             ax.plot(ytest_plot, ytest_plot, 'k')

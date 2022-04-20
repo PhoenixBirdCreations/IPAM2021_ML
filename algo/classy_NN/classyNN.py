@@ -107,8 +107,7 @@ class CustomScaler:
         if self.quantile:
             if self.qscaler is None:
                 qscaler = QuantileTransformer(output_distribution='normal')
-                qscaler.fit(x)
-                self.qscaler = qscaler
+                self.qscaler = qscaler.fit(x)
             x = self.qscaler.transform(x)
             
             # update A and B!
@@ -137,6 +136,7 @@ class CustomScaler:
         return y
 
     def print_info(self):
+        print('quantile : ', self.quantile)
         for i in range(0,len(self.A)): 
             print('----------------------')
             print('Feature n.', i, sep='')
@@ -144,7 +144,6 @@ class CustomScaler:
             print('B        : ', self.B[i])
             print('C        : ', self.C[i])
             print('D        : ', self.D[i])
-            print('quantile : ', self.quantile)
         return
 
     def return_dict(self):
@@ -500,7 +499,7 @@ class RegressionNN:
                 ytest_notnorm_1d = ytest_notnorm[:,feature]
                 prediction_1d    = prediction[:,feature]
                 diff = np.abs(ytest_notnorm_1d-prediction_1d)
-                ax.scatter(ytest_notnorm_1d, prediction_1d, s=15, c=diff, cmap="gist_rainbow")
+                ax.scatter(ytest_notnorm_1d, prediction_1d, s=2, c=diff, cmap="gist_rainbow")
                 ax.plot(ytest_notnorm_1d, ytest_notnorm_1d, 'k')
                 ax.set_ylabel('predicted - '+str(feature), fontsize=25)
                 ax.set_xlabel('injected - '+str(feature), fontsize=25)
