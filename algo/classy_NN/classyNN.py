@@ -106,7 +106,7 @@ class CustomScaler:
     def transform(self,x):
         if self.quantile:
             if self.qscaler is None:
-                qscaler = QuantileTransformer(output_distribution='normal')
+                qscaler = QuantileTransformer(n_quantiles=10000, output_distribution='normal')
                 self.qscaler = qscaler.fit(x)
             x = self.qscaler.transform(x)
             
@@ -167,13 +167,14 @@ class RegressionNN:
     The scalers will be defined when loading the train dataset.
     """
     def __init__(self, nfeatures=NFEATURES, hlayers_sizes=HLAYERS_SIZES, out_intervals=None, load_model=None, verbose=False,
-                 seed=SEED):
+                 seed=SEED, linear_output=False):
         # input
         self.nfeatures        = nfeatures
         self.hlayers_sizes    = hlayers_sizes
         if out_intervals is not None:
             out_intervals = np.array(out_intervals)
         self.out_intervals = out_intervals
+        self.linear_output = linear_output
         self.hidden_activation = 'relu'
         
         if seed is None:
@@ -187,7 +188,7 @@ class RegressionNN:
                 error_message += 'loaded model  : nfeatures={:}, hlayers_sizes={:}\n'.format(self.nfeatures, self.hlayers_sizes)
                 raise ValueError(error_message)
         else:
-            self.__build_model()
+            self.__build_model(linear_output=linear_output)
         
 
     def __check_attributes(self, attr_list):
@@ -203,12 +204,14 @@ class RegressionNN:
                     raise ValueError ('Error: '+attr+' is not defined')
         return
 
-    def __build_model(self):
+    def __build_model(self, linear_output=False):
         """ Build the architecture of the NeuralNewtork
         """
         def output_activation_lin_constraint(x):
             signs = K.switch(x>0, 1+x*0, -1+x*0) # x*0 in order to broadcast to correct dimension
             return K.switch(abs(x)<1, x, signs)
+        def output_linear(x):
+            return x
         hlayers_sizes     = self.hlayers_sizes
         nfeatures         = self.nfeatures
         hidden_activation = self.hidden_activation
@@ -219,7 +222,10 @@ class RegressionNN:
         nlayers = len(hlayers_sizes)
         for i in range(1, nlayers):
             x = Dense(hlayers_sizes[i], kernel_initializer=RandomNormal(seed=seed+i), activation=hidden_activation)(x)
-        out = Dense(nfeatures, kernel_initializer=RandomNormal(seed=seed+nlayers),activation=output_activation_lin_constraint)(x)
+        if linear_output:
+            out = Dense(nfeatures, kernel_initializer=RandomNormal(seed=seed+nlayers),activation=output_linear)(x)
+        else:
+            out = Dense(nfeatures, kernel_initializer=RandomNormal(seed=seed+nlayers),activation=output_activation_lin_constraint)(x)
         self.model = tf.keras.Model(model_input, out)
         return
     
