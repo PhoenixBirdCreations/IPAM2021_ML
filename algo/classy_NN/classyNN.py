@@ -91,7 +91,8 @@ def load_dill(fname, verbose=False):
 #######################################################################
 class CustomScaler:
     """ Linear (vectorized) map between [A,B] <--> [C,D]
-    You can also use a quantile-scaler befor linear mapping
+    You can also use a quantile-scaler befor linear mapping, but
+    does not seem to improve the regression.
     """
     def __init__(self, A, B, C, D, quantile=False, qscaler=None):
         self.A = A
@@ -109,16 +110,19 @@ class CustomScaler:
                 qscaler = QuantileTransformer(n_quantiles=10000, output_distribution='normal')
                 self.qscaler = qscaler.fit(x)
             x = self.qscaler.transform(x)
-            
             # update A and B!
             A = np.array(self.A)
             B = np.array(self.B)
+            nfeatures = len(self.A)
+            """
+            # this does not work with quantile-transformation due to the mean in the quantiles!
             new_A = self.qscaler.transform(A.reshape(1, -1))
             new_B = self.qscaler.transform(B.reshape(1, -1))
-            nfeatures = len(self.A)
             self.A = new_A.reshape(nfeatures,1)
             self.B = new_B.reshape(nfeatures,1)
-
+            """
+            self.A = np.reshape(x.min(axis=0), (nfeatures,1))
+            self.B = np.reshape(x.max(axis=0), (nfeatures,1))
         A = self.A
         B = self.B
         C = self.C
@@ -603,8 +607,10 @@ class RegressionNN:
 
         fstep = (fmax-fmin)/nbins
         plt.figure
-        plt.hist(errors_rec , bins=np.arange(fmin, fmax, fstep), alpha=alpha_rec,  color=color_rec, label='rec')
-        plt.hist(errors_pred, bins=np.arange(fmin, fmax, fstep), alpha=alpha_pred, color=color_pred, label='pred')
+        plt.hist(errors_rec , bins=np.arange(fmin, fmax, fstep), alpha=alpha_rec,  color=color_rec, label='rec',
+                 histtype='bar', ec='black')
+        plt.hist(errors_pred, bins=np.arange(fmin, fmax, fstep), alpha=alpha_pred, color=color_pred, label='pred',
+                 histtype='bar', ec='black')
         plt.legend(fontsize=20)
         plt.xlabel(xlab, fontsize=15)
         if logscale:
