@@ -504,7 +504,7 @@ class RegressionNN:
             i+=1
         return
 
-    def plot_predictions(self, x):
+    def plot_predictions(self, x, show=True, save=False, figname='predictions.png'):
         """ Simple plot. For more 'elaborate' plots we rely
         on other modules (i.e. do not overcomplicate 
         this code with useless graphical functions)
@@ -539,10 +539,15 @@ class RegressionNN:
                 ax.set_ylabel('predicted - '+str(feature), fontsize=25)
                 ax.set_xlabel('injected - '+str(feature), fontsize=25)
                 feature+=1;
-        plt.show()
+        if save:
+            plt.savefig(figname,dpi=200,bbox_inches='tight')
+        if show:
+            plt.show()
+        else:
+            plt.close()
         return 
     
-    def plot_history(self): 
+    def plot_history(self, show=True, save=False, figname='history.png'): 
         """ History plot
         history is one attribute of the ouput of model.compile() in TensorFlow
         """
@@ -573,12 +578,17 @@ class RegressionNN:
             ax2.set_xlabel('Epochs')
             ax2.set_ylabel('R2')
             ax2.legend()
-        plt.show()
+        if save:
+            plt.savefig(figname,dpi=200,bbox_inches='tight')
+        if show:
+            plt.show()
+        else:
+            plt.close()
         return 
     
     def plot_err_histogram(self, feature_idx=0, color_rec=[0.7,0.7,0.7], color_pred=[0,1,0], nbins=31, 
                            logscale=False, name=None, abs_diff=False, fmin=None, fmax=None, verbose=False,
-                           alpha_rec=1, alpha_pred=0.5):
+                           alpha_rec=1, alpha_pred=0.5, show=True, save=False, figname=None):
         """ Plot error-histogram for one feature. 
         The feature is chosen by feature_idx
         """
@@ -590,12 +600,12 @@ class RegressionNN:
         rec  = xtest_notnorm[:,feature_idx]
         pred =    prediction[:,feature_idx]
         if abs_diff:
-            errors_rec  = (inj- rec)/inj
-            errors_pred = (inj-pred)/inj
-            xlab        = r'$\Delta y$'
-        else:
             errors_rec  = (inj- rec)
             errors_pred = (inj-pred)
+            xlab        = r'$\Delta y$'
+        else:
+            errors_rec  = (inj- rec)/inj
+            errors_pred = (inj-pred)/inj
             xlab        = r'$\Delta y/y$'
         
         if fmin is None:
@@ -625,10 +635,10 @@ class RegressionNN:
                 rec_max_outliers += 1 
         
         if verbose:
-            print('prediction below fmin={:6.2f}: {:d}'.format(fmin, pred_min_outliers))
             print('recovery   below fmin={:6.2f}: {:d}'.format(fmin,  rec_min_outliers))
-            print('prediction above fmax={:6.2f}: {:d}'.format(fmax, pred_max_outliers))
             print('recovery   above fmax={:6.2f}: {:d}'.format(fmax,  rec_max_outliers))
+            print('prediction below fmin={:6.2f}: {:d}'.format(fmin, pred_min_outliers))
+            print('prediction above fmax={:6.2f}: {:d}'.format(fmax, pred_max_outliers))
 
         fstep = (fmax-fmin)/nbins
         plt.figure
@@ -639,10 +649,17 @@ class RegressionNN:
         plt.legend(fontsize=20)
         plt.xlabel(xlab, fontsize=15)
         if logscale:
-            plt.yscale('log', nonposy='clip')
+            plt.yscale('log', nonpositive='clip')
         if name is not None:
             plt.title(name, fontsize=20)
-        plt.show() 
+        if save:
+            if figname is None:
+                figname = 'err_hist'+str(feature_idx)+'.png'
+            plt.savefig(figname,dpi=200,bbox_inches='tight')
+        if show:
+            plt.show()
+        else:
+            plt.close()
         return
 
 #######################################################################
@@ -768,7 +785,7 @@ class CrossValidator:
                     print('saving key:',key)
         return
 
-    def plot(self, threshold=0.6, npars_lim=1e+6, feature_idx=-1):
+    def plot(self, threshold=0.6, npars_lim=1e+6, feature_idx=-1, show=True, save=False, figname='crossval.png'):
         """ Plots to check which NN-architecture produces the best results
         The metric used is R2. Use feature_idx=-1 to plot the mean of R2
         """
@@ -842,7 +859,12 @@ class CrossValidator:
         axs[1].set_ylabel('score')
         axs[1].set_ylim(threshold, min(np.max(scores)*1.005, 1)) 
         plt.subplots_adjust(wspace=0.4)
-        plt.show()
+        if save:
+            plt.savefig(figname,dpi=200,bbox_inches='tight')
+        if show:
+            plt.show()
+        else:
+            plt.close()
         return
 
 #######################################################################
