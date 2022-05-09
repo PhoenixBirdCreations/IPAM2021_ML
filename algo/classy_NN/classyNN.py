@@ -603,10 +603,12 @@ class RegressionNN:
             errors_rec  = (inj- rec)
             errors_pred = (inj-pred)
             xlab        = r'$\Delta y$'
+            err_str     = 'difference'
         else:
             errors_rec  = (inj- rec)/inj
             errors_pred = (inj-pred)/inj
             xlab        = r'$\Delta y/y$'
+            err_str     = ' rel diff '
         
         if fmin is None:
             min_rec  = min(errors_rec)
@@ -635,6 +637,14 @@ class RegressionNN:
                 rec_max_outliers += 1 
         
         if verbose:
+            print('mean rec  {:s} : {:9.5f} (std={:8.5f}, |{:s}|={:8.5f})'.format(err_str, 
+                   np.mean(errors_rec),  np.std(errors_rec),  err_str, np.mean(np.abs(errors_rec))))
+            print('mean pred {:s} : {:9.5f} (std={:8.5f}, |{:s}|={:8.5f})'.format(err_str, 
+                   np.mean(errors_pred), np.std(errors_pred), err_str, np.mean(np.abs(errors_pred))))
+            print('\n')
+            print('median rec  {:s} : {:9.5f}'.format(err_str, np.median(errors_rec)))
+            print('median pred {:s} : {:9.5f}'.format(err_str, np.median(errors_pred)))
+            print('\n')
             print('recovery   below fmin={:6.2f}: {:d}'.format(fmin,  rec_min_outliers))
             print('recovery   above fmax={:6.2f}: {:d}'.format(fmax,  rec_max_outliers))
             print('prediction below fmin={:6.2f}: {:d}'.format(fmin, pred_min_outliers))
@@ -649,7 +659,7 @@ class RegressionNN:
         plt.legend(fontsize=20)
         plt.xlabel(xlab, fontsize=15)
         if logscale:
-            plt.yscale('log', nonpositive='clip')
+            plt.yscale('log', nonposy='clip')
         if name is not None:
             plt.title(name, fontsize=20)
         if save:
