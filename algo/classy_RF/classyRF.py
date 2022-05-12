@@ -13,6 +13,7 @@ from sklearn.metrics import confusion_matrix as cm
 from sklearn.metrics import roc_curve
 import seaborn 
 from sklearn.ensemble import RandomForestClassifier
+import joblib
 
 #######################################################################
 # Usual I/O functiony by Marina
@@ -30,18 +31,6 @@ def extractData(filename, verbose=False):
         print(filename, 'loaded')
     return data
 
-#def writeResult(filename, data, verbose=False):
-#    """ Writes data predicted by trained algorithm into a csv file.
-#    """
-#    with open(filename, 'w') as csvfile:
-#        spamwriter = csv.writer(csvfile, delimiter=',')
-#        for row in data:
-#            spamwriter.writerow(row)
-#    if verbose:
-#        print(filename, 'saved')
-
-
-
 
 
 #######################################################################
@@ -54,8 +43,17 @@ class ClassificationRF:
         self.verbose = verbose
         self.save_plots=save
         self.show_plots=show
+        self.headers=["ID", "m1_inj" , "m2_inj", "chi1_inj", "chi2_inj", "mc_inj", "q_inj", "R_isco_inj", "Compactness_inj", "m1_rec", "m2_rec", "chi1_rec", "chi2_rec", "mc_rec", "frac_mc_err", "q_rec", "R_isco_rec", "Compactness_rec", "snr", "label"]
         return
    
+    def saveModel(self, path, filename='random_forest'):
+        joblib.dump(self.model, path+filename+".joblib")
+        return
+    
+    def loadModel(self, path, filename="random_forest"):
+        print("loading ",path+filename+".joblib")
+        self.model = joblib.load(path+filename+".joblib")
+        return
 
     def __check_attributes(self, attr_list):
         for i in range(0, len(attr_list)):
@@ -77,7 +75,31 @@ class ClassificationRF:
         self.labels     = ytrain
         self.Nfeatures  = len(xtrain[0,:])
         return
+    
+    def load_train_dataset(self, path, fname_x='xtrain.csv'):
+        """ Load datasets in CSV format 
+        """
+        xtrain = extractData(path+fname_x, verbose=False)
+        self.data_train_all       = xtrain
+        self.labels_train     = xtrain[:,-1]
+        return
+    
+    def load_test_dataset(self, path, fname_x='xtrain.csv'):
+        """ Load datasets in CSV format 
+        """
+        xtrain = extractData(path+fname_x, verbose=False)
+        self.data_test_all       = xtrain
+        self.labels_test     = xtrain[:,-1]
+        return
         
+    def subset_features(self, indexes):
+        print("Training and testing using:")
+        for i in indexes:
+            print(self.headers[i])
+        self.Nfeatures = len(indexes)
+        self.data_train=self.data_train_all[:,indexes]
+        self.data_test=self.data_test_all[:,indexes]
+        return
     
     def split_train_test(self, pct=0.7):
         Ntrain=int(pct*len(self.data))
@@ -122,6 +144,7 @@ class ClassificationRF:
         """ Train the model
         """
         self.__check_attributes(['data_train', 'labels_train'])
+        self.Nfeatures=len(self.data_train[0])
 
         self.model=RandomForestClassifier(n_estimators=trees, criterion=criterion, max_features=max_features) 
         self.model.fit(self.data_train, np.ravel(self.labels_train))
@@ -161,18 +184,22 @@ class ClassificationRF:
         
         return
 
-    def print_metrics(self):
+    def print_metrics(self,filename='cm.png'):
         """ Print (and eventually compute) evaluation metrics 
         """
-        if not hasattr(self, 'metric_dic'):
-            self.__compute_metrics()
+        self.__compute_metrics()
 
         print("Score on testing: ", self.metric_dic["score"])
         print("******Confusion matrix******")
         seaborn.heatmap(self.metric_dic["conf_matrix"], annot=True)
+        if self.save_plots:
+            plt.savefig(filename,dpi=200,bbox_inches='tight')
+        if self.show_plots:
+            plt.show()
+        plt.clf()
         return
 
-    def ROC_plot(self, name='roc_curve.png'):
+    def ROC_plot(self, filename='roc_curve.png',path='./'):
         prob_being_1 = self.metric_dic["prob"][:,1]
         fpr, tpr, thresholds = roc_curve(self.labels_test, prob_being_1)
         plt.figure()
@@ -183,7 +210,7 @@ class ClassificationRF:
         plt.ylabel("true positive rate",  fontsize=14)
 
         if self.save_plots:
-            plt.savefig(name,dpi=200,bbox_inches='tight')
+            plt.savefig(path+filename,dpi=200,bbox_inches='tight')
         if self.show_plots:
             plt.show()
         plt.clf()
@@ -191,7 +218,7 @@ class ClassificationRF:
 
         return
     
-    def scatterplot_prob(self, index_m1=0, index_m2=1,name='scatterplot.png'):
+    def scatterplot_prob(self, index_m1=0, index_m2=1,filename='scatterplot.png',path='./'):
         if not hasattr(self, 'metric_dic'):
             self.__compute_metrics()
         m1 = self.data_test[:,index_m1]
@@ -203,16 +230,16 @@ class ClassificationRF:
         plt.xlabel('m1', fontsize=18)
         plt.ylabel('m2', fontsize=18)
         if self.save_plots:
-            plt.savefig(name,dpi=200,bbox_inches='tight')
+            plt.savefig(path+filename,dpi=200,bbox_inches='tight')
         if self.show_plots:
             plt.show()
         plt.clf()
         
         return
     
-    def analysis_plot(self):
-        self.scatterplot_prob()
-        self.ROC_plot()
+    def analysis_plot(self,path):
+        self.scatterplot_prob(path=path)
+        self.ROC_plot(path=path)
 
 if __name__ == '__main__':
 

@@ -44,7 +44,7 @@ def regrPredictionPlots(ytest, ypredicted, labels, scaler=None, show=True, save=
             ytest_1d      = ytest[:,feature]
             ypredicted_1d = ypredicted[:,feature]
             diff = np.abs(ytest_1d-ypredicted_1d)
-            ax.scatter(ytest_1d, ypredicted_1d, s=15, c=diff, cmap="gist_rainbow")
+            ax.scatter(ytest_1d, ypredicted_1d, s=2, c=diff, cmap="gist_rainbow")
             ax.plot(ytest_1d, ytest_1d, 'k')
             ymax = max(ytest_1d)
             xmin = min(ytest_1d)
@@ -66,7 +66,8 @@ def regrPredictionPlots(ytest, ypredicted, labels, scaler=None, show=True, save=
         plt.savefig(figname,dpi=200,bbox_inches='tight')
     if show:
         plt.show()
-    
+    else:
+        plt.close()
     return
 
 def plotHistory(history, show=True, save=False, figname='history.png'): 
@@ -100,7 +101,8 @@ def plotHistory(history, show=True, save=False, figname='history.png'):
         plt.savefig(figname,dpi=200,bbox_inches='tight')
     if show:
         plt.show()
-        
+    else:
+        plt.close()
     return
 
 def checkRegressionPlot(xtest, ytest, ypredicted, labels, scaler_y=None, scaler_x=None, show=True, save=False, figname='checkRegression.png'):
@@ -147,8 +149,8 @@ def checkRegressionPlot(xtest, ytest, ypredicted, labels, scaler_y=None, scaler_
             xtest_plot = xtest[:,feature]
             ypred_plot = ypredicted[:,feature]
             
-            ax.scatter(ytest_plot, xtest_plot, label='recovered', s=50)
-            ax.scatter(ytest_plot, ypred_plot, label='predicted', marker='x', s=80)
+            ax.scatter(ytest_plot, xtest_plot, label='recovered', s=1)
+            ax.scatter(ytest_plot, ypred_plot, label='predicted', s=1)
             ax.set_xlabel('injected - '+labels[feature], fontsize=fontsize_lab)
             ax.set_ylabel(labels[feature], fontsize=fontsize_lab)
             ax.plot(ytest_plot, ytest_plot, 'k')
@@ -159,6 +161,8 @@ def checkRegressionPlot(xtest, ytest, ypredicted, labels, scaler_y=None, scaler_
         plt.savefig(figname,dpi=200,bbox_inches='tight')
     if show:
         plt.show()
+    else:
+        plt.close()
         
     return
 
@@ -199,6 +203,8 @@ def plotInjRecPred(injected, recovered, predicted, idx_m1=0, idx_m2=1, idx_Mc=No
         plt.savefig(figname+'m1m2.png',dpi=200,bbox_inches='tight')
     if show:
         plt.show()
+    else:
+        plt.close()
 
     plt.figure
     plt.figure(figsize=(4,5))
@@ -214,6 +220,8 @@ def plotInjRecPred(injected, recovered, predicted, idx_m1=0, idx_m2=1, idx_Mc=No
         plt.savefig(figname+'m1m2all.png',dpi=200,bbox_inches='tight')
     if show:
         plt.show()
+    else:
+        plt.close()
 
     print(asterisks,'m1 vs q: injected, recovered, predicted (indirectly)',asterisks,sep='\n')
     plt.figure(figsize=(4,5))
@@ -229,6 +237,8 @@ def plotInjRecPred(injected, recovered, predicted, idx_m1=0, idx_m2=1, idx_Mc=No
         plt.savefig(figname+'q.png',dpi=200,bbox_inches='tight')
     if show:
         plt.show()
+    else:
+        plt.close()
 
     if idx_Mc is not None:
         Mc_inj  = np.copy(injected[:,idx_Mc])
@@ -252,6 +262,8 @@ def plotInjRecPred(injected, recovered, predicted, idx_m1=0, idx_m2=1, idx_Mc=No
             plt.savefig(figname+'m1Mc.png',dpi=200,bbox_inches='tight')
         if show:
             plt.show()
+        else:
+            plt.close()
 
         plt.figure(figsize=(4,5))
         if not hide_recovered:
@@ -266,6 +278,8 @@ def plotInjRecPred(injected, recovered, predicted, idx_m1=0, idx_m2=1, idx_Mc=No
             plt.savefig(figname+'m1Mcall.png',dpi=200,bbox_inches='tight')
         if show:
             plt.show()
+        else:
+            plt.close()
 
     return
 
@@ -273,7 +287,7 @@ def plotInjRecPred(injected, recovered, predicted, idx_m1=0, idx_m2=1, idx_Mc=No
 # Classification plots
 ##################################################################
 def probLabelDensePlot(model, label_idx=0, mass_range=[1,3],  N=30000, idx_m1=0, idx_m2=1, \
-                       dataset='GSTLAL_2m', verbose=False, cv=0, title=None):
+                       dataset='GSTLAL_2m', verbose=False, cv=0, title=None, show=True):
     """
     Scatter plot in the (m1,m2) plane with colorbar 
     for the probability of a certain label.
@@ -311,10 +325,13 @@ def probLabelDensePlot(model, label_idx=0, mass_range=[1,3],  N=30000, idx_m1=0,
         plt.title(title)
     plt.xlabel("m1", fontsize=20)
     plt.ylabel("m2", fontsize=20)
-    plt.show()
+    if show:
+        plt.show()
+    else:
+        plt.close()
     return
 
-def plotROC(ytrue, prob_of_label):
+def plotROC(ytrue, prob_of_label, show=True):
     """
     Improve me! prob_of_label is the probability of having a certain
     label (i.e. is a 1D vector)
@@ -325,7 +342,10 @@ def plotROC(ytrue, prob_of_label):
     plt.colorbar(sc)
     plt.xlabel("false positive rate", fontsize=14)
     plt.ylabel("true positive rate",  fontsize=14)
-    plt.show()
+    if show:
+        plt.show()
+    else:
+        plt.close()
     return
 
 

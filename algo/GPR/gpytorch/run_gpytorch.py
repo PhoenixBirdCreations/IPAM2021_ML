@@ -6,15 +6,16 @@ import torch
 import gpytorch
 
 from data_conditioning import *
-sys.path.insert(0, '/Users/Lorena/ML_IPAM/IPAM2021_ML/utils')
-from utils import *
 
-xtrain = extractData('../../../datasets/GSTLAL_EarlyWarning_Dataset/Dataset/train_recover.csv')
-ytrain = extractData('../../../datasets/GSTLAL_EarlyWarning_Dataset/Dataset/train_inject.csv')
-xtest = extractData('../../../datasets/GSTLAL_EarlyWarning_Dataset/Dataset/test_recover.csv')
-ytest = extractData('../../../datasets/GSTLAL_EarlyWarning_Dataset/Dataset/test_inject.csv')
+_, train_data = extractData('../../../ipam_NS_set/train_NS.csv')
+_, test_data = extractData('../../../ipam_NS_set/test_NS.csv')
 
-xtrain_inf, ytrain_inf, xtest_inf, ytest_inf = map_to_inf(xtrain, ytrain, xtest, ytest)
+ytrain = train_data[:,1:3]
+xtrain = train_data[:,9:11]
+ytest = test_data[:,1:3]
+xtest = test_data[:,9:11]
+
+xtrain_inf, ytrain_inf, xtest_inf, ytest_inf = map_to_inf(xtrain, ytrain, xtest, ytest, shuffle_data=False)
 xtrain_scaled, ytrain_scaled, xtest_scaled, ytest_scaled, ytest_scaler = standardize(xtrain_inf, ytrain_inf, xtest_inf, ytest_inf)
 train_x, train_y, test_x, test_y = torchify(xtrain_scaled, ytrain_scaled, xtest_scaled, ytest_scaled)
 
@@ -69,4 +70,4 @@ with torch.no_grad(), gpytorch.settings.fast_pred_var():
 predicted_data_inf = unstandardize(predictions, ytest_scaler)
 predicted_data = map_from_inf(predicted_data_inf)
 
-writeResult('data_files/just_RBF.csv', predicted_data)
+writeResult('data_files/real_ligo.csv', predicted_data)

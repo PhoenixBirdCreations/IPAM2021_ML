@@ -21,8 +21,7 @@ from tensorflow.keras.optimizers import Adam
 from keras.utils.layer_utils import count_params
 from keras.initializers import RandomNormal
 from scipy import stats
-
-# TODO: understand why Box-Cox gives NaNs during training
+from sklearn.preprocessing import QuantileTransformer, StandardScaler
 
 #######################################################################
 # Default values used in the classes RegressionNN and CrossValidator
@@ -92,113 +91,93 @@ def load_dill(fname, verbose=False):
 #######################################################################
 class CustomScaler:
     """ Linear (vectorized) map between [A,B] <--> [C,D]
-    There is also implemented a Box-Cox transformation (i.e. linear+Box-Cox), but gives NaNs
-    during the training, so it is switched-off
-    Lambdas and shifts for Box-Cox eventually computed at the first call if not given in input.
-    If lmbdas(shifts) is not None and shifts(lmbdas) is None, then the 
-    lmbdas(shifts)-value are ignored and compute at the first call of transform()
+    You can also use a quantile-scaler befor linear mapping, but
+    does not seem to improve the regression.
     """
-    def __init__(self, A, B, C, D, boxcox=False, lmbdas=None, shifts=None):
+    def __init__(self, A, B, C, D, quantile=False, qscaler=None, standard=False, std_scaler=None):
         self.A = A
         self.B = B 
         self.C = C
         self.D = D
-        self.boxcox = boxcox
-        self.lmbdas = lmbdas
-        self.shifts = shifts
-    
+        self.quantile   = quantile # flag
+        self.qscaler    = qscaler
+        self.standard   = standard
+        self.std_scaler = std_scaler
+        self.sigma0     = 10
+        if qscaler is not None and quantile is False:
+            raise ValueError('Quantile scaler given in input but quantile flag is False!')
+        if standard and quantile:
+            raise ValueError('quantile=True and standard=True are in conflict!')
+
     def transform(self,x):
-        if self.boxcox and (self.lmbdas is None or self.shifts is None):
-            ncols  = len(x[0,:])
-            nrows  = len(x[:,0])
-            lmbdas = np.zeros((ncols,)) 
-            shifts = np.zeros((ncols,)) 
-            A_new  = np.zeros((ncols,)) 
-            B_new  = np.zeros((ncols,)) 
-            y      = np.zeros((nrows, ncols))
-            for i in range(ncols):
-                x1d = x[:,i]
-                minx = min(x1d)
-                if minx==0:
-                    shift = 0.1
-                elif minx<0:
-                    shift = -minx*1.1
-                else:
-                    shift = 0
-                xs = x1d + shift
-                y1d, lmbda = stats.boxcox(xs)
-                shifts[i] = shift
-                lmbdas[i] = lmbda
-                y[:,i]    = y1d.reshape((nrows,))
-                if lmbda==0:
-                    A_new[i] = np.log(self.A[i]+shift)
-                    B_new[i] = np.log(self.B[i]+shift)
-                    print('HERE WE ARE')
-                else:
-                    A_new[i] = ((self.A[i]+shift)**lmbda-1)/lmbda
-                    B_new[i] = ((self.B[i]+shift)**lmbda-1)/lmbda
-            self.lmbdas = lmbdas
-            self.shifts = shifts
-            self.A = A_new.reshape((ncols,1))
-            self.B = B_new.reshape((ncols,1))
-            x      = y
-        A = self.A
-        B = self.B
-        C = self.C
-        D = self.D
-        return np.transpose((D-C)*(np.transpose(x)-A)/(B-A)+C)
+        if not self.standard:
+            if self.quantile:
+                if self.qscaler is None:
+                    qscaler = QuantileTransformer(n_quantiles=10000, output_distribution='normal')
+                    self.qscaler = qscaler.fit(x)
+                x = self.qscaler.transform(x)
+                # update A and B!
+                A = np.array(self.A)
+                B = np.array(self.B)
+                nfeatures = len(self.A)
+                """
+                # this does not work with quantile-transformation due to the mean in the quantiles!
+                new_A = self.qscaler.transform(A.reshape(1, -1))
+                new_B = self.qscaler.transform(B.reshape(1, -1))
+                self.A = new_A.reshape(nfeatures,1)
+                self.B = new_B.reshape(nfeatures,1)
+                """
+                self.A = np.reshape(x.min(axis=0), (nfeatures,1))
+                self.B = np.reshape(x.max(axis=0), (nfeatures,1))
+            A = self.A
+            B = self.B
+            C = self.C
+            D = self.D
+            y = np.transpose((D-C)*(np.transpose(x)-A)/(B-A)+C)
+        else:
+            if self.std_scaler is None:
+                std_scaler = StandardScaler()
+                std_scaler.fit(x)
+                self.std_scaler = std_scaler
+            y = self.std_scaler.transform(x)
+            y = y/self.sigma0
+        return y
 
     def inverse_transform(self,x):
-        A = self.A
-        B = self.B
-        C = self.C
-        D = self.D
-        y = np.transpose((B-A)*(np.transpose(x)-C)/(D-C)+A)
-        if self.boxcox and (self.lmbdas is None or self.shifts is None):
-            raise ValueError('Cannot invert the Box-Cox transformation, lambdas and shifts not determined!')
-        elif self.boxcox:
-            ncols  = len(x[0,:])
-            nrows  = len(x[:,0])
-            for i in range(ncols):
-                lmbda = self.lmbdas[i]
-                shift = self.shifts[i]
-                y1d   = y[:,i]
-                if lmbda!=0:
-                    xs = (y1d*lmbda+1)**(1/lmbda)
-                else:
-                    xs = np.exp(y1d)
-                y1d    = xs - shift 
-                y[:,i] = y1d.reshape((nrows,))
+        if not self.standard:
+            A = self.A
+            B = self.B
+            C = self.C
+            D = self.D
+            y = np.transpose((B-A)*(np.transpose(x)-C)/(D-C)+A)
+            if self.quantile:
+                y = self.qscaler.inverse_transform(y)
+        else:
+            y = self.std_scaler.inverse_transform(x*self.sigma0)
         return y
-    
+
     def print_info(self):
+        print('quantile : ', self.quantile)
+        print('standard : ', self.standard)
         for i in range(0,len(self.A)): 
             print('----------------------')
             print('Feature n.', i, sep='')
-            print('A: ', self.A[i])
-            print('B: ', self.B[i])
-            print('C: ', self.C[i])
-            print('D: ', self.D[i])
-        print('----------------------')
-        print('Box-Cox:', self.boxcox)
-        if self.boxcox:
-            if self.lmbdas is not None:
-                for i in range(0,len(self.A)): 
-                   print('lmbdas[{:2d}]: {:9.6f}'.format(i,self.lmbdas[i])) 
-                   print('shifts[{:2d}]: {:9.6f}'.format(i,self.shifts[i]))
-            else:
-                print('lmbdas: None\nshifts: None')
+            print('A        : ', self.A[i])
+            print('B        : ', self.B[i])
+            print('C        : ', self.C[i])
+            print('D        : ', self.D[i])
         return
 
     def return_dict(self):
         scaler_dict = {}
-        scaler_dict['A'] = self.A
-        scaler_dict['B'] = self.B
-        scaler_dict['C'] = self.C
-        scaler_dict['D'] = self.D
-        scaler_dict['boxcox'] = self.boxcox
-        scaler_dict['lmbdas'] = self.lmbdas
-        scaler_dict['shifts'] = self.shifts
+        scaler_dict['A']          = self.A
+        scaler_dict['B']          = self.B
+        scaler_dict['C']          = self.C
+        scaler_dict['D']          = self.D
+        scaler_dict['quantile']   = self.quantile
+        scaler_dict['qscaler']    = self.qscaler
+        scaler_dict['standard']   = self.standard
+        scaler_dict['std_scaler'] = self.std_scaler
         return scaler_dict 
 
 #######################################################################
@@ -212,13 +191,14 @@ class RegressionNN:
     The scalers will be defined when loading the train dataset.
     """
     def __init__(self, nfeatures=NFEATURES, hlayers_sizes=HLAYERS_SIZES, out_intervals=None, load_model=None, verbose=False,
-                 seed=SEED):
+                 seed=SEED, linear_output=False):
         # input
         self.nfeatures        = nfeatures
         self.hlayers_sizes    = hlayers_sizes
         if out_intervals is not None:
             out_intervals = np.array(out_intervals)
         self.out_intervals = out_intervals
+        self.linear_output = linear_output
         self.hidden_activation = 'relu'
         
         if seed is None:
@@ -232,7 +212,7 @@ class RegressionNN:
                 error_message += 'loaded model  : nfeatures={:}, hlayers_sizes={:}\n'.format(self.nfeatures, self.hlayers_sizes)
                 raise ValueError(error_message)
         else:
-            self.__build_model()
+            self.__build_model(linear_output=linear_output)
         
 
     def __check_attributes(self, attr_list):
@@ -248,12 +228,14 @@ class RegressionNN:
                     raise ValueError ('Error: '+attr+' is not defined')
         return
 
-    def __build_model(self):
+    def __build_model(self, linear_output=False):
         """ Build the architecture of the NeuralNewtork
         """
         def output_activation_lin_constraint(x):
             signs = K.switch(x>0, 1+x*0, -1+x*0) # x*0 in order to broadcast to correct dimension
             return K.switch(abs(x)<1, x, signs)
+        def output_linear(x):
+            return x
         hlayers_sizes     = self.hlayers_sizes
         nfeatures         = self.nfeatures
         hidden_activation = self.hidden_activation
@@ -264,7 +246,10 @@ class RegressionNN:
         nlayers = len(hlayers_sizes)
         for i in range(1, nlayers):
             x = Dense(hlayers_sizes[i], kernel_initializer=RandomNormal(seed=seed+i), activation=hidden_activation)(x)
-        out = Dense(nfeatures, kernel_initializer=RandomNormal(seed=seed+nlayers),activation=output_activation_lin_constraint)(x)
+        if linear_output:
+            out = Dense(nfeatures, kernel_initializer=RandomNormal(seed=seed+nlayers),activation=output_linear)(x)
+        else:
+            out = Dense(nfeatures, kernel_initializer=RandomNormal(seed=seed+nlayers),activation=output_activation_lin_constraint)(x)
         self.model = tf.keras.Model(model_input, out)
         return
     
@@ -325,18 +310,20 @@ class RegressionNN:
         Bx = scaler_x_dict['B']
         Cx = scaler_x_dict['C']
         Dx = scaler_x_dict['D']
-        boxcox_x = scaler_x_dict['boxcox']
-        lmbdas_x = scaler_x_dict['lmbdas']
-        shifts_x = scaler_x_dict['shifts']
-        self.scaler_x = CustomScaler(Ax, Bx, Cx, Dx, boxcox=boxcox_x, lmbdas=lmbdas_x, shifts=shifts_x)
+        quantile   = scaler_x_dict['quantile']
+        qscaler    = scaler_x_dict['qscaler']
+        standard   = scaler_x_dict['standard']
+        std_scaler = scaler_x_dict['std_scaler']
+        self.scaler_x = CustomScaler(Ax, Bx, Cx, Dx, quantile=quantile, qscaler=qscaler, standard=standard, std_scaler=std_scaler)
         Ay = scaler_y_dict['A']
         By = scaler_y_dict['B']
         Cy = scaler_y_dict['C']
         Dy = scaler_y_dict['D']
-        boxcox_y = scaler_y_dict['boxcox']
-        lmbdas_y = scaler_y_dict['lmbdas']
-        shifts_y = scaler_y_dict['shifts']
-        self.scaler_y = CustomScaler(Ay, By, Cy, Dy, boxcox=boxcox_y, lmbdas=lmbdas_y, shifts=shifts_y)
+        quantile   = scaler_y_dict['quantile']
+        qscaler    = scaler_y_dict['qscaler']
+        standard   = scaler_y_dict['standard']
+        std_scaler = scaler_y_dict['std_scaler']
+        self.scaler_y = CustomScaler(Ay, By, Cy, Dy, quantile=quantile, qscaler=qscaler, standard=standard, std_scaler=std_scaler)
         train_info_keys = list(train_info.keys())
         for key in train_info_keys:
             setattr(self, key, train_info[key])
@@ -348,7 +335,7 @@ class RegressionNN:
         return
 
     def load_train_dataset(self, fname_xtrain='xtrain.csv', fname_ytrain='ytrain.csv', xtrain_data=None, ytrain_data=None, 
-                           verbose=False, boxcox=False):
+                           verbose=False, quantile=False, standard_scaler=False):
         """ Load datasets in CSV format 
         """
         self.__check_attributes(['nfeatures'])
@@ -379,8 +366,9 @@ class RegressionNN:
         Ay = np.reshape(self.out_intervals[:,0], (nfeatures,1)) 
         By = np.reshape(self.out_intervals[:,1], (nfeatures,1)) 
         ones = np.ones(np.shape(Ax))
-        self.scaler_x       = CustomScaler(Ax,Bx,-1*ones, ones, boxcox=boxcox)
-        self.scaler_y       = CustomScaler(Ay,By,-1*ones, ones, boxcox=boxcox)
+        self.scaler_x       = CustomScaler(Ax,Bx,-1*ones, ones, quantile=quantile, standard=standard_scaler)
+        #self.scaler_y       = CustomScaler(Ay,By,-1*ones, ones, quantile=quantile, standard=standard_scaler)
+        self.scaler_y       = CustomScaler(Ay,By,-1*ones, ones, quantile=quantile)
         xtrain              = self.scaler_x.transform(xtrain_notnormalized)
         ytrain              = self.scaler_y.transform(ytrain_notnormalized)
         self.xtrain         = xtrain
@@ -516,7 +504,7 @@ class RegressionNN:
             i+=1
         return
 
-    def plot_predictions(self, x):
+    def plot_predictions(self, x, show=True, save=False, figname='predictions.png'):
         """ Simple plot. For more 'elaborate' plots we rely
         on other modules (i.e. do not overcomplicate 
         this code with useless graphical functions)
@@ -546,15 +534,20 @@ class RegressionNN:
                 ytest_notnorm_1d = ytest_notnorm[:,feature]
                 prediction_1d    = prediction[:,feature]
                 diff = np.abs(ytest_notnorm_1d-prediction_1d)
-                ax.scatter(ytest_notnorm_1d, prediction_1d, s=15, c=diff, cmap="gist_rainbow")
+                ax.scatter(ytest_notnorm_1d, prediction_1d, s=2, c=diff, cmap="gist_rainbow")
                 ax.plot(ytest_notnorm_1d, ytest_notnorm_1d, 'k')
                 ax.set_ylabel('predicted - '+str(feature), fontsize=25)
                 ax.set_xlabel('injected - '+str(feature), fontsize=25)
                 feature+=1;
-        plt.show()
+        if save:
+            plt.savefig(figname,dpi=200,bbox_inches='tight')
+        if show:
+            plt.show()
+        else:
+            plt.close()
         return 
     
-    def plot_history(self): 
+    def plot_history(self, show=True, save=False, figname='history.png'): 
         """ History plot
         history is one attribute of the ouput of model.compile() in TensorFlow
         """
@@ -585,12 +578,17 @@ class RegressionNN:
             ax2.set_xlabel('Epochs')
             ax2.set_ylabel('R2')
             ax2.legend()
-        plt.show()
+        if save:
+            plt.savefig(figname,dpi=200,bbox_inches='tight')
+        if show:
+            plt.show()
+        else:
+            plt.close()
         return 
     
     def plot_err_histogram(self, feature_idx=0, color_rec=[0.7,0.7,0.7], color_pred=[0,1,0], nbins=31, 
                            logscale=False, name=None, abs_diff=False, fmin=None, fmax=None, verbose=False,
-                           alpha_rec=1, alpha_pred=0.5):
+                           alpha_rec=1, alpha_pred=0.5, show=True, save=False, figname=None):
         """ Plot error-histogram for one feature. 
         The feature is chosen by feature_idx
         """
@@ -602,13 +600,15 @@ class RegressionNN:
         rec  = xtest_notnorm[:,feature_idx]
         pred =    prediction[:,feature_idx]
         if abs_diff:
-            errors_rec  = (inj- rec)/inj
-            errors_pred = (inj-pred)/inj
-            xlab        = r'$\Delta y$'
-        else:
             errors_rec  = (inj- rec)
             errors_pred = (inj-pred)
+            xlab        = r'$\Delta y$'
+            err_str     = 'difference'
+        else:
+            errors_rec  = (inj- rec)/inj
+            errors_pred = (inj-pred)/inj
             xlab        = r'$\Delta y/y$'
+            err_str     = ' rel diff '
         
         if fmin is None:
             min_rec  = min(errors_rec)
@@ -637,22 +637,39 @@ class RegressionNN:
                 rec_max_outliers += 1 
         
         if verbose:
-            print('prediction below fmin={:6.2f}: {:d}'.format(fmin, pred_min_outliers))
+            print('mean rec  {:s} : {:9.5f} (std={:8.5f}, |{:s}|={:8.5f})'.format(err_str, 
+                   np.mean(errors_rec),  np.std(errors_rec),  err_str, np.mean(np.abs(errors_rec))))
+            print('mean pred {:s} : {:9.5f} (std={:8.5f}, |{:s}|={:8.5f})'.format(err_str, 
+                   np.mean(errors_pred), np.std(errors_pred), err_str, np.mean(np.abs(errors_pred))))
+            print('\n')
+            print('median rec  {:s} : {:9.5f}'.format(err_str, np.median(errors_rec)))
+            print('median pred {:s} : {:9.5f}'.format(err_str, np.median(errors_pred)))
+            print('\n')
             print('recovery   below fmin={:6.2f}: {:d}'.format(fmin,  rec_min_outliers))
-            print('prediction above fmax={:6.2f}: {:d}'.format(fmax, pred_max_outliers))
             print('recovery   above fmax={:6.2f}: {:d}'.format(fmax,  rec_max_outliers))
+            print('prediction below fmin={:6.2f}: {:d}'.format(fmin, pred_min_outliers))
+            print('prediction above fmax={:6.2f}: {:d}'.format(fmax, pred_max_outliers))
 
         fstep = (fmax-fmin)/nbins
         plt.figure
-        plt.hist(errors_rec , bins=np.arange(fmin, fmax, fstep), alpha=alpha_rec,  color=color_rec, label='rec')
-        plt.hist(errors_pred, bins=np.arange(fmin, fmax, fstep), alpha=alpha_pred, color=color_pred, label='pred')
+        plt.hist(errors_rec , bins=np.arange(fmin, fmax, fstep), alpha=alpha_rec,  color=color_rec, label='rec',
+                 histtype='bar', ec='black')
+        plt.hist(errors_pred, bins=np.arange(fmin, fmax, fstep), alpha=alpha_pred, color=color_pred, label='pred',
+                 histtype='bar', ec='black')
         plt.legend(fontsize=20)
         plt.xlabel(xlab, fontsize=15)
         if logscale:
             plt.yscale('log', nonposy='clip')
         if name is not None:
             plt.title(name, fontsize=20)
-        plt.show() 
+        if save:
+            if figname is None:
+                figname = 'err_hist'+str(feature_idx)+'.png'
+            plt.savefig(figname,dpi=200,bbox_inches='tight')
+        if show:
+            plt.show()
+        else:
+            plt.close()
         return
 
 #######################################################################
@@ -778,7 +795,7 @@ class CrossValidator:
                     print('saving key:',key)
         return
 
-    def plot(self, threshold=0.6, npars_lim=1e+6, feature_idx=-1):
+    def plot(self, threshold=0.6, npars_lim=1e+6, feature_idx=-1, show=True, save=False, figname='crossval.png'):
         """ Plots to check which NN-architecture produces the best results
         The metric used is R2. Use feature_idx=-1 to plot the mean of R2
         """
@@ -852,7 +869,12 @@ class CrossValidator:
         axs[1].set_ylabel('score')
         axs[1].set_ylim(threshold, min(np.max(scores)*1.005, 1)) 
         plt.subplots_adjust(wspace=0.4)
-        plt.show()
+        if save:
+            plt.savefig(figname,dpi=200,bbox_inches='tight')
+        if show:
+            plt.show()
+        else:
+            plt.close()
         return
 
 #######################################################################
@@ -869,7 +891,7 @@ if __name__ == '__main__':
     ytest  = path+'ytest.csv'
    
     NN = RegressionNN(nfeatures=3, hlayers_sizes=(100,), out_intervals=out_intervals, seed=None)
-    NN.load_train_dataset(fname_xtrain=xtrain, fname_ytrain=ytrain, boxcox=False)
+    NN.load_train_dataset(fname_xtrain=xtrain, fname_ytrain=ytrain, quantile=False, standard_scaler=True)
     NN.print_summary()
     NN.training(verbose=True, epochs=10, validation_split=0.)
     NN.load_test_dataset(fname_xtest=xtest, fname_ytest=ytest) 
