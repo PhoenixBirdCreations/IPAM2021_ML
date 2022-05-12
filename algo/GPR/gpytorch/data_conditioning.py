@@ -1,5 +1,6 @@
 import sys
 
+import csv
 import numpy as np
 import torch
 import gpytorch
@@ -8,8 +9,29 @@ from sklearn.utils import shuffle
 import scipy
 from scipy.special import logit, expit
 
-sys.path.insert(0, '/Users/Lorena/ML_IPAM/IPAM2021_ML/utils')
-from utils import *
+#sys.path.insert(0, '/Users/Lorena/ML_IPAM/IPAM2021_ML/utils')
+#from utils import *
+
+def extractData(filename, verbose=False):
+    lst=[]
+    header = []
+    with open(filename) as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=',')
+        header.append(next(csv_reader))
+        for row in csv_reader:
+            lst.append(row)
+    data=np.array(lst, dtype=float)
+    if verbose:
+        print(filename, 'loaded')
+    return header, data
+
+def writeResult(filename, data, verbose=False):
+    with open(filename, 'w') as csvfile:
+        spamwriter = csv.writer(csvfile, delimiter=',')
+        for row in data:
+            spamwriter.writerow(row)
+    if verbose:
+        print(filename,'saved')
 
 def map_to_inf(xtrain, ytrain, xtest, ytest, shuffle_data=True):
     if shuffle_data==True:
@@ -18,8 +40,8 @@ def map_to_inf(xtrain, ytrain, xtest, ytest, shuffle_data=True):
         xtest = shuffle(xtest, random_state=42)
         ytest = shuffle(ytest, random_state=42)
     
-    min_mass = 0.95 # bounds from template bank
-    max_mass = 2.4
+    min_mass = 0.75 # bounds from template bank
+    max_mass = 400.
 
     # mapping into (0,1) range
     A = np.array([[min_mass, 1], [max_mass, 1]])
@@ -43,8 +65,8 @@ def map_to_inf(xtrain, ytrain, xtest, ytest, shuffle_data=True):
 def map_from_inf(predicted_data_inf):
     predicted_data_01 = expit(predicted_data_inf)
 
-    min_mass = 0.95 # bounds from template bank
-    max_mass = 2.4
+    min_mass = 0.75 # bounds from template bank
+    max_mass = 400.
 
     A = np.array([[min_mass, 1], [max_mass, 1]])
     B = np.array([0, 1])
@@ -77,6 +99,6 @@ def torchify(xtrain_scaled, ytrain_scaled, xtest_scaled, ytest_scaled):
     test_x = torch.from_numpy(xtest_scaled).float()
     test_y = torch.from_numpy(ytest_scaled).float()
 
-    train_x = train_x.unsqueeze(0).repeat(2, 1, 1)
+    train_x = train_x.unsqueeze(0).repeat(4, 1, 1)
     train_y = train_y.transpose(-2, -1)
     return train_x, train_y, test_x, test_y
