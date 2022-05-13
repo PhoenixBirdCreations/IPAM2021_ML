@@ -130,7 +130,7 @@ def checkRegressionPlot(xtest, ytest, ypredicted, labels, scaler_y=None, scaler_
         fontsize_lab = 20
         fontsize_leg = 20
     
-    rows = round(Nfeatures/plot_cols)
+    rows = int(np.ceil(Nfeatures/plot_cols))
     if rows>1:
         fig, axs  = plt.subplots(rows,plot_cols, figsize = (25,17))
     else: 
