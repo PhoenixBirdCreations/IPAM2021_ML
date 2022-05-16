@@ -21,7 +21,8 @@ from tensorflow.keras.optimizers import Adam
 from keras.utils.layer_utils import count_params
 from keras.initializers import RandomNormal
 from scipy import stats
-from sklearn.preprocessing import QuantileTransformer, StandardScaler
+from scipy.special import logit, expit
+from sklearn.preprocessing import StandardScaler
 
 #######################################################################
 # Default values used in the classes RegressionNN and CrossValidator
@@ -91,50 +92,31 @@ def load_dill(fname, verbose=False):
 #######################################################################
 class CustomScaler:
     """ Linear (vectorized) map between [A,B] <--> [C,D]
-    You can also use a quantile-scaler befor linear mapping, but
-    does not seem to improve the regression.
     """
-    def __init__(self, A, B, C, D, quantile=False, qscaler=None, standard=False, std_scaler=None):
+    def __init__(self, A, B, C, D, standard=False, std_scaler=None, compact=False, sigma0=10):
         self.A = A
         self.B = B 
         self.C = C
         self.D = D
-        self.quantile   = quantile # flag
-        self.qscaler    = qscaler
         self.standard   = standard
         self.std_scaler = std_scaler
-        self.sigma0     = 10
-        if qscaler is not None and quantile is False:
-            raise ValueError('Quantile scaler given in input but quantile flag is False!')
-        if standard and quantile:
-            raise ValueError('quantile=True and standard=True are in conflict!')
+        self.sigma0     = sigma0
+        self.compact    = compact
+        if compact: 
+            self.C = self.C*0     + 1e-2
+            self.D = self.D*0 + 1 - 1e-2
 
     def transform(self,x):
+        A = self.A
+        B = self.B
+        C = self.C
+        D = self.D
         if not self.standard:
-            if self.quantile:
-                if self.qscaler is None:
-                    qscaler = QuantileTransformer(n_quantiles=10000, output_distribution='normal')
-                    self.qscaler = qscaler.fit(x)
-                x = self.qscaler.transform(x)
-                # update A and B!
-                A = np.array(self.A)
-                B = np.array(self.B)
-                nfeatures = len(self.A)
-                """
-                # this does not work with quantile-transformation due to the mean in the quantiles!
-                new_A = self.qscaler.transform(A.reshape(1, -1))
-                new_B = self.qscaler.transform(B.reshape(1, -1))
-                self.A = new_A.reshape(nfeatures,1)
-                self.B = new_B.reshape(nfeatures,1)
-                """
-                self.A = np.reshape(x.min(axis=0), (nfeatures,1))
-                self.B = np.reshape(x.max(axis=0), (nfeatures,1))
-            A = self.A
-            B = self.B
-            C = self.C
-            D = self.D
             y = np.transpose((D-C)*(np.transpose(x)-A)/(B-A)+C)
         else:
+            if self.compact:
+                x = np.transpose((D-C)*(np.transpose(x)-A)/(B-A)+C)
+                x = logit(x)
             if self.std_scaler is None:
                 std_scaler = StandardScaler()
                 std_scaler.fit(x)
@@ -144,21 +126,22 @@ class CustomScaler:
         return y
 
     def inverse_transform(self,x):
+        A = self.A
+        B = self.B
+        C = self.C
+        D = self.D
         if not self.standard:
-            A = self.A
-            B = self.B
-            C = self.C
-            D = self.D
             y = np.transpose((B-A)*(np.transpose(x)-C)/(D-C)+A)
-            if self.quantile:
-                y = self.qscaler.inverse_transform(y)
         else:
             y = self.std_scaler.inverse_transform(x*self.sigma0)
+            if self.compact:
+                y = expit(y)
+                y = np.transpose((B-A)*(np.transpose(y)-C)/(D-C)+A)
         return y
 
     def print_info(self):
-        print('quantile : ', self.quantile)
         print('standard : ', self.standard)
+        print('compact  : ', self.compact)
         for i in range(0,len(self.A)): 
             print('----------------------')
             print('Feature n.', i, sep='')
@@ -174,10 +157,9 @@ class CustomScaler:
         scaler_dict['B']          = self.B
         scaler_dict['C']          = self.C
         scaler_dict['D']          = self.D
-        scaler_dict['quantile']   = self.quantile
-        scaler_dict['qscaler']    = self.qscaler
         scaler_dict['standard']   = self.standard
         scaler_dict['std_scaler'] = self.std_scaler
+        scaler_dict['compact']    = self.compact
         return scaler_dict 
 
 #######################################################################
@@ -310,20 +292,18 @@ class RegressionNN:
         Bx = scaler_x_dict['B']
         Cx = scaler_x_dict['C']
         Dx = scaler_x_dict['D']
-        quantile   = scaler_x_dict['quantile']
-        qscaler    = scaler_x_dict['qscaler']
         standard   = scaler_x_dict['standard']
         std_scaler = scaler_x_dict['std_scaler']
-        self.scaler_x = CustomScaler(Ax, Bx, Cx, Dx, quantile=quantile, qscaler=qscaler, standard=standard, std_scaler=std_scaler)
+        compact    = scaler_x_dict['compact']
+        self.scaler_x = CustomScaler(Ax, Bx, Cx, Dx, standard=standard, std_scaler=std_scaler, compact=compact)
         Ay = scaler_y_dict['A']
         By = scaler_y_dict['B']
         Cy = scaler_y_dict['C']
         Dy = scaler_y_dict['D']
-        quantile   = scaler_y_dict['quantile']
-        qscaler    = scaler_y_dict['qscaler']
         standard   = scaler_y_dict['standard']
         std_scaler = scaler_y_dict['std_scaler']
-        self.scaler_y = CustomScaler(Ay, By, Cy, Dy, quantile=quantile, qscaler=qscaler, standard=standard, std_scaler=std_scaler)
+        compact    = scaler_y_dict['compact']
+        self.scaler_y = CustomScaler(Ay, By, Cy, Dy, standard=standard, std_scaler=std_scaler, compact=compact)
         train_info_keys = list(train_info.keys())
         for key in train_info_keys:
             setattr(self, key, train_info[key])
@@ -335,7 +315,7 @@ class RegressionNN:
         return
 
     def load_train_dataset(self, fname_xtrain='xtrain.csv', fname_ytrain='ytrain.csv', xtrain_data=None, ytrain_data=None, 
-                           verbose=False, quantile=False, standard_scaler=False):
+                           verbose=False, standard_scaler=False, compact_scaler=False, sigma0=10):
         """ Load datasets in CSV format 
         """
         self.__check_attributes(['nfeatures'])
@@ -366,9 +346,8 @@ class RegressionNN:
         Ay = np.reshape(self.out_intervals[:,0], (nfeatures,1)) 
         By = np.reshape(self.out_intervals[:,1], (nfeatures,1)) 
         ones = np.ones(np.shape(Ax))
-        self.scaler_x       = CustomScaler(Ax,Bx,-1*ones, ones, quantile=quantile, standard=standard_scaler)
-        #self.scaler_y       = CustomScaler(Ay,By,-1*ones, ones, quantile=quantile, standard=standard_scaler)
-        self.scaler_y       = CustomScaler(Ay,By,-1*ones, ones, quantile=quantile)
+        self.scaler_x       = CustomScaler(Ax,Bx,-1*ones, ones, standard=standard_scaler, sigma0=sigma0, compact=compact_scaler)
+        self.scaler_y       = CustomScaler(Ay,By,-1*ones, ones, compact=compact_scaler)
         xtrain              = self.scaler_x.transform(xtrain_notnormalized)
         ytrain              = self.scaler_y.transform(ytrain_notnormalized)
         self.xtrain         = xtrain
@@ -891,7 +870,7 @@ if __name__ == '__main__':
     ytest  = path+'ytest.csv'
    
     NN = RegressionNN(nfeatures=3, hlayers_sizes=(100,), out_intervals=out_intervals, seed=None)
-    NN.load_train_dataset(fname_xtrain=xtrain, fname_ytrain=ytrain, quantile=False, standard_scaler=True)
+    NN.load_train_dataset(fname_xtrain=xtrain, fname_ytrain=ytrain, standard_scaler=True, compact_scaler=True)
     NN.print_summary()
     NN.training(verbose=True, epochs=10, validation_split=0.)
     NN.load_test_dataset(fname_xtest=xtest, fname_ytest=ytest) 
