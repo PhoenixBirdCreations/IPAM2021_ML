@@ -129,7 +129,7 @@ class ErrorStats:
         nbins = len(xbins)
         if np.all(x>0):
             ncols = 2
-            plt.figure(figsize=(8, 4))
+            plt.figure(figsize=(10, 4))
         else:
             ncols = 1
             plt.figure(figsize=(5, 3))
