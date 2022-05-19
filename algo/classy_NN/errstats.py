@@ -5,6 +5,7 @@ Accurate description:
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import stats
+from scipy.stats import skewnorm
 
 class ErrorStats:
     """ x and y are 1D arrays.
@@ -116,6 +117,44 @@ class ErrorStats:
             bins_dict = self.__bins_stats(new_xbins, new_ybins)
         return bins_dict
     
+    def distr_moments(self, x):
+        moments = {}
+        moments["mean"] = stats.tmean(x)
+        moments["var"]  = stats.tvar(x)
+        moments["skew"] = stats.skew(x)
+        return moments
+
+    def moments_to_pars(self, moments):
+        """ Recover location, scale and shape (alpha)
+        from mean, variance and skeweness
+        """
+        mean = moments["mean"]
+        var  = moments["var"]
+        skew = moments["skew"]
+
+        skew_tol = 1e-5
+        if skew>1:
+            skew = 1-skew_tol
+            #print('Warning: skew>1! Using skew =', skew)
+        if skew<-1:
+            skew = -1+skew_tol
+            #print('Warning: skew<-1! Using skew =', skew)
+        pi = np.pi
+        if skew>=0:
+            beta = ((2*skew)/(4-pi))**(1/3)
+        else:
+            beta = -((2*np.abs(skew))/(4-pi))**(1/3)
+        delta  = np.sqrt(pi/2)*beta/np.sqrt(1+beta*beta)
+        delta2 = delta*delta
+        pars   = {}
+        if 1-delta2<0:
+            delta2 = 1-1e-10
+        shape = delta/np.sqrt(1-delta2) 
+        scale = np.sqrt(var/(1-2*delta2/pi))
+        loc   = mean-scale*delta*np.sqrt(2/pi)
+        pars  = {"loc":loc, "scale":scale, "shape":shape}
+        return pars
+
     def plot_bins(self):
         x = self.x
         bins_dict = self.bins_dict
@@ -184,7 +223,7 @@ class ErrorStats:
             print('self.plot_xstep: if project is True, then xmax-xmin=0 by construction!')
         return
 
-    def plot_stats(self, bins_hist = 30, show_info=True, plot_xbins=False):
+    def plot_stats(self, bins_hist = 30, show_info=True, plot_xbins=False, plot_distr=True, show_gauss=False):
         bins_dict = self.bins_dict
         xbins = bins_dict['xbins']
         ybins = bins_dict['ybins']
@@ -193,8 +232,14 @@ class ErrorStats:
         xmin  = bins_dict['xmin']
         xmid  = bins_dict['xmid']
         std   = bins_dict['std']
+        var   = bins_dict['var']
+        skew  = bins_dict['skew']
+        if plot_distr:
+            density_hist = True
+        else: 
+            density_hist = False
         i = 0
-        subplot_cols = 8
+        subplot_cols = 6
         while i<len(ybins):
             j = 0
             if plot_xbins:
@@ -205,14 +250,15 @@ class ErrorStats:
                 plt.figure(figsize=(3*subplot_cols, 3))
             for j in range(subplot_cols):
                 if i<len(ybins):
-                    fmin = min(ybins[i])-mean[i]
-                    fmax = max(ybins[i])-mean[i]
+                    ydistr = ybins[i]-mean[i]
+                    fmin = min(ydistr)
+                    fmax = max(ydistr)
                     fstep = (fmax-fmin)/bins_hist
                     if plot_xbins:
                         ax1 = plt.subplot(2,subplot_cols,j+1)
                     else:
                         ax1 = plt.subplot(1,subplot_cols,j+1)
-                    ax1.hist(ybins[i]-mean[i], bins=bins_hist, range=(fmin,fmax), ec='black')
+                    ax1.hist(ydistr, bins=bins_hist, range=(fmin,fmax), ec=[0,.2,1], density=density_hist, alpha=0.5, color=[0,.2,0.8])
                     if show_info:
                         ax1.set_title(r"$N$: {:d}".format(len(xbins[i])) + "\n" +
                                       r"$x \in ({:.2f},{:.2f})$".format(xmin[i], xmax[i]) + "\n" +
@@ -226,6 +272,18 @@ class ErrorStats:
                         ax2.hist(xbins[i], bins=bins_hist, ec='black', color=[1,0.5,0])
                         if j==0:
                             ax2.set_ylabel('x', fontsize=20)
+                    if plot_distr:
+                        moments = self.distr_moments(ydistr)
+                        pars    = self.moments_to_pars(moments)
+                        rv      = skewnorm(a=pars["shape"], loc=pars["loc"], scale=pars["scale"])
+                        #x_rv    = np.linspace(fmin, fmax, 1000)
+                        x_rv = x = np.linspace(fmin*1.1, fmax*1.1, 1000)
+                        ax1.set_xlim([fmin*1.1,fmax*1.1])
+                        if show_gauss:
+                            gauss = skewnorm(a=0, loc=moments["mean"], scale=np.sqrt(moments["var"]))
+                            ax1.plot(x_rv, gauss.pdf(x_rv), c=[0.9,0,0], lw=3, label='Gauss')
+                        ax1.plot(x_rv, rv.pdf(x_rv), c=[0,0,1], lw=3, label='PDF') # plot recovered distribution
+                        ax1.legend()
                 else:
                     if plot_xbins:
                         ax1 = plt.subplot(2,subplot_cols,j+1)
