@@ -11,14 +11,14 @@ class ErrorStats:
     """ x and y are 1D arrays.
     y are the true values, while x are the guesses 
     """
-    def __init__(self, x, y, n=3000, project=False, sigma=None):
+    def __init__(self, x, y, n=3000, project=False, shift_extrema=False, sigma=None):
         self.x       = np.array(x)
         self.y       = np.array(y)
         self.Nx      = len(x)
         self.n       = n
         self.sigma   = sigma
         self.project = project
-        bins_dict      = self.__create_bins_fixed_size(n=n, project=project)
+        bins_dict      = self.__create_bins_fixed_size(n=n, project=project, shift_extrema=shift_extrema)
         bins_dict      = self.__remove_outliers(bins_dict, sigma=sigma)
         self.bins_dict = bins_dict
         return
@@ -55,7 +55,7 @@ class ErrorStats:
         bins_dict['xmax']  = xmax
         return bins_dict
 
-    def __create_bins_fixed_size(self, n=3000, project=False):
+    def __create_bins_fixed_size(self, n=3000, project=False, shift_extrema=False):
         """ Create bins with same number of points. However, if 
         two adiacent bins have the same x-middle value, then the
         bins are merged
@@ -77,6 +77,10 @@ class ErrorStats:
             new_ybin  = np.array(ys[ i*n : (i+1)*n ])
             new_xmid  = (new_xbin[-1]+new_xbin[0])/2
             if project:
+                if shift_extrema and i==0:
+                    new_xmid = min(new_xbin)
+                elif shift_extrema and i==nbins_guess-1:
+                    new_xmid = max(new_xbin)
                 new_ybin = new_ybin + new_xmid - new_xbin
                 new_xbin = new_xmid + new_xbin*0 # *0 is needed for the broadcast
             if i>0 and np.abs(new_xmid-xmid[-1])<xmid_tol:
@@ -126,7 +130,7 @@ class ErrorStats:
 
     def moments_to_pars(self, moments):
         """ Recover location, scale and shape (alpha)
-        from mean, variance and skeweness
+        from mean, variance and skewness
         """
         mean = moments["mean"]
         var  = moments["var"]
@@ -250,7 +254,8 @@ class ErrorStats:
                 plt.figure(figsize=(3*subplot_cols, 3))
             for j in range(subplot_cols):
                 if i<len(ybins):
-                    ydistr = ybins[i]-mean[i]
+                    #ydistr = ybins[i]-mean[i]
+                    ydistr = ybins[i]
                     fmin = min(ydistr)
                     fmax = max(ydistr)
                     fstep = (fmax-fmin)/bins_hist
@@ -276,14 +281,15 @@ class ErrorStats:
                         moments = self.distr_moments(ydistr)
                         pars    = self.moments_to_pars(moments)
                         rv      = skewnorm(a=pars["shape"], loc=pars["loc"], scale=pars["scale"])
-                        #x_rv    = np.linspace(fmin, fmax, 1000)
-                        x_rv = x = np.linspace(fmin*1.1, fmax*1.1, 1000)
-                        ax1.set_xlim([fmin*1.1,fmax*1.1])
+                        #x_rv = np.linspace(fmin, fmax, 1000)
+                        x_rv  = np.linspace(min(fmin, rv.ppf(0.001)), max(fmax, rv.ppf(0.999))) 
                         if show_gauss:
                             gauss = skewnorm(a=0, loc=moments["mean"], scale=np.sqrt(moments["var"]))
+                            x_rv  = np.linspace(min(fmin, gauss.ppf(0.001)), max(fmax, gauss.ppf(0.999))) 
                             ax1.plot(x_rv, gauss.pdf(x_rv), c=[0.9,0,0], lw=3, label='Gauss')
                         ax1.plot(x_rv, rv.pdf(x_rv), c=[0,0,1], lw=3, label='PDF') # plot recovered distribution
                         ax1.legend()
+                        #ax1.set_xlim([fmin,fmax])
                 else:
                     if plot_xbins:
                         ax1 = plt.subplot(2,subplot_cols,j+1)
