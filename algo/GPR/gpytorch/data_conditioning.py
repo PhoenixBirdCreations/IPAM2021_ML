@@ -9,9 +9,6 @@ from sklearn.utils import shuffle
 import scipy
 from scipy.special import logit, expit
 
-#sys.path.insert(0, '/Users/Lorena/ML_IPAM/IPAM2021_ML/utils')
-#from utils import *
-
 def extractData(filename, verbose=False):
     lst=[]
     header = []
@@ -39,42 +36,84 @@ def map_to_inf(xtrain, ytrain, xtest, ytest, shuffle_data=True):
         ytrain = shuffle(ytrain, random_state=5)
         xtest = shuffle(xtest, random_state=42)
         ytest = shuffle(ytest, random_state=42)
-    
+   
+    #Define mass mapping
     min_mass = 0.75 # bounds from template bank
     max_mass = 400.
-
-    # mapping into (0,1) range
     A = np.array([[min_mass, 1], [max_mass, 1]])
     B = np.array([0, 1])
     X = np.linalg.solve(A,B)
     a = X[0]
     b = X[1]
     y = lambda x : (a * x) + b
-    ytrain_01 = y(ytrain)
-    xtrain_01 = y(xtrain)
-    ytest_01 = y(ytest)
-    xtest_01 = y(xtest)
+    #Define spin mapping
+    min_spin = -1. # bounds from template bank
+    max_spin = 1.
+    sA = np.array([[min_spin, 1], [max_spin, 1]])
+    sB = np.array([0, 1])
+    sX = np.linalg.solve(sA,sB)
+    sa = sX[0]
+    sb = sX[1]
+    v = lambda u : (sa * u) + sb
 
+    #Map
+    ytrain_01 = ytrain
+    xtrain_01 = xtrain
+    ytest_01 = ytest
+    xtest_01 = xtest
+    ytrain_01[:,0:2] = y(ytrain[:,0:2])
+    xtrain_01[:,0:2] = y(xtrain[:,0:2])
+    ytest_01[:,0:2] = y(ytest[:,0:2])
+    xtest_01[:,0:2] = y(xtest[:,0:2])
+    ytrain_01[:,2:] = v(ytrain[:,2:])
+    xtrain_01[:,2:] = v(xtrain[:,2:])
+    ytest_01[:,2:] = v(ytest[:,2:])
+    xtest_01[:,2:] = v(xtest[:,2:])
+    
     # mapping into (-inf,inf) range
-    ytrain_inf = scipy.special.logit(ytrain_01)
-    xtrain_inf = scipy.special.logit(xtrain_01)
-    ytest_inf = scipy.special.logit(ytest_01)
-    xtest_inf = scipy.special.logit(xtest_01)
+    ytrain_inf = ytrain_01
+    xtrain_inf = xtrain_01
+    ytest_inf = ytest_01
+    xtest_inf = xtest_01
+    ytrain_inf[:,0:2] = scipy.special.logit(ytrain_01[:,0:2])
+    xtrain_inf[:,0:2] = scipy.special.logit(xtrain_01[:,0:2])
+    ytest_inf[:,0:2] = scipy.special.logit(ytest_01[:,0:2])
+    xtest_inf[:,0:2] = scipy.special.logit(xtest_01[:,0:2])
+    ytrain_inf[:,2:] = scipy.special.logit(ytrain_01[:,2:])
+    xtrain_inf[:,2:] = scipy.special.logit(xtrain_01[:,2:])
+    ytest_inf[:,2:] = scipy.special.logit(ytest_01[:,2:])
+    xtest_inf[:,2:] = scipy.special.logit(xtest_01[:,2:])
     return xtrain_inf, ytrain_inf, xtest_inf, ytest_inf
 
 def map_from_inf(predicted_data_inf):
-    predicted_data_01 = expit(predicted_data_inf)
-
+    predicted_data_01 = predicted_data_inf
+    predicted_data_01[:,0:2] = expit(predicted_data_inf[:,0:2])
+    predicted_data_01[:,2:] = expit(predicted_data_inf[:,2:])
+    
+    #Define mass and spin mappings
     min_mass = 0.75 # bounds from template bank
     max_mass = 400.
-
     A = np.array([[min_mass, 1], [max_mass, 1]])
     B = np.array([0, 1])
     X = np.linalg.solve(A,B)
     a = X[0]
     b = X[1]
     x = lambda y : (-b + y) * (1/a)
-    return x(predicted_data_01)
+
+    min_spin = -1. # bounds from template bank
+    max_spin = 1.
+    sA = np.array([[min_spin, 1], [max_spin, 1]])
+    sB = np.array([0, 1])
+    sX = np.linalg.solve(sA,sB)
+    sa = sX[0]
+    sb = sX[1]
+    u = lambda v : (-sb + v) * (1/sa)
+                                                
+    predicted_data = predicted_data_01
+    predicted_data[:,0:2] = x(predicted_data_01[:,0:2])
+    predicted_data[:,2:] = u(predicted_data_01[:,2:])
+
+    return predicted_data
 
 def standardize(xtrain_inf, ytrain_inf, xtest_inf, ytest_inf):
     xtrain_scaler = preprocessing.StandardScaler().fit(xtrain_inf)
