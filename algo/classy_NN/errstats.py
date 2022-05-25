@@ -11,7 +11,7 @@ class ErrorStats:
     """ x and y are 1D arrays.
     y are the true values, while x are the guesses 
     """
-    def __init__(self, x, y, n=3000, project=False, shift_extrema=False, sigma=None):
+    def __init__(self, x, y, n=3000, project=False, shift_extrema=False, sigma=None, npoly=[1,1,1]):
         self.x       = np.array(x)
         self.y       = np.array(y)
         self.Nx      = len(x)
@@ -21,6 +21,7 @@ class ErrorStats:
         bins_dict      = self.__create_bins_fixed_size(n=n, project=project, shift_extrema=shift_extrema)
         bins_dict      = self.__remove_outliers(bins_dict, sigma=sigma)
         self.bins_dict = bins_dict
+        self.__fit_moments(npoly=npoly) 
         return
 
     def __bins_stats(self, xbins, ybins):
@@ -136,7 +137,7 @@ class ErrorStats:
         var  = moments["var"]
         skew = moments["skew"]
 
-        skew_tol = 1e-5
+        skew_tol = 1e-2
         if skew>1:
             skew = 1-skew_tol
             #print('Warning: skew>1! Using skew =', skew)
@@ -157,6 +158,58 @@ class ErrorStats:
         scale = np.sqrt(var/(1-2*delta2/pi))
         loc   = mean-scale*delta*np.sqrt(2/pi)
         pars  = {"loc":loc, "scale":scale, "shape":shape}
+        return pars
+    
+    def __poly_fit(self, x, y, npoly, rm_outliers=False):
+        x = np.array(x)
+        y = np.array(y)
+        if rm_outliers:
+            mask = np.argwhere(np.abs(y-np.mean(y))<=3*np.std(y))
+            x = x[mask].reshape(-1,)
+            y = y[mask].reshape(-1,)
+        b  = np.polyfit(x,y,npoly)
+        return b
+
+    def __return_poly(self, x, b, bound=None):
+        p     = 0
+        npoly = len(b)-1
+        for i in range(0, npoly+1):
+            p += b[i]*x**(npoly-i)
+        if bound is not None and not np.isscalar(x):
+            low_mask = np.argwhere(p<bound[0])
+            up_mask  = np.argwhere(p>bound[1])
+            p[low_mask] = bound[0]
+            p[ up_mask] = bound[1]
+        return p 
+    
+    def __fit_moments(self, npoly=[1,1,1], rm_outliers=False, fit_extrema=True):
+        xmid  = self.bins_dict['xmid']
+        mean  = self.bins_dict['mean']
+        std   = self.bins_dict['std']
+        skew  = self.bins_dict['skew']
+        if fit_extrema:
+            j1 = 0
+            j2 = len(xmid)
+        else:
+            j1 = 1
+            j2 = len(xmid)-1
+        b_mean = self.__poly_fit(xmid[j1:j2], mean[j1:j2], npoly[0], rm_outliers=rm_outliers)
+        b_std  = self.__poly_fit(xmid[j1:j2],  std[j1:j2], npoly[1], rm_outliers=rm_outliers)
+        b_skew = self.__poly_fit(xmid[j1:j2], skew[j1:j2], npoly[2], rm_outliers=rm_outliers)
+        self.fit_pars         = {}
+        self.fit_pars['mean'] = b_mean
+        self.fit_pars['std']  = b_std
+        self.fit_pars['skew'] = b_skew
+        self.fit_npoly        = npoly
+        return
+    
+    def return_pars_from_fit(self, x0):
+        predicted         = {}
+        predicted['mean'] = self.__return_poly(x0, self.fit_pars['mean']) 
+        predicted['std']  = self.__return_poly(x0, self.fit_pars['std']) 
+        predicted['skew'] = self.__return_poly(x0, self.fit_pars['skew'], bound=[-1,1])
+        predicted['var']  = predicted['std']**2
+        pars = self.moments_to_pars(predicted)
         return pars
 
     def plot_bins(self):
@@ -211,6 +264,65 @@ class ErrorStats:
         plt.show()
         return 
     
+    def moving_mean(self, x, window_size=3):
+        if window_size%2==0:
+            raise ValueError('window_size must be odd!')
+        i = 0
+        moving_averages = []
+        half_window = int(np.floor(window_size/2));
+        N = len(x)
+        while i < N:
+            sub = x[ max(i-half_window,0) : min(i+half_window+1, N-1)]
+            moving_averages.append(np.mean(sub))
+            i += 1
+        return moving_averages
+        
+    def plot_moments(self, plot_mov_mean=False, window_size=3, plot_poly_fit=False):
+        xmid = self.bins_dict['xmid']
+        mean = self.bins_dict['mean']
+        std  = self.bins_dict['std']
+        skew = self.bins_dict['skew']
+        nbins = len(self.bins_dict['xbins'])
+        plt.figure(figsize=(12,3))
+        ax1 = plt.subplot(1,3,1)
+        ax1.plot(xmid, mean, 'bo', label='points')
+        ax1.set_xlabel(r'$\bar{x}$', fontsize=15)
+        ax1.set_ylabel(r'$\hat{y}$', fontsize=15)
+        ax2 = plt.subplot(1,3,2)
+        ax2.plot(xmid, std, 'go', label='points')
+        ax2.set_xlabel(r'$\bar{x}$', fontsize=15)
+        ax2.set_ylabel(r'$\sigma$', fontsize=15)
+        ax3 = plt.subplot(1,3,3)
+        ax3.plot(xmid, skew, 'ro', label='points')
+        ax3.set_xlabel(r'$\bar{x}$', fontsize=15)
+        ax3.set_ylabel(r'$\gamma_1$', fontsize=15)
+        if plot_mov_mean:
+            if nbins<window_size:
+                raise ValueError('nbins<window_size: %d<%d'.format(nbins,window_size))
+            mean_w = self.moving_mean(mean, window_size=window_size)
+            std_w  = self.moving_mean(std , window_size=window_size)
+            skew_w = self.moving_mean(skew, window_size=window_size)
+            ax1.plot(xmid, mean_w, ':b', label='mov-mean')
+            ax2.plot(xmid, std_w,  ':g', label='mov-mean')
+            ax3.plot(xmid, skew_w, ':r', label='mov-mean')
+            ax1.legend()
+            ax2.legend()
+            ax3.legend()
+        if plot_poly_fit:
+            new_x  = np.linspace(xmid[0], xmid[-1], 10000)     
+            mean_p = self.__return_poly(new_x, self.fit_pars['mean']) 
+            std_p  = self.__return_poly(new_x, self.fit_pars['std']) 
+            skew_p = self.__return_poly(new_x, self.fit_pars['skew'], bound=[-1,1]) 
+            ax1.plot(new_x, mean_p, '-b', label='p'+str(self.fit_npoly[0]))
+            ax2.plot(new_x, std_p,  '-g', label='p'+str(self.fit_npoly[1]))
+            ax3.plot(new_x, skew_p, '-r', label='p'+str(self.fit_npoly[2]))
+            ax1.legend()
+            ax2.legend()
+            ax3.legend()
+        plt.tight_layout()
+        plt.show()
+        return 
+    
     def plot_xstep(self):
         if not self.project:
             xmid = self.bins_dict['xmid']
@@ -227,7 +339,7 @@ class ErrorStats:
             print('self.plot_xstep: if project is True, then xmax-xmin=0 by construction!')
         return
 
-    def plot_stats(self, bins_hist = 30, show_info=True, plot_xbins=False, plot_distr=True, show_gauss=False):
+    def plot_stats(self, bins_hist = 30, show_info=True, plot_xbins=False, plot_exact_distr=True, plot_distr=True, show_gauss=False):
         bins_dict = self.bins_dict
         xbins = bins_dict['xbins']
         ybins = bins_dict['ybins']
@@ -277,7 +389,7 @@ class ErrorStats:
                         ax2.hist(xbins[i], bins=bins_hist, ec='black', color=[1,0.5,0])
                         if j==0:
                             ax2.set_ylabel('x', fontsize=20)
-                    if plot_distr:
+                    if plot_exact_distr:
                         moments = self.distr_moments(ydistr)
                         pars    = self.moments_to_pars(moments)
                         rv      = skewnorm(a=pars["shape"], loc=pars["loc"], scale=pars["scale"])
@@ -287,9 +399,15 @@ class ErrorStats:
                             gauss = skewnorm(a=0, loc=moments["mean"], scale=np.sqrt(moments["var"]))
                             x_rv  = np.linspace(min(fmin, gauss.ppf(0.001)), max(fmax, gauss.ppf(0.999))) 
                             ax1.plot(x_rv, gauss.pdf(x_rv), c=[0.9,0,0], lw=3, label='Gauss')
-                        ax1.plot(x_rv, rv.pdf(x_rv), c=[0,0,1], lw=3, label='PDF') # plot recovered distribution
+                        ax1.plot(x_rv, rv.pdf(x_rv), c=[0,0,1], lw=3, label=r'PDF$_0$') # plot recovered distribution
                         ax1.legend()
                         #ax1.set_xlim([fmin,fmax])
+                    if plot_distr:
+                        pars = self.return_pars_from_fit(xmid[i])
+                        rw   = skewnorm(a=pars["shape"], loc=pars["loc"], scale=pars["scale"])
+                        x_rw = np.linspace(min(fmin, rw.ppf(0.001)), max(fmax, rw.ppf(0.999))) 
+                        ax1.plot(x_rw, rw.pdf(x_rw), linestyle='-', c=[0,1,0], lw=3, label='PDF')
+                        ax1.legend()
                 else:
                     if plot_xbins:
                         ax1 = plt.subplot(2,subplot_cols,j+1)
@@ -300,6 +418,6 @@ class ErrorStats:
                 j += 1
             plt.tight_layout()
             plt.show()
-            print('-'*114)
+            #print('-'*114)
         return
         
