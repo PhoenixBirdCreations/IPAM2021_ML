@@ -1,17 +1,34 @@
 """
-Accurate description:
+Compute errors using magic
 """
-
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy import stats
+from scipy       import stats
 from scipy.stats import skewnorm
+from classyNN    import save_dill, load_dill
+
+#TODO: - check/fix the computation of the confidence interval
+#      - moving_mean is used only in a plot, maybe remove it 
+#      - check/improve the 'regularization' of the skewness and delta
+#      - skew normal distr is an option, but we should also 
+#        check exponentially modified Gaussian distribution
+#        (exp tail in one direction, especially useful 
+#         for Mc in the complete case)
 
 class ErrorStats:
     """ x and y are 1D arrays.
     y are the true values, while x are the guesses 
     """
-    def __init__(self, x, y, n=3000, project=False, shift_extrema=False, sigma=None, npoly=[1,1,1]):
+    def __init__(self, verbose=False):
+        if verbose:
+            print("-"*100, "Instance of ErrorStats created. Options:\n",
+                  "\t1) .fit(x,y,n=3000,project=False,shift_extrema=False,sigma=None,npoly=[1,1,1])",
+                  "\t   -> fit the error-model on (x,y) with specified options\n",
+                  "\t2) .load(fname)",
+                  "\t   -> load a saved error-model", "-"*100, sep='\n')
+        return
+    
+    def fit(self, x, y, n=3000, project=False, shift_extrema=False, sigma=None, npoly=[1,1,1]):
         self.x       = np.array(x)
         self.y       = np.array(y)
         self.Nx      = len(x)
@@ -23,7 +40,32 @@ class ErrorStats:
         self.bins_dict = bins_dict
         self.__fit_moments(npoly=npoly) 
         return
+    
+    def save(self, fname, verbose=False):
+        dict_to_save = {}
+        dict_to_save['bins_dict']   = self.bins_dict 
+        dict_to_save['npoly']       = self.npoly
+        dict_to_save['fit_pars']    = self.fit_pars
+        dict_to_save['miscellanea'] = {'x':self.x, 'y':self.y, 'n':self.n, 'sigma':self.sigma, 'project':self.project}
+        save_dill(fname, dict_to_save, verbose=verbose)
+        return
 
+    def load(self, fname, verbose=False):
+        saved_dict = load_dill(fname, verbose=verbose)
+        self.bins_dict = saved_dict['bins_dict']
+        self.npoly     = saved_dict['npoly']
+        self.fit_pars  = saved_dict['fit_pars']
+        misc = saved_dict['miscellanea']
+        self.x       = misc['x']
+        self.y       = misc['y']
+        self.n       = misc['n']
+        self.sigma   = misc['sigma']
+        self.project = misc['project']
+        return 
+    
+    #####################################################################################################
+    # Create bins
+    #####################################################################################################
     def __bins_stats(self, xbins, ybins):
         nbins = len(xbins)
         xmid  = np.empty((nbins,))
@@ -122,14 +164,17 @@ class ErrorStats:
             bins_dict = self.__bins_stats(new_xbins, new_ybins)
         return bins_dict
     
-    def distr_moments(self, x):
+    #####################################################################################################
+    # Conversion from moments to pars
+    #####################################################################################################
+    def __distr_moments(self, x):
         moments = {}
         moments["mean"] = stats.tmean(x)
         moments["var"]  = stats.tvar(x)
         moments["skew"] = stats.skew(x)
         return moments
 
-    def moments_to_pars(self, moments):
+    def __moments_to_pars(self, moments):
         """ Recover location, scale and shape (alpha)
         from mean, variance and skewness
         """
@@ -160,6 +205,22 @@ class ErrorStats:
         pars  = {"loc":loc, "scale":scale, "shape":shape}
         return pars
     
+    #####################################################################################################
+    # Fit of moments, find distribution from fits + some utilities
+    #####################################################################################################
+    def __moving_mean(self, x, window_size=3):
+        if window_size%2==0:
+            raise ValueError('window_size must be odd!')
+        i = 0
+        moving_averages = []
+        half_window = int(np.floor(window_size/2));
+        N = len(x)
+        while i < N:
+            sub = x[ max(i-half_window,0) : min(i+half_window+1, N-1)]
+            moving_averages.append(np.mean(sub))
+            i += 1
+        return moving_averages
+        
     def __poly_fit(self, x, y, npoly, rm_outliers=False):
         x = np.array(x)
         y = np.array(y)
@@ -200,18 +261,42 @@ class ErrorStats:
         self.fit_pars['mean'] = b_mean
         self.fit_pars['std']  = b_std
         self.fit_pars['skew'] = b_skew
-        self.fit_npoly        = npoly
+        self.npoly        = npoly
         return
     
-    def return_pars_from_fit(self, x0):
+    def __return_pars_from_fit(self, x0):
         predicted         = {}
         predicted['mean'] = self.__return_poly(x0, self.fit_pars['mean']) 
         predicted['std']  = self.__return_poly(x0, self.fit_pars['std']) 
         predicted['skew'] = self.__return_poly(x0, self.fit_pars['skew'], bound=[-1,1])
         predicted['var']  = predicted['std']**2
-        pars = self.moments_to_pars(predicted)
+        pars = self.__moments_to_pars(predicted)
         return pars
 
+    def confidence_interval(self, x0, confidence_level, verbose=False, plot=False):
+        pars  = self.__return_pars_from_fit(x0)
+        ymean = self.__return_poly(x0, self.fit_pars['mean'])
+        distr = skewnorm(a=pars['shape'], loc=pars['loc']-ymean, scale=pars['scale'])
+        tail  = (1-confidence_level)/2
+        x1    = distr.ppf(tail) 
+        x2    = distr.ppf(1-tail) 
+        if verbose:
+            print('{:.5f} -{:.5f} +{:.5f}'.format(x0, abs(x1), x2))
+        if plot:
+            x_lin = np.linspace(distr.ppf(0.0001), distr.ppf(0.9999))
+            plt.figure()
+            plt.plot(x_lin, distr.pdf(x_lin), linestyle='-', c=[0,0.8,0], lw=3, label='PDF')
+            plt.axvline(x=x1, color='k', linestyle='--')
+            plt.axvline(x=x2, color='k', linestyle='--')
+            plt.axvline(x=0, color='k', linestyle=':')
+            plt.axvline(x=x0-ymean, color='r', linestyle='--', label=r'$x_0-\hat{y}$')
+            plt.legend()
+            plt.show()
+        return x1, x2, ymean
+
+    #####################################################################################################
+    # Plots 
+    #####################################################################################################
     def plot_bins(self):
         x = self.x
         bins_dict = self.bins_dict
@@ -264,19 +349,6 @@ class ErrorStats:
         plt.show()
         return 
     
-    def moving_mean(self, x, window_size=3):
-        if window_size%2==0:
-            raise ValueError('window_size must be odd!')
-        i = 0
-        moving_averages = []
-        half_window = int(np.floor(window_size/2));
-        N = len(x)
-        while i < N:
-            sub = x[ max(i-half_window,0) : min(i+half_window+1, N-1)]
-            moving_averages.append(np.mean(sub))
-            i += 1
-        return moving_averages
-        
     def plot_moments(self, plot_mov_mean=False, window_size=3, plot_poly_fit=False):
         xmid = self.bins_dict['xmid']
         mean = self.bins_dict['mean']
@@ -299,9 +371,9 @@ class ErrorStats:
         if plot_mov_mean:
             if nbins<window_size:
                 raise ValueError('nbins<window_size: %d<%d'.format(nbins,window_size))
-            mean_w = self.moving_mean(mean, window_size=window_size)
-            std_w  = self.moving_mean(std , window_size=window_size)
-            skew_w = self.moving_mean(skew, window_size=window_size)
+            mean_w = self.__moving_mean(mean, window_size=window_size)
+            std_w  = self.__moving_mean(std , window_size=window_size)
+            skew_w = self.__moving_mean(skew, window_size=window_size)
             ax1.plot(xmid, mean_w, ':b', label='mov-mean')
             ax2.plot(xmid, std_w,  ':g', label='mov-mean')
             ax3.plot(xmid, skew_w, ':r', label='mov-mean')
@@ -313,9 +385,9 @@ class ErrorStats:
             mean_p = self.__return_poly(new_x, self.fit_pars['mean']) 
             std_p  = self.__return_poly(new_x, self.fit_pars['std']) 
             skew_p = self.__return_poly(new_x, self.fit_pars['skew'], bound=[-1,1]) 
-            ax1.plot(new_x, mean_p, '-b', label='p'+str(self.fit_npoly[0]))
-            ax2.plot(new_x, std_p,  '-g', label='p'+str(self.fit_npoly[1]))
-            ax3.plot(new_x, skew_p, '-r', label='p'+str(self.fit_npoly[2]))
+            ax1.plot(new_x, mean_p, '-b', label='p'+str(self.npoly[0]))
+            ax2.plot(new_x, std_p,  '-g', label='p'+str(self.npoly[1]))
+            ax3.plot(new_x, skew_p, '-r', label='p'+str(self.npoly[2]))
             ax1.legend()
             ax2.legend()
             ax3.legend()
@@ -339,7 +411,7 @@ class ErrorStats:
             print('self.plot_xstep: if project is True, then xmax-xmin=0 by construction!')
         return
 
-    def plot_stats(self, bins_hist = 30, show_info=True, plot_xbins=False, plot_exact_distr=True, plot_distr=True, show_gauss=False):
+    def plot_stats(self, bins_hist=30, show_info=False, plot_xbins=False, plot_exact_distr=True, plot_distr=True, show_gauss=False):
         bins_dict = self.bins_dict
         xbins = bins_dict['xbins']
         ybins = bins_dict['ybins']
@@ -390,21 +462,21 @@ class ErrorStats:
                         if j==0:
                             ax2.set_ylabel('x', fontsize=20)
                     if plot_exact_distr:
-                        moments = self.distr_moments(ydistr)
-                        pars    = self.moments_to_pars(moments)
-                        rv      = skewnorm(a=pars["shape"], loc=pars["loc"], scale=pars["scale"])
+                        moments = self.__distr_moments(ydistr)
+                        pars    = self.__moments_to_pars(moments)
+                        rv      = skewnorm(a=pars['shape'], loc=pars['loc'], scale=pars['scale'])
                         #x_rv = np.linspace(fmin, fmax, 1000)
                         x_rv  = np.linspace(min(fmin, rv.ppf(0.001)), max(fmax, rv.ppf(0.999))) 
                         if show_gauss:
-                            gauss = skewnorm(a=0, loc=moments["mean"], scale=np.sqrt(moments["var"]))
+                            gauss = skewnorm(a=0, loc=moments['mean'], scale=np.sqrt(moments['var']))
                             x_rv  = np.linspace(min(fmin, gauss.ppf(0.001)), max(fmax, gauss.ppf(0.999))) 
                             ax1.plot(x_rv, gauss.pdf(x_rv), c=[0.9,0,0], lw=3, label='Gauss')
                         ax1.plot(x_rv, rv.pdf(x_rv), c=[0,0,1], lw=3, label=r'PDF$_0$') # plot recovered distribution
                         ax1.legend()
                         #ax1.set_xlim([fmin,fmax])
                     if plot_distr:
-                        pars = self.return_pars_from_fit(xmid[i])
-                        rw   = skewnorm(a=pars["shape"], loc=pars["loc"], scale=pars["scale"])
+                        pars = self.__return_pars_from_fit(xmid[i])
+                        rw   = skewnorm(a=pars['shape'], loc=pars['loc'], scale=pars['scale'])
                         x_rw = np.linspace(min(fmin, rw.ppf(0.001)), max(fmax, rw.ppf(0.999))) 
                         ax1.plot(x_rw, rw.pdf(x_rw), linestyle='-', c=[0,1,0], lw=3, label='PDF')
                         ax1.legend()
