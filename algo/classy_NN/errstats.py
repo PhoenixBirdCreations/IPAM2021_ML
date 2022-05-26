@@ -264,6 +264,9 @@ class ErrorStats:
         self.npoly        = npoly
         return
     
+    def return_mean_from_fit(self,x0):
+        return self.__return_poly(x0, self.fit_pars['mean'])
+
     def __return_pars_from_fit(self, x0):
         predicted         = {}
         predicted['mean'] = self.__return_poly(x0, self.fit_pars['mean']) 
@@ -273,23 +276,19 @@ class ErrorStats:
         pars = self.__moments_to_pars(predicted)
         return pars
 
-    def confidence_interval(self, x0, confidence_level, verbose=False, plot=False):
+    def confidence_interval(self, x0, confidence_level, plot=False):
         pars  = self.__return_pars_from_fit(x0)
         ymean = self.__return_poly(x0, self.fit_pars['mean'])
         distr = skewnorm(a=pars['shape'], loc=pars['loc']-ymean, scale=pars['scale'])
         tail  = (1-confidence_level)/2
         x1    = distr.ppf(tail) 
         x2    = distr.ppf(1-tail) 
-        if verbose:
-            print('{:.5f} -{:.5f} +{:.5f}'.format(x0, abs(x1), x2))
         if plot:
             x_lin = np.linspace(distr.ppf(0.0001), distr.ppf(0.9999))
             plt.figure()
             plt.plot(x_lin, distr.pdf(x_lin), linestyle='-', c=[0,0.8,0], lw=3, label='PDF')
             plt.axvline(x=x1, color='k', linestyle='--')
             plt.axvline(x=x2, color='k', linestyle='--')
-            plt.axvline(x=0, color='k', linestyle=':')
-            plt.axvline(x=x0-ymean, color='r', linestyle='--', label=r'$x_0-\hat{y}$')
             plt.legend()
             plt.show()
         return x1, x2, ymean
