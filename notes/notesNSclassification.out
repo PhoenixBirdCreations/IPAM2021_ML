@@ -1,9 +1,0 @@
-\BOOKMARK [0][-]{section*.1}{Classification of NS data}{}% 1
-\BOOKMARK [1][-]{section*.2}{Random forest}{section*.1}% 2
-\BOOKMARK [2][-]{section*.3}{Using only independent recovered variables}{section*.2}% 3
-\BOOKMARK [2][-]{section*.4}{Using recovered variables}{section*.2}% 4
-\BOOKMARK [2][-]{section*.5}{All injected values}{section*.2}% 5
-\BOOKMARK [2][-]{section*.6}{Independent injected values}{section*.2}% 6
-\BOOKMARK [1][-]{section*.7}{K-Nearest Neighbors}{section*.1}% 7
-\BOOKMARK [2][-]{section*.8}{Using paper's hyperparameters}{section*.7}% 8
-\BOOKMARK [2][-]{section*.9}{Using our hyperparameters}{section*.7}% 9
