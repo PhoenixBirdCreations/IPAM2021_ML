@@ -28,7 +28,7 @@ class ErrorStats:
                   "\t   -> load a saved error-model", "-"*100, sep='\n')
         return
     
-    def fit(self, x, y, n=3000, project=False, shift_extrema=False, sigma=None, npoly=[1,1,1]):
+    def fit(self, x, y, n=3000, project=False, shift_extrema=False, sigma=None, fit_method='poly', npoly=[1,1,1]):
         self.x       = np.array(x)
         self.y       = np.array(y)
         self.Nx      = len(x)
@@ -38,14 +38,21 @@ class ErrorStats:
         bins_dict      = self.__create_bins_fixed_size(n=n, project=project, shift_extrema=shift_extrema)
         bins_dict      = self.__remove_outliers(bins_dict, sigma=sigma)
         self.bins_dict = bins_dict
-        self.__fit_moments(npoly=npoly) 
+        self.fit_method = fit_method
+
+        self.poly_fit_pars = None
+        self.npoly         = None
+        if fit_method=='poly':
+            self.__poly_fit_moments(npoly=npoly) 
+        elif fit_method=='poly':
+            raise ValueError('not implemented')
         return
     
     def save(self, fname, verbose=False):
         dict_to_save = {}
         dict_to_save['bins_dict']   = self.bins_dict 
         dict_to_save['npoly']       = self.npoly
-        dict_to_save['fit_pars']    = self.fit_pars
+        dict_to_save['poly_fit_pars']    = self.poly_fit_pars
         dict_to_save['miscellanea'] = {'x':self.x, 'y':self.y, 'n':self.n, 'sigma':self.sigma, 'project':self.project}
         save_dill(fname, dict_to_save, verbose=verbose)
         return
@@ -54,7 +61,7 @@ class ErrorStats:
         saved_dict = load_dill(fname, verbose=verbose)
         self.bins_dict = saved_dict['bins_dict']
         self.npoly     = saved_dict['npoly']
-        self.fit_pars  = saved_dict['fit_pars']
+        self.poly_fit_pars  = saved_dict['poly_fit_pars']
         misc = saved_dict['miscellanea']
         self.x       = misc['x']
         self.y       = misc['y']
@@ -243,7 +250,7 @@ class ErrorStats:
             p[ up_mask] = bound[1]
         return p 
     
-    def __fit_moments(self, npoly=[1,1,1], rm_outliers=False, fit_extrema=True):
+    def __poly_fit_moments(self, npoly=[1,1,1], rm_outliers=False, fit_extrema=True):
         xmid  = self.bins_dict['xmid']
         mean  = self.bins_dict['mean']
         std   = self.bins_dict['std']
@@ -257,28 +264,31 @@ class ErrorStats:
         b_mean = self.__poly_fit(xmid[j1:j2], mean[j1:j2], npoly[0], rm_outliers=rm_outliers)
         b_std  = self.__poly_fit(xmid[j1:j2],  std[j1:j2], npoly[1], rm_outliers=rm_outliers)
         b_skew = self.__poly_fit(xmid[j1:j2], skew[j1:j2], npoly[2], rm_outliers=rm_outliers)
-        self.fit_pars         = {}
-        self.fit_pars['mean'] = b_mean
-        self.fit_pars['std']  = b_std
-        self.fit_pars['skew'] = b_skew
-        self.npoly        = npoly
+        self.poly_fit_pars         = {}
+        self.poly_fit_pars['mean'] = b_mean
+        self.poly_fit_pars['std']  = b_std
+        self.poly_fit_pars['skew'] = b_skew
+        self.npoly            = npoly
         return
     
-    def return_mean_from_fit(self,x0):
-        return self.__return_poly(x0, self.fit_pars['mean'])
+    def return_mean_from_poly_fit(self,x0):
+        return self.__return_poly(x0, self.poly_fit_pars['mean'])
 
     def __return_pars_from_fit(self, x0):
         predicted         = {}
-        predicted['mean'] = self.__return_poly(x0, self.fit_pars['mean']) 
-        predicted['std']  = self.__return_poly(x0, self.fit_pars['std']) 
-        predicted['skew'] = self.__return_poly(x0, self.fit_pars['skew'], bound=[-1,1])
+        if self.fit_method is 'poly':
+            predicted['mean'] = self.__return_poly(x0, self.poly_fit_pars['mean']) 
+            predicted['std']  = self.__return_poly(x0, self.poly_fit_pars['std']) 
+            predicted['skew'] = self.__return_poly(x0, self.poly_fit_pars['skew'], bound=[-1,1])
+        elif self.fit_method is 'spline':
+            raise ValueError('not implemented!')
         predicted['var']  = predicted['std']**2
         pars = self.__moments_to_pars(predicted)
         return pars
 
     def confidence_interval(self, x0, confidence_level, plot=False):
         pars  = self.__return_pars_from_fit(x0)
-        ymean = self.__return_poly(x0, self.fit_pars['mean'])
+        ymean = self.__return_poly(x0, self.poly_fit_pars['mean'])
         distr = skewnorm(a=pars['shape'], loc=pars['loc']-ymean, scale=pars['scale'])
         tail  = (1-confidence_level)/2
         x1    = distr.ppf(tail) 
@@ -381,9 +391,9 @@ class ErrorStats:
             ax3.legend()
         if plot_poly_fit:
             new_x  = np.linspace(xmid[0], xmid[-1], 10000)     
-            mean_p = self.__return_poly(new_x, self.fit_pars['mean']) 
-            std_p  = self.__return_poly(new_x, self.fit_pars['std']) 
-            skew_p = self.__return_poly(new_x, self.fit_pars['skew'], bound=[-1,1]) 
+            mean_p = self.__return_poly(new_x, self.poly_fit_pars['mean']) 
+            std_p  = self.__return_poly(new_x, self.poly_fit_pars['std']) 
+            skew_p = self.__return_poly(new_x, self.poly_fit_pars['skew'], bound=[-1,1]) 
             ax1.plot(new_x, mean_p, '-b', label='p'+str(self.npoly[0]))
             ax2.plot(new_x, std_p,  '-g', label='p'+str(self.npoly[1]))
             ax3.plot(new_x, skew_p, '-r', label='p'+str(self.npoly[2]))
