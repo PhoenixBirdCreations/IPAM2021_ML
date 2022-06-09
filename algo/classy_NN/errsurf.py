@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib import ticker, cm
+from matplotlib import cm
 from scipy import interpolate
 
 class ErrorSurface:
@@ -208,7 +208,7 @@ class ErrorSurface:
         self.y_interp   = y_interp
         self.xg_interp  = xg_interp
         self.yg_interp  = yg_interp
-        self.S_interp = S_interp
+        self.S_interp   = S_interp
         return
     
     def distribution(self, x0, verbose=False):
@@ -255,14 +255,19 @@ class ErrorSurface:
         if log_bar:
             np.seterr(divide='ignore', invalid='ignore') 
             S0_plot = np.log10(S0)
+            min_S = max(S0_plot.min(), 0)
+            lev_decimals = 3
             #for i in range(0,Nx-1):
             #    for j in range(0, Ny-1):
             #        if S0_plot[i,j]<0:
             #                S0_plot[i,j]=0
         else:
             S0_plot = S0
+            min_S = S0_plot.min()
+            lev_decimals = 0
+        levels = np.around(np.linspace(min_S, S0_plot.max(), 30), decimals=lev_decimals)
         fig,ax=plt.subplots(1,1, figsize=(10,6))
-        cp = ax.contourf(xg0, yg0, S0_plot, cmap=plt.get_cmap('viridis'))
+        cp = ax.contourf(xg0, yg0, S0_plot, cmap=plt.get_cmap('viridis'), levels=levels)
         cb = fig.colorbar(cp)
         if show_grid:
             for i in range(Nx):
@@ -301,8 +306,13 @@ class ErrorSurface:
         if log_bar:
             np.seterr(divide='ignore', invalid='ignore') 
             S_interp_plot = np.log10(S_interp)
+            min_S = max(S_interp_plot.min(), 0)
+            lev_decimals = 3
         else:
             S_interp_plot = S_interp
+            min_S = S_interp_plot.min() 
+            lev_decimals = 0
+        levels = np.around(np.linspace(min_S, S_interp_plot.max(), 30), decimals=lev_decimals)
         #S_interp_plot = np.empty(np.shape(S_interp))
         #for i in range(Nx_grid):
         #    for j in range(Ny_grid):
@@ -313,13 +323,13 @@ class ErrorSurface:
         #        else:
         #            S_interp_plot[i,j] = np.log10(S_interp[i,j])
         fig,ax=plt.subplots(1,1, figsize=(10,6))
-        cp = ax.contourf(xg_interp, yg_interp, S_interp_plot, cmap=plt.get_cmap('viridis'))
+        cp = ax.contourf(xg_interp, yg_interp, S_interp_plot, cmap=plt.get_cmap('viridis'), levels=levels)
         cb = fig.colorbar(cp)
         ax.set_ylim([Y_min,Y_max])
         ax.set_xlim([X_min,X_max])
         ax.plot(self.x_interp, self.x_interp,c='r',lw=1)
         if x0_line is not None:
-            ax.axvline(x0_line)
+            ax.axvline(x0_line, color=[1,0,1])
         if log_scale:
             ax.set_yscale('log')
             ax.set_xscale('log')
