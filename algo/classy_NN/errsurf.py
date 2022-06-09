@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib import cm
+from matplotlib import ticker, cm
 from scipy import interpolate
 
 class ErrorSurface:
@@ -84,6 +84,10 @@ class ErrorSurface:
         Y_max = self.Y_max
         dx = (X_max-X_min)/Nx
         dy = (Y_max-Y_min)/Ny
+        # compute middle points and edges
+        x_mid   = np.linspace(X_min+dx/2, X_max-dx/2, Nx-1)
+        y_mid   = np.linspace(Y_min+dy/2, Y_max-dy/2, Ny-1)
+        x_edges = np.linspace(X_min, X_max, Nx)
         # compute uniform non-interpolated surface
         xg0, yg0 = self.__tmesh(x_mid, y_mid)
         S0 = np.empty((Nx-1, Ny-1))
@@ -97,10 +101,6 @@ class ErrorSurface:
                 mask_y = np.argwhere((Y>=y1) & (Y<y2))
                 mask   = np.intersect1d(mask_x, mask_y)
                 S0[i,j] = len(mask)
-        # compute middle points and edges
-        x_mid   = np.linspace(X_min+dx/2, X_max-dx/2, Nx-1)
-        y_mid   = np.linspace(Y_min+dy/2, Y_max-dy/2, Ny-1)
-        x_edges = np.linspace(X_min, X_max, Nx)
         y_edges = np.linspace(Y_min, Y_max, Ny)
         # save stuff in the dictionary
         step_dict            = {}
@@ -173,49 +173,7 @@ class ErrorSurface:
         xg = np.transpose(xg)
         yg = np.transpose(yg)
         return xg, yg
-
-    def plot_surf(self, show_grid=True, log_scale=False):
-        x_mid   = self.x_mid
-        y_mid   = self.y_mid
-        x_edges = self.x_edges
-        y_edges = self.y_edges
-        S0      = self.S0
-        X_min   = self.X_min
-        X_max   = self.X_max
-        Y_min   = self.Y_min
-        Y_max   = self.Y_max
-        Nx      = self.Nx
-        Ny      = self.Ny
-        xg0     = self.xg0
-        yg0     = self.yg0
-        S0_plot = np.log10(S0)
-        for i in range(0,Nx-1):
-            for j in range(0, Ny-1):
-                if S0_plot[i,j]<0:
-                        S0_plot[i,j]=0
-        fig,ax=plt.subplots(1,1, figsize=(10,6))
-        cp = ax.contourf(xg0, yg0, S0_plot, cmap=plt.get_cmap('viridis'))
-        cb = fig.colorbar(cp)
-        if show_grid:
-            for i in range(Nx):
-                plt.axvline(x_edges[i], lw=0.5, color=[0,0,0])
-            for j in range(Ny):
-                plt.axhline(y_edges[j], lw=0.5, color=[0,0,0])    
-        ax.set_ylim([Y_min,Y_max])
-        ax.set_xlim([X_min,X_max])
-        if log_scale:
-            ax.set_yscale('log')
-            ax.set_xscale('log')
-            ax.set_xlabel(r'$log_{10}(x)$', fontsize=25)
-            ax.set_ylabel(r'$log_{10}(y)$', fontsize=25)
-        else:
-            ax.set_xlabel(r'$x$', fontsize=25)
-            ax.set_ylabel(r'$y$', fontsize=25)
-        cb.set_label(r'$log_{10}(N_s)$', fontsize=25)
-        ax.plot(x_mid,x_mid,c='r',lw=1)
-        plt.show()
-        return
-
+    
     def __interpolate_surface(self):
         Nx_grid = self.Nx_grid
         Ny_grid = self.Ny_grid
@@ -243,54 +201,16 @@ class ErrorSurface:
                 points[k,1] = yg0[i,j]
                 values[k]   = S0[i,j]
                 k += 1
-        S_interp = interpolate.griddata(points, values, (xg_interp, yg_interp), method='linear')
+        S_interp = interpolate.griddata(points, values, (xg_interp, yg_interp), method=self.method)
         S_interp = np.around(S_interp, decimals=0)
+        S_interp = np.nan_to_num(S_interp, copy=True, nan=0)      
         self.x_interp   = x_interp
         self.y_interp   = y_interp
         self.xg_interp  = xg_interp
         self.yg_interp  = yg_interp
         self.S_interp = S_interp
         return
-
-    def plot_interp(self, x0_line=None, log_scale=False):
-        Nx_grid = self.Nx_grid
-        Ny_grid = self.Ny_grid
-        xg_interp = self.xg_interp
-        yg_interp = self.yg_interp
-        X_min   = self.X_min
-        X_max   = self.X_max
-        Y_min   = self.Y_min
-        Y_max   = self.Y_max
-        S_interp = self.S_interp
-        S_interp_plot = np.empty(np.shape(S_interp))
-        for i in range(Nx_grid):
-            for j in range(Ny_grid):
-                if np.isnan(S_interp[i,j]):
-                    S_interp[i,j] = 0;
-                if S_interp[i,j]<1:
-                    S_interp_plot[i,j] = 0
-                else:
-                    S_interp_plot[i,j] = np.log10(S_interp[i,j])
-        fig,ax=plt.subplots(1,1, figsize=(10,6))
-        cp = ax.contourf(xg_interp, yg_interp, S_interp_plot, cmap=plt.get_cmap('viridis'))
-        cb = fig.colorbar(cp)
-        cb.set_label(r'$log_{10}(N_s)$', fontsize=25)    
-        ax.set_ylim([Y_min,Y_max])
-        ax.set_xlim([X_min,X_max])
-        ax.plot(self.x_interp, self.x_interp,c='r',lw=1)
-        if x0_line is not None:
-            ax.axvline(x0_line)
-        if log_scale:
-            ax.set_yscale('log')
-            ax.set_xscale('log')
-            ax.set_xlabel(r'$log_{10}(x)$', fontsize=25)
-            ax.set_ylabel(r'$log_{10}(y)$', fontsize=25)
-        else:
-            ax.set_xlabel(r'$x$', fontsize=25)
-            ax.set_ylabel(r'$y$', fontsize=25)
-        plt.show()
-        return
-
+    
     def distribution(self, x0, verbose=False):
         x_interp = self.x_interp
         y_interp = self.y_interp
@@ -318,8 +238,113 @@ class ErrorSurface:
                 y_values = np.concatenate((y_values, ones*y_interp[j]))
         return y_values
 
+    def plot_surf(self, show_grid=True, log_bar=False, log_scale=False, bisectrix=True):
+        x_mid   = self.x_mid
+        y_mid   = self.y_mid
+        x_edges = self.x_edges
+        y_edges = self.y_edges
+        S0      = self.S0
+        X_min   = self.X_min
+        X_max   = self.X_max
+        Y_min   = self.Y_min
+        Y_max   = self.Y_max
+        Nx      = self.Nx
+        Ny      = self.Ny
+        xg0     = self.xg0
+        yg0     = self.yg0
+        if log_bar:
+            np.seterr(divide='ignore', invalid='ignore') 
+            S0_plot = np.log10(S0)
+            #for i in range(0,Nx-1):
+            #    for j in range(0, Ny-1):
+            #        if S0_plot[i,j]<0:
+            #                S0_plot[i,j]=0
+        else:
+            S0_plot = S0
+        fig,ax=plt.subplots(1,1, figsize=(10,6))
+        cp = ax.contourf(xg0, yg0, S0_plot, cmap=plt.get_cmap('viridis'))
+        cb = fig.colorbar(cp)
+        if show_grid:
+            for i in range(Nx):
+                plt.axvline(x_edges[i], lw=0.5, color=[0,0,0])
+            for j in range(Ny):
+                plt.axhline(y_edges[j], lw=0.5, color=[0,0,0])    
+        ax.set_ylim([Y_min,Y_max])
+        ax.set_xlim([X_min,X_max])
+        if log_scale:
+            ax.set_yscale('log')
+            ax.set_xscale('log')
+            ax.set_xlabel(r'$log_{10}(x)$', fontsize=25)
+            ax.set_ylabel(r'$log_{10}(y)$', fontsize=25)
+        else:
+            ax.set_xlabel(r'$x$', fontsize=25)
+            ax.set_ylabel(r'$y$', fontsize=25)
+        if log_bar:
+            cb.set_label(r'$log_{10}(N_s)$', fontsize=25)
+        else:
+            cb.set_label(r'$N_s$', fontsize=25)
+        if bisectrix:
+            ax.plot(x_mid,x_mid,c='r',lw=1)
+        plt.show()
+        return
+
+    def plot_interp(self, x0_line=None, log_bar=False, log_scale=False):
+        Nx_grid = self.Nx_grid
+        Ny_grid = self.Ny_grid
+        xg_interp = self.xg_interp
+        yg_interp = self.yg_interp
+        X_min   = self.X_min
+        X_max   = self.X_max
+        Y_min   = self.Y_min
+        Y_max   = self.Y_max
+        S_interp = self.S_interp
+        if log_bar:
+            np.seterr(divide='ignore', invalid='ignore') 
+            S_interp_plot = np.log10(S_interp)
+        else:
+            S_interp_plot = S_interp
+        #S_interp_plot = np.empty(np.shape(S_interp))
+        #for i in range(Nx_grid):
+        #    for j in range(Ny_grid):
+        #        if np.isnan(S_interp[i,j]):
+        #            S_interp[i,j] = 0;
+        #        if S_interp[i,j]<1:
+        #            S_interp_plot[i,j] = 0
+        #        else:
+        #            S_interp_plot[i,j] = np.log10(S_interp[i,j])
+        fig,ax=plt.subplots(1,1, figsize=(10,6))
+        cp = ax.contourf(xg_interp, yg_interp, S_interp_plot, cmap=plt.get_cmap('viridis'))
+        cb = fig.colorbar(cp)
+        ax.set_ylim([Y_min,Y_max])
+        ax.set_xlim([X_min,X_max])
+        ax.plot(self.x_interp, self.x_interp,c='r',lw=1)
+        if x0_line is not None:
+            ax.axvline(x0_line)
+        if log_scale:
+            ax.set_yscale('log')
+            ax.set_xscale('log')
+            ax.set_xlabel(r'$log_{10}(x)$', fontsize=25)
+            ax.set_ylabel(r'$log_{10}(y)$', fontsize=25)
+        else:
+            ax.set_xlabel(r'$x$', fontsize=25)
+            ax.set_ylabel(r'$y$', fontsize=25)
+        if log_bar:
+            cb.set_label(r'$log_{10}(N_s)$', fontsize=25)    
+        else:
+            cb.set_label(r'$N_s$', fontsize=25)    
+        plt.show()
+        return
+
     def plot_hist(self, x0, nbins=50):
+        X_min   = self.X_min
+        X_max   = self.X_max
+        if x0<X_min or x0>X_max:
+            print('x={:f} is outside the prediction range [{:6f},{:6f}]'.format(x0, X_min, X_max))
+            return
         y_values = self.distribution(x0)
+        if len(y_values)<1:
+            print('Empty bin!')
+            return
         plt.figure(figsize=(12,4))
         plt.subplot(1,2,1)
         plt.hist(y_values, bins=nbins, ec='black')
