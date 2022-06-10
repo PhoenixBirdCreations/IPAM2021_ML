@@ -13,7 +13,7 @@ from sklearn.neighbors import DistanceMetric
 from sklearn.model_selection import cross_val_score
 import sklearn.utils as utils
 from sklearn.utils     import shuffle
-from sklearn.metrics import confusion_matrix, roc_curve
+from sklearn.metrics import confusion_matrix, roc_curve, precision_recall_curve
 
 
 
@@ -146,6 +146,8 @@ class ClassificationKNN:
             self.k_opt = 6
         elif self.label == 'NS':
             self.k_opt = 10
+        print('Optimal K : ', self.k_opt)
+        print('*'*60)
         return KNeighborsClassifier(n_neighbors=self.k_opt, metric = self.metric,algorithm = self.algo, weights = self.weights)
 
     def train_test(self):
@@ -230,16 +232,28 @@ class ClassificationKNN:
 
         return
 
-    def ROC_plot(self):
+    def ROC_PRC(self):
         ytest = self.ytest
         proba = self.probab
         proba1d = proba[:,1]
         fpr, tpr, thresholds = roc_curve(ytest, proba1d)
-        self.FPR = fpr
-        self.TPR = tpr
-        self.THR = thresholds
-        fp.plotROC(ytest, proba1d)
-        #plt.savefig('/Users/miquelmiravet/Projects/IPAM_LA/ML_group/KNN_miq/ipam_REM_set/plots_miq/ROCplot_REM.pdf')
+        self.FPRv = fpr
+        self.TPRv = tpr
+        self.THRv = thresholds
+
+        cm = confusion_matrix(self.ytest, self.predict)
+        fnr = cm.sum(axis=1) - np.diag(cm)
+        fprr = cm.sum(axis=0) - np.diag(cm)
+        tp = np.diag(cm)
+        sens = tp/(tp+fnr)
+        self.SENS = sens[1]
+        precision = tp/(tp+fprr)
+        self.PREC = precision[1]
+        f1 = 2*precision*sens/(precision+sens)
+        self.F1 = f1[1]
+        #fp.plotROC(ytest, proba1d)
+        fp.plotPRC(ytest, proba1d)
+        plt.savefig('/Users/miquelmiravet/Projects/IPAM_LA/ML_group/KNN_miq/ipam_'+KNN.label+'_set/plots_miq/PRCplot_'+KNN.label+'.pdf')
 
         return
 
@@ -247,7 +261,7 @@ class ClassificationKNN:
 
 if __name__ == '__main__':
 
-    KNN = ClassificationKNN()
+    KNN = ClassificationKNN('NS')
 
     path = "/Users/miquelmiravet/Projects/IPAM_LA/ML_group/KNN_miq/"
 
@@ -259,28 +273,35 @@ if __name__ == '__main__':
     print('Metric : ', KNN.metric)
     print('Algorithm : ', KNN.algo)
     print('Weights : ', KNN.weights)
-    print('#'*60)
+    print('-'*60)
 
     #KNN.CrossVal()
     KNN.train_test()
 
-
     #plots and stuff
 
-    KNN.write_probabilities()
+    #KNN.write_probabilities()
     #KNN.write_probab_pred(path+'predictions_prob_REM.csv')
 
-    KNN.plot_confmatrix()
-    KNN.scatter_plot()
-    KNN.ROC_plot()
+    #KNN.plot_confmatrix()
+    #KNN.scatter_plot()
+    KNN.ROC_PRC()
 
     print('*'*60)
     print('OUR KNN')
-    print('THRESHOLD    TPR(HasNS)    FPR(HasNS)')
+    print('THRESHOLD    TPR(Has'+KNN.label+')    FPR(Has'+KNN.label+')')
     print('-'*60)
     thrvec = [0.07,0.27,0.51,0.80,0.94]
 
     for x in range(0,len(thrvec)):
-        i = np.where( KNN.THR < thrvec[x])[0][0]
-        print('%.3f \t\t %.3f \t\t %.3f'%(thrvec[x],KNN.TPR[i],KNN.FPR[i]))
+        i = np.where(KNN.THRv < thrvec[x])[0][0]
+        print('%.3f \t\t %.3f \t\t %.3f'%(thrvec[x],KNN.TPRv[i],KNN.FPRv[i]))
+    print('*'*60)
+
+    print('*'*60)
+    print('OUR KNN')
+    print('-'*60)
+    print('%s\t   %s\t   %s\t   %s'%('SCORE','SENSITIVITY','PRECISION','F1'))
+    print('-'*60)
+    print('%.3f\t\t%.3f\t\t%.3f\t\t%.3f'%(KNN.score,KNN.SENS,KNN.PREC,KNN.F1))
     print('*'*60)

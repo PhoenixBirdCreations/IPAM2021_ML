@@ -205,6 +205,17 @@ class ClassificationKNN:
         self.TPR = tpr
         self.THR = thresholds
 
+        cm = confusion_matrix(self.ytest, self.predict)
+        fnr = cm.sum(axis=1) - np.diag(cm)
+        fprr = cm.sum(axis=0) - np.diag(cm)
+        tp = np.diag(cm)
+        sens = tp/(tp+fnr)
+        self.SENS = sens[1]
+        precision = tp/(tp+fprr)
+        self.PREC = precision[1]
+        f1 = 2*precision*sens/(precision+sens)
+        self.F1 = f1[1]
+
         #fp.plotROC(ytest, proba1d,'/Users/miquelmiravet/Projects/IPAM_LA/ML_group/KNN_miq/ipam_REM_set/plots_chatt/ROCplot_REM.pdf')
 
         return
@@ -213,7 +224,7 @@ class ClassificationKNN:
 
 if __name__ == '__main__':
 
-    KNN = ClassificationKNN()
+    KNN = ClassificationKNN('REM')
 
     path = "/Users/miquelmiravet/Projects/IPAM_LA/ML_group/KNN_miq/"
 
@@ -233,9 +244,9 @@ if __name__ == '__main__':
 
     #plots and stuff
 
-    KNN.write_probabilities()
-    KNN.plot_confmatrix()
-    KNN.scatter_plot()
+    #KNN.write_probabilities()
+    #KNN.plot_confmatrix()
+    #KNN.scatter_plot()
     KNN.ROC_plot()
 
     print('*'*60)
@@ -247,4 +258,12 @@ if __name__ == '__main__':
     for x in range(0,len(thrvec)):
         i = np.where( KNN.THR < thrvec[x])[0][0]
         print('%.3f \t\t %.3f \t\t %.3f'%(thrvec[x],KNN.TPR[i],KNN.FPR[i]))
+    print('*'*60)
+
+    print('*'*60)
+    print('PAPER KNN')
+    print('-'*60)
+    print('%s\t   %s\t   %s\t   %s'%('SCORE','SENSITIVITY','PRECISION','F1'))
+    print('-'*60)
+    print('%.3f\t\t%.3f\t\t%.3f\t\t%.3f'%(KNN.score,KNN.SENS,KNN.PREC,KNN.F1))
     print('*'*60)
