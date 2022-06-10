@@ -638,7 +638,7 @@ class RegressionNN:
         plt.legend(fontsize=20)
         plt.xlabel(xlab, fontsize=15)
         if logscale:
-            plt.yscale('log', nonposy='clip')
+            plt.yscale('log')
         if name is not None:
             plt.title(name, fontsize=20)
         if save:
