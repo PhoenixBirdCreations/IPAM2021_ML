@@ -4,7 +4,7 @@ import numpy as np
 import sklearn.utils
 import utils as ut
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
-from sklearn.metrics import roc_curve
+from sklearn.metrics import roc_curve,precision_recall_curve
 
 ##################################################################
 # Regression plots
@@ -348,7 +348,21 @@ def plotROC(ytrue, prob_of_label, show=True):
         plt.close()
     return
 
-
+def plotPRC(ytrue, prob_of_label, show=True):
+  
+    precision, recall, thresholds = precision_recall_curve(ytrue, prob_of_label)
+    plt.figure
+    recall = np.delete(recall,-1)
+    precision = np.delete(precision,-1)
+    sc=plt.scatter(recall, precision, c=thresholds, cmap='viridis')
+    plt.colorbar(sc)
+    plt.xlabel("recall", fontsize=14)
+    plt.ylabel("precision",  fontsize=14)
+    if show:
+        plt.show()
+    else:
+        plt.close()
+    return
 
 
 
