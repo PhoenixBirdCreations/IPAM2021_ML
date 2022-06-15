@@ -237,6 +237,45 @@ class ErrorSurface:
                 ones = np.ones((nj,))
                 y_values = np.concatenate((y_values, ones*y_interp[j]))
         return y_values
+    
+    def confidence_interval(self, x0, cfi=0.9, verbose=False, nbins=50):
+        y  = self.distribution(x0,verbose=False)
+        hist, bin_edges = np.histogram(y,bins=nbins)
+        density = hist/hist.sum()
+        # note: plt.bar(bins_edges[:-1], density, width=bins_edges[2]-bins_edges[1]) is equivalent to plt.hist(y);
+        tail = (1-cfi)/2
+        suml = 0
+        sumr = 0
+        xl   = None
+        xr   = None
+        for i in range(0,nbins):
+            if xl is None:
+                suml += density[i]
+                if suml>=tail:
+                    il = i+1
+                    xl = bin_edges[il]
+            if xr is None:
+                j = nbins-1-i
+                sumr += density[j]
+                if xr is None and sumr>=tail:
+                    ir = j-1
+                    xr = bin_edges[ir]
+            if xl is not None and xr is not None:
+                break
+        if xl is None or xr is None:
+            raise ValueError('confidence interval not found!')
+        cfi_final = np.sum(density[il:ir+1])
+        if verbose:
+            ccfi = np.sum(density[0:il])+np.sum(density[ir+1:])
+            print('-'*100)
+            print('cfi requested                  : {:f}'.format(cfi))
+            print('number of bins                 :', nbins)
+            print('left-idf, right-idx            : {:d}, {:d}'.format(il, ir))
+            print('left-tail prob, left-tail prob : {:.5f}, {:.5f}'.format(suml, sumr))
+            print('final cfi (diff from initial)  : {:.5f} ({:f} %)'.format(cfi_final, 100*(cfi_final-cfi)/cfi))
+            print('sum of final cfi and compl-cfi : {:.10f}'.format(cfi_final+ccfi))
+            print('-'*100)
+        return xl, xr, cfi_final
 
     def plot_surf(self, show_grid=True, log_bar=False, log_scale=False, bisectrix=True):
         x_mid   = self.x_mid
@@ -345,7 +384,7 @@ class ErrorSurface:
         plt.show()
         return
 
-    def plot_hist(self, x0, nbins=50):
+    def plot_hist(self, x0, nbins=50, axvlines=None):
         X_min   = self.X_min
         X_max   = self.X_max
         if x0<X_min or x0>X_max:
@@ -368,6 +407,11 @@ class ErrorSurface:
         plt.ylabel(r'$log_{10}(N)$', fontsize=20)
         plt.yscale('log')
         plt.tight_layout()
+        if axvlines is not None:
+            for i in range(2):
+                plt.subplot(1,2,i+1)
+                for axvl in axvlines:
+                    plt.axvline(axvl, color=[0,1,0])
         plt.show()
         return 
 
