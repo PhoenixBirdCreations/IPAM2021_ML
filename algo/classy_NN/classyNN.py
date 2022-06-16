@@ -104,7 +104,7 @@ class CustomScaler:
         self.compact    = compact
         if compact:
             self.C = self.C*0
-            self.D = self.D*1
+            self.D = self.D*0+1
 
     def transform(self,x):
         A = self.A
