@@ -102,9 +102,9 @@ class CustomScaler:
         self.std_scaler = std_scaler
         self.sigma0     = sigma0
         self.compact    = compact
-        if compact: 
-            self.C = self.C*0     + 1e-2
-            self.D = self.D*0 + 1 - 1e-2
+        if compact:
+            self.C = self.C*0
+            self.D = self.D*1
 
     def transform(self,x):
         A = self.A
@@ -112,10 +112,10 @@ class CustomScaler:
         C = self.C
         D = self.D
         if not self.standard:
-            y = np.transpose((D-C)*(np.transpose(x)-A)/(B-A)+C)
+            y = self.__lin_transf(A,B,C,D,x)
         else:
             if self.compact:
-                x = np.transpose((D-C)*(np.transpose(x)-A)/(B-A)+C)
+                x = self.__lin_transf(A,B,C,D,x)
                 x = logit(x)
             if self.std_scaler is None:
                 std_scaler = StandardScaler()
@@ -131,13 +131,16 @@ class CustomScaler:
         C = self.C
         D = self.D
         if not self.standard:
-            y = np.transpose((B-A)*(np.transpose(x)-C)/(D-C)+A)
+            y = self.__lin_transf(C,D,A,B,x)
         else:
             y = self.std_scaler.inverse_transform(x*self.sigma0)
             if self.compact:
                 y = expit(y)
-                y = np.transpose((B-A)*(np.transpose(y)-C)/(D-C)+A)
+                y = self.__lin_transf(C,D,A,B,y)
         return y
+    
+    def __lin_transf(self,A,B,C,D,x):
+        return np.transpose((D-C)*(np.transpose(x)-A)/(B-A)+C)
 
     def print_info(self):
         print('standard : ', self.standard)
@@ -315,7 +318,7 @@ class RegressionNN:
         return
 
     def load_train_dataset(self, fname_xtrain='xtrain.csv', fname_ytrain='ytrain.csv', xtrain_data=None, ytrain_data=None, 
-                           verbose=False, standard_scaler=False, compact_scaler=False, sigma0=10):
+                           verbose=False, standard_scaler=False, compact_scaler=False, sigma0=10, compact_bounds=None):
         """ Load datasets in CSV format 
         """
         self.__check_attributes(['nfeatures'])
@@ -341,13 +344,24 @@ class RegressionNN:
             self.out_intervals      = np.zeros((nfeatures,2))
             self.out_intervals[:,0] = xtrain_notnormalized.min(axis=0)
             self.out_intervals[:,1] = xtrain_notnormalized.max(axis=0)
-        Ax = np.reshape(xtrain_notnormalized.min(axis=0), (nfeatures,1))
-        Bx = np.reshape(xtrain_notnormalized.max(axis=0), (nfeatures,1))
-        Ay = np.reshape(self.out_intervals[:,0], (nfeatures,1)) 
-        By = np.reshape(self.out_intervals[:,1], (nfeatures,1)) 
+        if not compact_scaler or compact_bounds is None:
+            Ax = np.reshape(xtrain_notnormalized.min(axis=0), (nfeatures,1))
+            Bx = np.reshape(xtrain_notnormalized.max(axis=0), (nfeatures,1))
+            Ay = np.reshape(self.out_intervals[:,0], (nfeatures,1)) 
+            By = np.reshape(self.out_intervals[:,1], (nfeatures,1)) 
+        else: 
+            Ax = np.array(compact_bounds['A']).reshape(nfeatures,1)
+            Bx = np.array(compact_bounds['B']).reshape(nfeatures,1)
+            Ay = Ax
+            By = Bx
         ones = np.ones(np.shape(Ax))
         self.scaler_x       = CustomScaler(Ax,Bx,-1*ones, ones, standard=standard_scaler, sigma0=sigma0, compact=compact_scaler)
-        self.scaler_y       = CustomScaler(Ay,By,-1*ones, ones, compact=compact_scaler)
+        if self.linear_output:
+            self.scaler_y   = CustomScaler(Ay,By,-1*ones, ones, standard=standard_scaler, sigma0=sigma0, compact=compact_scaler)
+        else:
+            # if we apply constraints on the output (i.e. not linear-output), we cannot use 
+            # compact or std scaler for y
+            self.scaler_y   = CustomScaler(Ay,By,-1*ones, ones)
         xtrain              = self.scaler_x.transform(xtrain_notnormalized)
         ytrain              = self.scaler_y.transform(ytrain_notnormalized)
         self.xtrain         = xtrain
