@@ -238,16 +238,35 @@ class ErrorSurface:
                 y_values = np.concatenate((y_values, ones*y_interp[j]))
         return y_values
     
-    def confidence_interval(self, x0, cfi=0.9, verbose=False, nbins=50):
+    def confidence_interval(self, x0, cfi=0.9, verbose=False, nbins=50, spline=False, spline_sample=1000, spline_plot=False):
         y  = self.distribution(x0,verbose=False)
         hist, bin_edges = np.histogram(y,bins=nbins)
         density = hist/hist.sum()
-        # note: plt.bar(bins_edges[:-1], density, width=bins_edges[2]-bins_edges[1]) is equivalent to plt.hist(y);
         tail = (1-cfi)/2
         suml = 0
         sumr = 0
         xl   = None
         xr   = None
+
+        if spline:
+            x = (bin_edges[0:-1]+bin_edges[1:])/2
+            y = density
+            tck = interpolate.splrep(x, y)
+            edges_fine = np.linspace(bin_edges[0], bin_edges[-1], spline_sample)
+            x_fine     = (edges_fine[0:-1]+edges_fine[1:])/2
+            new_hist    = interpolate.splev(x_fine, tck)
+            new_bin_edges  = edges_fine
+            mask = np.argwhere(new_hist<0)
+            new_hist[mask] = 0
+            if spline_plot:
+                plt.figure
+                plt.bar(x, density, width=bin_edges[2]-bin_edges[1], ec='black')
+                plt.bar(x_fine, new_hist, width=new_bin_edges[2]-new_bin_edges[1], alpha=0.4)
+                plt.show()
+            density   = new_hist/new_hist.sum()
+            bin_edges = new_bin_edges
+            nbins     = len(bin_edges)-1
+
         for i in range(0,nbins):
             if xl is None:
                 suml += density[i]
@@ -263,6 +282,8 @@ class ErrorSurface:
             if xl is not None and xr is not None:
                 break
         if xl is None or xr is None:
+            print(suml)
+            print(sumr)
             raise ValueError('confidence interval not found!')
         cfi_final = np.sum(density[il:ir+1])
         if verbose:
@@ -276,7 +297,10 @@ class ErrorSurface:
             print('sum of final cfi and compl-cfi : {:.10f}'.format(cfi_final+ccfi))
             print('-'*100)
         return xl, xr, cfi_final
-
+    
+    #---------------------------------------------
+    # Plots
+    #---------------------------------------------
     def plot_surf(self, show_grid=True, log_bar=False, log_scale=False, bisectrix=True):
         x_mid   = self.x_mid
         y_mid   = self.y_mid
@@ -395,23 +419,22 @@ class ErrorSurface:
             print('Empty bin!')
             return
         plt.figure(figsize=(12,4))
-        plt.subplot(1,2,1)
-        plt.hist(y_values, bins=nbins, ec='black')
-        plt.axvline(x0, c='r')
-        plt.xlabel(r'$y$', fontsize=20)
-        plt.ylabel(r'$N$', fontsize=20)
-        plt.subplot(1,2,2)
-        plt.hist(y_values, bins=nbins, ec='black')
-        plt.axvline(x0, c='r')
-        plt.xlabel(r'$y$', fontsize=20)
-        plt.ylabel(r'$log_{10}(N)$', fontsize=20)
-        plt.yscale('log')
+        ax1=plt.subplot(1,2,1)
+        ax1.hist(y_values, bins=nbins, ec='black')
+        ax1.axvline(x0, c='r')
+        ax1.set_xlabel(r'$y$', fontsize=20)
+        ax1.set_ylabel(r'$N$', fontsize=20)
+        ax2=plt.subplot(1,2,2)
+        ax2.hist(y_values, bins=nbins, ec='black')
+        ax2.axvline(x0, c='r')
+        ax2.set_xlabel(r'$y$', fontsize=20)
+        ax2.set_ylabel(r'$log_{10}(N)$', fontsize=20)
+        ax2.set_yscale('log')
         plt.tight_layout()
         if axvlines is not None:
-            for i in range(2):
-                plt.subplot(1,2,i+1)
-                for axvl in axvlines:
-                    plt.axvline(axvl, color=[0,1,0])
+            for axvl in axvlines:
+                ax1.axvline(axvl, color=[0,1,0])
+                ax2.axvline(axvl, color=[0,1,0])
         plt.show()
         return 
 
