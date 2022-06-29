@@ -484,8 +484,8 @@ class RegressionNN:
         metrics_dict    = {};
         for i in range(0, len(metrics)):
             metrics_dict[metrics[i].name] = metrics_results[i]
-        metrics_dict["R2"]          = R2_vec
-        metrics_dict["R2mean"]      = np.mean(R2_vec)
+        metrics_dict['R2']          = R2_vec
+        metrics_dict['R2mean']      = np.mean(R2_vec)
         return metrics_dict
 
     def print_metrics(self):
@@ -493,10 +493,10 @@ class RegressionNN:
         """
         self.__check_attributes(['xtest', 'ytest'])
         metrics_dict = self.compute_metrics_dict(self.xtest,self.ytest)
-        print('Final R2 mean  : {:.5f}'.format(metrics_dict["R2mean"]))
+        print('Final R2 mean  : {:.5f}'.format(metrics_dict['R2mean']))
         i = 0
-        R2_vec = metrics_dict["R2"]
-        for R2 in metrics_dict["R2"]:
+        R2_vec = metrics_dict['R2']
+        for R2 in metrics_dict['R2']:
             print('R2[{:2d}]         : {:.5f}'.format(i,R2))
             i+=1
         return
@@ -531,7 +531,7 @@ class RegressionNN:
                 ytest_notnorm_1d = ytest_notnorm[:,feature]
                 prediction_1d    = prediction[:,feature]
                 diff = np.abs(ytest_notnorm_1d-prediction_1d)
-                ax.scatter(ytest_notnorm_1d, prediction_1d, s=2, c=diff, cmap="gist_rainbow")
+                ax.scatter(ytest_notnorm_1d, prediction_1d, s=2, c=diff, cmap='gist_rainbow')
                 ax.plot(ytest_notnorm_1d, ytest_notnorm_1d, 'k')
                 ax.set_ylabel('predicted - '+str(feature), fontsize=25)
                 ax.set_xlabel('injected - '+str(feature), fontsize=25)
@@ -679,7 +679,7 @@ class CrossValidator:
     """
     def __init__(self, nfeatures=NFEATURES, dict_name=None, neurons_max=300, neurons_step=50, out_intervals=None,
                  epochs=EPOCHS, batch_size=BATCH_SIZE, learning_rate=LEARNING_RATE, verbose=False,
-                 fname_xtrain=None, fname_ytrain=None, fname_xtest=None, fname_ytest=None, seed=SEED, 
+                 xtrain=None, ytrain=None, xtest=None, ytest=None, seed=SEED, 
                  standard_scaler=True, sigma0=1, compact_scaler=True, compact_bounds=None, linear_output=True):
         nlayers_max        = 2 # hard-coded for now, but should be ok (i.e. no NN with >2 layers needed)
         self.nfeatures     = nfeatures
@@ -700,12 +700,12 @@ class CrossValidator:
         self.compact_bounds  = compact_bounds
         self.linear_output   = linear_output
 
-        if fname_xtrain is None or fname_ytrain is None or fname_xtest is None or fname_ytest is None:
-            raise ValueError('Incomplete data-input! Specifiy fname_xtrain, fname_ytrain, fname_xtest, fname_ytest')
-        self.fname_xtrain = fname_xtrain
-        self.fname_ytrain = fname_ytrain
-        self.fname_xtest  = fname_xtest
-        self.fname_ytest  = fname_ytest
+        if xtrain is None or ytrain is None or xtest is None or ytest is None:
+            raise ValueError('Incomplete data-input! Specifiy xtrain, ytrain, xtest, ytest')
+        self.input_xtrain = xtrain
+        self.input_ytrain = ytrain
+        self.input_xtest  = xtest
+        self.input_ytest  = ytest
         hlayers_sizes_list = []
         for i in range(neurons_step, neurons_max, neurons_step):
             for j in range(0, neurons_max, neurons_step):
@@ -761,6 +761,13 @@ class CrossValidator:
             if i<nlayers-1:
                 key += '+'
         return key
+    
+    def __get_data(self, my_input, verbose=False):
+        if type(my_input)==str:
+            out = extract_data(my_input, verbose=verbose)
+        else:
+            out = my_input
+        return out
 
     def crossval(self, verbose=False):
         """ Do cross-validation
@@ -773,10 +780,14 @@ class CrossValidator:
         out_intervals      = self.out_intervals
         hlayers_sizes_list = self.hlayers_sizes_list 
         linear_output      = self.linear_output
-        xtrain_data = extract_data(self.fname_xtrain,verbose=verbose)
-        ytrain_data = extract_data(self.fname_ytrain,verbose=verbose)
-        xtest_data  = extract_data(self.fname_xtest,verbose=verbose)
-        ytest_data  = extract_data(self.fname_ytest,verbose=verbose)
+        standard_scaler    = self.standard_scaler
+        sigma0             = self.sigma0
+        compact_scaler     = self.compact_scaler
+        compact_bounds     = self.compact_bounds
+        xtrain_data = self.__get_data(self.input_xtrain, verbose=verbose)
+        ytrain_data = self.__get_data(self.input_ytrain, verbose=verbose)
+        xtest_data  = self.__get_data(self.input_xtest,  verbose=verbose)
+        ytest_data  = self.__get_data(self.input_ytest,  verbose=verbose)
         for hlayers_sizes in hlayers_sizes_list:
             key = self.__param_to_key(hlayers_sizes)
             if key in self.cv_dict:
@@ -786,25 +797,29 @@ class CrossValidator:
             else:
                 NN = RegressionNN(nfeatures=nfeatures, hlayers_sizes=hlayers_sizes, seed=seed, linear_output=linear_output)
                 NN.load_train_dataset(xtrain_data=xtrain_data, ytrain_data=ytrain_data, 
-                                      compact_scaler=self.compact_scaler, compact_bounds=self.compact_bounds, 
-                                      standard_scaler=self.standard_scaler, sigma0=self.sigma0)
+                                      compact_scaler=compact_scaler, compact_bounds=compact_bounds, 
+                                      standard_scaler=standard_scaler, sigma0=sigma0)
                 NN.training(epochs=epochs, batch_size=batch_size, learning_rate=learning_rate)
                 NN.load_test_dataset(xtest_data=xtest_data, ytest_data=ytest_data)
                 metrics_dict = NN.compute_metrics_dict(NN.xtest, NN.ytest)
                 prediction   = NN.compute_prediction(NN.xtest_notnorm, transform_output=True, transform_input=True) 
                 npars        = count_params(NN.model.trainable_weights) 
                 del NN
-                struct               = lambda:0
-                struct.metrics       = metrics_dict
-                struct.hlayers_sizes = hlayers_sizes
-                struct.prediction    = prediction
-                struct.npars         = npars
-                struct.nlayers       = len(hlayers_sizes)
-                struct.epochs        = epochs
-                struct.batch_size    = batch_size 
-                struct.out_intervals = self.out_intervals
-                struct.learning_rate = self.learning_rate
-                struct.seed          = seed
+                struct                 = lambda:0
+                struct.metrics         = metrics_dict
+                struct.hlayers_sizes   = hlayers_sizes
+                struct.prediction      = prediction
+                struct.npars           = npars
+                struct.nlayers         = len(hlayers_sizes)
+                struct.epochs          = epochs
+                struct.batch_size      = batch_size 
+                struct.out_intervals   = self.out_intervals
+                struct.learning_rate   = self.learning_rate
+                struct.seed            = seed
+                struct.standard_scaler = standard_scaler
+                struct.sigma0          = sigma0
+                struct.compact_scaler  = compact_scaler
+                struct.compact_bounds  = compact_bounds
                 self.cv_dict[key] = struct 
                 cv_dict           = self.cv_dict
                 save_dill(self.dict_name, cv_dict)
@@ -836,12 +851,12 @@ class CrossValidator:
         for key in dict_keys:
             s = cv_dict[key]
             if feature_idx<0:
-                score = s.metrics["R2mean"]
-                mytitle = "mean of R2"
+                score = s.metrics['R2mean']
+                mytitle = 'mean of R2'
             else:
-                score = s.metrics["R2"][feature_idx]
-                mytitle = "R2 of feature n."+str(feature_idx)
-            mytitle += ", threshold: "+str(threshold)
+                score = s.metrics['R2'][feature_idx]
+                mytitle = 'R2 of feature n.'+str(feature_idx)
+            mytitle += ', threshold: '+str(threshold)
             
             if self.__param_to_key(s.hlayers_sizes)==key:
                 scores.append(score)
@@ -904,7 +919,7 @@ if __name__ == '__main__':
     compact_bounds['A'] = [0.5,0.5,0.1]
     compact_bounds['B'] = [3,3,3]
     
-    path = "/home/simonealbanesi/repos/IPAM2021_ML/datasets/GSTLAL_EarlyWarning_Dataset/Dataset/m1m2Mc/"
+    path = '/home/simonealbanesi/repos/IPAM2021_ML/datasets/GSTLAL_EarlyWarning_Dataset/Dataset/m1m2Mc/'
     xtrain = path+'xtrain.csv'
     ytrain = path+'ytrain.csv'
     xtest  = path+'xtest.csv'
@@ -931,8 +946,10 @@ if __name__ == '__main__':
     NN2.print_info()
     print(dashes)
 
-    CV = CrossValidator(neurons_step=100, fname_xtrain=xtrain, fname_ytrain=ytrain, fname_xtest=xtest, \
-                        fname_ytest=ytest, epochs=10, batch_size=128, out_intervals=None, seed=None, \
-                        compact_bounds=compact_bounds)
+    CV = CrossValidator(nfeatures=3, dict_name='test.dict', neurons_max=300, neurons_step=100, 
+                        xtrain=xtrain, ytrain=ytrain, xtest=xtest, ytest=ytest, 
+                        epochs=10, batch_size=128, out_intervals=None, seed=None,
+                        standard_scaler=True, compact_scaler=True, compact_bounds=compact_bounds,
+                        linear_output=True)
     CV.crossval(verbose=True)
     CV.plot(feature_idx=-1, threshold=0.82)
