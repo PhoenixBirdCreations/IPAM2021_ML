@@ -706,15 +706,17 @@ class CrossValidator:
         self.input_ytrain = ytrain
         self.input_xtest  = xtest
         self.input_ytest  = ytest
+        
         hlayers_sizes_list = []
-        for i in range(neurons_step, neurons_max, neurons_step):
-            for j in range(0, neurons_max, neurons_step):
+        for i in range(neurons_step, neurons_max+1, neurons_step):
+            for j in range(0, neurons_max+1, neurons_step):
                 if j>0:
                     hlayers_size = (i,j)
                 else:
                     hlayers_size = (i,)
                 hlayers_sizes_list.append(hlayers_size)
         self.hlayers_sizes_list = hlayers_sizes_list
+        
         if dict_name is None:
             dict_name = 'dict_nfeatures'+str(nfeatures)+'.dict'
         self.dict_name = dict_name
@@ -804,6 +806,7 @@ class CrossValidator:
                 metrics_dict = NN.compute_metrics_dict(NN.xtest, NN.ytest)
                 prediction   = NN.compute_prediction(NN.xtest_notnorm, transform_output=True, transform_input=True) 
                 npars        = count_params(NN.model.trainable_weights) 
+                ttime        = NN.training_time
                 del NN
                 struct                 = lambda:0
                 struct.metrics         = metrics_dict
@@ -824,8 +827,7 @@ class CrossValidator:
                 cv_dict           = self.cv_dict
                 save_dill(self.dict_name, cv_dict)
                 if verbose:
-                    #print('{:90s} saved in {:}'.format(key,self.dict_name))
-                    print('saving key:',key)
+                    print('saving key: {:75s} ({:.3f} s)'.format(key, ttime))
         return
 
     def plot(self, threshold=0.6, npars_lim=1e+6, feature_idx=-1, show=True, save=False, figname='crossval.png'):
