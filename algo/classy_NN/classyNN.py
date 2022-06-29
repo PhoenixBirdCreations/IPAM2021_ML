@@ -93,7 +93,7 @@ def load_dill(fname, verbose=False):
 class CustomScaler:
     """ Linear (vectorized) map between [A,B] <--> [C,D]
     """
-    def __init__(self, A, B, C, D, standard=False, std_scaler=None, compact=False, sigma0=10):
+    def __init__(self, A, B, C, D, standard=False, std_scaler=None, compact=False, sigma0=1):
         self.A = A
         self.B = B 
         self.C = C
@@ -338,22 +338,24 @@ class RegressionNN:
         if nfeatures!=len(xtrain_notnormalized[0,:]):
             raise ValueError('Incompatible data size')
         # create scalers
-        if self.out_intervals is None:
-            if verbose:
-                print('No output-intervals specified, using MinMaxScaler')
-            self.out_intervals      = np.zeros((nfeatures,2))
-            self.out_intervals[:,0] = xtrain_notnormalized.min(axis=0)
-            self.out_intervals[:,1] = xtrain_notnormalized.max(axis=0)
-        if not compact_scaler or compact_bounds is None:
+        if not compact_scaler:
+            if self.out_intervals is None:
+                if verbose:
+                    print('No output-intervals specified, using MinMaxScaler')
+                self.out_intervals      = np.empty((nfeatures,2))
+                self.out_intervals[:,0] = xtrain_notnormalized.min(axis=0)
+                self.out_intervals[:,1] = xtrain_notnormalized.max(axis=0)
             Ax = np.reshape(xtrain_notnormalized.min(axis=0), (nfeatures,1))
             Bx = np.reshape(xtrain_notnormalized.max(axis=0), (nfeatures,1))
             Ay = np.reshape(self.out_intervals[:,0], (nfeatures,1)) 
             By = np.reshape(self.out_intervals[:,1], (nfeatures,1)) 
-        else: 
+        elif compact_bounds is not None: 
             Ax = np.array(compact_bounds['A']).reshape(nfeatures,1)
             Bx = np.array(compact_bounds['B']).reshape(nfeatures,1)
             Ay = Ax
             By = Bx
+        else:
+            raise ValueError('Compact scaler is activated but not compact-bounds are given in input!')
         ones = np.ones(np.shape(Ax))
         self.scaler_x       = CustomScaler(Ax,Bx,-1*ones, ones, standard=standard_scaler, sigma0=sigma0, compact=compact_scaler)
         if self.linear_output:
@@ -451,12 +453,14 @@ class RegressionNN:
             if (not '__' in attr) and (not type(value)==types.MethodType) and (not attr in attr2skip):
                 if attr=='out_intervals':
                     out_intervals = self.out_intervals
-                    print('{:20s}: ['.format(attr),end='')
-                    for i in range(0,self.nfeatures):
-                        print('[{:},{:}]'.format(out_intervals[i][0],out_intervals[i][1]),end='')
-                        if i<self.nfeatures-1:
-                            print(',',end='')
-                    print(']')
+                    if out_intervals is not None:
+                        print('{:20s}: ['.format(attr),end='')
+                        for i in range(0,self.nfeatures):
+                            print('[{:},{:}]'.format(out_intervals[i][0],out_intervals[i][1]),end='')
+                            if i<self.nfeatures-1:
+                                print(',',end='')
+                    else:
+                        print('{:20s}: None'.format(attr),end='')
                 else:
                     print('{:20s}: {:}'.format(attr, value))
         return
@@ -671,17 +675,16 @@ class RegressionNN:
 class CrossValidator:
     """ Cross validation on architecture.
     Consider 1 and 2 layer(s) architectures and do a cross-val on the number of neurons
-    for each layer. 
-    Options for Box-Cox not implemented here (also because for some reason Box-Cox gives NaN
-    during training)
+    for each layer. Compact-scaler is hard-coded+linear output 
     """
     def __init__(self, nfeatures=NFEATURES, dict_name=None, neurons_max=300, neurons_step=50, out_intervals=None,
                  epochs=EPOCHS, batch_size=BATCH_SIZE, learning_rate=LEARNING_RATE, verbose=False,
-                 fname_xtrain=None, fname_ytrain=None, fname_xtest=None, fname_ytest=None, seed=SEED):
+                 fname_xtrain=None, fname_ytrain=None, fname_xtest=None, fname_ytest=None, seed=SEED, 
+                 standard_scaler=True, sigma0=1, compact_scaler=True, compact_bounds=None, linear_output=True):
         nlayers_max        = 2 # hard-coded for now, but should be ok (i.e. no NN with >2 layers needed)
         self.nfeatures     = nfeatures
         self.nlayers_max   = nlayers_max
-        self.neurons_max  = neurons_max
+        self.neurons_max   = neurons_max
         self.neurons_step  = neurons_step
         if out_intervals is not None:
             out_intervals = np.array(out_intervals)
@@ -691,6 +694,12 @@ class CrossValidator:
         self.learning_rate = learning_rate
         self.seed          = seed
         
+        self.standard_scaler = standard_scaler
+        self.sigma0          = sigma0
+        self.compact_scaler  = compact_scaler
+        self.compact_bounds  = compact_bounds
+        self.linear_output   = linear_output
+
         if fname_xtrain is None or fname_ytrain is None or fname_xtest is None or fname_ytest is None:
             raise ValueError('Incomplete data-input! Specifiy fname_xtrain, fname_ytrain, fname_xtest, fname_ytest')
         self.fname_xtrain = fname_xtrain
@@ -720,14 +729,14 @@ class CrossValidator:
         learning_rate = self.learning_rate
         out_intervals = self.out_intervals
         nfeatures     = self.nfeatures
-        nlayers = len(hlayers_sizes)
+
+        standard_scaler = self.standard_scaler
+        sigma0          = self.sigma0
+        compact_scaler  = self.compact_scaler
+        compact_bounds  = self.compact_bounds
+        linear_output   = self.linear_output
+        
         key  = 'e:'+str(epochs)+'-bs:'+str(batch_size)+'-alpha:'+str(learning_rate)+'-'
-        key += str(nlayers) + 'layers:'
-        for i in range(0, nlayers):
-            key += str(hlayers_sizes[i])
-            if i<nlayers-1:
-                key += '+'
-        key += '-'
         if out_intervals is not None:
             key += 'oc:['
             for i in range(0, nfeatures):
@@ -738,6 +747,19 @@ class CrossValidator:
         else:
             key += 'no_oc'
         key += '-seed:'+str(self.seed)
+        if standard_scaler:
+            key += '-std'+str(sigma0)
+        if compact_scaler:
+            key += '-compact'
+        if linear_output:
+            key += '-linout'
+        key += '-' 
+        nlayers = len(hlayers_sizes)
+        key += str(nlayers) + 'layers:'
+        for i in range(0, nlayers):
+            key += str(hlayers_sizes[i])
+            if i<nlayers-1:
+                key += '+'
         return key
 
     def crossval(self, verbose=False):
@@ -750,6 +772,7 @@ class CrossValidator:
         learning_rate      = self.learning_rate
         out_intervals      = self.out_intervals
         hlayers_sizes_list = self.hlayers_sizes_list 
+        linear_output      = self.linear_output
         xtrain_data = extract_data(self.fname_xtrain,verbose=verbose)
         ytrain_data = extract_data(self.fname_ytrain,verbose=verbose)
         xtest_data  = extract_data(self.fname_xtest,verbose=verbose)
@@ -761,8 +784,10 @@ class CrossValidator:
                     #print('{:90s} already saved in {:}'.format(key,self.dict_name))
                     print('key already present:',key)
             else:
-                NN = RegressionNN(nfeatures=nfeatures, hlayers_sizes=hlayers_sizes, seed=seed)
-                NN.load_train_dataset(xtrain_data=xtrain_data, ytrain_data=ytrain_data)
+                NN = RegressionNN(nfeatures=nfeatures, hlayers_sizes=hlayers_sizes, seed=seed, linear_output=linear_output)
+                NN.load_train_dataset(xtrain_data=xtrain_data, ytrain_data=ytrain_data, 
+                                      compact_scaler=self.compact_scaler, compact_bounds=self.compact_bounds, 
+                                      standard_scaler=self.standard_scaler, sigma0=self.sigma0)
                 NN.training(epochs=epochs, batch_size=batch_size, learning_rate=learning_rate)
                 NN.load_test_dataset(xtest_data=xtest_data, ytest_data=ytest_data)
                 metrics_dict = NN.compute_metrics_dict(NN.xtest, NN.ytest)
@@ -875,16 +900,19 @@ class CrossValidator:
 #######################################################################
 if __name__ == '__main__':
 
-    out_intervals = [[1,2.2],[1,1.8],[0.9,1.6]]
-
-    path = "/home/simone/repos/IPAM2021_ML/datasets/GSTLAL_EarlyWarning_Dataset/Dataset/m1m2Mc/"
+    compact_bounds = {}
+    compact_bounds['A'] = [0.5,0.5,0.1]
+    compact_bounds['B'] = [3,3,3]
+    
+    path = "/home/simonealbanesi/repos/IPAM2021_ML/datasets/GSTLAL_EarlyWarning_Dataset/Dataset/m1m2Mc/"
     xtrain = path+'xtrain.csv'
     ytrain = path+'ytrain.csv'
     xtest  = path+'xtest.csv'
     ytest  = path+'ytest.csv'
-   
-    NN = RegressionNN(nfeatures=3, hlayers_sizes=(100,), out_intervals=out_intervals, seed=None)
-    NN.load_train_dataset(fname_xtrain=xtrain, fname_ytrain=ytrain, standard_scaler=True, compact_scaler=True)
+     
+    NN = RegressionNN(nfeatures=3, hlayers_sizes=(100,), out_intervals=None, seed=None, linear_output=True)
+    NN.load_train_dataset(fname_xtrain=xtrain, fname_ytrain=ytrain, standard_scaler=True, 
+                          compact_scaler=True, compact_bounds=compact_bounds)
     NN.print_summary()
     NN.training(verbose=True, epochs=10, validation_split=0.)
     NN.load_test_dataset(fname_xtest=xtest, fname_ytest=ytest) 
@@ -897,15 +925,14 @@ if __name__ == '__main__':
     NN2 = RegressionNN(load_model='model_nfeatures3_'+datetime.today().strftime('%Y-%m-%d'), verbose=True)
     NN2.load_test_dataset(fname_xtest=xtest, fname_ytest=ytest) 
     NN2.print_metrics() 
-     
     print(dashes)
     NN.print_info()
     print(dashes)
     NN2.print_info()
     print(dashes)
 
-    out_intervals = None 
     CV = CrossValidator(neurons_step=100, fname_xtrain=xtrain, fname_ytrain=ytrain, fname_xtest=xtest, \
-                        fname_ytest=ytest, epochs=10, batch_size=128, out_intervals=out_intervals, seed=None)
+                        fname_ytest=ytest, epochs=10, batch_size=128, out_intervals=None, seed=None, \
+                        compact_bounds=compact_bounds)
     CV.crossval(verbose=True)
     CV.plot(feature_idx=-1, threshold=0.82)
