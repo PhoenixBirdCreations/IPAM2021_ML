@@ -5,21 +5,21 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy import stats
 from split_GstLAL_data import split_GstLAL_data
-
 repo_paths = ['/home/simonealbanesi/repos/IPAM2021_ML/', '/home/simone/repos/IPAM2021_ML/']
 for rp in repo_paths:
     if os.path.isdir(rp):
         repo_path = rp
         break
 sys.path.insert(0, repo_path+'utils/')
+import classyNN as cnn
 
-import classyNN   as cnn
+dict_name      = 'crossval_dicts/GstLAL.dict'
+neurons_max    = 750
+neurons_step   = 50
+epochs         = 100
+batch_size     = 128 
 
 # default without constraints in the output layer
-dict_name      = 'crossval_dicts/GstLAL.dict'
-neurons_max    = 500
-neurons_step   = 100
-
 learning_rate  = 0.001;
 linear_output  = True
 compact_scaler = True
@@ -52,11 +52,12 @@ nfeatures = len(train_inj[0,:])
 ## Cross-validation
 CV = cnn.CrossValidator(nfeatures=nfeatures, neurons_max=neurons_max, neurons_step=neurons_step, dict_name=dict_name,
                         xtrain=train_rec, ytrain=train_inj, xtest=test_rec, ytest=test_inj,
-                        epochs=10, batch_size=128, out_intervals=None, seed=None,
+                        epochs=epochs, batch_size=batch_size, out_intervals=None, seed=None,
                         compact_bounds=compact_bounds, linear_output=linear_output,
                         compact_scaler=compact_scaler, standard_scaler=std_scaler, sigma0=sigma0)
 CV.crossval(verbose=True)
-#CV.plot(feature_idx=-1, threshold=None)
+
+CV.plot(feature_idx=-1, threshold=None)
 
 
 
