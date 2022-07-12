@@ -1,12 +1,5 @@
 """
-Final stand-alone implementation of the regression NN using TensorFlow
-
-The idea here is to have a short and clea{r,n} code.
-Here we only implement the state-of-the-art NN.
-For testing, plots and stuff see the notebooks
-in the folder algo/NN_tf/
-
-Update: The plan failed. The code is not short and clear.
+Slightly simpler implemenation of classNN.py
 """
 
 import os, sys, csv, types, dill, time
@@ -16,7 +9,7 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 from keras import backend as K
 from tensorflow.keras.layers import Dense
-from tensorflow.keras.losses import MeanSquaredError
+#from tensorflow.keras.losses import MeanSquaredError
 from tensorflow.keras.optimizers import Adam
 from keras.utils.layer_utils import count_params
 from keras.initializers import RandomNormal
@@ -90,39 +83,28 @@ def load_dill(fname, verbose=False):
 #######################################################################
 # Scaler
 #######################################################################
-class CustomScaler:
-    """ Linear (vectorized) map between [A,B] <--> [C,D]
+class Scaler:
+    """ Compact scaler 
     """
-    def __init__(self, A, B, C, D, standard=False, std_scaler=None, compact=False, sigma0=1):
+    def __init__(self, A, B, std_scaler=None):
         self.A = A
         self.B = B 
-        self.C = C
-        self.D = D
-        self.standard   = standard
+        self.C = self.A*0 # broadcast to correct dimension
+        self.D = self.A*0 + 1
         self.std_scaler = std_scaler
-        self.sigma0     = sigma0
-        self.compact    = compact
-        if compact:
-            self.C = self.C*0
-            self.D = self.D*0+1
 
     def transform(self,x):
         A = self.A
         B = self.B
         C = self.C
         D = self.D
-        if not self.standard:
-            y = self.__lin_transf(A,B,C,D,x)
-        else:
-            if self.compact:
-                x = self.__lin_transf(A,B,C,D,x)
-                x = logit(x)
-            if self.std_scaler is None:
-                std_scaler = StandardScaler()
-                std_scaler.fit(x)
-                self.std_scaler = std_scaler
-            y = self.std_scaler.transform(x)
-            y = y/self.sigma0
+        x = self.__lin_transf(A,B,C,D,x)
+        x = logit(x)
+        if self.std_scaler is None:
+            std_scaler = StandardScaler()
+            std_scaler.fit(x)
+            self.std_scaler = std_scaler
+        y = self.std_scaler.transform(x)
         return y
 
     def inverse_transform(self,x):
@@ -130,39 +112,27 @@ class CustomScaler:
         B = self.B
         C = self.C
         D = self.D
-        if not self.standard:
-            y = self.__lin_transf(C,D,A,B,x)
-        else:
-            y = self.std_scaler.inverse_transform(x*self.sigma0)
-            if self.compact:
-                y = expit(y)
-                y = self.__lin_transf(C,D,A,B,y)
+        y = self.std_scaler.inverse_transform(x)
+        y = expit(y)
+        y = self.__lin_transf(C,D,A,B,y)
         return y
     
     def __lin_transf(self,A,B,C,D,x):
         return np.transpose((D-C)*(np.transpose(x)-A)/(B-A)+C)
 
     def print_info(self):
-        print('standard : ', self.standard)
-        print('compact  : ', self.compact)
         for i in range(0,len(self.A)): 
             print('----------------------')
             print('Feature n.', i, sep='')
             print('A        : ', self.A[i])
             print('B        : ', self.B[i])
-            print('C        : ', self.C[i])
-            print('D        : ', self.D[i])
         return
 
     def return_dict(self):
         scaler_dict = {}
         scaler_dict['A']          = self.A
         scaler_dict['B']          = self.B
-        scaler_dict['C']          = self.C
-        scaler_dict['D']          = self.D
-        scaler_dict['standard']   = self.standard
         scaler_dict['std_scaler'] = self.std_scaler
-        scaler_dict['compact']    = self.compact
         return scaler_dict 
 
 #######################################################################
@@ -171,38 +141,35 @@ class CustomScaler:
 class RegressionNN:
     """ Class to do regression using a NN from Tensorflow 
     and Keras backend.
-    If load_model='cool_model', load the model and the scalers saved in cool_model/ by save_model(),
+    If model2load='cool_model', load the model and the scalers saved in cool_model/ by save_model(),
     otherwise build a new model according to nfeatures and hlayers_sizes.
     The scalers will be defined when loading the train dataset.
     """
-    def __init__(self, nfeatures=NFEATURES, hlayers_sizes=HLAYERS_SIZES, out_intervals=None, load_model=None, verbose=False,
-                 seed=SEED, linear_output=False):
+    def __init__(self, nfeatures=NFEATURES, hlayers_sizes=HLAYERS_SIZES, model2load=None, verbose=False, seed=SEED,
+                 loss_function='MSE'):
         # input
-        self.nfeatures        = nfeatures
-        self.hlayers_sizes    = hlayers_sizes
-        if out_intervals is not None:
-            out_intervals = np.array(out_intervals)
-        self.out_intervals = out_intervals
-        self.linear_output = linear_output
+        self.nfeatures         = nfeatures
+        self.hlayers_sizes     = hlayers_sizes
+        self.loss_function     = loss_function
         self.hidden_activation = 'relu'
         
         if seed is None:
             seed = np.random.randint(1,10000)
         self.seed = seed
-        if load_model is not None:
-            self.__load_model(load_model, verbose=verbose)
+        if model2load is not None:
+            self.__load_model(model2load, verbose=verbose)
             if nfeatures!=self.nfeatures or hlayers_sizes!=self.hlayers_sizes:
                 error_message  = 'Trying to load model that is incosistent with input!\n'
                 error_message += 'instance input: nfeatures={:}, hlayers_sizes={:}\n'.format(nfeatures, hlayers_sizes)
                 error_message += 'loaded model  : nfeatures={:}, hlayers_sizes={:}\n'.format(self.nfeatures, self.hlayers_sizes)
                 raise ValueError(error_message)
         else:
-            self.__build_model(linear_output=linear_output)
-        
+            self.__build_model()
 
     def __check_attributes(self, attr_list):
-        """ Check that all the attributes in the list
-        are defined
+        """ Check that all the attributes in the list are defined.
+        Not essential, but can be useful to check that the functions
+        are called in the correct order 
         """
         for i in range(0, len(attr_list)):
             attr = attr_list[i]
@@ -212,32 +179,47 @@ class RegressionNN:
                 else:
                     raise ValueError ('Error: '+attr+' is not defined')
         return
-
-    def __build_model(self, linear_output=False):
+    
+    def __build_model(self):
         """ Build the architecture of the NeuralNewtork
         """
-        def output_activation_lin_constraint(x):
-            signs = K.switch(x>0, 1+x*0, -1+x*0) # x*0 in order to broadcast to correct dimension
-            return K.switch(abs(x)<1, x, signs)
-        def output_linear(x):
-            return x
+        # Read input
         hlayers_sizes     = self.hlayers_sizes
         nfeatures         = self.nfeatures
         hidden_activation = self.hidden_activation
         seed              = self.seed
         model_input       = tf.keras.Input(shape=(nfeatures))
-        # hidden layers
+        # Build hidden layers
         x = Dense(hlayers_sizes[0], kernel_initializer=RandomNormal(seed=seed), activation=hidden_activation)(model_input)
         nlayers = len(hlayers_sizes)
         for i in range(1, nlayers):
             x = Dense(hlayers_sizes[i], kernel_initializer=RandomNormal(seed=seed+i), activation=hidden_activation)(x)
-        if linear_output:
-            out = Dense(nfeatures, kernel_initializer=RandomNormal(seed=seed+nlayers),activation=output_linear)(x)
-        else:
-            out = Dense(nfeatures, kernel_initializer=RandomNormal(seed=seed+nlayers),activation=output_activation_lin_constraint)(x)
+        # Output function (simple linear function)
+        def output_linear(x):
+            return x
+        out = Dense(nfeatures, kernel_initializer=RandomNormal(seed=seed+nlayers),activation=output_linear)(x)
         self.model = tf.keras.Model(model_input, out)
         return
-    
+
+    def __loss_function(self):
+        if self.loss_function=='MSE':
+            #loss = MeanSquaredError()
+            def loss_MSE():
+                def loss(y_true, y_pred):
+                    return K.mean(K.square(y_pred - y_true), axis=-1)
+                return loss
+            loss = loss_MSE()
+        elif self.loss_function=='MQE':
+            def loss_test():
+                exponent = 4
+                def loss(y_true, y_pred):
+                    return K.mean(K.pow(y_pred - y_true, exponent), axis=-1)
+                return loss
+            loss = loss_test()
+        else:
+            raise ValueError("loss_function='{:s}' is not a valid option".format(self.loss_function))
+        return loss 
+
     def __compile_model(self):
         """ Standard compilation of the model
         """
@@ -248,83 +230,25 @@ class RegressionNN:
             #if tf.math.is_nan(r2):
             #    r2 = 0.
             return r2
-        loss    = MeanSquaredError()
+        loss = self.__loss_function()
         metrics = [loss, R2metric]
         self.model.compile(loss=loss, metrics=metrics, optimizer=Adam(learning_rate=self.learning_rate))
         return
     
-    def save_model(self, model_name=None, verbose=False, overwrite=True):
-        """ Save weights of the model, scalers and fit options
-        """
-        attr2save = ['nfeatures', 'hlayers_sizes', 'batch_size', 'epochs', 'validation_split', \
-                     'learning_rate', 'ntrain', 'out_intervals', 'seed', 'training_time']
-        self.__check_attributes(['model', 'scaler_x', 'scaler_y']+attr2save)
-        if model_name is None:
-            model_name = 'model_nfeatures'+str(self.nfeatures)+'_'+datetime.today().strftime('%Y-%m-%d')
-            if not overwrite:
-                i = 1
-                model_name_v0 = model_name
-                while os.path.isdir(model_name):
-                    model_name = model_name_v0 + '_v'+str(i)
-                    i += 1
-                if i>1:
-                    print('+++ warning +++: ', model_name_v0, ' already exists and overwrite is False.\n',
-                          'Renaming the new model as ', model_name, sep='')
-        self.model.save_weights(model_name+'/checkpoint')
-        train_info = {}
-        for a in attr2save:
-            train_info[a] = getattr(self, a)
-        scaler_x_dict = self.scaler_x.return_dict() 
-        scaler_y_dict = self.scaler_y.return_dict() 
-        save_dill(model_name+'/scaler_x.dill'  , scaler_x_dict)
-        save_dill(model_name+'/scaler_y.dill'  , scaler_y_dict)
-        save_dill(model_name+'/train_info.dill', train_info)
-        if verbose:
-            print(model_name, 'saved')
-        return
-    
-    def __load_model(self, model_name, verbose=False):
-        """ Load things saved by self.save_model() and compile the model
-        """
-        if not os.path.isdir(model_name):
-            raise ValueError(model_name+' not found!')
-        scaler_x_dict = load_dill(model_name+'/scaler_x.dill')
-        scaler_y_dict = load_dill(model_name+'/scaler_y.dill')
-        train_info    = load_dill(model_name+'/train_info.dill')
-        Ax = scaler_x_dict['A']
-        Bx = scaler_x_dict['B']
-        Cx = scaler_x_dict['C']
-        Dx = scaler_x_dict['D']
-        standard   = scaler_x_dict['standard']
-        std_scaler = scaler_x_dict['std_scaler']
-        compact    = scaler_x_dict['compact']
-        self.scaler_x = CustomScaler(Ax, Bx, Cx, Dx, standard=standard, std_scaler=std_scaler, compact=compact)
-        Ay = scaler_y_dict['A']
-        By = scaler_y_dict['B']
-        Cy = scaler_y_dict['C']
-        Dy = scaler_y_dict['D']
-        standard   = scaler_y_dict['standard']
-        std_scaler = scaler_y_dict['std_scaler']
-        compact    = scaler_y_dict['compact']
-        self.scaler_y = CustomScaler(Ay, By, Cy, Dy, standard=standard, std_scaler=std_scaler, compact=compact)
-        train_info_keys = list(train_info.keys())
-        for key in train_info_keys:
-            setattr(self, key, train_info[key])
-        self.__build_model() 
-        self.model.load_weights(model_name+'/checkpoint')
-        self.__compile_model()
-        if verbose:
-            print(model_name, 'loaded')
-        return
-
+    #-----------------------------------------------------------------------------------
+    # Load training and test dataset. When loading the training dataset, the scalers 
+    # are defined
+    #-----------------------------------------------------------------------------------
     def load_train_dataset(self, fname_xtrain='xtrain.csv', fname_ytrain='ytrain.csv', xtrain_data=None, ytrain_data=None, 
-                           verbose=False, standard_scaler=False, compact_scaler=False, sigma0=10, compact_bounds=None):
-        """ Load datasets in CSV format 
+                           verbose=False, compact_bounds=None):
+        """ Load training dataset and define scalers.
+        
         """
         self.__check_attributes(['nfeatures'])
         if hasattr(self, 'scaler_x'):
             raise RuntimeError('scaler_x is already defined, i.e. the train dataset has been already loaded.')
-
+        
+        # Load training dataset
         if xtrain_data is None:
             xtrain_notnormalized = extract_data(fname_xtrain, verbose=verbose)
         else:
@@ -337,33 +261,15 @@ class RegressionNN:
         nfeatures = self.nfeatures
         if nfeatures!=len(xtrain_notnormalized[0,:]):
             raise ValueError('Incompatible data size')
-        # create scalers
-        if not compact_scaler:
-            if self.out_intervals is None:
-                if verbose:
-                    print('No output-intervals specified, using MinMaxScaler')
-                self.out_intervals      = np.empty((nfeatures,2))
-                self.out_intervals[:,0] = xtrain_notnormalized.min(axis=0)
-                self.out_intervals[:,1] = xtrain_notnormalized.max(axis=0)
-            Ax = np.reshape(xtrain_notnormalized.min(axis=0), (nfeatures,1))
-            Bx = np.reshape(xtrain_notnormalized.max(axis=0), (nfeatures,1))
-            Ay = np.reshape(self.out_intervals[:,0], (nfeatures,1)) 
-            By = np.reshape(self.out_intervals[:,1], (nfeatures,1)) 
-        elif compact_bounds is not None: 
-            Ax = np.array(compact_bounds['A']).reshape(nfeatures,1)
-            Bx = np.array(compact_bounds['B']).reshape(nfeatures,1)
-            Ay = Ax
-            By = Bx
-        else:
-            raise ValueError('Compact scaler is activated but not compact-bounds are given in input!')
+
+        # create scalers according to loaded data
+        Ax = np.array(compact_bounds['A']).reshape(nfeatures,1)
+        Bx = np.array(compact_bounds['B']).reshape(nfeatures,1)
+        Ay = Ax
+        By = Bx
         ones = np.ones(np.shape(Ax))
-        self.scaler_x       = CustomScaler(Ax,Bx,-1*ones, ones, standard=standard_scaler, sigma0=sigma0, compact=compact_scaler)
-        if self.linear_output:
-            self.scaler_y   = CustomScaler(Ay,By,-1*ones, ones, standard=standard_scaler, sigma0=sigma0, compact=compact_scaler)
-        else:
-            # if we apply constraints on the output (i.e. not linear-output), we cannot use 
-            # compact or std scaler for y
-            self.scaler_y   = CustomScaler(Ay,By,-1*ones, ones)
+        self.scaler_x = Scaler(Ax, Bx)
+        self.scaler_y = Scaler(Ay, By)
         xtrain              = self.scaler_x.transform(xtrain_notnormalized)
         ytrain              = self.scaler_y.transform(ytrain_notnormalized)
         self.xtrain         = xtrain
@@ -391,6 +297,9 @@ class RegressionNN:
         self.ytest_notnorm  = ytest_notnormalized
         return
     
+    #-----------------------------------------------------------------------------------
+    # Training and computaton of prediction
+    #-----------------------------------------------------------------------------------
     def training(self, verbose=False, epochs=EPOCHS, batch_size=BATCH_SIZE, 
                  learning_rate=LEARNING_RATE, validation_split=VALIDATION_SPLIT):
         """ Train the model with the options given in input
@@ -432,7 +341,7 @@ class RegressionNN:
         if transform_input:
             self.__check_attributes(['scaler_x'])
             x = self.scaler_x.transform(x)
-        prediction = self.model.predict(x) 
+        prediction = self.model.predict(x,verbose=False) 
         if transform_output:
             self.__check_attributes(['scaler_y'])
             out = self.scaler_y.inverse_transform(prediction)
@@ -440,6 +349,9 @@ class RegressionNN:
             out = prediction
         return out
     
+    #-----------------------------------------------------------------------------------
+    # Utilities
+    #-----------------------------------------------------------------------------------
     def print_summary(self):
         self.model.summary()
         return
@@ -451,18 +363,7 @@ class RegressionNN:
         for attr in attrs:
             value = getattr(self,attr)
             if (not '__' in attr) and (not type(value)==types.MethodType) and (not attr in attr2skip):
-                if attr=='out_intervals':
-                    out_intervals = self.out_intervals
-                    if out_intervals is not None:
-                        print('{:20s}: ['.format(attr),end='')
-                        for i in range(0,self.nfeatures):
-                            print('[{:},{:}]'.format(out_intervals[i][0],out_intervals[i][1]),end='')
-                            if i<self.nfeatures-1:
-                                print(',',end='')
-                    else:
-                        print('{:20s}: None'.format(attr),end='')
-                else:
-                    print('{:20s}: {:}'.format(attr, value))
+                print('{:20s}: {:}'.format(attr, value))
         return
 
     def compute_metrics_dict(self,x,y):
@@ -500,7 +401,69 @@ class RegressionNN:
             print('R2[{:2d}]         : {:.5f}'.format(i,R2))
             i+=1
         return
-
+    
+    #-----------------------------------------------------------------------------
+    # Save and load (saved) model
+    #-----------------------------------------------------------------------------
+    def save_model(self, model_name=None, verbose=False, overwrite=True):
+        """ Save weights of the model, scalers and fit options
+        """
+        attr2save = ['nfeatures', 'hlayers_sizes', 'batch_size', 'epochs', 'validation_split', \
+                     'learning_rate', 'ntrain', 'seed', 'training_time']
+        self.__check_attributes(['model', 'scaler_x', 'scaler_y']+attr2save)
+        if model_name is None:
+            model_name = 'model_nfeatures'+str(self.nfeatures)+'_'+datetime.today().strftime('%Y-%m-%d')
+            if not overwrite:
+                i = 1
+                model_name_v0 = model_name
+                while os.path.isdir(model_name):
+                    model_name = model_name_v0 + '_v'+str(i)
+                    i += 1
+                if i>1:
+                    print('+++ warning +++: ', model_name_v0, ' already exists and overwrite is False.\n',
+                          'Renaming the new model as ', model_name, sep='')
+        self.model.save_weights(model_name+'/checkpoint')
+        train_info = {}
+        for a in attr2save:
+            train_info[a] = getattr(self, a)
+        scaler_x_dict = self.scaler_x.return_dict() 
+        scaler_y_dict = self.scaler_y.return_dict() 
+        save_dill(model_name+'/scaler_x.dill'  , scaler_x_dict)
+        save_dill(model_name+'/scaler_y.dill'  , scaler_y_dict)
+        save_dill(model_name+'/train_info.dill', train_info)
+        if verbose:
+            print(model_name, 'saved')
+        return
+    
+    def __load_model(self, model_name, verbose=False):
+        """ Load things saved by self.save_model() and compile the model
+        """
+        if not os.path.isdir(model_name):
+            raise ValueError(model_name+' not found!')
+        scaler_x_dict = load_dill(model_name+'/scaler_x.dill')
+        scaler_y_dict = load_dill(model_name+'/scaler_y.dill')
+        train_info    = load_dill(model_name+'/train_info.dill')
+        Ax = scaler_x_dict['A']
+        Bx = scaler_x_dict['B']
+        std_scaler = scaler_x_dict['std_scaler']
+        self.scaler_x = Scaler(Ax, Bx, std_scaler=std_scaler)
+        Ay = scaler_y_dict['A']
+        By = scaler_y_dict['B']
+        std_scaler = scaler_y_dict['std_scaler']
+        self.scaler_y = Scaler(Ay, By, std_scaler=std_scaler)
+        train_info_keys = list(train_info.keys())
+        for key in train_info_keys:
+            setattr(self, key, train_info[key])
+        self.__build_model() 
+        self.model.load_weights(model_name+'/checkpoint')
+        self.__compile_model()
+        if verbose:
+            print(model_name, 'loaded')
+        return
+    
+    #-----------------------------------------------------------------------------------
+    # Function for plots
+    #-----------------------------------------------------------------------------------
     def plot_predictions(self, x, show=True, save=False, figname='predictions.png'):
         """ Simple plot. For more 'elaborate' plots we rely
         on other modules (i.e. do not overcomplicate 
@@ -677,28 +640,19 @@ class CrossValidator:
     Consider 1 and 2 layer(s) architectures and do a cross-val on the number of neurons
     for each layer. Compact-scaler is hard-coded+linear output 
     """
-    def __init__(self, nfeatures=NFEATURES, dict_name=None, neurons_max=300, neurons_step=50, out_intervals=None,
+    def __init__(self, nfeatures=NFEATURES, dict_name=None, neurons_max=300, neurons_step=50,
                  epochs=EPOCHS, batch_size=BATCH_SIZE, learning_rate=LEARNING_RATE, verbose=False,
-                 xtrain=None, ytrain=None, xtest=None, ytest=None, seed=SEED, 
-                 standard_scaler=True, sigma0=1, compact_scaler=True, compact_bounds=None, linear_output=True):
+                 xtrain=None, ytrain=None, xtest=None, ytest=None, seed=SEED, compact_bounds=None):
         nlayers_max        = 2 # hard-coded for now, but should be ok (i.e. no NN with >2 layers needed)
         self.nfeatures     = nfeatures
         self.nlayers_max   = nlayers_max
         self.neurons_max   = neurons_max
         self.neurons_step  = neurons_step
-        if out_intervals is not None:
-            out_intervals = np.array(out_intervals)
-        self.out_intervals = out_intervals
         self.epochs        = epochs
         self.batch_size    = batch_size
         self.learning_rate = learning_rate
         self.seed          = seed
-        
-        self.standard_scaler = standard_scaler
-        self.sigma0          = sigma0
-        self.compact_scaler  = compact_scaler
         self.compact_bounds  = compact_bounds
-        self.linear_output   = linear_output
 
         if xtrain is None or ytrain is None or xtest is None or ytest is None:
             raise ValueError('Incomplete data-input! Specifiy xtrain, ytrain, xtest, ytest')
@@ -729,35 +683,13 @@ class CrossValidator:
         epochs        = self.epochs
         batch_size    = self.batch_size
         learning_rate = self.learning_rate
-        out_intervals = self.out_intervals
         nfeatures     = self.nfeatures
-
-        standard_scaler = self.standard_scaler
-        sigma0          = self.sigma0
-        compact_scaler  = self.compact_scaler
         compact_bounds  = self.compact_bounds
-        linear_output   = self.linear_output
         
         key  = 'e:'+str(epochs)+'-bs:'+str(batch_size)+'-alpha:'+str(learning_rate)+'-'
-        if out_intervals is not None:
-            key += 'oc:['
-            for i in range(0, nfeatures):
-                key += '['+str(out_intervals[i][0])+','+str(out_intervals[i][1])+']'
-                if i<nfeatures-1:
-                    key += ','
-            key += ']'
-        else:
-            key += 'no_oc'
-        key += '-seed:'+str(self.seed)
-        if standard_scaler:
-            key += '-std'+str(sigma0)
-        if compact_scaler:
-            key += '-compact'
-        if linear_output:
-            key += '-linout'
-        key += '-' 
+        key += 'seed:'+str(self.seed)
         nlayers = len(hlayers_sizes)
-        key += str(nlayers) + 'layers:'
+        key += '-' + str(nlayers) + 'layers:'
         for i in range(0, nlayers):
             key += str(hlayers_sizes[i])
             if i<nlayers-1:
@@ -779,12 +711,7 @@ class CrossValidator:
         epochs             = self.epochs
         batch_size         = self.batch_size
         learning_rate      = self.learning_rate
-        out_intervals      = self.out_intervals
         hlayers_sizes_list = self.hlayers_sizes_list 
-        linear_output      = self.linear_output
-        standard_scaler    = self.standard_scaler
-        sigma0             = self.sigma0
-        compact_scaler     = self.compact_scaler
         compact_bounds     = self.compact_bounds
         xtrain_data = self.__get_data(self.input_xtrain, verbose=verbose)
         ytrain_data = self.__get_data(self.input_ytrain, verbose=verbose)
@@ -797,10 +724,9 @@ class CrossValidator:
                     #print('{:90s} already saved in {:}'.format(key,self.dict_name))
                     print('key already present:',key)
             else:
-                NN = RegressionNN(nfeatures=nfeatures, hlayers_sizes=hlayers_sizes, seed=seed, linear_output=linear_output)
+                NN = RegressionNN(nfeatures=nfeatures, hlayers_sizes=hlayers_sizes, seed=seed)
                 NN.load_train_dataset(xtrain_data=xtrain_data, ytrain_data=ytrain_data, 
-                                      compact_scaler=compact_scaler, compact_bounds=compact_bounds, 
-                                      standard_scaler=standard_scaler, sigma0=sigma0)
+                                      compact_bounds=compact_bounds)
                 NN.training(epochs=epochs, batch_size=batch_size, learning_rate=learning_rate)
                 NN.load_test_dataset(xtest_data=xtest_data, ytest_data=ytest_data)
                 metrics_dict = NN.compute_metrics_dict(NN.xtest, NN.ytest)
@@ -816,12 +742,8 @@ class CrossValidator:
                 struct.nlayers         = len(hlayers_sizes)
                 struct.epochs          = epochs
                 struct.batch_size      = batch_size 
-                struct.out_intervals   = self.out_intervals
                 struct.learning_rate   = self.learning_rate
                 struct.seed            = seed
-                struct.standard_scaler = standard_scaler
-                struct.sigma0          = sigma0
-                struct.compact_scaler  = compact_scaler
                 struct.compact_bounds  = compact_bounds
                 self.cv_dict[key] = struct 
                 cv_dict           = self.cv_dict
@@ -830,7 +752,7 @@ class CrossValidator:
                     print('saving key: {:75s} ({:.3f} s)'.format(key, ttime))
         return
 
-    def plot(self, threshold=0.6, npars_lim=1e+6, feature_idx=-1, show=True, save=False, figname='crossval.png'):
+    def plot(self, threshold=0.6, npars_lim=1e+7, feature_idx=-1, show=True, save=False, figname='crossval.png'):
         """ Plots to check which NN-architecture produces the best results
         The metric used is R2. Use feature_idx=-1 to plot the mean of R2
         """
@@ -921,15 +843,16 @@ if __name__ == '__main__':
     compact_bounds['A'] = [0.5,0.5,0.1]
     compact_bounds['B'] = [3,3,3]
     
-    path = '/home/simonealbanesi/repos/IPAM2021_ML/datasets/GSTLAL_EarlyWarning_Dataset/Dataset/m1m2Mc/'
+    loss_function = 'MSE' # 'MSE' or 'MQE'
+
+    path = '/home/simone/repos/IPAM2021_ML/datasets/GSTLAL_EarlyWarning_Dataset/Dataset/m1m2Mc/'
     xtrain = path+'xtrain.csv'
     ytrain = path+'ytrain.csv'
     xtest  = path+'xtest.csv'
     ytest  = path+'ytest.csv'
      
-    NN = RegressionNN(nfeatures=3, hlayers_sizes=(100,), out_intervals=None, seed=None, linear_output=True)
-    NN.load_train_dataset(fname_xtrain=xtrain, fname_ytrain=ytrain, standard_scaler=True, 
-                          compact_scaler=True, compact_bounds=compact_bounds)
+    NN = RegressionNN(nfeatures=3, hlayers_sizes=(100,), seed=None, loss_function=loss_function)
+    NN.load_train_dataset(fname_xtrain=xtrain, fname_ytrain=ytrain, compact_bounds=compact_bounds)
     NN.print_summary()
     NN.training(verbose=True, epochs=10, validation_split=0.)
     NN.load_test_dataset(fname_xtest=xtest, fname_ytest=ytest) 
@@ -939,7 +862,7 @@ if __name__ == '__main__':
     dashes = '-'*80
     print(dashes, 'Save and load test:', dashes, sep='\n')
     NN.save_model(verbose=True, overwrite=True)
-    NN2 = RegressionNN(load_model='model_nfeatures3_'+datetime.today().strftime('%Y-%m-%d'), verbose=True)
+    NN2 = RegressionNN(model2load='model_nfeatures3_'+datetime.today().strftime('%Y-%m-%d'), verbose=True)
     NN2.load_test_dataset(fname_xtest=xtest, fname_ytest=ytest) 
     NN2.print_metrics() 
     print(dashes)
@@ -950,8 +873,6 @@ if __name__ == '__main__':
 
     CV = CrossValidator(nfeatures=3, dict_name='test.dict', neurons_max=300, neurons_step=100, 
                         xtrain=xtrain, ytrain=ytrain, xtest=xtest, ytest=ytest, 
-                        epochs=10, batch_size=128, out_intervals=None, seed=None,
-                        standard_scaler=True, compact_scaler=True, compact_bounds=compact_bounds,
-                        linear_output=True)
+                        epochs=10, batch_size=128, seed=None, compact_bounds=compact_bounds)
     CV.crossval(verbose=True)
     CV.plot(feature_idx=-1, threshold=0.82)
