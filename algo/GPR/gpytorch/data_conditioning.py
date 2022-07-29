@@ -129,7 +129,7 @@ def standardize(xtrain_inf, ytrain_inf, xtest_inf, ytest_inf):
     return xtrain_scaled, ytrain_scaled, xtest_scaled, ytest_scaled, ytest_scaler
 
 def unstandardize(predictions, ytest_scaler):
-    preds = torch.transpose(predictions.mean,0,1).numpy()
+    preds = torch.transpose(predictions.mean.cpu(),0,1).numpy()
     return ytest_scaler.inverse_transform(preds)
 
 def torchify(xtrain_scaled, ytrain_scaled, xtest_scaled, ytest_scaled):
@@ -140,4 +140,6 @@ def torchify(xtrain_scaled, ytrain_scaled, xtest_scaled, ytest_scaled):
 
     train_x = train_x.unsqueeze(0).repeat(4, 1, 1)
     train_y = train_y.transpose(-2, -1)
+
+    #send tensors to be on GPUs
     return train_x, train_y, test_x, test_y
