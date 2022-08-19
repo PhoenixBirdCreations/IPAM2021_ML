@@ -15,7 +15,6 @@
 \usepackage{bm}
 \usepackage{makecell}
 %\usepackage{MnSymbol}
-% LCS: Proper input/output encoding
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{microtype}
@@ -67,7 +66,7 @@
 \begin{document}
 
 %Title of paper
-\title{Regression}
+\title{Work in Regression}
 
 \author{Simone Albanesi
 	\orcidlink{0000-0001-7345-4415}}
@@ -107,9 +106,7 @@
 
 \date{\today}
 
-\begin{abstract}
-  Abstract goes here.
-\end{abstract}
+\input{Regression_Abstract.tex}
 
 %\maketitle must follow title, authors, abstract, \pacs, and \keywords
 \maketitle
@@ -119,33 +116,19 @@
 % body of paper here - Use proper  commands
 % References should be done using the \cite, \ref, and \label commands
 
-%\tableofcontents
+\input{Regression_Introduction.tex}
 
-\section{Introduction}
-In our introduction we want to start from big picture (LIGO, ML, pipelines)
-and narrow down to what work we are presenting here and why it is important. We
-also describe in which ways it is novel and how it compares to previous works
-like in~\cite{Chatterjee:2019avs}. We may also want to cite~\cite{Sachdev:2020lfd}. 
+\input{Improving_Parameters.tex}
+\input{GPR.tex}
+\input{NNs.tex}
 
-\section{Improving Recovered Parameters through Regression}
-\label{sec:ML_concept}
-In this section we may want to expand on the idea of using regression itself.
-We should mention which algorithms we attempted to use and why they did not
-work. Then we can talk more in detail about the ones that did work in the
-following subsections.
-\footnote{We may want to add a footnote here and there.}
+\input{Regression_Data_Conditioning.tex}
+%\footnote{We may want to add a footnote here and there.}
 
-\subsection{Gaussian Process Regression (GPR)}
-
-\subsection{Neural Networks (NNs)}
-
-
-\section{Data Conditioning}
-\label{sec:BMSFramesIntro}
-We should in principle condition the data in the same way but any differences
-can also be described here.
-
-
+\input{Regression_Results.tex}
+\input{GPR_Results.tex}
+\input{NN_Results.tex}
+% Code below can be used to add figures in the section files.
 %\begin{figure}[t]
 %	\centering
 %	\includegraphics[width=.45\textwidth]{image_name}
@@ -154,45 +137,9 @@ can also be described here.
 %	\label{image_label}
 %\end{figure}
 
-\section{Results}
-Here we talk about overall results and specifically from each algorithm in the
-subsections below.
-\subsection{GPR}
+\input{Regression_Conclusions.tex}
 
-\subsection{NN}
-
-
-\section{Conclusions}
-Reiterate why what we did is important and how it improves current knowledge.
-
-\section*{Acknowledgments}
-We thank Deep Chatterjee for useful discussions and for sharing his work, which
-helped us compare our results to those of~\cite{Chatterjee:2019avs}. We also
-thank Shaon Ghosh for useful discussions and X, Y, and Z for reviewing an
-earlier version of this manuscript. Part of this research was performed while
-the authors were visiting the Institute of Pure and Applied Mathematics (IPAM), 
-University of California Los-Angeles (UCLA). The authors would like to thank 
-IPAM, UCLA and the National Science Foundation through grant DMS-1925919 for
-their warm hospitality during the fall of 2021. 
-%
-
-The authors are grateful for computational resources provided by the LIGO 
-Laboratory and supported by the U.S. National Science Foundation Grants 
-PHY-0757058 and PHY-0823459, as well as resources from the Gravitational Wave
-Open Science Center, a service of the LIGO Laboratory, the LIGO Scientific 
-Collaboration and the Virgo Collaboration.
-%
-
-The work of L.M.Z. was partially supported by the MSSGC Graduate
-Research Fellowship, awarded through the NASA Cooperative Agreement
-80NSSC20M0101. 
-%
-The work of X.Y. was partially supported by NSF Grant No.~PHY-20XXXXX.
-%
-
-All plots were made using the python package \texttt{matplotlib}~\cite{Hunter:2007ouj}.
-
-This manuscript has been assigned LIGO Document Control Center number LIGO-P22XXXXX.
+\input{Regression_Acknowledgements.tex}
 
 \def\bibsection{\section*{References}}
 
