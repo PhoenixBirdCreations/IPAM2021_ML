@@ -1,0 +1,205 @@
+% voodoo for arXiv scripts
+\pdfoutput=1
+\documentclass[aps,prd,twocolumn,superscriptaddress,preprintnumbers,floatfix,nofootinbib]{revtex4-2}
+
+\usepackage{graphicx}
+\usepackage{amsmath}
+%\usepackage{mdwlist}
+%\usepackage[caption=false]{subfig}
+%\usepackage{siunitx}
+%\usepackage{placeins}
+\usepackage{color}
+%\usepackage{standalone}
+\usepackage{dcolumn}
+\usepackage{tensor}
+\usepackage{bm}
+\usepackage{makecell}
+%\usepackage{MnSymbol}
+% LCS: Proper input/output encoding
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{microtype}
+\usepackage{etoolbox}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{accents}
+\usepackage[normalem]{ulem}
+\usepackage[table,dvipsnames]{xcolor}
+\usepackage[colorlinks,urlcolor=NavyBlue,citecolor=NavyBlue,linkcolor=NavyBlue,pdfusetitle]{hyperref}
+\usepackage[all]{hypcap}
+\usepackage[inline,shortlabels]{enumitem}
+\usepackage{braket}
+
+\usepackage{array}
+\usepackage{diagbox}
+\usepackage{color}
+\usepackage{colortbl}
+\usepackage{hhline}
+\usepackage{multirow}
+
+\graphicspath{{./}{figs/}}
+
+\newcommand{\nn}{\nonumber}
+\newcommand{\NR}{\text{NR}}
+
+%\newcommand{\lorena}[1]{\textcolor{magenta}{#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Author information
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\usepackage{orcidlink}
+
+\newcommand{\MST}{\affiliation{Institute of Multi-messenger Astrophysics and Cosmology \& Physics Department, 
+		Missouri University of Science and Technology, Rolla, MO 65409, USA}}
+\newcommand{\OleMiss}{\affiliation{Department of Physics and Astronomy,
+		University of Mississippi, University, Mississippi 38677, USA}}
+\newcommand{\Torino}{\affiliation{Dipartimento di Fisica,
+		Universit`a di Torino \& INFN Sezione di Torino, via P. Giuria 1, 10125 Torino, Italy}}
+\newcommand{\Tubingen}{\affiliation{Theoretical Astrophysics Department, 
+		Eberhard-Karls University of T\"{u}bingen, T\"{u}bingen 72076, Germany}}
+\newcommand{\UAB}{\affiliation{Departament de Matem\`{a}tiques,
+		Universitat Aut\`{o}noma de Barcelona, 08193 Bellaterra, Spain}}
+\newcommand{\UV}{\affiliation{Departament d’Astronomia i Astrof\'{i}sica,
+		Universitat de Val\`{e}ncia, Dr. Moliner 50, 46100, Burjassot (Val\`{e}ncia), Spain}}
+		
+\begin{document}
+
+%Title of paper
+\title{Classification}
+
+\author{Simone Albanesi
+	\orcidlink{0000-0001-7345-4415}}
+\email{simone.albanesi@edu.unito.it}
+\Torino
+\author{Marina Berbel
+	\orcidlink{0000-0001-6345-1798}}
+\email{mberbel@mat.uab.cat}
+\UAB
+\author{Marco Cavagli\`{a}
+	\orcidlink{0000-0002-3835-6729}}
+\email{cavagliam@mst.edu}
+\MST
+\author{Lorena \surname{Magaña Zertuche}
+	\orcidlink{0000-0003-1888-9904}}
+\email{lmaganaz@go.olemiss.edu}
+\OleMiss
+\author{Miquel Miravet-Ten\'{e}s
+	\orcidlink{0000-0002-8766-1156}}
+\email{miquel.miravet@uv.es}
+\UV
+\author{Dimitra Tseneklidou
+	\orcidlink{0000-0003-2582-1705}}
+\email{dimitra.tseneklidou@uni-tuebingen.de}
+\Tubingen
+\author{Yanyan Zheng
+	\orcidlink{0000-0002-5432-1331}}
+\email{zytfc@umsystem.edu}
+\MST
+\author{Any other?}
+%	\orcidlink{}}
+%\email{}
+
+
+% Because hyperref only gets the *last* author, we need to be explicit.
+\hypersetup{pdfauthor={LastName et al.}}
+
+\date{\today}
+
+\begin{abstract}
+  Abstract goes here.
+\end{abstract}
+
+%\maketitle must follow title, authors, abstract, \pacs, and \keywords
+\maketitle
+
+%\tableofcontents
+
+% body of paper here - Use proper  commands
+% References should be done using the \cite, \ref, and \label commands
+
+%\tableofcontents
+
+\section{Introduction}
+In our introduction we want to start from big picture (LIGO, ML, pipelines)
+and narrow down to what work we are presenting here and why it is important. We
+also describe in which ways it is novel and how it compares to previous works
+like in~\cite{Chatterjee:2019avs}. We may also want to cite~\cite{Sachdev:2020lfd}. 
+
+\section{Improving Binary Classification through ML}
+\label{sec:ML_concept}
+In this section we may want to expand on the idea of using classification itself.
+We should mention which algorithms we attempted to use and why they did not
+work. Then we can talk more in detail about the ones that did work in the
+following subsections.
+\footnote{We may want to add a footnote here and there.}
+
+\subsection{Random Forest (RF)}
+
+\subsection{Neural Networks (NNs)}
+
+
+\section{Data Conditioning}
+\label{sec:BMSFramesIntro}
+We should in principle condition the data in the same way but any differences
+can also be described here.
+
+
+%\begin{figure}[t]
+%	\centering
+%	\includegraphics[width=.45\textwidth]{image_name}
+%	\caption{%
+%		Here we explain our plot.}
+%	\label{image_label}
+%\end{figure}
+
+\section{Results}
+Here we talk about overall results and specifically from each algorithm in the
+subsections below.
+\subsection{RF}
+
+\subsection{NN}
+
+
+\section{Conclusions}
+Reiterate why what we did is important and how it improves current knowledge.
+
+\section*{Acknowledgments}
+We thank Deep Chatterjee for useful discussions and for sharing his work, which
+helped us compare our results to those of~\cite{Chatterjee:2019avs}. We also
+thank Shaon Ghosh for useful discussions and X, Y, and Z for reviewing an
+earlier version of this manuscript. Part of this research was performed while
+the authors were visiting the Institute of Pure and Applied Mathematics (IPAM), 
+University of California Los-Angeles (UCLA). The authors would like to thank 
+IPAM, UCLA and the National Science Foundation through grant DMS-1925919 for
+their warm hospitality during the fall of 2021. 
+%
+
+The authors are grateful for computational resources provided by the LIGO 
+Laboratory and supported by the U.S. National Science Foundation Grants 
+PHY-0757058 and PHY-0823459, as well as resources from the Gravitational Wave
+Open Science Center, a service of the LIGO Laboratory, the LIGO Scientific 
+Collaboration and the Virgo Collaboration.
+%
+
+The work of L.M.Z. was partially supported by the MSSGC Graduate
+Research Fellowship, awarded through the NASA Cooperative Agreement
+80NSSC20M0101. 
+%
+The work of X.Y. was partially supported by NSF Grant No.~PHY-20XXXXX.
+%
+
+All plots were made using the python package \texttt{matplotlib}~\cite{Hunter:2007ouj}.
+
+This manuscript has been assigned LIGO Document Control Center number LIGO-P22XXXXX.
+
+\def\bibsection{\section*{References}}
+
+\bibliography{regression}
+
+\end{document}
+
+% Local Variables:
+% mode: latex
+% End:
