@@ -1,0 +1,9 @@
+These are the results from training 23 forests, one for every EoS.
+
+I uploaded the histogram and ROC curves from every EoS, for p(HasNS) and p(HasREM).
+The ROC curve for p(HasNS) is always very similar, which is consistent as label HasNS={0,1} does not change much. (I do not know if for the labelling 
+they consider the maximum mass of the EoS or they are still using the 3Ms cut. In that case, the label never changes).
+
+The ROC curve for p(HasREM) gives very good results, even better than with the 2H EoS.
+
+All models are a forest of 500 trees, using the entropy criteria and sqrt max_features at the nodes. The score remains consistent in all EoS, around 0.96 (as in 2H). 
