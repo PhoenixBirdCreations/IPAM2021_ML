@@ -22,8 +22,10 @@ def extractData(filename, verbose=False):
     """ Reads data from csv file and returns it in array form.
     """
     lst=[]
+    
     with open(filename) as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
+        next(csv_reader, None)
         for row in csv_reader:
             lst.append(row)
     data=np.array(lst, dtype=float)
@@ -84,6 +86,14 @@ class ClassificationRF:
         self.labels_train     = xtrain[:,-1]
         return
     
+    def load_original_dataset(self, path, fname_x='xtrain.csv'):
+        """ Load datasets in CSV format 
+        """
+        xtrain = extractData(path+fname_x, verbose=False)
+        self.data_train_all       = xtrain
+        print("loaded")
+        return
+    
     def load_test_dataset(self, path, fname_x='xtrain.csv'):
         """ Load datasets in CSV format 
         """
@@ -126,8 +136,11 @@ class ClassificationRF:
                 for feature in features:
                     if self.verbose:
                         print("Doing ",tree, " trees, criterion ",criteria," and ",feature," features") 
-                    clf = RandomForestClassifier(n_estimators=tree, criterion=criteria, max_features=feature) 
+                    clf = RandomForestClassifier(n_estimators=tree, criterion=criteria, max_features=feature, random_state=42) 
+                    t0=time.perf_counter()
                     clf.fit(self.data_train, np.ravel(self.labels_train))
+                    total_time=time.perf_counter()-t0
+                    print("Training: ",tree, " trees, criterion ",criteria," and ",feature," features. Time elapsed: ",total_time, "s")
                     score = clf.score(self.data_test,self.labels_test)
                     scores.append(score)
                     if score>best_score:
@@ -146,7 +159,7 @@ class ClassificationRF:
         self.__check_attributes(['data_train', 'labels_train'])
         self.Nfeatures=len(self.data_train[0])
 
-        self.model=RandomForestClassifier(n_estimators=trees, criterion=criterion, max_features=max_features) 
+        self.model=RandomForestClassifier(n_estimators=trees, criterion=criterion, max_features=max_features,random_state=42) 
         self.model.fit(self.data_train, np.ravel(self.labels_train))
         
         return
@@ -166,7 +179,7 @@ class ClassificationRF:
         
         return prediction
 
-    def __compute_metrics(self):
+    def compute_metrics(self):
         """ Compute evaluation metrics: score and confusion matrix 
         """
         
@@ -187,7 +200,7 @@ class ClassificationRF:
     def print_metrics(self,filename='cm.png'):
         """ Print (and eventually compute) evaluation metrics 
         """
-        self.__compute_metrics()
+        self.compute_metrics()
 
         print("Score on testing: ", self.metric_dic["score"])
         print("******Confusion matrix******")
@@ -202,6 +215,9 @@ class ClassificationRF:
     def ROC_plot(self, filename='roc_curve.png',path='./'):
         prob_being_1 = self.metric_dic["prob"][:,1]
         fpr, tpr, thresholds = roc_curve(self.labels_test, prob_being_1)
+        self.fpr=fpr;
+        self.tpr=tpr;
+        self.thr=thresholds
         plt.figure()
         plt.title("Category 1")
         sc=plt.scatter(fpr[1:-1], tpr[1:-1], c=thresholds[1:-1], cmap='viridis')
@@ -215,7 +231,14 @@ class ClassificationRF:
             plt.show()
         plt.clf()
   
-
+        if(self.verbose):
+            print("*****Stats from ROC curve*****")
+            print("FPR")
+            print(fpr)
+            print("TPR")
+            print(tpr)
+            print("Threshold")
+            print(thresholds)
         return
     
     def scatterplot_prob(self, index_m1=0, index_m2=1,filename='scatterplot.png',path='./'):
