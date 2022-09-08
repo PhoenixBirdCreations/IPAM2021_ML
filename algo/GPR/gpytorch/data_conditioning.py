@@ -57,10 +57,10 @@ def map_to_inf(xtrain, ytrain, xtest, ytest, shuffle_data=True):
     v = lambda u : (sa * u) + sb
 
     #Map
-    ytrain_01 = ytrain
-    xtrain_01 = xtrain
-    ytest_01 = ytest
-    xtest_01 = xtest
+    ytrain_01 = np.zeros(np.shape(xtrain)) 
+    xtrain_01 = np.zeros(np.shape(xtrain))
+    ytest_01 = np.zeros(np.shape(xtest))
+    xtest_01 = np.zeros(np.shape(xtest))
     ytrain_01[:,0:2] = y(ytrain[:,0:2])
     xtrain_01[:,0:2] = y(xtrain[:,0:2])
     ytest_01[:,0:2] = y(ytest[:,0:2])
@@ -71,24 +71,19 @@ def map_to_inf(xtrain, ytrain, xtest, ytest, shuffle_data=True):
     xtest_01[:,2:] = v(xtest[:,2:])
     
     # mapping into (-inf,inf) range
-    ytrain_inf = ytrain_01
-    xtrain_inf = xtrain_01
-    ytest_inf = ytest_01
-    xtest_inf = xtest_01
-    ytrain_inf[:,0:2] = scipy.special.logit(ytrain_01[:,0:2])
-    xtrain_inf[:,0:2] = scipy.special.logit(xtrain_01[:,0:2])
-    ytest_inf[:,0:2] = scipy.special.logit(ytest_01[:,0:2])
-    xtest_inf[:,0:2] = scipy.special.logit(xtest_01[:,0:2])
-    ytrain_inf[:,2:] = scipy.special.logit(ytrain_01[:,2:])
-    xtrain_inf[:,2:] = scipy.special.logit(xtrain_01[:,2:])
-    ytest_inf[:,2:] = scipy.special.logit(ytest_01[:,2:])
-    xtest_inf[:,2:] = scipy.special.logit(xtest_01[:,2:])
+    ytrain_inf = np.zeros(np.shape(xtrain))
+    xtrain_inf = np.zeros(np.shape(xtrain))
+    ytest_inf = np.zeros(np.shape(xtest))
+    xtest_inf = np.zeros(np.shape(xtest)
+    ytrain_inf[:,:] = scipy.special.logit(ytrain_01[:,:])
+    xtrain_inf[:,:] = scipy.special.logit(xtrain_01[:,:])
+    ytest_inf[:,:] = scipy.special.logit(ytest_01[:,:])
+    xtest_inf[:,:] = scipy.special.logit(xtest_01[:,:])
     return xtrain_inf, ytrain_inf, xtest_inf, ytest_inf
 
 def map_from_inf(predicted_data_inf):
-    predicted_data_01 = predicted_data_inf
-    predicted_data_01[:,0:2] = expit(predicted_data_inf[:,0:2])
-    predicted_data_01[:,2:] = expit(predicted_data_inf[:,2:])
+    predicted_data_01 = np.zeros(np.shape(predicted_data_inf))
+    predicted_data_01[:,:] = expit(predicted_data_inf[:,:])
     
     #Define mass and spin mappings
     min_mass = 0.75 # bounds from template bank
@@ -109,7 +104,7 @@ def map_from_inf(predicted_data_inf):
     sb = sX[1]
     u = lambda v : (-sb + v) * (1/sa)
                                                 
-    predicted_data = predicted_data_01
+    predicted_data = np.zeros(np.shape(predicted_data_01))
     predicted_data[:,0:2] = x(predicted_data_01[:,0:2])
     predicted_data[:,2:] = u(predicted_data_01[:,2:])
 
