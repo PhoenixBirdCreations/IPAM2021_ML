@@ -126,13 +126,13 @@ def checkRegressionPlot(xtest, ytest, ypredicted, labels, scaler_y=None, scaler_
         fontsize_lab = 30
         fontsize_leg = 25
     else:
-        plot_cols    = 3
+        plot_cols    = 2
         fontsize_lab = 20
         fontsize_leg = 20
     
     rows = int(np.ceil(Nfeatures/plot_cols))
     if rows>1:
-        fig, axs  = plt.subplots(rows,plot_cols, figsize = (25,17))
+        fig, axs  = plt.subplots(rows,plot_cols, figsize = (25,18))
     else: 
         fig, axs  = plt.subplots(rows,plot_cols, figsize = (22,9))
 
@@ -149,8 +149,8 @@ def checkRegressionPlot(xtest, ytest, ypredicted, labels, scaler_y=None, scaler_
             xtest_plot = xtest[:,feature]
             ypred_plot = ypredicted[:,feature]
             
-            ax.scatter(ytest_plot, xtest_plot, label='recovered', s=1)
-            ax.scatter(ytest_plot, ypred_plot, label='predicted', s=1)
+            ax.scatter(ytest_plot, xtest_plot, label='recovered', s=5)
+            ax.scatter(ytest_plot, ypred_plot, label='predicted', s=5)
             ax.set_xlabel('injected - '+labels[feature], fontsize=fontsize_lab)
             ax.set_ylabel(labels[feature], fontsize=fontsize_lab)
             ax.plot(ytest_plot, ytest_plot, 'k')

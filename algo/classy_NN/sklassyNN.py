@@ -241,7 +241,7 @@ class RegressionNN:
         self.learning_rate    = learning_rate
         self.validation_split = validation_split
         
-
+        t0 = time.perf_counter()
         MyLPRegressor = MLPRegressor(hidden_layer_sizes  = self.hlayers_sizes,
             activation          = self.hidden_activation,
             solver              = 'adam', 
@@ -254,12 +254,11 @@ class RegressionNN:
 
         model = MyLPRegressor.fit(self.xtrain, self.ytrain)
 
-        t0 = time.perf_counter()
         self.training_time = time.perf_counter()-t0
         self.model = model
         return
         
-    def compute_prediction(self, x, transform_output=False, transform_input=False):
+    def compute_prediction(self, x, transform_output=False, transform_input=False, verbose=False):
         """ Prediction, can be used only after training
         If you want to remove the normalization, i.e. 
         to have the prediction in physical units, then use 
@@ -268,6 +267,7 @@ class RegressionNN:
         If the input (i.e. x) is not already normalized, use
         transform_input = True
         """
+        t0 = time.perf_counter()
         self.__check_attributes(['nfeatures', 'model'])
         x = np.array(x)
         if len(x.shape)==1:
@@ -285,6 +285,11 @@ class RegressionNN:
             out = self.scaler_y.inverse_transform(prediction)
         else:
             out = prediction
+        
+        pred_time = time.perf_counter()-t0
+        if verbose:
+            print('prediction-time: ', pred_time)
+            
         return out
     
     #-----------------------------------------------------------------------------------
