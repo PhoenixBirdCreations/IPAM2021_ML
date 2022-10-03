@@ -1,8 +1,8 @@
 # IPAM2021_ML
 
  ![LaTeX build](../../workflows/LaTeX%20build/badge.svg)
- [![Latest classification paper](https://img.shields.io/badge/classification_paper-latest-orange.svg?style=flat)](../gh-action-result/pdflatex/paper/classification_paper.pdf)
- [![Latest regression paper](https://img.shields.io/badge/regression_paper-latest-orange.svg?style=flat)](../gh-action-result/pdflatex/paper/regression_paper.pdf)
+ [![Latest classification paper](https://img.shields.io/badge/classification_paper-latest-orange.svg?style=flat)](../gh-action-result/pdflatex/papers/classification/classification_paper.pdf)
+ [![Latest regression paper](https://img.shields.io/badge/regression_paper-latest-orange.svg?style=flat)](../gh-action-result/pdflatex/papers/regression/regression_paper.pdf)
 
 Files for the ML working group
 
