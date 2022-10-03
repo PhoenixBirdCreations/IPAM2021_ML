@@ -2,7 +2,6 @@ import sys
 import os
 import gc
 gc.collect()
-import math
 import numpy as np
 import torch
 torch.cuda.empty_cache()
@@ -42,7 +41,7 @@ print('Device: ', device)
 
 train_x = train_x.to(device)
 train_y = train_y.to(device)
-test_x = test_x.to(device)
+#test_x = test_x.to(device)
 print('Allocated:', torch.cuda.memory_allocated())
 print('Reserved:', torch.cuda.memory_reserved())
 
@@ -60,7 +59,7 @@ class MultitaskGPModel(gpytorch.models.ExactGP):
             covar_x = self.covar_module(x)
         return gpytorch.distributions.MultivariateNormal(mean_x, covar_x)
 
-likelihood = gpytorch.likelihoods.GaussianLikelihood(num_tasks=4).cuda() #noise_prior=gpytorch.priors.NormalPrior()).cuda()
+likelihood = gpytorch.likelihoods.GaussianLikelihood(num_tasks=4).cuda()
 model = MultitaskGPModel(train_x, train_y, likelihood).cuda()
 
 gc.collect()
@@ -90,52 +89,24 @@ for i in range(n_iter):
     with autocast():
         output = model(train_x)
         torch.cuda.empty_cache()
-        print('b4 loss: ', torch.cuda.max_memory_allocated())
         loss = -mll(output, train_y).sum() #need to decrease this
         torch.cuda.empty_cache()
-        print('after loss: ', torch.cuda.max_memory_allocated())
         del output
         gc.collect()
     scaler.scale(loss).backward(retain_graph=False) #need to decrease this
-    print('after backward: ', torch.cuda.max_memory_allocated())
     scaler.step(optimizer)
     scaler.update()
     del loss
     gc.collect()
-    print(torch.cuda.max_memory_allocated())
     torch.cuda.reset_peak_memory_stats()
     torch.cuda.empty_cache()
 
 # Set into eval mode
 del train_x, train_y
 gc.collect()
-print(dir())
-print('Allocated b4 eval: ', torch.cuda.memory_allocated())
-print('Reserved b4 eval: ', torch.cuda.memory_reserved())
-model.eval()
-likelihood.eval()
-
-print('predicting...')
-# Make predictions
-with torch.no_grad(), gpytorch.settings.fast_pred_var():
-    predictions = likelihood(model(test_x))
-    mean = predictions.mean
-    lower, upper = predictions.confidence_region()
-
-del test_x
-gc.collect()
-
-predicted_data_inf = unstandardize(predictions, ytest_scaler)
-predicted_data = map_from_inf(predicted_data_inf)
-
-del predicted_data_inf, ytest_scaler
-gc.collect()
-
 torch.cuda.empty_cache()
-
-writeResult('data_files/regression_results_50its_gpu.csv',predicted_data)
 
 executionTime = (time.time() - startTime)
 print('Execution time in seconds: ' + str(executionTime))
-db = {'model': model.state_dict(), 'pred': predicted_data, 'lower': lower, 'upper': upper}
-torch.save(db, 'data_files/full_data_50its_tensor.pt')
+db = {'model': model.state_dict()}
+torch.save(db, 'data_files/trained_model_gpu.pt')
