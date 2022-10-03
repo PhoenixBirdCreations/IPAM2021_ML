@@ -12,10 +12,11 @@ jobs:
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@v2
         with:
-          working_directory: papers
+          working_directory: papers/
           root_file: |
               classification/classification_paper.tex
               regression/regression_paper.tex
+          work_in_root_file_dir: true
       - name: Commit to orphan branch
         run: |
           git checkout --orphan gh-action-result/pdflatex
