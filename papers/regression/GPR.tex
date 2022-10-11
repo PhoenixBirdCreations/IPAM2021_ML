@@ -5,15 +5,15 @@ Gaussian distributions between system data and the predictions. This makes it a
 particularly powerful in interpolating between data sets and estimating
 errors. Throughout this paper, we use \texttt{PyTorch}'s GPR module. We have to
 make certain choices for our model such as the kernel function, loss function,
-and the number of iterations. 
+and the number of iterations.}
 
-A kernel funciton is a covariance function use to measure the similarity
+\lorena{A kernel funciton is a covariance function use to measure the similarity
 between two data points. Our choice of kernel for training is the radial 
-basis function (RBF) which is a squared exponential function given by
+basis function (RBF) which is a squared exponential function given by}
 \begin{equation}
 K(X_1, X_2) = e^{-\frac{||X_1-X_2||^2}{2 \sigma^2}},
 \end{equation}
-where $X_1$ and $X_2$ are input data points and $\sigma$ is the variance, 
+\lorena{where $X_1$ and $X_2$ are input data points and $\sigma$ is the variance, 
 or lengthscale parameter. This kernel is chosen for its accuracy and speed. 
 The predictions of the O2 dataset are not strongly depend on the choice of
 kernel. Apart from its popularity due to its versatility, the RBF kernel seems
