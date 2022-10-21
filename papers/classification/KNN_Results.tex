@@ -11,7 +11,7 @@
 	d = |x_1-x_2|+|y_1-y_2|\,.
 \end{equation}
 
-\mmt{Moreover, the points are weighted uniformly.  After applying cross-validation,  we get that the optimal number of neighbors is $K_{\rm NS} = 10$, with a mean score $\rm{s_m} = 0:9718355224352762$ and a testing score  $\rm{s_t} = 0.9723828730478842$.} 
+\mmt{Moreover, the points are weighted uniformly.  After applying cross-validation,  we get that the optimal number of neighbors is $K_{\rm NS} = 10$, with a mean score $\rm{s_m} = 0:9718355224352762$ and a testing score  $\rm{s_t} = 0.9723828730478842$. In Fig.~\ref{fig:crossvalK} you can find how the mean score changes with the number of neighbors of the algorithm. } 
 
 \begin{figure}
     \includegraphics[width = 0.4\textwidth]{CrossValK.pdf}
@@ -38,6 +38,9 @@
     \label{fig:roc}
 \end{figure}
 
-\mmt{In Fig.~\ref{fig:crossvalK} you can find how the mean score changes with the number of neighbors of the algorithm.  The confusion matrix appears in Fig.~\ref{fig:confmat}, the probability as a function of $m_1$ and $m_2$  is shown in Figs.~\ref{fig:m1m2}, and the true and false positive rates in terms of the threshold probability appear in Fig.~\ref{fig:roc}.}
+\mmt{The confusion matrix appears in Fig.~\ref{fig:confmat}. It depicts that the number of events that are correctly classified when there is a NS is much higher than the ones without a NS. The probability as a function of $m_1$ and $m_2$  is shown in Figs.~\ref{fig:m1m2}, There are no big differences with different values of the spins, but the most remarkable one is that the model classifies better for 0-spin values, especially when $m_1$ is large. The true and false positive rates in terms of the threshold probability (ROC curve) appear in Fig.~\ref{fig:roc}.}
+
+\subsubsection{\mmt{Has REM}}
+\mmt{In order to classify the events between having or not a post-merger remnant and therefore a likely EM emission, we apply again the cross validation to get the optimal number of neighbors, which turns out to be $K_{\rm REM} = 6$. }
 
 

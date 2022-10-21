@@ -1,0 +1,14 @@
+\BOOKMARK [0][-]{section*.2}{Work in Classification}{}% 2
+\BOOKMARK [1][-]{section*.1}{Abstract}{section*.2}% 1
+\BOOKMARK [1][-]{section*.3}{Introduction}{section*.2}% 3
+\BOOKMARK [1][-]{section*.4}{Improving Binary Classification through ML}{section*.2}% 4
+\BOOKMARK [2][-]{section*.5}{K-Nearest Neighbors \(KNN\)}{section*.4}% 5
+\BOOKMARK [2][-]{section*.6}{Random Forest \(RF\)}{section*.4}% 6
+\BOOKMARK [1][-]{section*.7}{Data Conditioning}{section*.2}% 7
+\BOOKMARK [1][-]{section*.8}{Results}{section*.2}% 8
+\BOOKMARK [2][-]{section*.9}{KNN Results}{section*.8}% 9
+\BOOKMARK [3][-]{section*.10}{Has NS}{section*.9}% 10
+\BOOKMARK [3][-]{section*.11}{Has REM}{section*.9}% 11
+\BOOKMARK [2][-]{section*.12}{RF Results}{section*.8}% 12
+\BOOKMARK [1][-]{section*.13}{Conclusions}{section*.2}% 13
+\BOOKMARK [1][-]{section*.14}{Acknowledgments}{section*.2}% 14
