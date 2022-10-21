@@ -1,0 +1,598 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2020.3.26)  27 JAN 2022 14:01
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**regression_NNtf.tex
+(./regression_NNtf.tex
+LaTeX2e <2018-12-01>
+(/usr/local/texlive/2019/texmf-dist/tex/latex/revtex/revtex4-1.cls
+Document Class: revtex4-1 2010/07/25/20:33:00 4.1r (http://publish.aps.org/revt
+ex4/ for documentation)
+ Copyright (c) 2009 The American Physical Society.
+ mailto:revtex@aps.org
+ Licensed under the LPPL:
+http://www.ctan.org/tex-archive/macros/latex/base/lppl.txt
+ Arthur Ogawa <arthur_ogawa at sbcglobal dot net>
+ Based on work by David Carlisle <david at dcarlisle.demon.co.uk>.
+ltxutil[2010/07/25/20:33:00 4.1r utilities package (portions licensed from W. E
+. Baxter web at superscript.com)]
+LaTeX Info: Redefining \@centercr on input line 308.
+Class revtex4-1 Info: Repairing broken LaTeX eqnarray on input line 358.
+\eqncolsep=\skip41
+Class revtex4-1 Info: Repairing hyperref-unfriendly LaTeX definition of \mpfoot
+note on input line 433.
+Class revtex4-1 Info: Repairing broken LateX \@sect on input line 755.
+\intertabularlinepenalty=\count80
+\@tbpen=\count81
+\@arstrutbox@hline=\box27
+Class revtex4-1 Info: Repairing broken LaTeX \@xbitor on input line 1786.
+Class revtex4-1 Info: Making \typeout \long on input line 2046.
+ltxfront[2010/07/25/20:33:00 4.1r frontmatter package (AO,DPC)]
+\c@affil=\count82
+\c@collab=\count83
+\absbox=\box28
+ltxgrid[2010/07/25/20:33:00 4.1r page grid package (portions licensed from W. E
+. Baxter web at superscript.com)]
+\c@linecount=\count84
+\output@latex=\toks14
+\box@size@1=\box29
+\box@size@2=\box30
+\@protection@box=\box31
+\@topmark@saved=\toks15
+\footins@saved=\box32
+\footins@recovered=\box33
+\column@recovered=\box34
+\pagesofar=\box35
+\footsofar=\box36
+\pagegrid@col=\count85
+Class revtex4-1 Info: Overriding \@vspace, \@vspacer, \@no@pgbk, \@newline, and
+ \\  on input line 5578.
+\c@part=\count86
+\c@section=\count87
+\c@subsection=\count88
+\c@subsubsection=\count89
+\c@paragraph=\count90
+\c@subparagraph=\count91
+\abovecaptionskip=\skip42
+\belowcaptionskip=\skip43
+\c@figure=\count92
+\fbox@1=\box37
+\c@table=\count93
+\fbox@2=\box38
+\c@video=\count94
+\fbox@4=\box39
+\@bibdataout=\write3
+\widetext@top=\box40
+\widetext@bot=\box41
+Class revtex4-1 Info: Selecting society aps on input line 7542.
+(/usr/local/texlive/2019/texmf-dist/tex/latex/revtex/aps4-1.rtx
+File: aps4-1 2010/07/25/20:33:00 4.1r (http://publish.aps.org/revtex4/ for docu
+mentation)
+Class revtex4-1 Info: RevTeX society APS selected on input line 31.
+)
+Class revtex4-1 Info: Selecting journal prd on input line 7544.
+Class revtex4-1 Info: APS journal PRD selected on input line 7545.
+
+
+Class revtex4-1 Warning: No type size specified, using default 10.
+
+(/usr/local/texlive/2019/texmf-dist/tex/latex/revtex/aps10pt4-1.rtx
+File: aps10pt4-1 2010/07/25/20:33:00 4.1r (http://publish.aps.org/revtex4/ for 
+documentation)
+Class revtex4-1 Info: RevTeX pointsize 10pt selected on input line 30.
+)
+(/usr/local/texlive/2019/texmf-dist/tex/latex/textcase/textcase.sty
+Package: textcase 2004/10/07 v0.07 Text only upper/lower case changing (DPC)
+)
+(/usr/local/texlive/2019/texmf-dist/tex/latex/url/url.sty
+\Urlmuskip=\muskip10
+Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+)
+(/usr/local/texlive/2019/texmf-dist/tex/latex/natbib/natbib.sty
+Package: natbib 2010/09/13 8.31b (PWD, AO)
+\bibhang=\skip44
+\bibsep=\skip45
+LaTeX Info: Redefining \cite on input line 694.
+\c@NAT@ctr=\count95
+)
+Class revtex4-1 Info: Repairing natbib's \BibitemShut on input line 7549.
+
+(/usr/local/texlive/2019/texmf-dist/tex/latex/revtex/revsymb4-1.sty
+Package: revsymb4-1 2010/07/25/20:33:00 4.1r (http://publish.aps.org/revtex4/ f
+or documentation)
+LaTeX Info: Redefining \REV@mathfrak on input line 119.
+))
+(/usr/local/texlive/2019/texmf-dist/tex/latex/amsmath/amsmath.sty
+Package: amsmath 2018/12/01 v2.17b AMS math features
+\@mathmargin=\skip46
+
+For additional information on amsmath, use the `?' option.
+(/usr/local/texlive/2019/texmf-dist/tex/latex/amsmath/amstext.sty
+Package: amstext 2000/06/29 v2.01 AMS text
+
+(/usr/local/texlive/2019/texmf-dist/tex/latex/amsmath/amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0 generic functions
+\@emptytoks=\toks16
+\ex@=\dimen102
+)
+LaTeX Info: Redefining \text on input line 28.
+)
+(/usr/local/texlive/2019/texmf-dist/tex/latex/amsmath/amsbsy.sty
+Package: amsbsy 1999/11/29 v1.2d Bold Symbols
+\pmbraise@=\dimen103
+)
+(/usr/local/texlive/2019/texmf-dist/tex/latex/amsmath/amsopn.sty
+Package: amsopn 2016/03/08 v2.02 operator names
+)
+\inf@bad=\count96
+LaTeX Info: Redefining \frac on input line 223.
+\uproot@=\count97
+\leftroot@=\count98
+LaTeX Info: Redefining \overline on input line 385.
+\classnum@=\count99
+\DOTSCASE@=\count100
+LaTeX Info: Redefining \ldots on input line 482.
+LaTeX Info: Redefining \dots on input line 485.
+LaTeX Info: Redefining \cdots on input line 606.
+\Mathstrutbox@=\box42
+\strutbox@=\box43
+\big@size=\dimen104
+LaTeX Font Info:    Redeclaring font encoding OML on input line 729.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 730.
+\macc@depth=\count101
+\c@MaxMatrixCols=\count102
+\dotsspace@=\muskip11
+\c@parentequation=\count103
+\dspbrk@lvl=\count104
+\tag@help=\toks17
+\row@=\count105
+\column@=\count106
+\maxfields@=\count107
+\andhelp@=\toks18
+\eqnshift@=\dimen105
+\alignsep@=\dimen106
+\tagshift@=\dimen107
+\tagwidth@=\dimen108
+\totwidth@=\dimen109
+\lineht@=\dimen110
+\@envbody=\toks19
+\multlinegap=\skip47
+\multlinetaggap=\skip48
+\mathdisplay@stack=\toks20
+LaTeX Info: Redefining \[ on input line 2844.
+LaTeX Info: Redefining \] on input line 2845.
+)
+(/usr/local/texlive/2019/texmf-dist/tex/latex/amsfonts/amsfonts.sty
+Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
+LaTeX Info: Redefining \frak on input line 111.
+LaTeX Info: Redefining \Bbb on input line 113.
+)
+(/usr/local/texlive/2019/texmf-dist/tex/latex/amsfonts/amssymb.sty
+Package: amssymb 2013/01/14 v3.01 AMS font symbols
+)
+(/usr/local/texlive/2019/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 2017/06/01 v1.1a Enhanced LaTeX Graphics (DPC,SPQR)
+
+(/usr/local/texlive/2019/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
+\KV@toks@=\toks21
+)
+(/usr/local/texlive/2019/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2017/06/25 v1.2c Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/local/texlive/2019/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 2016/01/03 v1.10 sin cos tan (DPC)
+)
+(/usr/local/texlive/2019/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 99.
+
+(/usr/local/texlive/2019/texmf-dist/tex/latex/graphics-def/pdftex.def
+File: pdftex.def 2018/01/08 v1.0l Graphics/color driver for pdftex
+))
+\Gin@req@height=\dimen111
+\Gin@req@width=\dimen112
+)
+(/usr/local/texlive/2019/texmf-dist/tex/latex/graphics/color.sty
+Package: color 2016/07/10 v1.1e Standard LaTeX Color (DPC)
+
+(/usr/local/texlive/2019/texmf-dist/tex/latex/graphics-cfg/color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package color Info: Driver file: pdftex.def on input line 147.
+)
+Class revtex4-1 Info: Patching LaTeX tabular. on input line 12.
+Class revtex4-1 Info: Robustifying \LaTeX's \boldmath command on input line 12.
+
+Class revtex4-1 Info: cite was not loaded (OK!) on input line 12.
+Class revtex4-1 Info: mcite was not loaded (OK!) on input line 12.
+Class revtex4-1 Info: multicol was not loaded (OK!) on input line 12.
+
+(./regression_NNtf.aux)
+\openout1 = `regression_NNtf.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+
+(/usr/local/texlive/2019/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count108
+\scratchdimen=\dimen113
+\scratchbox=\box44
+\nofMPsegments=\count109
+\nofMParguments=\count110
+\everyMPshowfont=\toks22
+\MPscratchCnt=\count111
+\MPscratchDim=\dimen114
+\MPnumerator=\count112
+\makeMPintoPDFobject=\count113
+\everyMPtoPDFconversion=\toks23
+) (/usr/local/texlive/2019/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
+Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
+
+(/usr/local/texlive/2019/texmf-dist/tex/generic/oberdiek/infwarerr.sty
+Package: infwarerr 2016/05/16 v1.4 Providing info/warning/error messages (HO)
+)
+(/usr/local/texlive/2019/texmf-dist/tex/latex/oberdiek/grfext.sty
+Package: grfext 2016/05/16 v1.2 Manage graphics extensions (HO)
+
+(/usr/local/texlive/2019/texmf-dist/tex/generic/oberdiek/kvdefinekeys.sty
+Package: kvdefinekeys 2016/05/16 v1.4 Define keys (HO)
+
+(/usr/local/texlive/2019/texmf-dist/tex/generic/oberdiek/ltxcmds.sty
+Package: ltxcmds 2016/05/16 v1.23 LaTeX kernel commands for general use (HO)
+)))
+(/usr/local/texlive/2019/texmf-dist/tex/latex/oberdiek/kvoptions.sty
+Package: kvoptions 2016/05/16 v3.12 Key value format for package options (HO)
+
+(/usr/local/texlive/2019/texmf-dist/tex/generic/oberdiek/kvsetkeys.sty
+Package: kvsetkeys 2016/05/16 v1.17 Key value parser (HO)
+
+(/usr/local/texlive/2019/texmf-dist/tex/generic/oberdiek/etexcmds.sty
+Package: etexcmds 2016/05/16 v1.6 Avoid name clashes with e-TeX commands (HO)
+
+(/usr/local/texlive/2019/texmf-dist/tex/generic/oberdiek/ifluatex.sty
+Package: ifluatex 2016/05/16 v1.4 Provides the ifluatex switch (HO)
+Package ifluatex Info: LuaTeX not detected.
+))))
+(/usr/local/texlive/2019/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
+Package: pdftexcmds 2018/09/10 v0.29 Utility functions of pdfTeX for LuaTeX (HO
+)
+
+(/usr/local/texlive/2019/texmf-dist/tex/generic/oberdiek/ifpdf.sty
+Package: ifpdf 2018/09/07 v3.3 Provides the ifpdf switch
+)
+Package pdftexcmds Info: LuaTeX not detected.
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+)
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
+38.
+Package grfext Info: Graphics extension search list:
+(grfext)             [.pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPE
+G,.JBIG2,.JB2,.eps]
+(grfext)             \AppendGraphicsExtensions on input line 456.
+
+(/usr/local/texlive/2019/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
+e
+))
+\openout3 = `regression_NNtfNotes.bib'.
+
+
+
+Class revtex4-1 Warning: Assuming \noaffiliation for authors.
+
+LaTeX Font Info:    Try loading font information for U+msa on input line 29.
+(/usr/local/texlive/2019/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Try loading font information for U+msb on input line 29.
+
+(/usr/local/texlive/2019/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+)
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 35.
+
+(/usr/local/texlive/2019/texmf-dist/tex/latex/base/omscmr.fd
+File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 35.
+
+Underfull \hbox (badness 3780) in paragraph at lines 64--66
+ []\OT1/cmr/m/n/10 loss func-tion: \OT1/cmtt/m/n/10 MeanSquaredError() \OT1/cmr
+/m/n/10 (see
+ []
+
+<./Figs/out_activation_function.png, id=1, 651.43375pt x 517.935pt>
+File: ./Figs/out_activation_function.png Graphic file (type png)
+<use ./Figs/out_activation_function.png>
+Package pdftex.def Info: ./Figs/out_activation_function.png  used on input line
+ 120.
+(pdftex.def)             Requested size: 117.29277pt x 105.26851pt.
+<./Figs/history_sigma5_layers20+20.png, id=2, 299.1175pt x 302.12875pt>
+File: ./Figs/history_sigma5_layers20+20.png Graphic file (type png)
+<use ./Figs/history_sigma5_layers20+20.png>
+Package pdftex.def Info: ./Figs/history_sigma5_layers20+20.png  used on input l
+ine 121.
+(pdftex.def)             Requested size: 117.29889pt x 110.96529pt.
+[1{/usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+
+LaTeX Warning: No positions in optional float specifier.
+               Default added (so using `tbp') on input line 183.
+
+<./Figs/v0c0_regression.png, id=22, 1488.56125pt x 986.68625pt>
+File: ./Figs/v0c0_regression.png Graphic file (type png)
+<use ./Figs/v0c0_regression.png>
+Package pdftex.def Info: ./Figs/v0c0_regression.png  used on input line 185.
+(pdftex.def)             Requested size: 484.49844pt x 321.151pt.
+<./Figs/v0c0_regression_noise.png, id=23, 1473.505pt x 992.70876pt>
+File: ./Figs/v0c0_regression_noise.png Graphic file (type png)
+<use ./Figs/v0c0_regression_noise.png>
+Package pdftex.def Info: ./Figs/v0c0_regression_noise.png  used on input line 1
+86.
+(pdftex.def)             Requested size: 484.49844pt x 326.39825pt.
+
+LaTeX Warning: Float too large for page by 21.79926pt on input line 192.
+
+
+LaTeX Warning: No positions in optional float specifier.
+               Default added (so using `tbp') on input line 194.
+
+<./Figs/v1c0_regression.png, id=24, 1488.56125pt x 988.69376pt>
+File: ./Figs/v1c0_regression.png Graphic file (type png)
+<use ./Figs/v1c0_regression.png>
+Package pdftex.def Info: ./Figs/v1c0_regression.png  used on input line 196.
+(pdftex.def)             Requested size: 484.49844pt x 321.80443pt.
+<./Figs/v1c0_regression_noise.png, id=25, 1479.5275pt x 992.70876pt>
+File: ./Figs/v1c0_regression_noise.png Graphic file (type png)
+<use ./Figs/v1c0_regression_noise.png>
+Package pdftex.def Info: ./Figs/v1c0_regression_noise.png  used on input line 1
+97.
+(pdftex.def)             Requested size: 484.49844pt x 325.08041pt.
+
+LaTeX Warning: Float too large for page by 21.13484pt on input line 203.
+
+
+LaTeX Warning: No positions in optional float specifier.
+               Default added (so using `tbp') on input line 251.
+
+<./Figs/crossval_v0c0_R2mean.png, id=26, 735.74875pt x 279.0425pt>
+File: ./Figs/crossval_v0c0_R2mean.png Graphic file (type png)
+<use ./Figs/crossval_v0c0_R2mean.png>
+Package pdftex.def Info: ./Figs/crossval_v0c0_R2mean.png  used on input line 25
+3.
+(pdftex.def)             Requested size: 229.49844pt x 87.03876pt.
+<./Figs/crossval_v0c0_R2m1.png, id=27, 735.74875pt x 279.0425pt>
+File: ./Figs/crossval_v0c0_R2m1.png Graphic file (type png)
+<use ./Figs/crossval_v0c0_R2m1.png>
+Package pdftex.def Info: ./Figs/crossval_v0c0_R2m1.png  used on input line 255.
+
+(pdftex.def)             Requested size: 229.49844pt x 87.03876pt.
+<./Figs/crossval_v0c0_R2m2.png, id=28, 735.74875pt x 279.0425pt>
+File: ./Figs/crossval_v0c0_R2m2.png Graphic file (type png)
+<use ./Figs/crossval_v0c0_R2m2.png>
+Package pdftex.def Info: ./Figs/crossval_v0c0_R2m2.png  used on input line 256.
+
+(pdftex.def)             Requested size: 229.49844pt x 87.03876pt.
+<./Figs/crossval_v0c0_R2s1x.png, id=29, 735.74875pt x 279.0425pt>
+File: ./Figs/crossval_v0c0_R2s1x.png Graphic file (type png)
+<use ./Figs/crossval_v0c0_R2s1x.png>
+Package pdftex.def Info: ./Figs/crossval_v0c0_R2s1x.png  used on input line 258
+.
+(pdftex.def)             Requested size: 229.49844pt x 87.03876pt.
+<./Figs/crossval_v0c0_R2s1y.png, id=30, 735.74875pt x 279.0425pt>
+File: ./Figs/crossval_v0c0_R2s1y.png Graphic file (type png)
+<use ./Figs/crossval_v0c0_R2s1y.png>
+Package pdftex.def Info: ./Figs/crossval_v0c0_R2s1y.png  used on input line 259
+.
+(pdftex.def)             Requested size: 229.49844pt x 87.03876pt.
+<./Figs/crossval_v0c0_R2s1z.png, id=31, 735.74875pt x 279.0425pt>
+File: ./Figs/crossval_v0c0_R2s1z.png Graphic file (type png)
+<use ./Figs/crossval_v0c0_R2s1z.png>
+Package pdftex.def Info: ./Figs/crossval_v0c0_R2s1z.png  used on input line 261
+.
+(pdftex.def)             Requested size: 229.49844pt x 87.03876pt.
+<./Figs/crossval_v0c0_R2s2x.png, id=32, 735.74875pt x 279.0425pt>
+File: ./Figs/crossval_v0c0_R2s2x.png Graphic file (type png)
+<use ./Figs/crossval_v0c0_R2s2x.png>
+Package pdftex.def Info: ./Figs/crossval_v0c0_R2s2x.png  used on input line 262
+.
+(pdftex.def)             Requested size: 229.49844pt x 87.03876pt.
+<./Figs/crossval_v0c0_R2s2y.png, id=33, 735.74875pt x 279.0425pt>
+File: ./Figs/crossval_v0c0_R2s2y.png Graphic file (type png)
+<use ./Figs/crossval_v0c0_R2s2y.png>
+Package pdftex.def Info: ./Figs/crossval_v0c0_R2s2y.png  used on input line 264
+.
+(pdftex.def)             Requested size: 229.49844pt x 87.03876pt.
+<./Figs/crossval_v0c0_R2s2z.png, id=34, 735.74875pt x 279.0425pt>
+File: ./Figs/crossval_v0c0_R2s2z.png Graphic file (type png)
+<use ./Figs/crossval_v0c0_R2s2z.png>
+Package pdftex.def Info: ./Figs/crossval_v0c0_R2s2z.png  used on input line 265
+.
+(pdftex.def)             Requested size: 229.49844pt x 87.03876pt.
+<./Figs/crossval_v0c0_R2theta.png, id=35, 735.74875pt x 279.0425pt>
+File: ./Figs/crossval_v0c0_R2theta.png Graphic file (type png)
+<use ./Figs/crossval_v0c0_R2theta.png>
+Package pdftex.def Info: ./Figs/crossval_v0c0_R2theta.png  used on input line 2
+67.
+(pdftex.def)             Requested size: 229.49844pt x 87.03876pt.
+<./Figs/crossval_v0c0_R2q.png, id=36, 735.74875pt x 279.0425pt>
+File: ./Figs/crossval_v0c0_R2q.png Graphic file (type png)
+<use ./Figs/crossval_v0c0_R2q.png>
+Package pdftex.def Info: ./Figs/crossval_v0c0_R2q.png  used on input line 268.
+(pdftex.def)             Requested size: 229.49844pt x 87.03876pt.
+<./Figs/crossval_v0c0_R2Mc.png, id=37, 735.74875pt x 279.0425pt>
+File: ./Figs/crossval_v0c0_R2Mc.png Graphic file (type png)
+<use ./Figs/crossval_v0c0_R2Mc.png>
+Package pdftex.def Info: ./Figs/crossval_v0c0_R2Mc.png  used on input line 270.
+
+(pdftex.def)             Requested size: 229.49844pt x 87.03876pt.
+[2 <./Figs/out_activation_function.png (PNG copy)> <./Figs/history_sigma5_layer
+s20+20.png>] [3 <./Figs/v0c0_regression.png> <./Figs/v0c0_regression_noise.png>
+]
+
+LaTeX Warning: A float is stuck (cannot be placed); try class option [floatfix]
+ on input line 281.
+
+
+Class revtex4-1 Warning: Deferred float stuck during \clearpage processing.
+
+[4 <./Figs/v1c0_regression.png> <./Figs/v1c0_regression_noise.png>]
+
+LaTeX Warning: A float is stuck (cannot be placed); try class option [floatfix]
+ on input line 281.
+
+
+Class revtex4-1 Warning: Deferred float stuck during \clearpage processing.
+
+[5 <./Figs/crossval_v0c0_R2mean.png> <./Figs/crossval_v0c0_R2m1.png> <./Figs/cr
+ossval_v0c0_R2m2.png> <./Figs/crossval_v0c0_R2s1x.png> <./Figs/crossval_v0c0_R2
+s1y.png> <./Figs/crossval_v0c0_R2s1z.png> <./Figs/crossval_v0c0_R2s2x.png> <./F
+igs/crossval_v0c0_R2s2y.png> <./Figs/crossval_v0c0_R2s2z.png> <./Figs/crossval_
+v0c0_R2theta.png> <./Figs/crossval_v0c0_R2q.png> <./Figs/crossval_v0c0_R2Mc.png
+>]
+
+LaTeX Warning: No positions in optional float specifier.
+               Default added (so using `tbp') on input line 284.
+
+<./Figs/GstLAL_paperlike_m1m2.png, id=72, 739.76375pt x 602.25pt>
+File: ./Figs/GstLAL_paperlike_m1m2.png Graphic file (type png)
+<use ./Figs/GstLAL_paperlike_m1m2.png>
+Package pdftex.def Info: ./Figs/GstLAL_paperlike_m1m2.png  used on input line 2
+86.
+(pdftex.def)             Requested size: 229.49844pt x 186.8334pt.
+
+LaTeX Warning: No positions in optional float specifier.
+               Default added (so using `tbp') on input line 316.
+
+<./Figs/GstLAL_regression.png, id=73, 1297.84875pt x 550.055pt>
+File: ./Figs/GstLAL_regression.png Graphic file (type png)
+<use ./Figs/GstLAL_regression.png>
+Package pdftex.def Info: ./Figs/GstLAL_regression.png  used on input line 318.
+(pdftex.def)             Requested size: 484.49844pt x 205.33847pt.
+<./Figs/GstLAL_regression_noise.png, id=74, 1292.83pt x 545.03625pt>
+File: ./Figs/GstLAL_regression_noise.png Graphic file (type png)
+<use ./Figs/GstLAL_regression_noise.png>
+Package pdftex.def Info: ./Figs/GstLAL_regression_noise.png  used on input line
+ 319.
+(pdftex.def)             Requested size: 484.49844pt x 204.25502pt.
+<./Figs/GstLAL_m2.png, id=75, 275.0275pt x 318.18875pt>
+File: ./Figs/GstLAL_m2.png Graphic file (type png)
+<use ./Figs/GstLAL_m2.png>
+Package pdftex.def Info: ./Figs/GstLAL_m2.png  used on input line 320.
+(pdftex.def)             Requested size: 158.09875pt x 182.9134pt.
+<./Figs/GstLAL_Mc.png, id=76, 275.0275pt x 318.18875pt>
+File: ./Figs/GstLAL_Mc.png Graphic file (type png)
+<use ./Figs/GstLAL_Mc.png>
+Package pdftex.def Info: ./Figs/GstLAL_Mc.png  used on input line 321.
+(pdftex.def)             Requested size: 158.09875pt x 182.9134pt.
+<./Figs/GstLAL_q.png, id=77, 275.0275pt x 318.18875pt>
+File: ./Figs/GstLAL_q.png Graphic file (type png)
+<use ./Figs/GstLAL_q.png>
+Package pdftex.def Info: ./Figs/GstLAL_q.png  used on input line 322.
+(pdftex.def)             Requested size: 158.09875pt x 182.9134pt.
+[6 <./Figs/GstLAL_paperlike_m1m2.png>] [7 <./Figs/GstLAL_regression.png> <./Fig
+s/GstLAL_regression_noise.png> <./Figs/GstLAL_m2.png> <./Figs/GstLAL_Mc.png> <.
+/Figs/GstLAL_q.png>]
+
+LaTeX Warning: No positions in optional float specifier.
+               Default added (so using `tbp') on input line 450.
+
+<./Figs/GstLAL_p_regression.png, id=92, 1297.84875pt x 550.055pt>
+File: ./Figs/GstLAL_p_regression.png Graphic file (type png)
+<use ./Figs/GstLAL_p_regression.png>
+Package pdftex.def Info: ./Figs/GstLAL_p_regression.png  used on input line 452
+.
+(pdftex.def)             Requested size: 382.5pt x 162.10535pt.
+<./Figs/GstLAL_p_regression_noise.png, id=93, 1301.86375pt x 555.07375pt>
+File: ./Figs/GstLAL_p_regression_noise.png Graphic file (type png)
+<use ./Figs/GstLAL_p_regression_noise.png>
+Package pdftex.def Info: ./Figs/GstLAL_p_regression_noise.png  used on input li
+ne 453.
+(pdftex.def)             Requested size: 382.5pt x 163.08469pt.
+<./Figs/GstLAL_p_m2.png, id=94, 275.0275pt x 318.18875pt>
+File: ./Figs/GstLAL_p_m2.png Graphic file (type png)
+<use ./Figs/GstLAL_p_m2.png>
+Package pdftex.def Info: ./Figs/GstLAL_p_m2.png  used on input line 454.
+(pdftex.def)             Requested size: 158.09875pt x 182.9134pt.
+<./Figs/GstLAL_p_Mc.png, id=95, 275.0275pt x 318.18875pt>
+File: ./Figs/GstLAL_p_Mc.png Graphic file (type png)
+<use ./Figs/GstLAL_p_Mc.png>
+Package pdftex.def Info: ./Figs/GstLAL_p_Mc.png  used on input line 455.
+(pdftex.def)             Requested size: 158.09875pt x 182.9134pt.
+<./Figs/GstLAL_p_q.png, id=96, 275.0275pt x 318.18875pt>
+File: ./Figs/GstLAL_p_q.png Graphic file (type png)
+<use ./Figs/GstLAL_p_q.png>
+Package pdftex.def Info: ./Figs/GstLAL_p_q.png  used on input line 456.
+(pdftex.def)             Requested size: 158.09875pt x 182.9134pt.
+<./Figs/GstLAL_p_m1m2.png, id=97, 387.4475pt x 262.9825pt>
+File: ./Figs/GstLAL_p_m1m2.png Graphic file (type png)
+<use ./Figs/GstLAL_p_m1m2.png>
+Package pdftex.def Info: ./Figs/GstLAL_p_m1m2.png  used on input line 457.
+(pdftex.def)             Requested size: 229.49844pt x 155.77629pt.
+<./Figs/GstLAL_standard_m1m2.png, id=98, 387.4475pt x 262.9825pt>
+File: ./Figs/GstLAL_standard_m1m2.png Graphic file (type png)
+<use ./Figs/GstLAL_standard_m1m2.png>
+Package pdftex.def Info: ./Figs/GstLAL_standard_m1m2.png  used on input line 45
+9.
+(pdftex.def)             Requested size: 229.49844pt x 155.77629pt.
+
+LaTeX Warning: Float too large for page by 82.12973pt on input line 475.
+
+No file regression_NNtf.bbl.
+[8] [9 <./Figs/GstLAL_p_regression.png> <./Figs/GstLAL_p_regression_noise.png> 
+<./Figs/GstLAL_p_m2.png> <./Figs/GstLAL_p_Mc.png> <./Figs/GstLAL_p_q.png> <./Fi
+gs/GstLAL_p_m1m2.png> <./Figs/GstLAL_standard_m1m2.png>] (./regression_NNtf.aux
+) ) 
+Here is how much of TeX's memory you used:
+ 4539 strings out of 492616
+ 62910 string characters out of 6129481
+ 177320 words of memory out of 5000000
+ 8366 multiletter control sequences out of 15000+600000
+ 10342 words of font info for 41 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 41i,10n,25p,1286b,345s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pf
+b></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb
+></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb><
+/usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></
+usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></u
+sr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr
+/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/l
+ocal/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/loc
+al/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/local
+/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/t
+exlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/texl
+ive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive
+/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/20
+19/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2019/
+texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2019/t
+exmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2019/tex
+mf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2019/texmf
+-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2019/texmf-
+dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
+Output written on regression_NNtf.pdf (9 pages, 2843932 bytes).
+PDF statistics:
+ 172 PDF objects out of 1000 (max. 8388607)
+ 80 compressed objects within 1 object stream
+ 0 named destinations out of 1000 (max. 500000)
+ 156 words of extra memory for PDF output out of 10000 (max. 10000000)
+
