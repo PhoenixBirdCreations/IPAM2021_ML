@@ -56,7 +56,7 @@ def categorize(m1i, m2i):
     #4 categories
     vector=np.where(np.logical_and(m1i <= 3, m2i <=3), 0, 5)
     vector=np.where(np.logical_and(m1i >= 5, m2i >=5), 3, vector)
-    vector=np.where(np.logical_and(m1i >= 5, m2i <=5), 2, vector)
+    vector=np.where(np.logical_or(np.logical_and(m1i >= 5, m2i <=5),np.logical_and(m2i >= 5, m1i <=5)), 2, vector) #bc from massgap dataset m1<m2 in some rows
     label_4cat=np.where(np.logical_or(np.logical_and(m1i > 3, m1i <5),np.logical_and(m2i > 3, m2i < 5)), 1, vector)
     print("Four categories: 0 - m1&m2<3 (BNS),  1 - Mass Gap,  2 - m1>5 & m2<3 (NSBH) ,  3 - m1&m2>5 (BBH)")
     unique, counts = np.unique(label_4cat, return_counts=True)
@@ -71,7 +71,9 @@ def createJointDataset():
     test_BNS = readfile(pathBNS + 'test_NS.csv', False)
     massgap = readfile(pathHere + 'massgap.csv', True)
     
-    N = len(massgap);
+    massgap = massgap[np.where(massgap[:,13] < 3.86e-7)[0], :]  #cut on combined FAR
+    
+    N = len(massgap); print(N, "massgap events after FAR cut")
     test_N = int(np.floor(0.3*N));
     train_N = N - test_N
     print("Adding ", train_N, " samples in the mass gap to training")
@@ -91,7 +93,7 @@ def createJointDataset():
     BNS_snr = 18
     
     MG_m1_inj = 0
-    MG_m2_inj = 1
+    MG_m2_inj = 1 #source frame. Not always m1>m2
     MG_m1_rec = 8
     MG_m2_rec = 9 
     MG_chi1_rec = 10
@@ -121,10 +123,12 @@ def createJointDataset():
     chi2 = 5
     snr = 6
     
+    print("----Training dataset----")
     m1i = Train[:,m1_inj]
     m2i = Train[:,m2_inj]
     label_train_2, label_train_3, label_train_4 = categorize(m1i, m2i)
-          
+    
+    print("----Testing dataset----")
     m1i = Test[:,m1_inj]
     m2i = Test[:,m2_inj]
     label_test_2, label_test_3, label_test_4 = categorize(m1i, m2i)
