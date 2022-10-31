@@ -79,7 +79,7 @@ def split_GstLAL_data(X, features='mass&spin', m1_cutoff=None, Mc_min=None):
         rec = np.column_stack((m1_rec,chi1_rec,chi2_rec,mc_rec))
         names = [r'$m_1$', r'$\chi_1$', r'$\chi_2$', r'${\cal M}_c$']
     
-    elif features=='mass&spin2':
+    elif features=='m1m2chi1chi2':
         m1_inj          = X[:, 1]
         m2_inj          = X[:, 2]
         chi1_inj        = X[:, 3]

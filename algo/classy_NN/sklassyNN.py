@@ -151,8 +151,10 @@ class RegressionNN:
         if seed is None:
             seed = np.random.randint(1,10000)
         self.seed = seed
+        
         if model2load is not None:
             self.__load_model(model2load, verbose=verbose)
+        return
 
     def __check_attributes(self, attr_list):
         """ Check that all the attributes in the list are defined.
@@ -250,7 +252,9 @@ class RegressionNN:
             alpha               = learning_rate,
             verbose             = verbose,
             random_state        = self.seed,
-            validation_fraction = validation_split)
+            validation_fraction = validation_split,
+            shuffle             = False,
+            warm_start          = True)
 
         model = MyLPRegressor.fit(self.xtrain, self.ytrain)
 
