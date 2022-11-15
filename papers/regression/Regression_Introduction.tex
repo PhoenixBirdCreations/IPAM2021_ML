@@ -1,5 +1,52 @@
 \section{Introduction}
-In our introduction we want to start from big picture (LIGO, ML, pipelines)
-and narrow down to what work we are presenting here and why it is important. We
-also describe in which ways it is novel and how it compares to previous works
-like in~\cite{Chatterjee:2019avs}. We may also want to cite~\cite{Sachdev:2020lfd}. 
+% mention BNS Fermi EM observation?
+\lorena{More than seven years ago, the first gravitational wave (GW) from a compact
+binary coalescence (CBC) was detected by the Laser Interferometer 
+Gravitational-wave Observatory (LIGO)~\cite{LIGOScientific:2016aoc}. Ever 
+since that first detection, the LIGO-Virgo-KAGRA (LVK) detector network has 
+brought us to a total of more than 90 confident GW 
+detections~\cite{LIGOScientific:2021djpq}. The sources of these detections 
+originate from binary black hole (BBH) systems, binary neutron star (BNS) 
+systems, and neutron star-black hole (NSBH) binaries. With the increased 
+detector sensitivity in the fourth observing run (O4), the LVK is expected to 
+detect as many as one GW signal per day~\cite{KAGRA:2013rdx}. This will 
+require a quick turn-around time for analyses and results, prompting an
+increase in automation of searches, data quality algorithms, and parameter
+estimation (PE) pipelines.}
+
+\lorena{In order to rapidly estimate the intrinsic and extrinsic parameters of CBC 
+signals,the LVK detection pipelines use a technique called matched-filtering. 
+This method takes the observed signal and matches it with a best-fit waveform
+derived from general relativity. However, more accurate results on the source
+parameters necessitates a follow-up with PE algorithms. These algorithms are 
+robust but can take hours or days to run. This can be problematic when the 
+signal observed comes from a system that radiates energy in the 
+electromagnetic (EM) spectrum. Recent improvements in Bayesian techniques for 
+PE have reduced the time needed to estimate the source parameters of a GW
+detection~\cite{Ashton:2021anp,Wofford:2022ykb} and proposed machine learning 
+(ML) algorithms promise to further reduce this latency by several orders of 
+magnitude~\cite{Gabbard:2019rde}. Current online results using 
+Bilby~\cite{Ashton:2018jfp} and RapidPE-RIFT~\cite{Lange:2018pyp} have 
+decreased the time required for PE in low latency to be $\sim 10$ minutes. This 
+result is obtained by suitably narrowing the PE priors and choosing aggresive 
+sample settings. Nevertheless, there is still much to gain by reducing the 
+latency of online PE even more. During O4, the LVK is planning to issue 
+preliminary alerts for candidate detections seconds after the merger, and in
+some cases, an early warning alert with information on sky localization may be 
+issued~\cite{LVPublicAlerts}. Providing a higher level of accuracy at low 
+latency will allow us to better estimate the time and peak luminosity of the 
+afterglow emission in the case of a coincident EM signal.}
+%mention our astronomy partners? 
+
+%Introduce our work
+\lorena{In this work, we present a novel approach to low latency PE using ML alongside 
+the output of detection pipelines.}
+
+
+%In our introduction we want to start from big picture (LIGO, ML, pipelines)
+%and narrow down to what work we are presenting here and why it is important. We
+%also describe in which ways it is novel and how it compares to previous works
+%like in~\cite{Chatterjee:2019avs}. We may also want to cite~\cite{Sachdev:2020lfd}
+
+\lorena{This paper is organized as follows.  In Sec. X we describe how the data is
+prepared in order to be fed into GPR and NN.}
