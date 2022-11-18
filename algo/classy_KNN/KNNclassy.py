@@ -21,6 +21,7 @@ sys.path.insert(0, "/Users/miquelmiravet/Projects/IPAM_LA/ML_group/IPAM2021_ML/u
 import utils as ut
 import fancyplots as fp
 import realistic
+import sys
 
 import seaborn as sns
 from matplotlib.ticker import PercentFormatter
@@ -251,17 +252,16 @@ class ClassificationKNN:
         self.PREC = precision[1]
         f1 = 2*precision*sens/(precision+sens)
         self.F1 = f1[1]
-        #fp.plotROC(ytest, proba1d)
-        fp.plotPRC(ytest, proba1d)
-        plt.savefig('/Users/miquelmiravet/Projects/IPAM_LA/ML_group/KNN_miq/ipam_'+KNN.label+'_set/plots_miq/PRCplot_'+KNN.label+'.pdf')
-
+        fp.plotROC(ytest, proba1d, KNN.label, True)
+        #fp.plotPRC(ytest, proba1d)
+       
         return
 
 #######################################################################
 
 if __name__ == '__main__':
 
-    KNN = ClassificationKNN('NS')
+    KNN = ClassificationKNN(sys.argv[1])
 
     path = "/Users/miquelmiravet/Projects/IPAM_LA/ML_group/KNN_miq/"
 

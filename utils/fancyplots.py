@@ -331,7 +331,7 @@ def probLabelDensePlot(model, label_idx=0, mass_range=[1,3],  N=30000, idx_m1=0,
         plt.close()
     return
 
-def plotROC(ytrue, prob_of_label, show=True):
+def plotROC(ytrue, prob_of_label,label,save =False):
     """
     Improve me! prob_of_label is the probability of having a certain
     label (i.e. is a 1D vector)
@@ -342,8 +342,8 @@ def plotROC(ytrue, prob_of_label, show=True):
     plt.colorbar(sc)
     plt.xlabel("false positive rate", fontsize=14)
     plt.ylabel("true positive rate",  fontsize=14)
-    if show:
-        plt.show()
+    if save: 
+        plt.savefig('/Users/miquelmiravet/Projects/IPAM_LA/ML_group/KNN_miq/ipam_'+label+'_set/plots_miq/ROCplot_'+label+'.pdf',bbox_inches = 'tight')
     else:
         plt.close()
     return
