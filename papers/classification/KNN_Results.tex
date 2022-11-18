@@ -28,19 +28,46 @@
 \begin{figure}
     \includegraphics[width = 0.4\textwidth]{plot_fig4_chatt_spins.png}
   %   \includegraphics[width = 0.4\textwidth]{/Users/miquelmiravet/Projects/IPAM_LA/ML_group/IPAM2021_ML/algo/classy_KNN/PLOTS_KNN/NS_set/plots_miq/plot_fig4_chatt_snr.png}
-    \caption{Probability of having a remnant as a function of the values of the masses. The different panels show the results for different spins. The solid red line depicts the threshold mass for $m_2$.}
+    \caption{Probability of having a neutron star in the binary system as a function of the values of the masses. The different panels show the results for different spins. The solid red line depicts the threshold mass for $m_2$.}
     \label{fig:m1m2}
 \end{figure}
 
 \begin{figure}
-	\includegraphics[width =0.4\textwidth]{ROCplot.pdf}
-    \caption{Relation of the true and false positive rates as a function of the threshold applied to make the decision between having or not having a remnant. }
+	\includegraphics[width =0.4\textwidth]{ROCplot_NS.pdf}
+    \caption{Relation of the true and false positive rates as a function of the threshold applied to make the decision between having or not having a neutron star. }
     \label{fig:roc}
 \end{figure}
 
 \mmt{The confusion matrix appears in Fig.~\ref{fig:confmat}. It depicts that the number of events that are correctly classified when there is a NS is much higher than the ones without a NS. The probability as a function of $m_1$ and $m_2$  is shown in Figs.~\ref{fig:m1m2}, There are no big differences with different values of the spins, but the most remarkable one is that the model classifies better for 0-spin values, especially when $m_1$ is large. The true and false positive rates in terms of the threshold probability (ROC curve) appear in Fig.~\ref{fig:roc}.}
 
 \subsubsection{\mmt{Has REM}}
-\mmt{In order to classify the events between having or not a post-merger remnant and therefore a likely EM emission, we apply again the cross validation to get the optimal number of neighbors, which turns out to be $K_{\rm REM} = 6$. }
+\mmt{In order to classify the events between having or not a post-merger remnant and therefore a likely EM emission, we apply again the cross validation to get the optimal number of neighbors, which turns out to be $K_{\rm REM} = 6$. Fig.~\ref{fig:crossvalK_REM} shows the dependence of the mean score with $K$ for this label. In this case, it is clearer that the score peaks at a certain value of $K$. Another hyperparameter that we change is the way the neighbors are weighted; in this case, we weight them with the inverse of the distance. } 
 
+\begin{figure}
+    \includegraphics[width = 0.4\textwidth]{CrossValK_REM.pdf}
+    \caption{Score of our KNN model as a function of the number of neighbors. We are considering \textit{HasREM}.}
+    \label{fig:crossvalK_REM}
+\end{figure}
+
+\begin{figure}
+    \includegraphics[width=0.45\textwidth]{conf_matrix_REM.pdf}
+    \caption{Confusion matrix for our model for \textit{HasREM}, using the independent recovered values. }
+    \label{fig:confmat_REM}
+\end{figure}
+
+\mmt{The confusion matrix depicted in Fig.~\ref{fig:confmat_REM} shows that the algorithm classifies correctly those events that do not have any remnant after the merger. On the other hand, it has more problems when classifying events with a post-merger remnant, i.e., with at least a neutron star with a mass $M_{\rm NS} \lesssim 2.83$ $M_{\odot}$ [MMT: Maybe this should go somewhere else]. There is also a dependence on the value of the spin that can be seen in Fig.~\ref{fig:m1m2_REM} [MMT:it would be nice to use the plots with the red line that Marina got].This dependence is correct, since the probability of having a remnant increases for large values of $m_1$ at larger spin, but this dependence is given by the EOS.  We show in Fig.~\ref{fig:roc_REM} the ROC curve for this new case.}
+
+\begin{figure}
+    \includegraphics[width = 0.4\textwidth]{plot_fig4_chatt_spins_REM.png}
+    \caption{Probability of having a remnant as a function of the values of the masses. The different panels show the results for different spins. }
+    \label{fig:m1m2_REM}
+\end{figure}
+
+\begin{figure}
+	\includegraphics[width =0.4\textwidth]{ROCplot_REM.pdf}
+    \caption{As in Fig.~\ref{fig:roc}, we show the relation of the true and false positive rates, but in this case as a function of the threshold applied to make the decision between having or not having a remnant object. }
+    \label{fig:roc_REM}
+\end{figure}
+
+\mmt{[MMT: Nothing more to show here. These are the results I got for our KNN. It would be nice to plot the ROC curves for KNN and RF all together, and also the confussion matrices. I would like also to put a table comparing the different values of precision, sensitivity and score for both algorithms. More tests are needed with new datasets for KNN if we want an updated comparison.]}
 
