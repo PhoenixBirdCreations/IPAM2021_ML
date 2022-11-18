@@ -1,25 +1,30 @@
-\section{Data Conditioning}
-\label{sec:conditioning}
+\section{Binary System Data}
+\label{sec:data}
+
 % Mention approximants used for the template bank? or instead mentioned ranges
 % of template bank parameter space?
-\lorena{The training and testing datasets represent $\sim 200,000$ binary
-systems comprised of BBHs, BNSs, and NSBHs. The injections of these systems 
-come from the Mock Data Challenge (MDC) conducted during LIGO's second 
-observing run (O2) and are recovered using \texttt{GstLAL}, a low-latency 
-detection pipeline. The data is divided into a training/testing breakdown 
-of $70\%/30\%$. Regression is applied to four features, namely the 
-initial masses $m_1$ and $m_2$ and initial spin magnitudes $\chi_1$ and 
-$\chi_2$. The training dataset has mass ranges $m_1 =  [1.02, 116]$ and 
-$m_2 =  [0.81, 81]$ and spin ranges $\chi_{1,2} =  [-0.99, 0.99]$, as 
-shown in Fig.~\ref{parameter_space}.}
+\lorena{The training dataset represents $\sim 140,000$ binary systems comprised
+of BBHs, BNSs, and NSBHs. The injections of these systems come from the Mock
+Data Challenge (MDC) conducted during LIGO's second observing run (O2) and are
+recovered using \texttt{GstLAL}, a low-latency detection pipeline. Regression is 
+applied to four features, namely the initial masses $m_1$ and $m_2$ and the initial 
+spin magnitudes $\chi_1$ and $\chi_2$. The training data has masses in the
+ranges  $m_1 = [1.02, 116]$ and $m_2 =  [0.81, 81]$ and spin components 
+$\chi_{1,2} =  [-0.99, 0.99]$, as shown in Fig.~\ref{parameter_space}.
+For testing we use two datasets. The first contains $60,000$ systems from the O2 
+MDC with injections recovered by \texttt{GstLAL}. The second is used as an
+additional test of model robustness as it contains $18,311$ systems from the O3 
+MDC which are recovered by the \texttt{PyCBC}, \texttt{GstLAL}, and 
+\texttt{MBTAOnline} pipelines. The number of triggers recovered by these 
+three detection pipelines are $8,742$, $7,221$, and $2,348$, respectively.}
+% plot with training, testing O2 and testing O3 distributions?
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.45\textwidth]{m1m2_chi1chi2_comparison.png}
-    \caption{\lorena{The $m_1$-$m_2$ (left) and $\chi_1$-$\chi_2$ (right) parameter space 
-		of injections is shown in red, the recovered
-  		values from matched-filtering are in blue, and the predicted values from 
-        regression are in green.}}
+	\includegraphics[width=0.45\textwidth]{training_parameter_space.png}
+    \caption{The $m_1$-$m_2$ (left) and $\chi_1$-$\chi_2$ (right) parameter space 
+		    of injections from the O2 MDC.
+            }
 	\label{parameter_space}
 \end{figure}
 
@@ -30,7 +35,7 @@ words, a prediction without proper data conditioning can result in negative
 masses and spin magnitudes greater than one. To avoid this, we first map the 
 data to be in the $(0,1)$ range by solving a simple, linear system of equations 
 separately for the masses and the spins. We, then, transform our data using a 
-sigmoid function so that the values map between $- \infty$ and $+ \infty$. It
+sigmoid function so that the values map between $(-\infty,+\infty)$. It
 is only at this point that the data is ready to be standardized and fed into
 GPR and NN. Once the algorithm gives us the predicted data, or the corrected
 paramters estimates, the reverse process is applied, i.e., the data is scaled 
