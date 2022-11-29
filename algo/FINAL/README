@@ -2,7 +2,7 @@
 
 Crossvalidation for searching the hyperparameters that get best score
 
-RF:  X trees, Y max depth,  Z criteria
+RF:  95 trees, 15 max depth,  entropy criteria
 
 KNN: X neighbors,  Y distance,  Z ???
 
