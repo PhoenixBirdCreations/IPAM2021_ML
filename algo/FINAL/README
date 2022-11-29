@@ -1,0 +1,12 @@
+3 label classification
+
+Crossvalidation for searching the hyperparameters that get best score
+
+RF:  X trees, Y max depth,  Z criteria
+
+KNN: X neighbors,  Y distance,  Z ???
+
+Computed for HasNS and HasREM separately:
+      ROC curves (png, exported [fp, tp, thr])
+      Histogram (png, exported [bins, counts])
+      TP, FP at thr= [0.1, 0.3, 0.5, 0.8, 0.95]
