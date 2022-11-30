@@ -276,8 +276,8 @@ class ClassificationRF:
     
     def ROC_NS(self, thr_wanted = [], figname="ROC_NS"):
         allprob = self.model.predict_proba(self.data_test)
-        v_prob_NS = 1-allprob[:,] 
-        events_have_NS = np.where((RF.labels_test==1) | (RF.labels_test==2))[0]
+        v_prob_NS = 1-allprob[:,0] 
+        events_have_NS = np.where((self.labels_test==1) | (self.labels_test==2))[0]
         N = len(events_have_NS)
         M = len(self.labels_test) - N
         threshold = np.linspace(0,1,101)[1:-1]
@@ -316,7 +316,7 @@ class ClassificationRF:
     def ROC_REM(self, thr_wanted = [], figname="ROC_REM"):
         allprob = self.model.predict_proba(self.data_test)
         v_prob_REM = allprob[:,2]
-        events_have_REM = np.where(RF.labels_test==2)[0]
+        events_have_REM = np.where(self.labels_test==2)[0]
         N = len(events_have_REM)
         M = len(self.labels_test) - N
         threshold = np.linspace(0,1,101)[1:-1]
