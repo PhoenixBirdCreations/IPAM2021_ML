@@ -10,3 +10,12 @@ Computed for HasNS and HasREM separately:
       ROC curves (png, exported [fp, tp, thr])
       Histogram (png, exported [bins, counts])
       TP, FP at thr= [0.1, 0.3, 0.5, 0.8, 0.95]
+
+
+RF Has NS:
+
+RF Has REM:
+Threshold  0.1 TP: 0.997, FP 0.030
+Threshold  0.3 TP: 0.991, FP 0.015
+Threshold  0.5 TP: 0.983, FP 0.009
+Threshold  0.8 TP: 0.954, FP 0.003
