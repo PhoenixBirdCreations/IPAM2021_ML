@@ -1,1 +1,13 @@
 \subsection{Neural Networks (NNs)}
+\simone{While deep NNs have been extensively used in recent years 
+for classification tasks, in this work we consider a NN for our regression analysis.
+We started by considering a NN implemented within the \texttt{TensorFlow} framework with 
+\texttt{Keras} backend in order to have more flexibility in building the architecture of our NN. 
+However we found that the best configurations between the ones tested is a standard
+NN with two hidden layers with 400 neurons each, \texttt{ReLU} activation function, 
+and a linear output function. Such configuration can be easily coded with \texttt{scikit-learn}
+using the \texttt{MLPRegressor}. Since the \texttt{scikit-learn} is already imported 
+in the LVK infrastructure, in the end we decide to use this framework.
+We train our NN for10 epochs using a batch size of 128, a learning rate of $10^{-3}$ and mean 
+square error (MSE) loss function. 
+}
