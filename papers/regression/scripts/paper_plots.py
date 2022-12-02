@@ -43,13 +43,13 @@ def plot_recovered_vs_predicted(data):
             ax.set_xlabel(r'injected', fontsize=20)
     #plt.legend()
     plt.subplots_adjust(wspace=0.4)
-    plt.show() 
     if data.savepng:
         figname = data.plots_prefix+'m_chi_comparisons.png'
         fullname = data.plots_dir+'/'+figname
         plt.savefig(figname,dpi=200,bbox_inches='tight')
         if data.verbose:
             print(figname, 'saved in', data.plots_dir)
+    plt.show() 
 
     return 
 
