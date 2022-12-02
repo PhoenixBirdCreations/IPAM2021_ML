@@ -25,6 +25,10 @@ def escapeLatex(text):
 # Plots 
 ###################################################
 def plot_recovered_vs_predicted(data):
+    """ Usual plot with injection on x-axis and 
+    recovered/predicted on y. data is the struct
+    produced in the main
+    """
     dot_size = 1
     edge_color_factor = 1
     fig, axs = plt.subplots(2,2,figsize = (8,8))
@@ -50,9 +54,60 @@ def plot_recovered_vs_predicted(data):
         if data.verbose:
             print(figname, 'saved in', data.plots_dir)
     plt.show() 
-
     return 
 
+def plot_parspace(data):
+    """ Plot injections
+    """
+    dot_size = 1
+    color    = [0.3,0.3,1]
+    fig, axs = plt.subplots(1,2,figsize=(9,5))
+    axs[0].scatter(data.inj[:,0], data.inj[:,1], s=dot_size, color=color)
+    axs[1].scatter(data.inj[:,2], data.inj[:,3], s=dot_size, color=color)
+    xlab1 = escapeLatex(data.var_names_tex[0])
+    ylab1 = escapeLatex(data.var_names_tex[1])
+    xlab2 = escapeLatex(data.var_names_tex[2])
+    ylab2 = escapeLatex(data.var_names_tex[3])
+    axs[0].set_xlabel(xlab1, fontsize=15)
+    axs[0].set_ylabel(ylab1, fontsize=15)
+    axs[1].set_xlabel(xlab2, fontsize=15)
+    axs[1].set_ylabel(ylab2, fontsize=15)
+    plt.subplots_adjust(wspace=0.4)
+    if data.savepng:
+        figname = data.plots_prefix+'parspace.png'
+        fullname = data.plots_dir+'/'+figname
+        plt.savefig(figname,dpi=200,bbox_inches='tight')
+        if data.verbose:
+            print(figname, 'saved in', data.plots_dir)
+    plt.show()
+    return
+
+def plot_histograms(data):
+    fig, axs = plt.subplots(2,2,figsize=(8,8))
+    color_rec  = np.array([0.7,0.7,0.7]);
+    color_pred = np.array([1,0.8,0]);
+    for i in range(NFEATURES):
+        ax = axs[int(i/2), i%2]
+        if data.var_names[i]=='chi1' or data.var_names[i]=='chi2':
+            y_rec  = data.stats['diffs_rec'][:,i]
+            y_pred = data.stats['diffs_pred'][:,i]
+        else:
+            y_rec  = data.stats['errors_rec'][:,i]
+            y_pred = data.stats['errors_pred'][:,i]
+        fmin  = -3
+        fmax  =  3
+        nbins = 30
+        fstep = (fmax-fmin)/nbins
+        ax.hist(y_rec, bins=np.arange(fmin, fmax, fstep), color=color_rec, histtype='bar', ec='black')
+        ax.hist(y_pred, bins=np.arange(fmin, fmax, fstep),color=color_pred, histtype='bar', ec='black')
+    if data.savepng:
+        figname = data.plots_prefix+'histo.png'
+        fullname = data.plots_dir+'/'+figname
+        plt.savefig(figname,dpi=200,bbox_inches='tight')
+        if data.verbose:
+            print(figname, 'saved in', data.plots_dir)
+    plt.show()
+    return
 
 ###################################################
 # Main 
@@ -103,9 +158,8 @@ if __name__=='__main__':
         var_idx['chi1'] = 2
         var_idx['chi2'] = 3
 
-
-    injected  = splitted_data['inj']
-    recovered = splitted_data['rec']
+    inj = splitted_data['inj']
+    rec = splitted_data['rec']
 
     # load prediction 
     plots_prefix = args.regr_vars
@@ -117,7 +171,7 @@ if __name__=='__main__':
         plots_prefix += '_GPR_'
     else:
         raise RuntimeError('Invalid input. Use --NN or --GPR')
-    predicted = extract_data(fname, verbose=verbose)
+    pred = extract_data(fname, verbose=verbose)
 
     def order_data(X, old_idx):
         x1 = X[:,old_idx[0]]
@@ -128,23 +182,23 @@ if __name__=='__main__':
 
     if args.use_NN_data and args.regr_vars=='m1Mcchi1chi2':
         # in this case re-order the prediction and the input
-        injected  = order_data(injected,  [0,3,1,2])
-        recovered = order_data(recovered, [0,3,1,2])
-        predicted = order_data(predicted, [0,3,1,2])
+        inj  = order_data(inj,  [0,3,1,2])
+        rec  = order_data(rec, [0,3,1,2])
+        pred = order_data(pred, [0,3,1,2])
 
 
     dashes = '-'*50
     if verbose:
         print(dashes)
-        print('Shape of injected  matrix:', np.shape(injected))
-        print('Shape of recovered matrix:', np.shape(recovered))
-        print('Shape of predicted matrix:', np.shape(predicted))
+        print('Shape of injected  matrix:', np.shape(inj))
+        print('Shape of recovered matrix:', np.shape(rec))
+        print('Shape of predicted matrix:', np.shape(pred))
         print(dashes)
 
     data               = lambda:0
-    data.inj           = injected
-    data.rec           = recovered
-    data.pred          = predicted
+    data.inj           = inj
+    data.rec           = rec
+    data.pred          = pred
     data.var_names     = var_names
     data.var_names_tex = var_names_tex
     data.var_idx       = var_idx
@@ -152,10 +206,22 @@ if __name__=='__main__':
     data.plots_dir     = args.plots_dir
     data.plots_prefix  = plots_prefix
     data.verbose       = verbose
+    
+    data.stats = {}
+    for i in range(NFEATURES):
+        data.stats['diffs_rec']   =  inj-rec
+        data.stats['diffs_pred']  =  inj-pred
+        with np.errstate(divide='ignore'):
+            data.stats['errors_rec']  = (inj-rec )/inj 
+            data.stats['errors_pred'] = (inj-pred)/inj 
 
     for plot_id in args.plots2do:
         if plot_id=='rec_vs_pred':
             plot_recovered_vs_predicted(data)
+        elif plot_id=='parspace':
+            plot_parspace(data)
+        elif plot_id=='histo':
+            plot_histograms(data)
         else:
             print('Unknown plot: '+plot_id)
 
