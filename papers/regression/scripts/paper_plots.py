@@ -31,7 +31,7 @@ def plot_recovered_vs_predicted(data):
     """
     dot_size = 1
     edge_color_factor = 1
-    fig, axs = plt.subplots(2,2,figsize = (8,8))
+    fig, axs = plt.subplots(2,2,figsize = (10,8))
     color_rec  = np.array([0.7,0.7,0.7]);
     color_pred = np.array([1,0.8,0]);
     for i in range(NFEATURES):
@@ -43,8 +43,8 @@ def plot_recovered_vs_predicted(data):
         ax.plot(data.inj[:,i],data.inj[:,i], color='k')
         ylabel = escapeLatex(data.var_names_tex[i]) + ' -  recovered/predicted'
         ax.set_ylabel(ylabel, fontsize=15)
-        if i>1:
-            ax.set_xlabel(r'injected', fontsize=20)
+        xlabel = escapeLatex(data.var_names_tex[i]) + ' -  injected'
+        ax.set_xlabel(xlabel, fontsize=15)
     #plt.legend()
     plt.subplots_adjust(wspace=0.4)
     if data.savepng:
@@ -89,17 +89,32 @@ def plot_histograms(data):
     for i in range(NFEATURES):
         ax = axs[int(i/2), i%2]
         if data.var_names[i]=='chi1' or data.var_names[i]=='chi2':
-            y_rec  = data.stats['diffs_rec'][:,i]
-            y_pred = data.stats['diffs_pred'][:,i]
+            dy_rec  = data.stats['diffs_rec'][:,i]
+            dy_pred = data.stats['diffs_pred'][:,i]
         else:
-            y_rec  = data.stats['errors_rec'][:,i]
-            y_pred = data.stats['errors_pred'][:,i]
-        fmin  = -3
-        fmax  =  3
-        nbins = 30
+            dy_rec  = data.stats['errors_rec'][:,i]
+            dy_pred = data.stats['errors_pred'][:,i]
+        
+        fmin  = data.histo_fmins[i]
+        fmax  = data.histo_fmaxs[i]
+        nbins = data.histo_nbins[i]
         fstep = (fmax-fmin)/nbins
-        ax.hist(y_rec, bins=np.arange(fmin, fmax, fstep), color=color_rec, histtype='bar', ec='black')
-        ax.hist(y_pred, bins=np.arange(fmin, fmax, fstep),color=color_pred, histtype='bar', ec='black')
+        ax.hist(dy_rec, bins=np.arange(fmin, fmax, fstep), color=color_rec, histtype='bar')
+        ax.hist(dy_pred, bins=np.arange(fmin, fmax, fstep),color=color_pred, histtype=u'step', linewidth=2.)
+        
+        if data.histo_logs[i]==1:
+            ax.set_yscale('log')      
+
+        if data.verbose:
+            tmp = np.where(dy_rec <fmin)
+            print('For {:4s} there are {:4d} recoveries  smaller than fmin={:7.3f}'.format(data.var_names[i], np.shape(tmp)[1], fmin))
+            tmp = np.where(dy_pred<fmin)
+            print('For {:4s} there are {:4d} predictions smaller than fmin={:7.3f}'.format(data.var_names[i], np.shape(tmp)[1], fmin))
+            tmp = np.where(dy_rec >fmax)
+            print('For {:4s} there are {:4d} recoveries  bigger  than fmax={:7.3f}'.format(data.var_names[i], np.shape(tmp)[1], fmax))
+            tmp = np.where(dy_pred>fmax)
+            print('For {:4s} there are {:4d} predictions bigger  than fmax={:7.3f}'.format(data.var_names[i], np.shape(tmp)[1], fmax))
+            print(' ')
     if data.savepng:
         figname = data.plots_prefix+'histo.png'
         fullname = data.plots_dir+'/'+figname
@@ -131,9 +146,18 @@ if __name__=='__main__':
     parser.add_argument('-v', '--verbose',  dest='verbose', action='store_true', 
                         help="Print stuff")
     
+    parser.add_argument('--histo_fmin', dest='histo_fmins', default=[-3,-3,-2,-2], nargs=4, type=int, 
+                        help="fmin used in histograms, one float for each feature, e.g. --histo_fmin -1 -2 -3 -4 ")
+    parser.add_argument('--histo_fmax', dest='histo_fmaxs', default=[2,2,2,2], nargs=4, type=int, 
+                        help="fmax used in histograms, one float for each feature, e.g. --histo_fmax 1 2 3 4 ")
+    parser.add_argument('--histo_nbins', dest='histo_nbins', default=[50,50,50,50], nargs=4, type=int, 
+                        help="nbins used in histograms, one float for each feature, e.g. --histo_nbins 50 30 40 10 ")
+    parser.add_argument('--histo_logs', dest='histo_logs', default=[0,0,0,0], nargs=4, type=int, 
+                        help="if i-element is 1, use logscale in i-subplot, e.g. --histo_logs 1 1 0 0 ")
+    
     args = parser.parse_args()
     verbose = args.verbose
-
+    
     # load injected and recovered  
     X = extract_data(args.dataset_path+'/test_NS.csv', skip_header=True, verbose=verbose)
     if args.regr_vars=='m1Mcchi1chi2':
@@ -186,7 +210,6 @@ if __name__=='__main__':
         rec  = order_data(rec, [0,3,1,2])
         pred = order_data(pred, [0,3,1,2])
 
-
     dashes = '-'*50
     if verbose:
         print(dashes)
@@ -206,6 +229,10 @@ if __name__=='__main__':
     data.plots_dir     = args.plots_dir
     data.plots_prefix  = plots_prefix
     data.verbose       = verbose
+    data.histo_fmins   = args.histo_fmins
+    data.histo_fmaxs   = args.histo_fmaxs
+    data.histo_nbins   = args.histo_nbins
+    data.histo_logs    = args.histo_logs
     
     data.stats = {}
     for i in range(NFEATURES):
