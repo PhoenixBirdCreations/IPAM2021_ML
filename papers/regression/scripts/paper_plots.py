@@ -8,8 +8,10 @@ for rp in repo_paths:
         repo_path = rp
         break
 sys.path.insert(0, repo_path+'algo/classy_NN/')
+sys.path.insert(0, repo_path+'utils/')
 from split_GstLAL_data import split_GstLAL_data  
 from sklassyNN import extract_data
+from utils import chirpMass, findSecondMassFromMc
 
 # this is hard-coded, but at this point I don't think we will change this number
 NFEATURES = 4 
@@ -48,9 +50,9 @@ def plot_recovered_vs_predicted(data):
     #plt.legend()
     plt.subplots_adjust(wspace=0.4)
     if data.savepng:
-        figname = data.plots_prefix+'m_chi_comparisons.png'
+        figname = data.plots_prefix+'recvspred.png'
         fullname = data.plots_dir+'/'+figname
-        plt.savefig(figname,dpi=200,bbox_inches='tight')
+        plt.savefig(fullname,dpi=200,bbox_inches='tight')
         if data.verbose:
             print(figname, 'saved in', data.plots_dir)
     plt.show() 
@@ -76,7 +78,7 @@ def plot_parspace(data):
     if data.savepng:
         figname = data.plots_prefix+'parspace.png'
         fullname = data.plots_dir+'/'+figname
-        plt.savefig(figname,dpi=200,bbox_inches='tight')
+        plt.savefig(fullname,dpi=200,bbox_inches='tight')
         if data.verbose:
             print(figname, 'saved in', data.plots_dir)
     plt.show()
@@ -101,10 +103,9 @@ def plot_histograms(data):
         fstep = (fmax-fmin)/nbins
         ax.hist(dy_rec, bins=np.arange(fmin, fmax, fstep), color=color_rec, histtype='bar')
         ax.hist(dy_pred, bins=np.arange(fmin, fmax, fstep),color=color_pred, histtype=u'step', linewidth=2.)
-        
+        ax.set_xlabel(escapeLatex(data.var_names_tex[i]), fontsize=15)
         if data.histo_logs[i]==1:
             ax.set_yscale('log')      
-
         if data.verbose:
             tmp = np.where(dy_rec <fmin)
             print('For {:4s} there are {:4d} recoveries  smaller than fmin={:7.3f}'.format(data.var_names[i], np.shape(tmp)[1], fmin))
@@ -118,10 +119,113 @@ def plot_histograms(data):
     if data.savepng:
         figname = data.plots_prefix+'histo.png'
         fullname = data.plots_dir+'/'+figname
-        plt.savefig(figname,dpi=200,bbox_inches='tight')
+        plt.savefig(fullname,dpi=200,bbox_inches='tight')
         if data.verbose:
             print(figname, 'saved in', data.plots_dir)
     plt.show()
+    return
+
+###################################################
+# Tables 
+###################################################
+def num2tex(x,precision=3):
+    #out = '${:.'+str(precision)+'e}'
+    #out = out.format(x)
+    #out = out.replace('e+00','')
+    #if 'e-0' in out:
+    #    out = out.replace('e-0', '\\times 10^{-')+'}'
+    #if 'e+0' in out:
+    #    out = out.replace('e+0', '\\times 10^{')+'}'
+    out = '${:.'+str(precision)+'f}'
+    out = out.format(x)
+    return out+'$'
+
+def print_errortab(data):
+    header = '\n{:14s} {:15s} {:15s} {:15s}     {:15s} {:15s} {:15s}'
+
+    dashes='-'*120
+    print('\n', dashes, sep='', end='')
+    print(header.format('name  ', '  mean_diff_rec', '  mean_err_rec', '        std_rec', 
+                                  ' mean_diff_pred', ' mean_err_pred', '       std_pred'))
+    print(dashes)
+    
+    err_rec    = data.stats['errors_rec']
+    err_pred   = data.stats['errors_pred']
+    diffs_rec  = data.stats['diffs_rec']
+    diffs_pred = data.stats['diffs_pred']
+    for i in range(NFEATURES):
+        var_name = data.var_names[i]
+        mean_diff_rec  = np.mean(np.abs(diffs_rec[:,i]))
+        mean_diff_pred = np.mean(np.abs(diffs_pred[:,i]))
+        if var_name=='chi1' or var_name=='chi2':
+            mean_err_rec  = np.nan  # then substitute with '/' while printing
+            mean_err_pred = np.nan  # then substitute with '/' while printing
+            std_rec       = np.std(diffs_rec[:,i])
+            std_pred      = np.std(diffs_pred[:,i])
+        else:
+            mean_err_rec  = np.mean(np.abs(err_rec[:,i]))
+            mean_err_pred = np.mean(np.abs(err_pred[:,i]))
+            std_rec       = np.std(err_rec[:,i])
+            std_pred      = np.std(err_pred[:,i])
+        
+        if data.tab_format=='txt':
+            line_format = '{:14s} {:15.3e} {:15.3e} {:15.3e}     {:15.3e} {:15.3e} {:15.3e}'
+            myline = line_format.format(var_name, mean_diff_rec,  mean_err_rec,  std_rec, 
+                                                  mean_diff_pred, mean_err_pred, std_pred) 
+        elif data.tab_format=='tex':
+            tex_name = data.var_names_tex[i]
+            line_format = escapeLatex('{:14s} & {:s} & {:s} & {:s} & {:s} & {:s} & {:s} \\\\')
+            myline = line_format.format(tex_name, num2tex(mean_diff_rec),  num2tex(mean_err_rec),  num2tex(std_rec), 
+                                                  num2tex(mean_diff_pred), num2tex(mean_err_pred), num2tex(std_pred)) 
+        else:
+            raise RuntimeError("'{:s}' is not a valid tab-format".format(data.tab_format))
+        print(myline.replace('$nan$', ' / '))
+    
+    # add missing variable (i.e. Mc or m2)
+    if data.regr_vars=='m1m2chi1chi2':
+        Mc_inj  = chirpMass(data.inj[:,0], data.inj[:,1]) # (m1, m2)
+        Mc_rec  = chirpMass(data.rec[:,0], data.rec[:,1])
+        Mc_pred = chirpMass(data.pred[:,0],data.pred[:,1])
+        diffs_rec  = Mc_inj-Mc_rec
+        diffs_pred = Mc_inj-Mc_pred
+        err_rec    = (Mc_inj-Mc_rec)/Mc_inj
+        err_pred   = (Mc_inj-Mc_pred)/Mc_inj
+        var_name   = 'Mc'
+        tex_name   = '${\cal{M}}_c$'
+    elif data.regr_vars=='m1Mcchi1chi2':
+        m2_inj  = findSecondMassFromMc(data.inj[:,1], data.inj[:,0]) # (Mc, m1)
+        m2_rec  = findSecondMassFromMc(data.rec[:,1], data.rec[:,0]) 
+        m2_pred = findSecondMassFromMc(data.pred[:,1],data.pred[:,0])
+        diffs_rec  = m2_inj-m2_rec
+        diffs_pred = m2_inj-m2_pred
+        err_rec    = (m2_inj-m2_rec)/m2_inj
+        err_pred   = (m2_inj-m2_pred)/m2_inj
+        var_name   = 'm2'
+        tex_name   = '$m_2$'
+    
+    mean_err_rec   = np.mean(np.abs(err_rec))
+    mean_err_pred  = np.mean(np.abs(err_pred))
+    mean_diff_rec  = np.mean(np.abs(diffs_rec))
+    mean_diff_pred = np.mean(np.abs(diffs_pred))
+    std_rec        = np.std(err_rec)
+    std_pred       = np.std(err_pred)
+
+    if data.tab_format=='txt':
+        line_format = '{:14s} {:15.3e} {:15.3e} {:15.3e}     {:15.3e} {:15.3e} {:15.3e}'
+        myline = line_format.format(var_name, mean_diff_rec,  mean_err_rec,  std_rec, 
+                                              mean_diff_pred, mean_err_pred, std_pred) 
+        print(dashes,myline,dashes,sep='\n')
+    elif data.tab_format=='tex':
+        line_format = escapeLatex('{:14s} & {:s} & {:s} & {:s} & {:s} & {:s} & {:s} \\\\')
+        myline = line_format.format(tex_name, num2tex(mean_diff_rec),  num2tex(mean_err_rec),  num2tex(std_rec), 
+                                              num2tex(mean_diff_pred), num2tex(mean_err_pred), num2tex(std_pred)) 
+        print('\hline',myline,dashes,sep='\n')
+
+
+    print(' \n+++ Warning +++: for spin-variables the std is computed on the difference ' +
+          'distribution [e.g. abs(inj-rec)],\nwhile for mass-variables on the error distributions'+
+          ' [e.g. abs(inj-rec)/inj]\n')
+    
     return
 
 ###################################################
@@ -130,19 +234,19 @@ def plot_histograms(data):
 if __name__=='__main__':
     parser = argparse.ArgumentParser(prog='paper_plots', description='plots to use in the regression paper')
     parser.add_argument('--NN', dest='use_NN_data', action='store_true',
-                        help="Use NN-data (path and filename hardcoded).")
+                        help="use NN-data (path and filename hardcoded).")
     parser.add_argument('--GPR', dest='use_GPR_data', action='store_true',
-                        help="Use GPR-data (path and filename hardcoded).")
-    parser.add_argument('-p', '--plots', dest='plots2do', nargs='+',default=['rec_vs_pred'],
-                        help='Identifiers of the plots to do, e.g. >> -p rec_vs_pred')
+                        help="use GPR-data (path and filename hardcoded).")
+    parser.add_argument('-p', '--plots', dest='plots2do', nargs='+',default=[],
+                        help='identifiers of the plots to do, e.g. >> -p rec_vs_pred')
     parser.add_argument('--vars', type=str, dest='regr_vars', default='m1m2chi1chi2', 
-                        help="Variables used in the regression. Can be 'm1m2chi1chi2' or 'm1Mchi1chi2'")
+                        help="variables used in the regression. Can be 'm1m2chi1chi2' or 'm1Mchi1chi2'")
     parser.add_argument('--dataset_path', type=str, dest='dataset_path', default=repo_path+'datasets/GstLAL/', 
-                        help="Path where there are the O2 injections (test_NS.csv)")
+                        help="path where there are the O2 injections (test_NS.csv)")
     parser.add_argument('-s', '--save',  dest='savepng', action='store_true', 
-                        help="Save plots in PNG format")
+                        help="save plots in PNG format")
     parser.add_argument('--plots_dir', type=str, dest='plots_dir', default=os.getcwd(),
-                        help="Directory where to save plots (default is current dir)")
+                        help="directory where to save plots (default is current dir)")
     parser.add_argument('-v', '--verbose',  dest='verbose', action='store_true', 
                         help="Print stuff")
     
@@ -155,6 +259,11 @@ if __name__=='__main__':
     parser.add_argument('--histo_logs', dest='histo_logs', default=[0,0,0,0], nargs=4, type=int, 
                         help="if i-element is 1, use logscale in i-subplot, e.g. --histo_logs 1 1 0 0 ")
     
+    parser.add_argument('--errortab', dest='errortab', action='store_true', 
+                        help="print a table with mean errors/differences")
+    parser.add_argument('--tab_format', dest='tab_format', type=str, default='txt', 
+                        help="format of printed tables, 'txt' (default) or 'tex'")
+
     args = parser.parse_args()
     verbose = args.verbose
     
@@ -164,23 +273,23 @@ if __name__=='__main__':
         splitted_data = split_GstLAL_data(X, features='mass&spin')
         var_names     = ['m1', 'Mc', 'chi1', 'chi2']
         var_names_tex = ['$m_1$', '${\cal{M}}_c$', '$\chi_1$', '$\chi_2$']
-        var_idx         = {}
-        var_idx['m1']   = 0
-        var_idx['m2']   = None
-        var_idx['Mc']   = 1
-        var_idx['chi1'] = 2
-        var_idx['chi2'] = 3
+        #var_idx         = {}
+        #var_idx['m1']   = 0
+        #var_idx['m2']   = None
+        #var_idx['Mc']   = 1
+        #var_idx['chi1'] = 2
+        #var_idx['chi2'] = 3
          
     elif args.regr_vars=='m1m2chi1chi2':
         splitted_data = split_GstLAL_data(X, features='m1m2chi1chi2')
         var_names     = ['m1', 'm2', 'chi1', 'chi2']
         var_names_tex = ['$m_1$', '$m_2$', '$\chi_1$', '$\chi_2$']
-        var_idx         = {}
-        var_idx['m1']   = 0
-        var_idx['m2']   = 1
-        var_idx['Mc']   = None
-        var_idx['chi1'] = 2
-        var_idx['chi2'] = 3
+        #var_idx         = {}
+        #var_idx['m1']   = 0
+        #var_idx['m2']   = 1
+        #var_idx['Mc']   = None
+        #var_idx['chi1'] = 2
+        #var_idx['chi2'] = 3
 
     inj = splitted_data['inj']
     rec = splitted_data['rec']
@@ -219,12 +328,13 @@ if __name__=='__main__':
         print(dashes)
 
     data               = lambda:0
+    data.regr_vars     = args.regr_vars
     data.inj           = inj
     data.rec           = rec
     data.pred          = pred
     data.var_names     = var_names
     data.var_names_tex = var_names_tex
-    data.var_idx       = var_idx
+    #data.var_idx       = var_idx
     data.savepng       = args.savepng
     data.plots_dir     = args.plots_dir
     data.plots_prefix  = plots_prefix
@@ -233,7 +343,9 @@ if __name__=='__main__':
     data.histo_fmaxs   = args.histo_fmaxs
     data.histo_nbins   = args.histo_nbins
     data.histo_logs    = args.histo_logs
-    
+    data.errortab      = args.errortab
+    data.tab_format    = args.tab_format
+
     data.stats = {}
     for i in range(NFEATURES):
         data.stats['diffs_rec']   =  inj-rec
@@ -241,6 +353,9 @@ if __name__=='__main__':
         with np.errstate(divide='ignore'):
             data.stats['errors_rec']  = (inj-rec )/inj 
             data.stats['errors_pred'] = (inj-pred)/inj 
+    
+    if args.errortab:
+        print_errortab(data)
 
     for plot_id in args.plots2do:
         if plot_id=='rec_vs_pred':
