@@ -33,7 +33,7 @@ def plot_recovered_vs_predicted(data):
     """
     dot_size = 1
     edge_color_factor = 1
-    fig, axs = plt.subplots(2,2,figsize = (10,8))
+    fig, axs = plt.subplots(2,2,figsize = (7,9))
     color_rec  = np.array([0.7,0.7,0.7]);
     color_pred = np.array([1,0.8,0]);
     for i in range(NFEATURES):
@@ -62,10 +62,51 @@ def plot_parspace(data):
     """ Plot injections
     """
     dot_size = 1
-    color    = [0.3,0.3,1]
-    fig, axs = plt.subplots(1,2,figsize=(9,5))
-    axs[0].scatter(data.inj[:,0], data.inj[:,1], s=dot_size, color=color)
-    axs[1].scatter(data.inj[:,2], data.inj[:,3], s=dot_size, color=color)
+    fig, axs = plt.subplots(1,2,figsize=(10,5))
+    
+    if data.parspace_colorful:
+        m1 = data.inj[:,0]
+        if data.regr_vars=='m1m2chi1chi2':
+            m2 = data.inj[:,1]
+        elif data.regr_vars=='m1Mcchi1chi2':
+            Mc = data.inj[:,1]
+            m2 = findSecondMassFromMc(Mc,m1)
+        else:
+            raise RuntimeError('Invalid regression variables')
+        chi1 = data.inj[:,2]
+        chi2 = data.inj[:,3]
+        mask   = {}
+        colors = {}
+        mask['bbh']  = np.where(( (m1>=5) & (m2>=5) ))
+        mask['bhns'] = np.where(( (m1>=5) & (m2<5)  ))
+        mask['bns']  = np.where(( (m1<5)  & (m2<5)  ))
+        colors['bbh']  = [1,0,0]
+        colors['bhns'] = [0,0,1]
+        colors['bns']  = [0,1,0]
+        m1_dict   = {}
+        m2_dict   = {}
+        chi1_dict = {}
+        chi2_dict = {}
+        y_dict    = {}
+        keys = mask.keys()
+        for k in keys:
+            m1_dict[k]   = m1[mask[k]]
+            m2_dict[k]   = m2[mask[k]]
+            chi1_dict[k] = chi1[mask[k]]
+            chi2_dict[k] = chi2[mask[k]]
+            if data.regr_vars=='m1m2chi1chi2':
+                y_dict[k]  = m2_dict[k]
+            elif data.regr_vars=='m1Mcchi1chi2':
+                y_dict[k]  = chirpMass(m1_dict[k],  m2_dict[k])
+         
+            axs[0].scatter(m1_dict[k],   y_dict[k],    s=dot_size, color=colors[k])
+            axs[1].scatter(chi1_dict[k], chi2_dict[k], s=dot_size, color=colors[k])
+
+    else:
+        color = [0.3,0.3,1]
+        axs[0].scatter(data.inj[:,0], data.inj[:,1], s=dot_size, color=color)
+        axs[1].scatter(data.inj[:,2], data.inj[:,3], s=dot_size, color=color)
+    
     xlab1 = escapeLatex(data.var_names_tex[0])
     ylab1 = escapeLatex(data.var_names_tex[1])
     xlab2 = escapeLatex(data.var_names_tex[2])
@@ -263,6 +304,9 @@ if __name__=='__main__':
                         help="print a table with mean errors/differences")
     parser.add_argument('--tab_format', dest='tab_format', type=str, default='txt', 
                         help="format of printed tables, 'txt' (default) or 'tex'")
+    
+    parser.add_argument('--parspace_colorful', dest='parspace_colorful', action='store_true', 
+                        help='Use different colors in parspace plot fr BBH, BNS, BHNS')
 
     args = parser.parse_args()
     verbose = args.verbose
@@ -345,6 +389,7 @@ if __name__=='__main__':
     data.histo_logs    = args.histo_logs
     data.errortab      = args.errortab
     data.tab_format    = args.tab_format
+    data.parspace_colorful = args.parspace_colorful
 
     data.stats = {}
     for i in range(NFEATURES):
