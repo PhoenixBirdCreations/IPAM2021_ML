@@ -341,7 +341,7 @@ if __name__=='__main__':
     # load prediction 
     plots_prefix = args.regr_vars
     if args.use_NN_data:
-        fname = repo_path+'algo/classy_NN/sklassy_prediction/prediction_'+args.regr_vars+'.csv' 
+        fname = repo_path+'algo/classy_NN/sklassy_prediction/complete_prediction_'+args.regr_vars+'.csv' 
         plots_prefix += '_NN_'
     elif args.use_GPR_data:
         fname = repo_path+'algo/GPR/something.csv'
@@ -350,18 +350,16 @@ if __name__=='__main__':
         raise RuntimeError('Invalid input. Use --NN or --GPR')
     pred = extract_data(fname, verbose=verbose)
 
-    def order_data(X, old_idx):
-        x1 = X[:,old_idx[0]]
-        x2 = X[:,old_idx[1]]
-        x3 = X[:,old_idx[2]]
-        x4 = X[:,old_idx[3]]
-        return np.column_stack((x1,x2,x3,x4))
-
-    if args.use_NN_data and args.regr_vars=='m1Mcchi1chi2':
-        # in this case re-order the prediction and the input
-        inj  = order_data(inj,  [0,3,1,2])
-        rec  = order_data(rec, [0,3,1,2])
-        pred = order_data(pred, [0,3,1,2])
+    #def order_data(X, old_idx):
+    #    x1 = X[:,old_idx[0]]
+    #    x2 = X[:,old_idx[1]]
+    #    x3 = X[:,old_idx[2]]
+    #    x4 = X[:,old_idx[3]]
+    #    return np.column_stack((x1,x2,x3,x4))
+    #if args.use_NN_data and args.regr_vars=='m1Mcchi1chi2':
+    #    inj  = order_data(inj,  [0,3,1,2])
+    #    rec  = order_data(rec, [0,3,1,2])
+    #    pred = order_data(pred, [0,3,1,2])
 
     dashes = '-'*50
     if verbose:
