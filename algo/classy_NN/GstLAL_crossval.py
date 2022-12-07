@@ -19,7 +19,6 @@ import sklassyNN  as sknn
 
 # ## Input
 seed            = 1
-verbose_train   = True
 epochs          = 50
 batch_size      = 128
 learning_rate   = 0.001;
@@ -35,7 +34,7 @@ compact_bounds['B'] = [500,   250,  1,  1]
 dict_name = 'crossval_dicts/'+features2use+'_GstLAL.dict'
 
 neurons_max  = 800
-neurons_step = 200
+neurons_step = 100
 
 data_path = repo_path+'datasets/GstLAL/'
 
@@ -63,10 +62,14 @@ CV = sknn.CrossValidator(neurons_max=neurons_max, neurons_step=neurons_step, dic
                     xtrain=train_rec, ytrain=train_inj, xtest=test_rec, ytest=test_inj,
                     epochs=epochs, batch_size=batch_size, seed=seed, learning_rate=learning_rate,
                     compact_bounds=compact_bounds)
-CV.crossval(verbose=False)
+CV.crossval(verbose=True)
 
 for i in range(-1,nfeatures):
-    CV.plot(feature_idx=i, threshold=None)
+    if i>=0:
+      name = names[i]
+    else:
+      name = 'avg'
+    CV.plot(feature_idx=i, threshold=None, show=False, save=True, figname='cval_'+features2use+'_'+name+'.png')
 
 
 
