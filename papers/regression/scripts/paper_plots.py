@@ -9,9 +9,7 @@ for rp in repo_paths:
         break
 sys.path.insert(0, repo_path+'algo/classy_NN/')
 sys.path.insert(0, repo_path+'utils/')
-from split_GstLAL_data import split_GstLAL_data  
-from sklassyNN import extract_data
-from utils import chirpMass, findSecondMassFromMc
+from utils import extract_data, chirpMass, findSecondMassFromMc
 
 # this is hard-coded, but at this point I don't think we will change this number
 NFEATURES = 4 
@@ -311,32 +309,21 @@ if __name__=='__main__':
     args = parser.parse_args()
     verbose = args.verbose
     
-    # load injected and recovered  
-    X = extract_data(args.dataset_path+'/test_NS.csv', skip_header=True, verbose=verbose)
+    # load injected and recovered: m1, m2, Mc, chi1, chi2
+    rec_all_features = extract_data(args.dataset_path+'/complete_xtest.csv', skip_header=False, verbose=verbose)
+    inj_all_features = extract_data(args.dataset_path+'/complete_ytest.csv', skip_header=False, verbose=verbose)
     if args.regr_vars=='m1Mcchi1chi2':
-        splitted_data = split_GstLAL_data(X, features='mass&spin')
+        idx_feature_to_remove = 1
         var_names     = ['m1', 'Mc', 'chi1', 'chi2']
         var_names_tex = ['$m_1$', '${\cal{M}}_c$', '$\chi_1$', '$\chi_2$']
-        #var_idx         = {}
-        #var_idx['m1']   = 0
-        #var_idx['m2']   = None
-        #var_idx['Mc']   = 1
-        #var_idx['chi1'] = 2
-        #var_idx['chi2'] = 3
          
     elif args.regr_vars=='m1m2chi1chi2':
-        splitted_data = split_GstLAL_data(X, features='m1m2chi1chi2')
+        idx_feature_to_remove = 2
         var_names     = ['m1', 'm2', 'chi1', 'chi2']
         var_names_tex = ['$m_1$', '$m_2$', '$\chi_1$', '$\chi_2$']
-        #var_idx         = {}
-        #var_idx['m1']   = 0
-        #var_idx['m2']   = 1
-        #var_idx['Mc']   = None
-        #var_idx['chi1'] = 2
-        #var_idx['chi2'] = 3
 
-    inj = splitted_data['inj']
-    rec = splitted_data['rec']
+    rec = np.delete(rec_all_features, idx_feature_to_remove, axis=1) # remove m2 or Mc
+    inj = np.delete(inj_all_features, idx_feature_to_remove, axis=1) # remove m2 or Mc
 
     # load prediction 
     plots_prefix = args.regr_vars
@@ -350,22 +337,11 @@ if __name__=='__main__':
         raise RuntimeError('Invalid input. Use --NN or --GPR')
     pred = extract_data(fname, verbose=verbose)
 
-    #def order_data(X, old_idx):
-    #    x1 = X[:,old_idx[0]]
-    #    x2 = X[:,old_idx[1]]
-    #    x3 = X[:,old_idx[2]]
-    #    x4 = X[:,old_idx[3]]
-    #    return np.column_stack((x1,x2,x3,x4))
-    #if args.use_NN_data and args.regr_vars=='m1Mcchi1chi2':
-    #    inj  = order_data(inj,  [0,3,1,2])
-    #    rec  = order_data(rec, [0,3,1,2])
-    #    pred = order_data(pred, [0,3,1,2])
-
     dashes = '-'*50
     if verbose:
         print(dashes)
         print('Shape of injected  matrix:', np.shape(inj))
-        print('Shape of recovered matrix:', np.shape(rec))
+        print('Shape of recovere2 matrix:', np.shape(rec))
         print('Shape of predicted matrix:', np.shape(pred))
         print(dashes)
 
