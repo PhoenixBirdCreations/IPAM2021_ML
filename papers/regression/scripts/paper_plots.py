@@ -31,7 +31,7 @@ def plot_recovered_vs_predicted(data):
     """
     dot_size = 1
     edge_color_factor = 1
-    fig, axs = plt.subplots(2,2,figsize = (7,9))
+    fig, axs = plt.subplots(2,2,figsize = (9,9))
     color_rec  = np.array([0.7,0.7,0.7]);
     color_pred = np.array([1,0.8,0]);
     for i in range(NFEATURES):
@@ -115,7 +115,7 @@ def plot_parspace(data):
     axs[1].set_ylabel(ylab2, fontsize=15)
     plt.subplots_adjust(wspace=0.4)
     if data.savepng:
-        figname = data.plots_prefix+'parspace.png'
+        figname = data.regr_vars+'_parspace.png'
         fullname = data.plots_dir+'/'+figname
         plt.savefig(fullname,dpi=200,bbox_inches='tight')
         if data.verbose:
@@ -124,25 +124,33 @@ def plot_parspace(data):
     return
 
 def plot_histograms(data):
-    fig, axs = plt.subplots(2,2,figsize=(8,8))
+    fig, axs = plt.subplots(2,2,figsize=(9,9))
     color_rec  = np.array([0.7,0.7,0.7]);
     color_pred = np.array([1,0.8,0]);
     for i in range(NFEATURES):
         ax = axs[int(i/2), i%2]
-        if data.var_names[i]=='chi1' or data.var_names[i]=='chi2':
+        var_name = data.var_names[i]
+        var_name_tex = escapeLatex(data.var_names_tex[i])
+        if var_name=='chi1' or var_name=='chi2':
             dy_rec  = data.stats['diffs_rec'][:,i]
             dy_pred = data.stats['diffs_pred'][:,i]
+            tmp     = var_name_tex.replace('$', '') 
+            y_lab   = escapeLatex(r'$\Delta{} y^{\rm pred/rec}$').replace('y',tmp)
         else:
             dy_rec  = data.stats['errors_rec'][:,i]
             dy_pred = data.stats['errors_pred'][:,i]
+            tmp     = var_name_tex.replace('$', '') 
+            y_lab   = escapeLatex(r'$\delta{} y^{\rm pred/rec}$').replace('y',tmp)
         
         fmin  = data.histo_fmins[i]
         fmax  = data.histo_fmaxs[i]
         nbins = data.histo_nbins[i]
         fstep = (fmax-fmin)/nbins
-        ax.hist(dy_rec, bins=np.arange(fmin, fmax, fstep), color=color_rec, histtype='bar')
-        ax.hist(dy_pred, bins=np.arange(fmin, fmax, fstep),color=color_pred, histtype=u'step', linewidth=2.)
-        ax.set_xlabel(escapeLatex(data.var_names_tex[i]), fontsize=15)
+        ax.hist(dy_rec, bins=np.arange(fmin, fmax, fstep), color=color_rec, histtype='bar', label= var_name_tex+' - rec')
+        ax.hist(dy_pred, bins=np.arange(fmin, fmax, fstep),color=color_pred, histtype=u'step', 
+                label=var_name_tex+' - pred', linewidth=2.) 
+        ax.set_xlabel(y_lab, fontsize=15)
+        ax.legend()
         if data.histo_logs[i]==1:
             ax.set_yscale('log')      
         if data.verbose:
@@ -155,6 +163,7 @@ def plot_histograms(data):
             tmp = np.where(dy_pred>fmax)
             print('For {:4s} there are {:4d} predictions bigger  than fmax={:7.3f}'.format(data.var_names[i], np.shape(tmp)[1], fmax))
             print(' ')
+        
     if data.savepng:
         figname = data.plots_prefix+'histo.png'
         fullname = data.plots_dir+'/'+figname
@@ -341,7 +350,7 @@ if __name__=='__main__':
     if verbose:
         print(dashes)
         print('Shape of injected  matrix:', np.shape(inj))
-        print('Shape of recovere2 matrix:', np.shape(rec))
+        print('Shape of recovered matrix:', np.shape(rec))
         print('Shape of predicted matrix:', np.shape(pred))
         print(dashes)
 
