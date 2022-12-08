@@ -45,7 +45,34 @@ def writeResult(filename, data, verbose=False):
             spamwriter.writerow(row)
     if verbose:
         print(filename, 'saved')
-            
+
+# updated I/O functions
+def extract_data(filename, verbose=False, skip_header=False):
+    """ Reads data from csv file and returns it in array form.
+    """
+    lst=[]
+    with open(filename) as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=',')
+        for row in csv_reader:
+            lst.append(row)
+    if skip_header:
+        lst = lst[1:]
+    data=np.array(lst, dtype=float)
+    if verbose:
+        print(filename, 'loaded')
+    return data
+
+def write_result(filename, data, verbose=False):
+    """ Writes data predicted by trained algorithm into a csv file.
+    """
+    with open(filename, 'w') as csvfile:
+        spamwriter = csv.writer(csvfile, delimiter=',')
+        for row in data:
+            spamwriter.writerow(row)
+    if verbose:
+        print(filename, 'saved')
+    return
+
 def removeSomeMassFromDataset(X0,Y0,labels,mass_cols):
     X = np.delete(X0,mass_cols,1);
     Y = np.delete(Y0,mass_cols,1);
