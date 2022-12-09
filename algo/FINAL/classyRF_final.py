@@ -14,6 +14,7 @@ from sklearn.metrics import roc_curve
 import seaborn 
 from sklearn.ensemble import RandomForestClassifier
 import joblib
+import pickle
 
 #######################################################################
 # Usual I/O functiony by Marina
@@ -57,6 +58,11 @@ class ClassificationRF:
         print("loading ",path+filename+".joblib")
         self.model = joblib.load(path+filename+".joblib")
         return
+    
+    def loadPickle(self, filename):
+        objectRep = open(filename+'.pickle', "rb")
+        self.model = pickle.load(objectRep)
+        return
 
     def __check_attributes(self, attr_list):
         for i in range(0, len(attr_list)):
@@ -95,10 +101,10 @@ class ClassificationRF:
         print("loaded")
         return
     
-    def load_test_dataset(self, path, fname_x='xtrain.csv'):
+    def load_test_dataset(self, path, fname_x='xtrain.csv', header=True):
         """ Load datasets in CSV format 
         """
-        xtrain = extractData(path+fname_x, verbose=False)
+        xtrain = extractData(path+fname_x, header=header, verbose=False)
         self.data_test_all       = xtrain
         self.labels_test     = xtrain[:,-1]
         return
@@ -109,6 +115,11 @@ class ClassificationRF:
             print(self.headers[i])
         self.Nfeatures = len(indexes)
         self.data_train=self.data_train_all[:,indexes]
+        self.data_test=self.data_test_all[:,indexes]
+        return
+    
+    def subset_test(self, indexes):
+        self.Nfeatures = len(indexes)
         self.data_test=self.data_test_all[:,indexes]
         return
     
@@ -184,7 +195,7 @@ class ClassificationRF:
         """ Compute evaluation metrics: score and confusion matrix 
         """
         
-        self.__check_attributes(['model','data_train', 'labels_train', 'data_test', 'labels_test'])
+        self.__check_attributes(['model','data_test', 'labels_test'])
         
         score = self.model.score(self.data_test, self.labels_test)
         self.test_prediction = self.model.predict(self.data_test)
@@ -213,7 +224,7 @@ class ClassificationRF:
         plt.clf()
         return
 
-    def hist_NS(self, figname="histNS"):
+    def hist_NS(self, eos, figname="histNS"):
         plt.rcParams["font.size"]=14
         
         probs=self.model.predict_proba(self.data_test)
@@ -232,6 +243,7 @@ class ClassificationRF:
         plt.ylim([4.5e1,1.9e5])
         plt.xlabel('P(HasNS)')
         plt.axvline(x=0.5,color='black',ls='--')
+        plt.title(eos)
         plt.grid(ls='--')
         handles, labels = plt.gca().get_legend_handles_labels()
         order = [1,0]
@@ -243,9 +255,9 @@ class ClassificationRF:
         if self.show_plots:
             plt.show()
 
-        return
+        return np.asarray(p_events_nohas), np.asarray(p_events_has), np.linspace(0,1,20)
 
-    def hist_REM(self, figname="histREM"):
+    def hist_REM(self, eos, figname="histREM"):
         probs=self.model.predict_proba(self.data_test)
         pred=probs[:,2]
         truelabel=self.labels_test
@@ -261,6 +273,7 @@ class ClassificationRF:
         plt.xticks([0,0.2,0.4,0.6,0.8,1])
         plt.ylim([4.5e1,1.9e5])
         plt.xlabel('P(HasRemnant)')
+        plt.title(eos)
         plt.axvline(x=0.5,color='black',ls='--')
         plt.grid(ls='--')
         handles, labels = plt.gca().get_legend_handles_labels()
@@ -272,9 +285,9 @@ class ClassificationRF:
             plt.savefig(figname+".png",dpi=200,bbox_inches='tight')
         if self.show_plots:
             plt.show()
-        return 
+        return np.asarray(p_events_nohas), np.asarray(p_events_has), np.linspace(0,1,20)
     
-    def ROC_NS(self, thr_wanted = [], figname="ROC_NS"):
+    def ROC_NS(self, eos, thr_wanted = [], figname="ROC_NS"):
         allprob = self.model.predict_proba(self.data_test)
         v_prob_NS = 1-allprob[:,0] 
         events_have_NS = np.where((self.labels_test==1) | (self.labels_test==2))[0]
@@ -307,13 +320,14 @@ class ClassificationRF:
         plt.ylim([0.82,1.02])
         plt.xlim([0,0.2])
         plt.yticks(np.linspace(0.825,1,8))
+        plt.title(eos)
         if self.save_plots:
             plt.savefig(figname+'.png',dpi=200,bbox_inches='tight')
         if self.show_plots:
             plt.show()
         return np.asarray(FP), np.asarray(TP), threshold
     
-    def ROC_REM(self, thr_wanted = [], figname="ROC_REM"):
+    def ROC_REM(self, eos, thr_wanted = [], figname="ROC_REM"):
         allprob = self.model.predict_proba(self.data_test)
         v_prob_REM = allprob[:,2]
         events_have_REM = np.where(self.labels_test==2)[0]
@@ -346,6 +360,7 @@ class ClassificationRF:
         plt.ylim([0.82,1.02])
         plt.xlim([0,0.2])
         plt.yticks(np.linspace(0.825,1,8))
+        plt.title(eos)
         if self.save_plots:
             plt.savefig(figname+'.png',dpi=200,bbox_inches='tight')
         if self.show_plots:
