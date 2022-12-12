@@ -7,3 +7,73 @@ The training of a RF is usually done with bootstrap, a technique that assigns a 
 We use the RK implementation in scikitlearn [REF AND DETAILS]. The main hyperparameters to tune in this module are the number of trees, the maximum depth allowed and the information gain criteria used at splitting (two are offered). We have observed that the maximum number of features to be considered in a node can be kept fix as the square root of the total number of features. Given that the aiming of this work is to improve the current low latency classification, the model once trained can occupy a restricted amount of memory. Therefore before searching the optimum hyperparameters for our dataset, we restrict those which make heavier models: the number of trees and their depth. We set to 100 the maximum number of trees the forest may have, and 25 their possible maximum depth.
 
 For the RF we use events with 5 features: the two masses, their corresponding spins and the SNR of the detection. In the tuning of the hyperparameters we measure the performance  by its score: the number of events correctly classified against the total number of events in the testing dataset, if threshold is taken as 0.5. As all categories are balanced, this approach is enough to roughly compare models. The best model found achieves a score of $whatever$ using $number$ of trees, $number$ maximum depth and $name$ criteria for the information gain.
+
+INFORMATION TO SAY, JUST HERE AND NOT WELL WRITTEN:
+
+For the 23 EoS we try a crossvalidation with:
+
+trees in the forest = [10, 30, 50, 80, 100, 300]  (more trees take too much memory)
+criterion = ‘entropy’    (in all tests, criterion ‘gini’ gives very similar results)
+
+max_features = ‘sqrt’ (in all tests, using a portion of the features instead of all of them in each node gives better results)
+
+max_depth = [15, 25, 35, 45, None] (we would prefer more shallow trees)
+
+Using the complete dataset, and not Sushant partitions, Use  first 30% of the rows to test, rest 70% of the rows to train
+
+We obtain the following:
+
+% Please add the following required packages to your document preamble:
+% \usepackage{booktabs}
+\begin{table}[]
+\centering
+\begin{tabular}{@{}cccccccccccc@{}}
+\toprule
+\multicolumn{1}{l}{}               & \multicolumn{5}{c}{Best}                                                                                                                                                                  & \multicolumn{5}{c}{Second best}                                                                                                                                                           & \multicolumn{1}{l}{}                 \\ \midrule
+\multicolumn{1}{|c|}{\textbf{EOS}} & \multicolumn{1}{c|}{\textbf{Trees}} & \multicolumn{1}{c|}{\textbf{Depth}} & \multicolumn{1}{c|}{\textbf{Score}} & \multicolumn{1}{c|}{\textbf{MB}} & \multicolumn{1}{c|}{\textbf{MB (c)}} & \multicolumn{1}{c|}{\textbf{Trees}} & \multicolumn{1}{c|}{\textbf{Depth}} & \multicolumn{1}{c|}{\textbf{Score}} & \multicolumn{1}{c|}{\textbf{MB}} & \multicolumn{1}{c|}{\textbf{MB (c)}} & \multicolumn{1}{c|}{\textbf{Δscore}} \\ \midrule
+\multicolumn{1}{|c|}{APR4\_BB}     & \multicolumn{1}{c|}{300}            & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.9683018}      & \multicolumn{1}{c|}{94.7}        & \multicolumn{1}{c|}{19.7}            & \multicolumn{1}{c|}{50}             & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.9682683}      & \multicolumn{1}{c|}{15.7}        & \multicolumn{1}{c|}{3.3}             & \multicolumn{1}{c|}{3.35e-5}         \\ \midrule
+\multicolumn{1}{|c|}{BHF\_BBB2}    & \multicolumn{1}{c|}{80}             & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.9685127}      & \multicolumn{1}{c|}{24.4}        & \multicolumn{1}{c|}{5.1}             & \multicolumn{1}{c|}{300}            & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.9684611}      & \multicolumn{1}{c|}{91.6}        & \multicolumn{1}{c|}{19.2}            & \multicolumn{1}{c|}{5.16e-5}         \\ \midrule
+\multicolumn{1}{|c|}{H4}           & \multicolumn{1}{c|}{80}             & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.9618587}      & \multicolumn{1}{c|}{29.6}        & \multicolumn{1}{c|}{6.1}             & \multicolumn{1}{c|}{300}            & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.9617395}      & \multicolumn{1}{c|}{111.4}       & \multicolumn{1}{c|}{23}              & \multicolumn{1}{c|}{1.19e-4}         \\ \midrule
+\multicolumn{1}{|c|}{HQC18}        & \multicolumn{1}{c|}{300}            & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.9673755}      & \multicolumn{1}{c|}{93.7}        & \multicolumn{1}{c|}{19.6}            & \multicolumn{1}{c|}{100}            & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.9670695}      & \multicolumn{1}{c|}{31.3}        & \multicolumn{1}{c|}{6.6}             & \multicolumn{1}{c|}{3.06e-4}         \\ \midrule
+\multicolumn{1}{|c|}{KDE0V}        & \multicolumn{1}{c|}{300}            & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.9673295}      & \multicolumn{1}{c|}{92.0}        & \multicolumn{1}{c|}{19.3}            & \multicolumn{1}{c|}{80}             & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.9671236}      & \multicolumn{1}{c|}{24.5}        & \multicolumn{1}{c|}{5.1}             & \multicolumn{1}{c|}{2.06e-4}         \\ \midrule
+\multicolumn{1}{|c|}{KDE0V1}       & \multicolumn{1}{c|}{100}            & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.96704954}     & \multicolumn{1}{c|}{30.9}        & \multicolumn{1}{c|}{6.5}             & \multicolumn{1}{c|}{80}             & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.96701525}     & \multicolumn{1}{c|}{24.5}        & \multicolumn{1}{c|}{5.2}             & \multicolumn{1}{c|}{3.43e-5}         \\ \midrule
+\multicolumn{1}{|c|}{MPA1}         & \multicolumn{1}{c|}{80}             & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.96601225}     & \multicolumn{1}{c|}{27.2}        & \multicolumn{1}{c|}{5.6}             & \multicolumn{1}{c|}{300}            & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.96593032}     & \multicolumn{1}{c|}{102.1}       & \multicolumn{1}{c|}{21.2}            & \multicolumn{1}{c|}{8.19e-5}         \\ \midrule
+\multicolumn{1}{|c|}{MS1\_PP}      & \multicolumn{1}{c|}{300}            & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.96563534}     & \multicolumn{1}{c|}{113.5}       & \multicolumn{1}{c|}{23.2}            & \multicolumn{1}{c|}{80}             & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.96552063}     & \multicolumn{1}{c|}{30.2}        & \multicolumn{1}{c|}{6.2}             & \multicolumn{1}{c|}{1.15e-4}         \\ \midrule
+\multicolumn{1}{|c|}{MS1B\_PP}     & \multicolumn{1}{c|}{300}            & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.96555340}     & \multicolumn{1}{c|}{114.2}       & \multicolumn{1}{c|}{23.3}            & \multicolumn{1}{c|}{100}            & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.96535675}     & \multicolumn{1}{c|}{38.0}        & \multicolumn{1}{c|}{7.8}             & \multicolumn{1}{c|}{1.97e-4}         \\ \midrule
+\multicolumn{1}{|c|}{RS}           & \multicolumn{1}{c|}{300}            & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.96447350}     & \multicolumn{1}{c|}{103.8}       & \multicolumn{1}{c|}{21.6}            & \multicolumn{1}{c|}{80}             & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.96423756}     & \multicolumn{1}{c|}{27.6}        & \multicolumn{1}{c|}{5.7}             & \multicolumn{1}{c|}{2.36e-4}         \\ \midrule
+\multicolumn{1}{|c|}{SK255}        & \multicolumn{1}{c|}{300}            & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.96472405}     & \multicolumn{1}{c|}{105.8}       & \multicolumn{1}{c|}{22.0}            & \multicolumn{1}{c|}{100}            & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.9643546}      & \multicolumn{1}{c|}{35.5}        & \multicolumn{1}{c|}{7.4}             & \multicolumn{1}{c|}{3.69e-4}         \\ \bottomrule
+\end{tabular}
+\caption{table1 comparison forests}
+\label{tab:RF1}
+\end{table}
+
+
+% Please add the following required packages to your document preamble:
+% \usepackage{booktabs}
+\begin{table}[]
+\centering
+\begin{tabular}{@{}|c|ccccc|ccccc|c|@{}}
+\toprule
+\multicolumn{1}{|l|}{} & \multicolumn{5}{c|}{Best}                                                                                                                                            & \multicolumn{5}{c|}{Second Best}                                                                                                                                     &                 \\ \midrule
+\textbf{EOS}           & \multicolumn{1}{c|}{\textbf{Trees}} & \multicolumn{1}{c|}{\textbf{Depth}} & \multicolumn{1}{c|}{\textbf{Score}} & \multicolumn{1}{c|}{\textbf{MB}} & \textbf{MB (c)} & \multicolumn{1}{c|}{\textbf{Trees}} & \multicolumn{1}{c|}{\textbf{Depth}} & \multicolumn{1}{c|}{\textbf{Score}} & \multicolumn{1}{c|}{\textbf{MB}} & \textbf{MB (c)} & \textbf{Δscore} \\ \midrule
+SK272                  & \multicolumn{1}{c|}{300}            & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.96401816}     & \multicolumn{1}{c|}{109.0}       & 22.6            & \multicolumn{1}{c|}{100}            & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.96381927}     & \multicolumn{1}{c|}{36.4}        & 7.5             & 1.99e-4         \\ \midrule
+SKI2                   & \multicolumn{1}{c|}{50}             & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.96242338}     & \multicolumn{1}{c|}{18.8}        & 3.9             & \multicolumn{1}{c|}{300}            & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.96233966}     & \multicolumn{1}{c|}{112.8}       & 23.2            & 8.37e-5         \\ \midrule
+SKI3                   & \multicolumn{1}{c|}{50}             & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.96174537}     & \multicolumn{1}{c|}{19.0}        & 3.9             & \multicolumn{1}{c|}{100}            & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.96167916}     & \multicolumn{1}{c|}{38.1}        & 7.8             & 6.62e-5         \\ \midrule
+SKI4                   & \multicolumn{1}{c|}{300}            & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.96598969}     & \multicolumn{1}{c|}{100.6}       & 20.9            & \multicolumn{1}{c|}{30}             & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.96590604}     & \multicolumn{1}{c|}{9.8}         & 2.1             & 8.37e-5         \\ \midrule
+SKI5                   & \multicolumn{1}{c|}{100}            & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.96343381}     & \multicolumn{1}{c|}{38.2}        & 7.8             & \multicolumn{1}{c|}{80}             & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.96331793}     & \multicolumn{1}{c|}{30.4}        & 6.2             & 1.16e-4         \\ \midrule
+SKI6                   & \multicolumn{1}{c|}{300}            & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.96586928}     & \multicolumn{1}{c|}{101.7}       & 21.1            & \multicolumn{1}{c|}{30}             & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.96565242}     & \multicolumn{1}{c|}{10.0}        & 2.1             & 2.17e-4         \\ \midrule
+SKMP                   & \multicolumn{1}{c|}{300}            & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.96544567}     & \multicolumn{1}{c|}{100.2}       & 20.9            & \multicolumn{1}{c|}{80}             & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.96527695}     & \multicolumn{1}{c|}{26.9}        & 5.6             & 1.69e-4         \\ \midrule
+SKOP                   & \multicolumn{1}{c|}{100}            & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.96610459}     & \multicolumn{1}{c|}{32.3}        & 6.8             & \multicolumn{1}{c|}{300}            & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.96603605}     & \multicolumn{1}{c|}{96.2}        & 20.1            & 6.85e-5         \\ \midrule
+SLy                    & \multicolumn{1}{c|}{80}             & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.96728884}     & \multicolumn{1}{c|}{25.3}        & 5.3             & \multicolumn{1}{c|}{300}            & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.96720392}     & \multicolumn{1}{c|}{95.2}        & 19.9            & 8.49e-5         \\ \midrule
+SLY2                   & \multicolumn{1}{c|}{100}            & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.96745868}     & \multicolumn{1}{c|}{31.8}        & 6.6             & \multicolumn{1}{c|}{80}             & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.96722091}     & \multicolumn{1}{c|}{25.4}        & 5.3             & 2.38e-4         \\ \midrule
+SLY9                   & \multicolumn{1}{c|}{300}            & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.96605993}     & \multicolumn{1}{c|}{101.6}       & 21.1            & \multicolumn{1}{c|}{100}            & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.96590909}     & \multicolumn{1}{c|}{34.1}        & 7.1             & 1.51e-4         \\ \midrule
+SLY230A                & \multicolumn{1}{c|}{300}            & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.96714915}     & \multicolumn{1}{c|}{95.5}        & 20.0            & \multicolumn{1}{c|}{100}            & \multicolumn{1}{c|}{15}             & \multicolumn{1}{c|}{0.96689580}     & \multicolumn{1}{c|}{31.9}        & 6.7             & 2.53e-4         \\ \bottomrule
+\end{tabular}
+\caption{table2 RF comparison}
+\label{tab:RF2}
+\end{table}
+
+
+
+And therefore we select 50 trees, 15 depth for all EoS and present the results with that.
+
