@@ -1,26 +1,28 @@
 import sys
-
 import csv
 import numpy as np
 import torch
 import gpytorch
 from sklearn import preprocessing
-from sklearn.utils import shuffle
 import scipy
 from scipy.special import logit, expit
 
-def extractData(filename, verbose=False):
+def extract_data(filename, header=False, verbose=False):
     lst=[]
-    header = []
+    header_list = []
     with open(filename) as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
-        header.append(next(csv_reader))
-        for row in csv_reader:
-            lst.append(row)
+        if header==True:
+            header_list.append(next(csv_reader))
+            for row in csv_reader:
+                lst.append(row)
+        else:
+            for row in csv_reader:
+                lst.append(row)
     data=np.array(lst, dtype=float)
     if verbose:
         print(filename, 'loaded')
-    return header, data
+    return header_list, data
 
 def writeResult(filename, data, verbose=False):
     with open(filename, 'w') as csvfile:
@@ -30,13 +32,20 @@ def writeResult(filename, data, verbose=False):
     if verbose:
         print(filename,'saved')
 
-def map_to_inf(xtrain, ytrain, xtest, ytest, shuffle_data=True):
-    if shuffle_data==True:
-        xtrain = shuffle(xtrain, random_state=5)
-        ytrain = shuffle(ytrain, random_state=5)
-        xtest = shuffle(xtest, random_state=42)
-        ytest = shuffle(ytest, random_state=42)
-   
+def flip_mass_values(data):
+    sorted_data = data.copy()
+    for ind,row in enumerate(data):
+        m1, m2, chi1, chi2 = row
+        if m2>m1:
+            sorted_data[ind,0] = m2
+            sorted_data[ind,1] = m1
+            sorted_data[ind,2] = chi2
+            sorted_data[ind,3] = chi1
+        else:
+            continue
+    return sorted_data
+
+def map_to_inf(xtrain, ytrain, xtest, ytest):
     #Define mass mapping
     min_mass = 0.75 # bounds from template bank
     max_mass = 400.
