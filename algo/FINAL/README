@@ -4,7 +4,7 @@ Crossvalidation for searching the hyperparameters that get best score
 
 RF:  95 trees, 15 max depth,  entropy criteria
 
-KNN: X neighbors,  Y distance,  Z ???
+KNN: 10 neighbors,  manhattan metric,  ball tree algorithm, distance weights 
 
 Computed for HasNS and HasREM separately:
       ROC curves (png, exported [fp, tp, thr])
