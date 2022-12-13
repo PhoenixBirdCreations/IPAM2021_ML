@@ -12,8 +12,9 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neighbors import DistanceMetric
 from sklearn.model_selection import cross_val_score
 import sklearn.utils as utils
-from sklearn.utils     import shuffle
+from sklearn.utils import shuffle
 from sklearn.metrics import confusion_matrix, roc_curve, precision_recall_curve
+from sklearn.model_selection import GridSearchCV
 import joblib
 
 
@@ -188,6 +189,43 @@ class ClassificationKNN:
         self.optimal["weight"] = config[3]
 
         return
+
+    def GridSearchCrossVal(self):
+
+        K_max         = 20
+        K_step        = 1
+        K_min         = 3
+        K_vec         = list(i for i in range(K_min,K_max,K_step))
+        score_vec     = []
+        best_score    = -1
+        x             = self.x_cross
+        y             = self.label_cross
+
+        parameters = {'n_neighbors':K_vec,'weights':('uniform','distance'),'algorithm':('ball_tree','kd_tree','brute','auto'),'metric':('euclidean','manhattan','cityblock')}
+
+
+        knn = KNeighborsClassifier()
+        clf = GridSearchCV(knn, parameters,refit = True, cv = 10)
+        clf.fit(x,y)
+
+        best_score = clf.best_score_
+        best_params = clf.best_params_
+        print('Best score: ',best_score)
+        print('Optimal parameters: ')
+        sorted(best_params.keys())
+
+        self.model = clf.best_estimator_
+
+        print('*'*60)
+        t0 = time.perf_counter()
+        print('Training best model...')
+        self.model.fit(self.xtrain,self.label_train.ravel())
+        self.train_time = time.perf_counter() - t0
+        print('Training time (s) : ', self.train_time)
+        print('*'*60)
+
+        return
+
 
     def build_train_model(self, n_neigh , metric, algo, weights):
 
