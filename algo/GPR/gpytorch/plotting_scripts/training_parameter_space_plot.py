@@ -63,7 +63,7 @@ if __name__ == '__main__':
     nsbh_s = ytest_spins[nsbh,:]
 
     print('Plotting ...')
-    f, ax = plt.subplots(1, 2, figsize=(14, 6))
+    f, ax = plt.subplots(2, 1, figsize=(8, 12))
 
     ax[0].plot(bbh_m[0][:,0], bbh_m[0][:,1], 'o', markersize=2, color=color_cycle[1], zorder=-1, label='BBH')
     ax[0].plot(bns_m[0][:,0], bns_m[0][:,1], 'o', markersize=2, color=color_cycle[2], label='BNS')

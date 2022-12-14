@@ -47,7 +47,7 @@ if __name__ == '__main__':
     predicted_data = flip_mass_values(predicted_data)
 
     print('Plotting ...')
-    f, ax = plt.subplots(1, 2, figsize=(14, 6))
+    f, ax = plt.subplots(2, 1, figsize=(8, 12))
 
     ax[0].plot(ytest[:,0], ytest[:,1], 'o', markersize=2, color=color_cycle[10],
             zorder=-1, label='Injected')
