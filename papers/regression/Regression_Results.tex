@@ -1,3 +1,179 @@
 \section{Results}
-Here we talk about overall results and specifically from each algorithm in the
-subsections below.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.45\textwidth]{inj_rec_pred_masses.png}
+    \caption{The left panel shows the injected (teal), recovered (gray), and 
+            regressed (yellow) masses while the right panel shows the spins.
+            }
+        \label{inj_rec_pred_masses}
+\end{figure}
+
+\begin{figure*}[t]
+    \centering
+    \includegraphics[width=\linewidth]{GPRvsNN.png}
+    \caption{The first two panels show the recovered (gray) and regressed
+             masses as a function of the injected values. The last two panels
+             show the same functions for the spin magnitudes. The black line
+             denotes a perfect recovery and regression. Regressed values from
+             GPR are in orange while those from NN are in blue.
+            }
+        \label{GPRvsNN}
+\end{figure*}
+
+\lorena{Using GPR and NN to create a map between the injected and recovered
+masses and spins of the O2 dataset allows us to better estimate the instrinsic 
+parameters of a binary system. The advantage of using regression can be seen in
+Fig~\ref{GPRvsNN}, which shows the predictions from the O2
+testing dataset. The gray circles represent the recovered values from the
+best-fit template, the orange circles are the predictions coming from GPR, and
+the blue circles are predictions from NN. The black lines shows where the
+points would lie if the parameters where perfectly recovered and/or perfectly 
+regressed.}
+
+\lorena{Fig~\ref{GPRvsNN} show how the primary mass is sometimes
+recovered as having very high values. With regression, however, one can correct
+for these more extreme cases and predict values that are closer to the injected
+values. Opposite to this overestimation, there is the underestimation of the
+secondary mass. Regardless of the values of the secondary mass injected, the
+recovered value tends to be more often undestimated. Regression is able to
+counteract this bias and decrease the difference with the injected values. Apart
+from improving the mass estimates, one can see in the bottom panels the effects
+regression has on spins. Although both the recovered and regressed values
+constitute wide bands around the injected values, the regressed values follow
+the diagonal line closer. In the secondary spin, the areas of parameter space
+furthest away from the true injected values are only populated by recovered
+values but not regressed values.
+}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.45\textwidth]{m1_m2_chi_error_analysis_wboxes.png}
+    \caption{The top panels show the distributions of the mean relative errors
+            for the recovered (gray) and regressed (orange) masses. The bottom
+            panels show the distributions of the mean difference for the spins
+            magnitudes. This plot is from GPR.
+            }
+        \label{m_chi_comparisons}
+\end{figure}
+
+\lorena{To get a better understand on the distribution of errors for these four
+quantities, we show the mean relative error for the masses (top panels) and the
+mean difference for the spins (bottom panels). It is evident that the error
+distributions in all cases are more highly picked towards zero when using
+regression. In addition, we show the mean of the error distributions on the
+count$=0$ horizontal line. Table~\ref{GPR_errors} quantify this errors. Greater
+improvements are in the primary mass where errors drop from $35.2 \%$ to $12.7
+\%$. The secondary mass still sees a decrease in mean percent error by about
+$14.5 \%$. The mean absolute differences in the spins also decrease by about
+half.}
+
+\begin{table}
+  \caption{\label{GPR_errors}  GPR. Mean differences in absolute value
+    $|\Delta \bar{y}|=  \frac{1}{N} \Sigma |y^i_{\rm inj} - y^i_{\rm rec/pred}|$
+    and averages of the relative differences in absolute value
+    $|\delta \bar{y}| = \frac{1}{N} \Sigma \left( |y^i_{\rm inj} -
+    y^i_{\rm rec/pred}|/y^i_{\rm inj} \right) $ for recovered and predicted data.
+    For spin variables, the standard deviation $\sigma_y$ is computed from the
+    former, while for mass variables is computed from the latter. Note that
+    ${\cal{M}}_c$ is not predicted by the NN but it is computed from the
+    predicted $m_i$.}
+  \begin{center}
+  \begin{tabular}{c|ccc|ccc}
+  \hline\hline
+  & $|\Delta \bar{y}_{\rm rec}|$  & $|\delta \bar{y}_{\rm rec}|$  & $\sigma_y^{\rm rec}$ &
+     $|\Delta \bar{y}_{\rm pred}|$ & $|\delta \bar{y}_{\rm pred}|$ & $\sigma_y^{\rm pred}$ \\
+  \hline\hline
+$m_1$          & $6.625$ & $0.352$ & $0.511$ & $3.241$ & $0.127$ & $0.279$ \\
+$m_2$          & $2.761$ & $0.256$ & $0.245$ & $1.414$ & $0.111$ & $0.319$ \\
+$\chi_1$       & $0.266$ &  /  & $0.282$ & $0.134$ &  /  & $0.194$ \\
+$\chi_2$       & $0.277$ &  /  & $0.373$ & $0.151$ &  /  & $0.225$ \\
+\hline
+${\cal{M}}_c$  & $1.323$ & $0.039$ & $0.099$ & $0.712$ & $0.027$ & $0.079$ \\
+  \hline\hline
+  \end{tabular}
+  \end{center}
+\end{table}
+
+\begin{table}
+  \caption{\label{GPR_errors_temp} GPR. Same as Table~\ref{GPR_errors} but predicting $(m_1, {\cal{M}}_c, \chi_1, \chi_2)$. }
+  \begin{center}
+  \begin{tabular}{c|ccc|ccc}
+  \hline\hline
+ %& $\bar{|\Delta y_{\rm rec}|}$ & $\bar{|\Delta y_{\rm rec}/y|}$ & $\bar{|\sigma_y_{\rm rec}|}$ & & &  \\
+  & $|\Delta \bar{y}_{\rm rec}|$  & $|\delta \bar{y}_{\rm rec}|$  & $\sigma_y^{\rm rec}$ & 
+     $|\Delta \bar{y}_{\rm pred}|$ & $|\delta \bar{y}_{\rm pred}|$ & $\sigma_y^{\rm pred}$ \\
+  \hline\hline
+$m_1$          & $6.625$ & $0.352$ & $0.511$ & $3.247$ & $0.127$ & $0.276$ \\
+${\cal{M}}_c$  & $1.323$ & $0.039$ & $0.099$ & $0.704$ & $0.027$ & $0.086$ \\
+$\chi_1$       & $0.266$ &  /  & $0.282$ & $0.135$ &  /  & $0.193$ \\
+$\chi_2$       & $0.277$ &  /  & $0.373$ & $0.151$ &  /  & $0.225$ \\
+\hline
+$m_2$          & $2.761$ & $0.256$ & $0.245$ & $1.407$ & $0.114$ & $0.351$ \\
+  \hline\hline
+  \end{tabular}
+  \end{center}
+\end{table}
+
+%%%%%% NN stuff pasted below %%%%%%%%
+
+%\begin{figure}
+%% >> python3 paper_plots.py --NN -v --plots rec_vs_pred
+%    \includegraphics[width=0.45\textwidth]{m1m2chi1chi2_NN_recvspred.png}
+%    \caption{NN version of Fig.~\ref{m_chi_comparisons}}
+%        \label{m1m2chi1chi2_NN_recvspred}
+%\end{figure}
+
+\begin{figure}
+% >> python3 paper_plots.py --NN -v --plots histo --histo_logs 1 1 0 0 --histo_fmin -10 -10 -2 -2
+    \centering
+    \includegraphics[width=0.45\textwidth]{m1m2chi1chi2_NN_histo.png}
+    \caption{Histograms}
+        \label{m1m2chi1chi2_NN_histo}
+\end{figure}
+
+\begin{table}
+% >> python3 paper_plots.py --NN -v --errortab --tab_format tex --vars m1m2chi1chi2
+  \caption{\label{tab:NN_errors}  Mean differences in absolute value $|\Delta \bar{y}|=  \frac{1}{N} \Sigma |y^i_{\rm inj} - y^i_{\rm rec/pred}|$
+  and averages of the relative
+  differences in absolute value $|\delta \bar{y}| = \frac{1}{N} \Sigma \left( |y^i_{\rm inj} - y^i_{\rm rec/pred}|/y^i_{\rm inj} \right) $ for recovered and predicted data.
+  For spin variables, the standard deviation $\sigma_y$ is computed from the former, while for mass variables is computed from the latter.
+  Note that ${\cal{M}}_c$ is not predicted by the NN but it is computed from the predicted $m_i$.}
+  \begin{center}
+  \begin{tabular}{c|ccc|ccc}
+  \hline\hline
+  & $|\Delta \bar{y}_{\rm rec}|$  & $|\delta \bar{y}_{\rm rec}|$  & $\sigma_y^{\rm rec}$ &
+     $|\Delta \bar{y}_{\rm pred}|$ & $|\delta \bar{y}_{\rm pred}|$ & $\sigma_y^{\rm pred}$ \\
+  \hline\hline
+$m_1$          & $6.625$ & $0.352$ & $0.596$ & $3.456$ & $0.134$ & $0.292$ \\
+$m_2$          & $2.761$ & $0.256$ & $0.351$ & $1.457$ & $0.123$ & $0.331$ \\
+$\chi_1$       & $0.266$ &  /  & $0.388$ & $0.138$ &  /  & $0.236$ \\
+$\chi_2$       & $0.277$ &  /  & $0.460$ & $0.153$ &  /  & $0.268$ \\
+\hline
+${\cal{M}}_c$  & $1.323$ & $0.039$ & $0.104$ & $0.769$ & $0.036$ & $0.087$ \\
+  \hline\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin{table}
+% >> python3 paper_plots.py --NN -v --errortab --tab_format tex --vars m1Mcchi1chi2
+  \caption{\label{tab:NN_errors_temp} As Table~\ref{tab:NN_errors} but predicting $(m_1, {\cal{M}}_c, \chi_1, \chi_2)$. }
+  \begin{center}
+  \begin{tabular}{c|ccc|ccc}
+  \hline\hline
+ %& $\bar{|\Delta y_{\rm rec}|}$ & $\bar{|\Delta y_{\rm rec}/y|}$ & $\bar{|\sigma_y_{\rm rec}|}$ & & &  \\
+  & $|\Delta \bar{y}_{\rm rec}|$  & $|\delta \bar{y}_{\rm rec}|$  & $\sigma_y^{\rm rec}$ &
+     $|\Delta \bar{y}_{\rm pred}|$ & $|\delta \bar{y}_{\rm pred}|$ & $\sigma_y^{\rm pred}$ \\
+  \hline\hline
+$m_1$          & $6.625$ & $0.352$ & $0.596$ & $3.488$ & $0.137$ & $0.293$ \\
+${\cal{M}}_c$  & $1.323$ & $0.039$ & $0.104$ & $0.757$ & $0.031$ & $0.083$ \\
+$\chi_1$       & $0.266$ &  /  & $0.388$ & $0.136$ &  /  & $0.236$ \\
+$\chi_2$       & $0.277$ &  /  & $0.460$ & $0.152$ &  /  & $0.268$ \\
+\hline
+$m_2$          & $2.761$ & $0.256$ & $0.351$ & $1.476$ & $0.126$ & $0.320$ \\
+  \hline\hline
+\end{tabular}
+\end{center}
+\end{table}
+
