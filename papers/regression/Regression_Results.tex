@@ -11,7 +11,7 @@
 
 \begin{figure*}[t]
     \centering
-    \includegraphics[width=\linewidth]{GPRvsNN.png}
+    \includegraphics[width=\linewidth]{GPRvsNN_with_hist.png}
     \caption{The first two panels show the recovered (gray) and regressed
              masses as a function of the injected values. The last two panels
              show the same functions for the spin magnitudes. The black line
@@ -46,16 +46,16 @@ furthest away from the true injected values are only populated by recovered
 values but not regressed values.
 }
 
-\begin{figure}
-    \centering
-    \includegraphics[width=0.45\textwidth]{m1_m2_chi_error_analysis_wboxes.png}
-    \caption{The top panels show the distributions of the mean relative errors
-            for the recovered (gray) and regressed (orange) masses. The bottom
-            panels show the distributions of the mean difference for the spins
-            magnitudes. This plot is from GPR.
-            }
-        \label{m_chi_comparisons}
-\end{figure}
+%\begin{figure}
+%    \centering
+%    \includegraphics[width=0.45\textwidth]{m1_m2_chi_error_analysis_wboxes.png}
+%    \caption{The top panels show the distributions of the mean relative errors
+%            for the recovered (gray) and regressed (orange) masses. The bottom
+%            panels show the distributions of the mean difference for the spins
+%            magnitudes. This plot is from GPR.
+%            }
+%        \label{m_chi_comparisons}
+%\end{figure}
 
 \lorena{To get a better understand on the distribution of errors for these four
 quantities, we show the mean relative error for the masses (top panels) and the
@@ -124,13 +124,13 @@ $m_2$          & $2.761$ & $0.256$ & $0.245$ & $1.407$ & $0.114$ & $0.351$ \\
 %        \label{m1m2chi1chi2_NN_recvspred}
 %\end{figure}
 
-\begin{figure}
-% >> python3 paper_plots.py --NN -v --plots histo --histo_logs 1 1 0 0 --histo_fmin -10 -10 -2 -2
-    \centering
-    \includegraphics[width=0.45\textwidth]{m1m2chi1chi2_NN_histo.png}
-    \caption{Histograms}
-        \label{m1m2chi1chi2_NN_histo}
-\end{figure}
+%\begin{figure}
+%% >> python3 paper_plots.py --NN -v --plots histo --histo_logs 1 1 0 0 --histo_fmin -10 -10 -2 -2
+%    \centering
+%    \includegraphics[width=0.45\textwidth]{m1m2chi1chi2_NN_histo.png}
+%    \caption{Histograms}
+%        \label{m1m2chi1chi2_NN_histo}
+%\end{figure}
 
 \begin{table}
 % >> python3 paper_plots.py --NN -v --errortab --tab_format tex --vars m1m2chi1chi2
