@@ -65,16 +65,16 @@ if __name__ == '__main__':
     print('Plotting ...')
     f, ax = plt.subplots(1, 2, figsize=(14, 6))
 
-    ax[0].plot(bbh_m[0][:,0], bbh_m[0][:,1], 'o', markersize=4, color=color_cycle[1], zorder=-1, label='BBH')
-    ax[0].plot(bns_m[0][:,0], bns_m[0][:,1], 'o', markersize=4, color=color_cycle[2], label='BNS')
-    ax[0].plot(nsbh_m[0][:,0], nsbh_m[0][:,1], 'o', markersize=4, color=color_cycle[3], label='NSBH')
+    ax[0].plot(bbh_m[0][:,0], bbh_m[0][:,1], 'o', markersize=2, color=color_cycle[1], zorder=-1, label='BBH')
+    ax[0].plot(bns_m[0][:,0], bns_m[0][:,1], 'o', markersize=2, color=color_cycle[2], label='BNS')
+    ax[0].plot(nsbh_m[0][:,0], nsbh_m[0][:,1], 'o', markersize=2, color=color_cycle[3], label='NSBH')
     ax[0].set_xlabel(r'$m_1$')
     ax[0].set_ylabel(r'$m_2$')
     ax[0].legend()
 
-    ax[1].plot(bbh_s[0][:,0], bbh_s[0][:,1], 'o', markersize=4, color=color_cycle[1], zorder=-3)
-    ax[1].plot(bns_s[0][:,0], bns_s[0][:,1], 'o', markersize=4, color=color_cycle[2], zorder=-1)
-    ax[1].plot(nsbh_s[0][:,0], nsbh_s[0][:,1], 'o', markersize=4, color=color_cycle[3], zorder=-2)
+    ax[1].plot(bbh_s[0][:,0], bbh_s[0][:,1], 'o', markersize=2, color=color_cycle[1], zorder=-3)
+    ax[1].plot(bns_s[0][:,0], bns_s[0][:,1], 'o', markersize=2, color=color_cycle[2], zorder=-1)
+    ax[1].plot(nsbh_s[0][:,0], nsbh_s[0][:,1], 'o', markersize=2, color=color_cycle[3], zorder=-2)
     ax[1].set_xlabel(r'$\chi_1$')
     ax[1].set_ylabel(r'$\chi_2$')
 
