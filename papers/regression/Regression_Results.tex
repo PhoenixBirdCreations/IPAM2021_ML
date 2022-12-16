@@ -68,52 +68,52 @@ improvements are in the primary mass where errors drop from $35.2 \%$ to $12.7
 $14.5 \%$. The mean absolute differences in the spins also decrease by about
 half.}
 
-\begin{table}
-  \caption{\label{GPR_errors}  GPR. Mean differences in absolute value
-    $|\Delta \bar{y}|=  \frac{1}{N} \Sigma |y^i_{\rm inj} - y^i_{\rm rec/pred}|$
-    and averages of the relative differences in absolute value
-    $|\delta \bar{y}| = \frac{1}{N} \Sigma \left( |y^i_{\rm inj} -
-    y^i_{\rm rec/pred}|/y^i_{\rm inj} \right) $ for recovered and predicted data.
-    For spin variables, the standard deviation $\sigma_y$ is computed from the
-    former, while for mass variables is computed from the latter. Note that
-    ${\cal{M}}_c$ is not predicted by the NN but it is computed from the
-    predicted $m_i$.}
-  \begin{center}
-  \begin{tabular}{c|ccc|ccc}
-  \hline\hline
-  & $|\Delta \bar{y}_{\rm rec}|$  & $|\delta \bar{y}_{\rm rec}|$  & $\sigma_y^{\rm rec}$ &
-     $|\Delta \bar{y}_{\rm pred}|$ & $|\delta \bar{y}_{\rm pred}|$ & $\sigma_y^{\rm pred}$ \\
-  \hline\hline
-$m_1$          & $6.625$ & $0.352$ & $0.511$ & $3.241$ & $0.127$ & $0.279$ \\
-$m_2$          & $2.761$ & $0.256$ & $0.245$ & $1.414$ & $0.111$ & $0.319$ \\
-$\chi_1$       & $0.266$ &  /  & $0.282$ & $0.134$ &  /  & $0.194$ \\
-$\chi_2$       & $0.277$ &  /  & $0.373$ & $0.151$ &  /  & $0.225$ \\
-\hline
-${\cal{M}}_c$  & $1.323$ & $0.039$ & $0.099$ & $0.712$ & $0.027$ & $0.079$ \\
-  \hline\hline
-  \end{tabular}
-  \end{center}
-\end{table}
-
-\begin{table}
-  \caption{\label{GPR_errors_temp} GPR. Same as Table~\ref{GPR_errors} but predicting $(m_1, {\cal{M}}_c, \chi_1, \chi_2)$. }
-  \begin{center}
-  \begin{tabular}{c|ccc|ccc}
-  \hline\hline
- %& $\bar{|\Delta y_{\rm rec}|}$ & $\bar{|\Delta y_{\rm rec}/y|}$ & $\bar{|\sigma_y_{\rm rec}|}$ & & &  \\
-  & $|\Delta \bar{y}_{\rm rec}|$  & $|\delta \bar{y}_{\rm rec}|$  & $\sigma_y^{\rm rec}$ & 
-     $|\Delta \bar{y}_{\rm pred}|$ & $|\delta \bar{y}_{\rm pred}|$ & $\sigma_y^{\rm pred}$ \\
-  \hline\hline
-$m_1$          & $6.625$ & $0.352$ & $0.511$ & $3.247$ & $0.127$ & $0.276$ \\
-${\cal{M}}_c$  & $1.323$ & $0.039$ & $0.099$ & $0.704$ & $0.027$ & $0.086$ \\
-$\chi_1$       & $0.266$ &  /  & $0.282$ & $0.135$ &  /  & $0.193$ \\
-$\chi_2$       & $0.277$ &  /  & $0.373$ & $0.151$ &  /  & $0.225$ \\
-\hline
-$m_2$          & $2.761$ & $0.256$ & $0.245$ & $1.407$ & $0.114$ & $0.351$ \\
-  \hline\hline
-  \end{tabular}
-  \end{center}
-\end{table}
+%%\begin{table}
+%%  \caption{\label{GPR_errors}  GPR. Mean differences in absolute value
+%%    $|\Delta \bar{y}|=  \frac{1}{N} \Sigma |y^i_{\rm inj} - y^i_{\rm rec/pred}|$
+%%    and averages of the relative differences in absolute value
+%%    $|\delta \bar{y}| = \frac{1}{N} \Sigma \left( |y^i_{\rm inj} -
+%%    y^i_{\rm rec/pred}|/y^i_{\rm inj} \right) $ for recovered and predicted data.
+%%    For spin variables, the standard deviation $\sigma_y$ is computed from the
+%%    former, while for mass variables is computed from the latter. Note that
+%%    ${\cal{M}}_c$ is not predicted by the NN but it is computed from the
+%%    predicted $m_i$.}
+%%  \begin{center}
+%%  \begin{tabular}{c|ccc|ccc}
+%%  \hline\hline
+%%  & $|\Delta \bar{y}_{\rm rec}|$  & $|\delta \bar{y}_{\rm rec}|$  & $\sigma_y^{\rm rec}$ &
+%%     $|\Delta \bar{y}_{\rm pred}|$ & $|\delta \bar{y}_{\rm pred}|$ & $\sigma_y^{\rm pred}$ \\
+%%  \hline\hline
+%%$m_1$          & $6.625$ & $0.352$ & $0.511$ & $3.241$ & $0.127$ & $0.279$ \\
+%%$m_2$          & $2.761$ & $0.256$ & $0.245$ & $1.414$ & $0.111$ & $0.319$ \\
+%%$\chi_1$       & $0.266$ &  /  & $0.282$ & $0.134$ &  /  & $0.194$ \\
+%%$\chi_2$       & $0.277$ &  /  & $0.373$ & $0.151$ &  /  & $0.225$ \\
+%%\hline
+%%${\cal{M}}_c$  & $1.323$ & $0.039$ & $0.099$ & $0.712$ & $0.027$ & $0.079$ \\
+%%  \hline\hline
+%%  \end{tabular}
+%%  \end{center}
+%%\end{table}
+%%
+%%\begin{table}
+%%  \caption{\label{GPR_errors_temp} GPR. Same as Table~\ref{GPR_errors} but predicting $(m_1, {\cal{M}}_c, \chi_1, \chi_2)$. }
+%%  \begin{center}
+%%  \begin{tabular}{c|ccc|ccc}
+%%  \hline\hline
+%% %& $\bar{|\Delta y_{\rm rec}|}$ & $\bar{|\Delta y_{\rm rec}/y|}$ & $\bar{|\sigma_y_{\rm rec}|}$ & & &  \\
+%%  & $|\Delta \bar{y}_{\rm rec}|$  & $|\delta \bar{y}_{\rm rec}|$  & $\sigma_y^{\rm rec}$ & 
+%%     $|\Delta \bar{y}_{\rm pred}|$ & $|\delta \bar{y}_{\rm pred}|$ & $\sigma_y^{\rm pred}$ \\
+%%  \hline\hline
+%%$m_1$          & $6.625$ & $0.352$ & $0.511$ & $3.247$ & $0.127$ & $0.276$ \\
+%%${\cal{M}}_c$  & $1.323$ & $0.039$ & $0.099$ & $0.704$ & $0.027$ & $0.086$ \\
+%%$\chi_1$       & $0.266$ &  /  & $0.282$ & $0.135$ &  /  & $0.193$ \\
+%%$\chi_2$       & $0.277$ &  /  & $0.373$ & $0.151$ &  /  & $0.225$ \\
+%%\hline
+%%$m_2$          & $2.761$ & $0.256$ & $0.245$ & $1.407$ & $0.114$ & $0.351$ \\
+%%  \hline\hline
+%%  \end{tabular}
+%%  \end{center}
+%%\end{table}
 
 %%%%%% NN stuff pasted below %%%%%%%%
 
@@ -132,48 +132,28 @@ $m_2$          & $2.761$ & $0.256$ & $0.245$ & $1.407$ & $0.114$ & $0.351$ \\
 %        \label{m1m2chi1chi2_NN_histo}
 %\end{figure}
 
-\begin{table}
+\begin{table*}
 % >> python3 paper_plots.py --NN -v --errortab --tab_format tex --vars m1m2chi1chi2
   \caption{\label{tab:NN_errors}  Mean differences in absolute value $|\Delta \bar{y}|=  \frac{1}{N} \Sigma |y^i_{\rm inj} - y^i_{\rm rec/pred}|$
   and averages of the relative
   differences in absolute value $|\delta \bar{y}| = \frac{1}{N} \Sigma \left( |y^i_{\rm inj} - y^i_{\rm rec/pred}|/y^i_{\rm inj} \right) $ for recovered and predicted data.
-  For spin variables, the standard deviation $\sigma_y$ is computed from the former, while for mass variables is computed from the latter.
-  Note that ${\cal{M}}_c$ is not predicted by the NN but it is computed from the predicted $m_i$.}
+ The standard deviation  $\sigma^{\Delta y}$ and $\sigma^{\delta y}$ are computed, respectively, from the differences and errors distributions 
+ without absolute value. Note that ${\cal{M}}_c$ is not directly predicted but it is computed from the predicted  masses $m_i$.}
   \begin{center}
-  \begin{tabular}{c|ccc|ccc}
+  \begin{tabular}{c|cccc|cccc|cccc}
   \hline\hline
-  & $|\Delta \bar{y}_{\rm rec}|$  & $|\delta \bar{y}_{\rm rec}|$  & $\sigma_y^{\rm rec}$ &
-     $|\Delta \bar{y}_{\rm pred}|$ & $|\delta \bar{y}_{\rm pred}|$ & $\sigma_y^{\rm pred}$ \\
+  & $|\Delta \bar{y}_{\rm rec}|$   & $\sigma_{\rm rec}^{\Delta y}$  & $|\delta \bar{y}_{\rm rec}|$  & $\sigma_{\rm rec}^{\delta y}$   &
+      $|\Delta \bar{y}_{\rm nn}|$   & $\sigma_{\rm nn}^{\Delta y}$   & $|\delta \bar{y}_{\rm nn}|$   & $\sigma_{\rm nn}^{\delta y}$  &
+      $|\Delta \bar{y}_{\rm gpr}|$  & $\sigma_{\rm gpr}^{\Delta y}$  & $|\delta \bar{y}_{\rm gpr}|$  & $\sigma_{\rm gpr}^{\delta y}$  \\
   \hline\hline
-$m_1$          & $6.625$ & $0.352$ & $0.596$ & $3.456$ & $0.134$ & $0.292$ \\
-$m_2$          & $2.761$ & $0.256$ & $0.351$ & $1.457$ & $0.123$ & $0.331$ \\
-$\chi_1$       & $0.266$ &  /  & $0.388$ & $0.138$ &  /  & $0.236$ \\
-$\chi_2$       & $0.277$ &  /  & $0.460$ & $0.153$ &  /  & $0.268$ \\
+$m_1$          & $6.625$ & $12.052$ & $0.352$ & $0.596$ & $3.456$ & $6.976$ & $0.134$ & $0.292$ & 3.241 & ... & 0.127 & 0.279\\
+$m_2$          & $2.761$ & $7.178$ & $0.256$ & $0.351$ & $1.457$ & $3.583$ & $0.123$ & $0.331$   &1.414  & ... & 0.111 & 0.319 \\
+$\chi_1$       & $0.266$ & $0.388$ &  /  &  /  & $0.138$ & $0.236$ &  /  &  /  & 0.134 & 0.194 & / &  / \\
+$\chi_2$       & $0.277$ & $0.460$ &  /  &  /  & $0.153$ & $0.268$ &  /  &  /  & 0.151 & 0.225 & / & / \\
 \hline
-${\cal{M}}_c$  & $1.323$ & $0.039$ & $0.104$ & $0.769$ & $0.036$ & $0.087$ \\
+${\cal{M}}_c$  & $1.323$ & $4.687$ & $0.039$ & $0.104$ & $0.769$ & $2.285$ & $0.036$ & $0.087$  & 0.712 & ... & 0.027 & 0.079\\
   \hline\hline
 \end{tabular}
 \end{center}
-\end{table}
-
-\begin{table}
-% >> python3 paper_plots.py --NN -v --errortab --tab_format tex --vars m1Mcchi1chi2
-  \caption{\label{tab:NN_errors_temp} As Table~\ref{tab:NN_errors} but predicting $(m_1, {\cal{M}}_c, \chi_1, \chi_2)$. }
-  \begin{center}
-  \begin{tabular}{c|ccc|ccc}
-  \hline\hline
- %& $\bar{|\Delta y_{\rm rec}|}$ & $\bar{|\Delta y_{\rm rec}/y|}$ & $\bar{|\sigma_y_{\rm rec}|}$ & & &  \\
-  & $|\Delta \bar{y}_{\rm rec}|$  & $|\delta \bar{y}_{\rm rec}|$  & $\sigma_y^{\rm rec}$ &
-     $|\Delta \bar{y}_{\rm pred}|$ & $|\delta \bar{y}_{\rm pred}|$ & $\sigma_y^{\rm pred}$ \\
-  \hline\hline
-$m_1$          & $6.625$ & $0.352$ & $0.596$ & $3.488$ & $0.137$ & $0.293$ \\
-${\cal{M}}_c$  & $1.323$ & $0.039$ & $0.104$ & $0.757$ & $0.031$ & $0.083$ \\
-$\chi_1$       & $0.266$ &  /  & $0.388$ & $0.136$ &  /  & $0.236$ \\
-$\chi_2$       & $0.277$ &  /  & $0.460$ & $0.152$ &  /  & $0.268$ \\
-\hline
-$m_2$          & $2.761$ & $0.256$ & $0.351$ & $1.476$ & $0.126$ & $0.320$ \\
-  \hline\hline
-\end{tabular}
-\end{center}
-\end{table}
+\end{table*}
 
