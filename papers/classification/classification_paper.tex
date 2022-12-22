@@ -118,26 +118,25 @@
 % References should be done using the \cite, \ref, and \label commands
 
 \input{Classification_Introduction.tex}
+%here why ligo wants to classify, alert astronomers, try to improve previous work (KNN) exploring more algo (RF and GP), but present also KNN for direct comparison
+
+
+\input{Classification_Data_Conditioning.tex}
+%for ML we need data, we use injections in O2. Usually the labels of NS and REM were put in this way. Then we do multilabel with that in this other way.
+%In particular to classify the REM we use 23 eos, that ligo chooses to be candidates covering wide parameter space (REF). So we have an algo for every of them. Probabilities are finally combined with weighted average by bayes factor (ref).
 
 \input{Improving_Classification.tex}
+%improving? that's not explaining the algo. I would call the section "Algorithms and results" or something similar
 \input{KNN.tex}
 \input{RF.tex}
 
-\input{Classification_Data_Conditioning.tex}
-%\footnote{We may want to add a footnote here and there.}
-
+\section{Results}
+%we present roc curves that are whatever, histograms that mean bla bla. We present in color the eos with max mass, the one with min mass, and sly because it's the one used in injections. Results for algos:
+\input{KNN_Results.tex} %plots and comments
+\input{RF_Results.tex} %plots and comments
 \input{Classification_Results.tex}
-\input{KNN_Results.tex}
-\input{RF_Results.tex}
+%comparing both, TP and FP and what do we think
 
-% Code below can be used to add figures in the section files.
-%\begin{figure}[t]
-%	\centering
-%	\includegraphics[width=.45\textwidth]{image_name}
-%	\caption{%
-%		Here we explain our plot.}
-%	\label{image_label}
-%\end{figure}
 
 \input{Classification_Conclusions.tex}
 
