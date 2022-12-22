@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2020.3.26)  16 DEC 2022 10:33
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2020.3.26)  22 DEC 2022 10:21
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -751,94 +751,14 @@ Underfull \hbox (badness 10000) in paragraph at lines 13--14
 r/m/n/10 (+20) is
  []
 
-) (./KNN_Results.tex
-<figs/CrossValK.pdf, id=112, 462.52798pt x 346.89601pt>
-File: figs/CrossValK.pdf Graphic file (type pdf)
-<use figs/CrossValK.pdf>
-Package pdftex.def Info: figs/CrossValK.pdf  used on input line 17.
-(pdftex.def)             Requested size: 203.99689pt x 152.99994pt.
-<figs/conf_matrix_NS.pdf, id=113, 722.7pt x 505.89pt>
-File: figs/conf_matrix_NS.pdf Graphic file (type pdf)
-<use figs/conf_matrix_NS.pdf>
-Package pdftex.def Info: figs/conf_matrix_NS.pdf  used on input line 23.
-(pdftex.def)             Requested size: 229.49844pt x 160.6453pt.
-<figs/plot_fig4_chatt_spins.png, id=114, 362.35374pt x 494.84875pt>
-File: figs/plot_fig4_chatt_spins.png Graphic file (type png)
-<use figs/plot_fig4_chatt_spins.png>
-Package pdftex.def Info: figs/plot_fig4_chatt_spins.png  used on input line 29.
+) (./KNN_Results.tex [3]) (./RF_Results.tex) (./Classification_Conclusions.tex)
+(./Classification_Acknowledgements.tex
 
-(pdftex.def)             Requested size: 203.99689pt x 278.59337pt.
-<figs/ROCplot_NS.pdf, id=116, 462.52798pt x 346.89601pt>
-File: figs/ROCplot_NS.pdf Graphic file (type pdf)
-<use figs/ROCplot_NS.pdf>
-Package pdftex.def Info: figs/ROCplot_NS.pdf  used on input line 36.
-(pdftex.def)             Requested size: 203.99689pt x 152.99994pt.
- [3 <./figs/CrossValK.pdf>]
-
-LaTeX Warning: A float is stuck (cannot be placed) on input line 45.
-
-
-LaTeX Warning: A float is stuck (cannot be placed) on input line 45.
-
-
-Class revtex4-2 Warning: Deferred float stuck during \clearpage processing.
-
-<figs/CrossValK_REM.pdf, id=144, 462.52798pt x 346.89601pt>
-File: figs/CrossValK_REM.pdf Graphic file (type pdf)
-<use figs/CrossValK_REM.pdf>
-Package pdftex.def Info: figs/CrossValK_REM.pdf  used on input line 47.
-(pdftex.def)             Requested size: 203.99689pt x 152.99994pt.
-<figs/conf_matrix_REM.pdf, id=145, 722.7pt x 505.89pt>
-File: figs/conf_matrix_REM.pdf Graphic file (type pdf)
-<use figs/conf_matrix_REM.pdf>
-Package pdftex.def Info: figs/conf_matrix_REM.pdf  used on input line 53.
-(pdftex.def)             Requested size: 229.49844pt x 160.6453pt.
-<figs/plot_fig4_chatt_spins_REM.png, id=149, 464.73625pt x 675.52374pt>
-File: figs/plot_fig4_chatt_spins_REM.png Graphic file (type png)
-<use figs/plot_fig4_chatt_spins_REM.png>
-Package pdftex.def Info: figs/plot_fig4_chatt_spins_REM.png  used on input line
- 61.
-(pdftex.def)             Requested size: 203.99689pt x 296.52014pt.
-<figs/ROCplot_REM.pdf, id=150, 393.56735pt x 317.41066pt>
-File: figs/ROCplot_REM.pdf Graphic file (type pdf)
-<use figs/ROCplot_REM.pdf>
-Package pdftex.def Info: figs/ROCplot_REM.pdf  used on input line 67.
-(pdftex.def)             Requested size: 203.99689pt x 164.52173pt.
-) (./RF_Results.tex) (./comparison_RF_KNN.tex [4 <./figs/conf_matrix_NS.pdf> <.
-/figs/plot_fig4_chatt_spins.png> <./figs/ROCplot_NS.pdf> <./figs/CrossValK_REM.
-pdf>]
-
-LaTeX Warning: A float is stuck (cannot be placed) on input line 4.
-
-
-LaTeX Warning: A float is stuck (cannot be placed) on input line 4.
-
-
-Class revtex4-2 Warning: Deferred float stuck during \clearpage processing.
-
-
-Overfull \hbox (0.77733pt too wide) in paragraph at lines 43--57
- []$[]$ 
- []
-
-) (./Classification_Conclusions.tex) (./Classification_Acknowledgements.tex
-
-Package natbib Warning: Citation `Chatterjee:2019avs' on page 5 undefined on in
+Package natbib Warning: Citation `Chatterjee:2019avs' on page 4 undefined on in
 put line 3.
 
-[5 <./figs/conf_matrix_REM.pdf> <./figs/plot_fig4_chatt_spins_REM.png> <./figs/
-ROCplot_REM.pdf>]
 
-LaTeX Warning: A float is stuck (cannot be placed) on input line 11.
-
-
-LaTeX Warning: A float is stuck (cannot be placed) on input line 11.
-
-
-Class revtex4-2 Warning: Deferred float stuck during \clearpage processing.
-
-
-Package natbib Warning: Citation `Hunter:2007ouj' on page 6 undefined on input 
+Package natbib Warning: Citation `Hunter:2007ouj' on page 4 undefined on input 
 line 29.
 
 
@@ -851,49 +771,65 @@ No file classification_paper.bbl.
 
 Package natbib Warning: There were undefined citations.
 
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 151.
-[6]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 151.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 150.
+[4]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 150.
  (./classification_paper.aux)
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 151.
-Package rerunfilecheck Info: File `classification_paper.out' has not changed.
-(rerunfilecheck)             Checksum: 96FD297EE287CECE6D377CFA44449887;939.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 150.
+
+
+Package rerunfilecheck Warning: File `classification_paper.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `classification_paper.out':
+(rerunfilecheck)             Before: 96FD297EE287CECE6D377CFA44449887;939
+(rerunfilecheck)             After:  C490F8368C975B55D6191C67C421EFF5;753.
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right .
+
+
  ) 
 Here is how much of TeX's memory you used:
- 12648 strings out of 492616
- 181370 string characters out of 6129481
+ 12562 strings out of 492616
+ 179697 string characters out of 6129481
  384216 words of memory out of 5000000
- 16090 multiletter control sequences out of 15000+600000
- 29686 words of font info for 143 fonts, out of 8000000 for 9000
+ 16058 multiletter control sequences out of 15000+600000
+ 28619 words of font info for 128 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  37i,9n,38p,911b,409s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/2019/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}
-</usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><
-/usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></u
+pdfTeX warning (dest): name{section*.15} has been referenced but does not exi
+st, replaced by a fixed one
+
+pdfTeX warning (dest): name{section*.14} has been referenced but does not exist
+, replaced by a fixed one
+
+pdfTeX warning (dest): name{section*.13} has been referenced but does not exist
+, replaced by a fixed one
+
+{/usr/local/texlive/2019/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}</
+usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></u
 sr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr
-/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/l
-ocal/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/loca
-l/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/t
-exlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texl
-ive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texli
-ve/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive
-/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2
-019/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texli
-ve/2019/texmf-dist/fonts/type1/public/cm-super/sfbx0900.pfb></usr/local/texlive
-/2019/texmf-dist/fonts/type1/public/cm-super/sfbx1000.pfb></usr/local/texlive/2
-019/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texlive/201
-9/texmf-dist/fonts/type1/public/cm-super/sfrm0600.pfb></usr/local/texlive/2019/
-texmf-dist/fonts/type1/public/cm-super/sfrm0700.pfb></usr/local/texlive/2019/te
-xmf-dist/fonts/type1/public/cm-super/sfrm0800.pfb></usr/local/texlive/2019/texm
-f-dist/fonts/type1/public/cm-super/sfrm0900.pfb></usr/local/texlive/2019/texmf-
-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/local/texlive/2019/texmf-di
-st/fonts/type1/public/cm-super/sfti0900.pfb></usr/local/texlive/2019/texmf-dist
-/fonts/type1/public/cm-super/sfti1000.pfb></usr/local/texlive/2019/texmf-dist/f
-onts/type1/public/cm-super/sftt1000.pfb>
-Output written on classification_paper.pdf (6 pages, 1032730 bytes).
+/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/lo
+cal/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local
+/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/
+texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/te
+xlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texl
+ive/2019/texmf-dist/fonts/type1/public/cm-super/sfbx0900.pfb></usr/local/texliv
+e/2019/texmf-dist/fonts/type1/public/cm-super/sfbx1000.pfb></usr/local/texlive/
+2019/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texlive/20
+19/texmf-dist/fonts/type1/public/cm-super/sfrm0600.pfb></usr/local/texlive/2019
+/texmf-dist/fonts/type1/public/cm-super/sfrm0700.pfb></usr/local/texlive/2019/t
+exmf-dist/fonts/type1/public/cm-super/sfrm0800.pfb></usr/local/texlive/2019/tex
+mf-dist/fonts/type1/public/cm-super/sfrm0900.pfb></usr/local/texlive/2019/texmf
+-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/local/texlive/2019/texmf-d
+ist/fonts/type1/public/cm-super/sfti0900.pfb></usr/local/texlive/2019/texmf-dis
+t/fonts/type1/public/cm-super/sfti1000.pfb></usr/local/texlive/2019/texmf-dist/
+fonts/type1/public/cm-super/sftt1000.pfb>
+Output written on classification_paper.pdf (4 pages, 315900 bytes).
 PDF statistics:
- 304 PDF objects out of 1000 (max. 8388607)
- 254 compressed objects within 3 object streams
- 43 named destinations out of 1000 (max. 500000)
- 26273 words of extra memory for PDF output out of 29859 (max. 10000000)
+ 192 PDF objects out of 1000 (max. 8388607)
+ 166 compressed objects within 2 object streams
+ 32 named destinations out of 1000 (max. 500000)
+ 26233 words of extra memory for PDF output out of 29859 (max. 10000000)
 

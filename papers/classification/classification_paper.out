@@ -7,9 +7,6 @@
 \BOOKMARK [1][-]{section*.7}{Dataset and labeling}{section*.2}% 7
 \BOOKMARK [1][-]{section*.8}{Results}{section*.2}% 8
 \BOOKMARK [2][-]{section*.9}{KNN Results}{section*.8}% 9
-\BOOKMARK [3][-]{section*.10}{Has NS}{section*.9}% 10
-\BOOKMARK [3][-]{section*.11}{Has REM}{section*.9}% 11
-\BOOKMARK [2][-]{section*.12}{RF Results}{section*.8}% 12
-\BOOKMARK [2][-]{section*.13}{Comparison between RF and KNN}{section*.8}% 13
-\BOOKMARK [1][-]{section*.14}{Conclusions}{section*.2}% 14
-\BOOKMARK [1][-]{section*.15}{Acknowledgments}{section*.2}% 15
+\BOOKMARK [2][-]{section*.10}{RF Results}{section*.8}% 10
+\BOOKMARK [1][-]{section*.11}{Conclusions}{section*.2}% 11
+\BOOKMARK [1][-]{section*.12}{Acknowledgments}{section*.2}% 12
