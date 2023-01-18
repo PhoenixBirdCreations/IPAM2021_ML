@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.3) (preloaded format=pdflatex 2023.1.16)  18 JAN 2023 11:54
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.3) (preloaded format=pdflatex 2023.1.16)  18 JAN 2023 12:01
 entering extended mode
 **./classification_paper.tex
 (classification_paper.tex
@@ -574,8 +574,14 @@ x.def
 File: l3backend-pdftex.def 2021-03-18 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count302
 \l__pdf_internal_box=\box74
+) (classification_paper.aux
+
+LaTeX Warning: Label `tab:my-table' multiply defined.
+
+
+LaTeX Warning: Label `tab:my-table' multiply defined.
+
 )
-No file classification_paper.aux.
 \openout1 = `classification_paper.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 67.
@@ -656,13 +662,15 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 LaTeX Info: Redefining \ref on input line 67.
 LaTeX Info: Redefining \pageref on input line 67.
 LaTeX Info: Redefining \nameref on input line 67.
+ (classification_paper.out) (classification_paper.out)
 \@outlinefile=\write4
 \openout4 = `classification_paper.out'.
 
 Class revtex4-2 Info: Taking \maketitle back from hyperref on input line 67.
 \openout3 = `classification_paperNotes.bib'.
 
- (Classification_Abstract.tex)
+
+(Classification_Abstract.tex)
 LaTeX Font Info:    Trying to load font information for U+msa on input line 113
 .
 
@@ -742,156 +750,123 @@ LaTeX Warning: A float is stuck (cannot be placed) on input line 11.
 
 Class revtex4-2 Warning: Deferred float stuck during \clearpage processing.
 
-
-LaTeX Warning: Reference `tab:KNN_CV' on page 3 undefined on input line 12.
-
-
-LaTeX Warning: Reference `tab:KNN_CV' on page 3 undefined on input line 12.
-
-
-LaTeX Warning: Reference `fig:KNN_confmat_SLY' on page 3 undefined on input lin
-e 52.
-
-
-LaTeX Warning: Reference `fig:KNN_paramsweep_NS_SLY' on page 3 undefined on inp
-ut line 52.
-
-
-LaTeX Warning: Reference `fig:KNN_paramsweep_REM_SLY' on page 3 undefined on in
-put line 52.
-
-<././//figs/KNN_confmat_SLy.png, id=57, 545.6385pt x 419.8887pt>
+<././//figs/KNN_confmat_SLy.png, id=103, 545.6385pt x 419.8887pt>
 File: ././//figs/KNN_confmat_SLy.png Graphic file (type png)
 <use ././//figs/KNN_confmat_SLy.png>
 Package pdftex.def Info: ././//figs/KNN_confmat_SLy.png  used on input line 56.
 
 (pdftex.def)             Requested size: 229.49844pt x 176.60832pt.
-<././//figs/KNN_param_sweep_spin_NS_SLy.png, id=59, 729.2043pt x 875.1897pt>
+<././//figs/KNN_param_sweep_spin_NS_SLy.png, id=105, 729.2043pt x 875.1897pt>
 File: ././//figs/KNN_param_sweep_spin_NS_SLy.png Graphic file (type png)
 <use ././//figs/KNN_param_sweep_spin_NS_SLy.png>
 Package pdftex.def Info: ././//figs/KNN_param_sweep_spin_NS_SLy.png  used on in
 put line 62.
 (pdftex.def)             Requested size: 229.49844pt x 275.44583pt.
-<././//figs/KNN_param_sweep_spin_REM_SLy.png, id=60, 729.2043pt x 875.1897pt>
+<././//figs/KNN_param_sweep_spin_REM_SLy.png, id=106, 729.2043pt x 875.1897pt>
 File: ././//figs/KNN_param_sweep_spin_REM_SLy.png Graphic file (type png)
 <use ././//figs/KNN_param_sweep_spin_REM_SLy.png>
 Package pdftex.def Info: ././//figs/KNN_param_sweep_spin_REM_SLy.png  used on i
 nput line 68.
 (pdftex.def)             Requested size: 229.49844pt x 275.44583pt.
-
-LaTeX Warning: Reference `fig:KNN_hist_BHFBBB2' on page 3 undefined on input li
-ne 72.
-
-
-LaTeX Warning: Reference `fig:KNN_hist_SLY' on page 3 undefined on input line 7
-2.
-
-
-LaTeX Warning: Reference `fig:KNN_hist_MS1PP' on page 3 undefined on input line
- 72.
-
-<././//figs/KNN_BHF_BBB2_NShist.png, id=61, 398.2077pt x 336.0555pt>
+<././//figs/KNN_BHF_BBB2_NShist.png, id=110, 398.2077pt x 336.0555pt>
 File: ././//figs/KNN_BHF_BBB2_NShist.png Graphic file (type png)
 <use ././//figs/KNN_BHF_BBB2_NShist.png>
 Package pdftex.def Info: ././//figs/KNN_BHF_BBB2_NShist.png  used on input line
  76.
 (pdftex.def)             Requested size: 229.49844pt x 193.67651pt.
-<././//figs/KNN_BHF_BBB2_REMhist.png, id=62, 398.2077pt x 336.0555pt>
+<././//figs/KNN_BHF_BBB2_REMhist.png, id=111, 398.2077pt x 336.0555pt>
 File: ././//figs/KNN_BHF_BBB2_REMhist.png Graphic file (type png)
 <use ././//figs/KNN_BHF_BBB2_REMhist.png>
 Package pdftex.def Info: ././//figs/KNN_BHF_BBB2_REMhist.png  used on input lin
 e 77.
 (pdftex.def)             Requested size: 229.49844pt x 193.67651pt.
-<././//figs/KNN_SLy_NShist.png, id=63, 398.2077pt x 336.0555pt>
+<././//figs/KNN_SLy_NShist.png, id=112, 398.2077pt x 336.0555pt>
 File: ././//figs/KNN_SLy_NShist.png Graphic file (type png)
 <use ././//figs/KNN_SLy_NShist.png>
 Package pdftex.def Info: ././//figs/KNN_SLy_NShist.png  used on input line 83.
 (pdftex.def)             Requested size: 229.49844pt x 193.67651pt.
-<././//figs/KNN_SLy_REMhist.png, id=64, 398.2077pt x 336.0555pt>
+<././//figs/KNN_SLy_REMhist.png, id=113, 398.2077pt x 336.0555pt>
 File: ././//figs/KNN_SLy_REMhist.png Graphic file (type png)
 <use ././//figs/KNN_SLy_REMhist.png>
 Package pdftex.def Info: ././//figs/KNN_SLy_REMhist.png  used on input line 84.
 
 (pdftex.def)             Requested size: 229.49844pt x 193.67651pt.
-<././//figs/KNN_MS1_PP_NShist.png, id=65, 398.2077pt x 336.0555pt>
+<././//figs/KNN_MS1_PP_NShist.png, id=114, 398.2077pt x 336.0555pt>
 File: ././//figs/KNN_MS1_PP_NShist.png Graphic file (type png)
 <use ././//figs/KNN_MS1_PP_NShist.png>
 Package pdftex.def Info: ././//figs/KNN_MS1_PP_NShist.png  used on input line 9
 0.
 (pdftex.def)             Requested size: 229.49844pt x 193.67651pt.
-<././//figs/KNN_MS1_PP_REMhist.png, id=66, 398.2077pt x 336.0555pt>
+<././//figs/KNN_MS1_PP_REMhist.png, id=115, 398.2077pt x 336.0555pt>
 File: ././//figs/KNN_MS1_PP_REMhist.png Graphic file (type png)
 <use ././//figs/KNN_MS1_PP_REMhist.png>
 Package pdftex.def Info: ././//figs/KNN_MS1_PP_REMhist.png  used on input line 
 91.
 (pdftex.def)             Requested size: 229.49844pt x 193.67651pt.
-
-LaTeX Warning: Reference `fig:KNN_roc' on page 3 undefined on input line 95.
-
-<././//figs/ROC_KNN_NS.png, id=67, 501.5538pt x 321.96284pt>
+<././//figs/ROC_KNN_NS.png, id=117, 501.5538pt x 321.96284pt>
 File: ././//figs/ROC_KNN_NS.png Graphic file (type png)
 <use ././//figs/ROC_KNN_NS.png>
 Package pdftex.def Info: ././//figs/ROC_KNN_NS.png  used on input line 99.
 (pdftex.def)             Requested size: 229.49844pt x 147.32356pt.
-<././//figs/ROC_KNN_REM.png, id=68, 496.85625pt x 321.96284pt>
+<././//figs/ROC_KNN_REM.png, id=118, 496.85625pt x 321.96284pt>
 File: ././//figs/ROC_KNN_REM.png Graphic file (type png)
 <use ././//figs/ROC_KNN_REM.png>
 Package pdftex.def Info: ././//figs/ROC_KNN_REM.png  used on input line 100.
 (pdftex.def)             Requested size: 229.49844pt x 148.71388pt.
+[3 <././//figs/KNN_confmat_SLy.png>]
+
+LaTeX Warning: A float is stuck (cannot be placed) on input line 103.
+
+
+LaTeX Warning: A float is stuck (cannot be placed) on input line 103.
+
+
+Class revtex4-2 Warning: Deferred float stuck during \clearpage processing.
+
 ) (RF_Results.tex
-<././//figs/BHF_BBB2_NShist.png, id=69, 404.35065pt x 338.2236pt>
+<././//figs/BHF_BBB2_NShist.png, id=137, 404.35065pt x 338.2236pt>
 File: ././//figs/BHF_BBB2_NShist.png Graphic file (type png)
 <use ././//figs/BHF_BBB2_NShist.png>
 Package pdftex.def Info: ././//figs/BHF_BBB2_NShist.png  used on input line 5.
 (pdftex.def)             Requested size: 229.49844pt x 191.96887pt.
-<././//figs/BHF_BBB2_REMhist.png, id=70, 404.35065pt x 338.2236pt>
+<././//figs/BHF_BBB2_REMhist.png, id=138, 404.35065pt x 338.2236pt>
 File: ././//figs/BHF_BBB2_REMhist.png Graphic file (type png)
 <use ././//figs/BHF_BBB2_REMhist.png>
 Package pdftex.def Info: ././//figs/BHF_BBB2_REMhist.png  used on input line 6.
 
 (pdftex.def)             Requested size: 229.49844pt x 191.96887pt.
- [3 <././//figs/KNN_confmat_SLy.png>]
-
-LaTeX Warning: A float is stuck (cannot be placed) on input line 9.
-
-
-LaTeX Warning: A float is stuck (cannot be placed) on input line 9.
-
-
-Class revtex4-2 Warning: Deferred float stuck during \clearpage processing.
-
-<././//figs/SLy_NShist.png, id=85, 404.35065pt x 338.58495pt>
+<././//figs/SLy_NShist.png, id=139, 404.35065pt x 338.58495pt>
 File: ././//figs/SLy_NShist.png Graphic file (type png)
 <use ././//figs/SLy_NShist.png>
 Package pdftex.def Info: ././//figs/SLy_NShist.png  used on input line 12.
 (pdftex.def)             Requested size: 229.49844pt x 192.17397pt.
-<././//figs/SLy_REMhist.png, id=86, 404.35065pt x 338.58495pt>
+<././//figs/SLy_REMhist.png, id=140, 404.35065pt x 338.58495pt>
 File: ././//figs/SLy_REMhist.png Graphic file (type png)
 <use ././//figs/SLy_REMhist.png>
 Package pdftex.def Info: ././//figs/SLy_REMhist.png  used on input line 13.
 (pdftex.def)             Requested size: 229.49844pt x 192.17397pt.
-<././//figs/MS1_PP_NShist.png, id=87, 404.35065pt x 338.2236pt>
+<././//figs/MS1_PP_NShist.png, id=141, 404.35065pt x 338.2236pt>
 File: ././//figs/MS1_PP_NShist.png Graphic file (type png)
 <use ././//figs/MS1_PP_NShist.png>
 Package pdftex.def Info: ././//figs/MS1_PP_NShist.png  used on input line 19.
 (pdftex.def)             Requested size: 229.49844pt x 191.96887pt.
-<././//figs/MS1_PP_REMhist.png, id=88, 404.35065pt x 338.2236pt>
+<././//figs/MS1_PP_REMhist.png, id=142, 404.35065pt x 338.2236pt>
 File: ././//figs/MS1_PP_REMhist.png Graphic file (type png)
 <use ././//figs/MS1_PP_REMhist.png>
 Package pdftex.def Info: ././//figs/MS1_PP_REMhist.png  used on input line 20.
 (pdftex.def)             Requested size: 229.49844pt x 191.96887pt.
-<././//figs/HasNS_roc.png, id=89, 516.0078pt x 328.1058pt>
+<././//figs/HasNS_roc.png, id=143, 516.0078pt x 328.1058pt>
 File: ././//figs/HasNS_roc.png Graphic file (type png)
 <use ././//figs/HasNS_roc.png>
 Package pdftex.def Info: ././//figs/HasNS_roc.png  used on input line 26.
 (pdftex.def)             Requested size: 229.49844pt x 145.92902pt.
-<././//figs/HasREM_roc.png, id=90, 516.0078pt x 328.1058pt>
+<././//figs/HasREM_roc.png, id=144, 516.0078pt x 328.1058pt>
 File: ././//figs/HasREM_roc.png Graphic file (type png)
 <use ././//figs/HasREM_roc.png>
 Package pdftex.def Info: ././//figs/HasREM_roc.png  used on input line 27.
 (pdftex.def)             Requested size: 229.49844pt x 145.92902pt.
-) (Classification_Results.tex) (Classification_Conclusions.tex)
-(Classification_Acknowledgements.tex
+) (Classification_Results.tex) (Classification_Conclusions.tex) (Classification
+_Acknowledgements.tex
 
 Package natbib Warning: Citation `Chatterjee:2019avs' on page 4 undefined on in
 put line 3.
@@ -939,25 +914,16 @@ png> <././//figs/SLy_REMhist.png>] [9 <././//figs/MS1_PP_NShist.png> <././//fig
 s/MS1_PP_REMhist.png>] [10 <././//figs/HasNS_roc.png> <././//figs/HasREM_roc.pn
 g>] (classification_paper.aux)
 
-LaTeX Warning: There were undefined references.
+LaTeX Warning: There were multiply-defined labels.
 
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
-
-Package rerunfilecheck Warning: File `classification_paper.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `classification_paper.out':
-(rerunfilecheck)             Before: <no file>
-(rerunfilecheck)             After:  7CACA8CE146A52EC5966AC10E5A3F18E;1675.
+Package rerunfilecheck Info: File `classification_paper.out' has not changed.
+(rerunfilecheck)             Checksum: 7CACA8CE146A52EC5966AC10E5A3F18E;1675.
  ) 
 Here is how much of TeX's memory you used:
- 15407 strings out of 481257
- 229129 string characters out of 2907743
- 618664 words of memory out of 3000000
- 32100 multiletter control sequences out of 15000+200000
+ 15427 strings out of 481257
+ 229703 string characters out of 2907743
+ 619533 words of memory out of 3000000
+ 32114 multiletter control sequences out of 15000+200000
  429661 words of font info for 163 fonts, out of 3000000 for 9000
  0 hyphenation exceptions out of 8191
  71i,10n,74p,1019b,415s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -984,9 +950,9 @@ c/cm-super/sfrm0900.pfb></home/miquelmiravet/.miktex/texmfs/install/fonts/type1
 /type1/public/cm-super/sfti0900.pfb></home/miquelmiravet/.miktex/texmfs/install
 /fonts/type1/public/cm-super/sfti1000.pfb></home/miquelmiravet/.miktex/texmfs/i
 nstall/fonts/type1/public/cm-super/sftt1000.pfb>
-Output written on classification_paper.pdf (10 pages, 1628480 bytes).
+Output written on classification_paper.pdf (10 pages, 1633608 bytes).
 PDF statistics:
- 229 PDF objects out of 1000 (max. 8388607)
+ 275 PDF objects out of 1000 (max. 8388607)
  47 named destinations out of 1000 (max. 500000)
- 47712 words of extra memory for PDF output out of 51595 (max. 10000000)
+ 47808 words of extra memory for PDF output out of 51595 (max. 10000000)
 
