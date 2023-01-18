@@ -9,16 +9,97 @@
 
 We apply cross validation in order to fix the different hyperparameters of the algorithm.  To do so, we compute the score over a range of different parameters. We consider a number of neighbors between 1 and 20; the different metrics we test are the \textit{euclidean}, \textit{manhattan} and \textit{cityblock}; the algorithms to compute the nearest neighbors can be \texttt{BallTree}, \texttt{KDTree} and the brute-force search, and the possible weight functions are the uniform weights (all points are weighted equally) and the \textit{distance} weights (points are weighted by the inverse of their distance). 
 
-Considering all these possibilities, we apply the cross val score function from \texttt{scikit-learn} using a 10-fold cross validation to all the 23 datasets with different EOS.  We find that the optimal metric, algorithm and weights are the same for all the EOS, being the  \textit{manhattan} metric, the \texttt{BallTree} algorithm (with a leaf size of 30) and the \textit{distance} weights. The only parameter that differs is the number of neighbors, that goes from 8 to 12. Doing an average weighting by the Bayes factor of each EOS, we finally get an optimal number of neighbors of 10. The mean score from the cross validation goes from \mmt{[MMT: lower score]} to \mmt{[MMT: higher score]}. \mmt{[MMT: Should I put a table with the optimal number of neighbors and the score of each EOS?]}.  
+Considering all these possibilities, we apply the \texttt{cross val score} function from \texttt{scikit-learn} using a 10-fold cross validation to all the 23 datasets with different EOS.  We find that the optimal metric, algorithm and weights are the same for all the EOS, being the  \textit{manhattan} metric, the \texttt{BallTree} algorithm (with a leaf size of 30) and the \textit{distance} weights. The only parameter that differs is the number of neighbors, that goes from 8 to 12. One can find the optimal hyperparameters and the corresponding score for each EOS in Table~\ref{tab:KNN_CV}. Doing an average weighting by the Bayes factor of each EOS, we finally get an optimal number of neighbors of 10. The mean score from the cross validation goes from 0.941 (for H4 EOS) to 0.953 (for APR4 EPP), as one can see in Table~\ref{tab:KNN_CV}.  
+
+\begin{table}
+    \centering
+\begin{tabular}{cccc}
+\hline
+    EOS & Score & $N_{\rm neighbors}$ & Bayes Factor\\
+    \hline 
+    \hline
+    APR4 EPP & 0.953 & 10 &  1.526 \\
+    BHF BBB2 & 0.951 & 8  &  1.555 \\
+    H4       & 0.941 & 10 &  0.056 \\
+    HQC18    & 0.950 & 10 &  1.422 \\
+    KDE0V    & 0.951 & 8  &  1.177 \\
+    KDE0V1   & 0.949 & 10 &  1.283 \\
+    MPA1     & 0.951 & 14 &  0.276 \\
+    MS1 PP   & 0.948 & 12 &  0.001 \\
+    MS1B PP  & 0.947 & 11 &  0.009 \\
+    RS       & 0.945 & 10 &  0.176 \\
+    SK255    & 0.946 & 10 &  0.179 \\
+    SK272    & 0.945 & 10 &  0.156 \\
+    SKI2     & 0.943 & 12 &  0.108 \\ 
+    SKI3     & 0.943 & 12 &  0.107 \\
+    SKI4     & 0.949 & 10 &  0.330 \\
+    SKI5     & 0.945 & 9  &  0.025 \\
+    SKI6     & 0.949 & 10 &  0.288 \\
+    SKMP     & 0.948 & 10 &  0.290 \\
+    SKOP     & 0.948 & 10 &  0.618 \\
+    SLy      & 0.950 & 10 &  1.000 \\
+    SLY2     & 0.950 & 10 &  1.028 \\
+    SLY9     & 0.949 & 10 &  0.370 \\
+    SLY230A  & 0.950 & 10 &  0.932 \\
+    
+\hline
+\end{tabular}
+    \caption{}
+    \label{tab:KNN_CV}
+\end{table}
 
 
-Considering now the SLy EOS,  the model with these parameters gives a confusion matrix that is shown in Fig .  The probability of having a NS as a function of $m_1$ and $m_2$  is shown in Figs . There are no big differences with different values of the spins, but the most remarkable one is that the model classifies better for 0-spin values, especially when $m_1$ is large.  There is also a dependence of the probability of having a remnant on the value of the spin that can be seen in Fig \mmt{[MMT: add red line to the plots]}.This dependence is correct, since the probability of having a remnant increases for large values of $m_1$ at larger spin, but this dependence is given by the EOS. 
+Considering now the SLy EOS,  the model with these parameters gives a confusion matrix that is shown in Fig.~\ref{fig:KNN_confmat_SLY}.  The probability of having a NS as a function of $m_1$ and $m_2$  is shown in Fig.~\ref{fig:KNN_paramsweep_NS_SLY}. There are no big differences with different values of the spins, but the most remarkable one is that the model classifies better for 0-spin values, especially when $m_1$ is large.  There is also a dependence of the probability of having a remnant on the value of the spin that can be seen in Fig.~\ref{fig:KNN_paramsweep_REM_SLY}.This dependence is correct, since the probability of having a remnant increases for large values of $m_1$ at larger spin, but this dependence is given by the EOS. 
 
-In Fig. we depict the histograms of the probabilities p(\textit{HasNS}) (p(\textit{HasRemnant})) for injections of binaries that had a NS (EM counterpart) and for those that not \mmt{[MMT: do you want to put different EOS here?]}.
+\begin{figure}
+\centering
+\includegraphics[width=0.45\textwidth]{/figs/KNN_confmat_SLy.png}
+\caption{\label{fig:KNN_confmat_SLY} Confusion matrix SLy KNN}
+\end{figure}
 
-We show in Fig. the ROC curves of the classifier for the two different probabilities we consider. All the EOS are depicted in this figure, but we highlight three cases: BHF BBB2, MS1 PP and SLy \mmt{[MMT: I don't remember now why we took these ones]}.
+\begin{figure}
+\centering
+\includegraphics[width=0.45\textwidth]{/figs/KNN_param_sweep_spin_NS_SLy.png}
+\caption{\label{fig:KNN_paramsweep_NS_SLY} Parameter sweep NS SLy KNN}
+\end{figure}
 
+\begin{figure}
+\centering
+\includegraphics[width=0.45\textwidth]{/figs/KNN_param_sweep_spin_REM_SLy.png}
+\caption{\label{fig:KNN_paramsweep_REM_SLY} Parameter sweep REM SLy KNN}
+\end{figure}
 
+In Figs.~\ref{fig:KNN_hist_BHFBBB2}, \ref{fig:KNN_hist_SLY} and \ref{fig:KNN_hist_MS1PP}  we depict the histograms of the probabilities p(\textit{HasNS}) (p(\textit{HasRemnant})) for injections of binaries that had a NS (EM counterpart) and for those that not, for the EOS BHF BB2, MS1 PP and SLy, respectively.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.45\textwidth]{/figs/KNN_BHF_BBB2_NShist.png}
+\includegraphics[width=0.45\textwidth]{/figs/KNN_BHF_BBB2_REMhist.png}
+\caption{\label{fig:KNN_hist_BHFBBB2} Histograms BHF BBB2 KNN}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.45\textwidth]{/figs/KNN_SLy_NShist.png}
+\includegraphics[width=0.45\textwidth]{/figs/KNN_SLy_REMhist.png}
+\caption{\label{fig:KNN_hist_SLY} Histograms SLy KNN}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.45\textwidth]{/figs/KNN_MS1_PP_NShist.png}
+\includegraphics[width=0.45\textwidth]{/figs/KNN_MS1_PP_REMhist.png}
+\caption{\label{fig:KNN_hist_MS1PP} Histograms MS1 PP KNN}
+\end{figure}
+
+We show in Fig.~\ref{fig:KNN_roc} the ROC curves of the classifier for the two different probabilities we consider. All the EOS are depicted in this figure, but we highlight three cases: BHF BBB2, MS1 PP and SLy.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.45\textwidth]{/figs/ROC_KNN_NS.png}
+\includegraphics[width=0.45\textwidth]{/figs/ROC_KNN_REM.png}
+\caption{\label{fig:KNN_roc} ROC curves KNN}
+\end{figure}
 
 
 
