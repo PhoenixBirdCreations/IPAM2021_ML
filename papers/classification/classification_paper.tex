@@ -125,7 +125,7 @@
 %for ML we need data, we use injections in O2. Usually the labels of NS and REM were put in this way. Then we do multilabel with that in this other way.
 %In particular to classify the REM we use 23 eos, that ligo chooses to be candidates covering wide parameter space (REF). So we have an algo for every of them. Probabilities are finally combined with weighted average by bayes factor (ref).
 
-\input{Improving_Classification.tex}
+%\input{Improving_Classification.tex}
 %improving? that's not explaining the algo. I would call the section "Algorithms and results" or something similar
 \input{KNN.tex}
 \input{RF.tex}
@@ -138,6 +138,7 @@ We highlight three reference EoS in color, from which we show results in more de
 Here are the results for both methods:
 \input{KNN_Results.tex} %plots and comments
 \input{RF_Results.tex} %plots and comments
+\subsection{Algorithm comparison}
 \input{Classification_Results.tex}
 %comparing both, TP and FP and what do we think
 
