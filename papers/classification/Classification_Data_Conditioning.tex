@@ -1,14 +1,12 @@
 \section{Dataset and labeling}
 \label{sec:dataset}
-HasNS true if m2inj<3Ms
+In this section, we discuss the data conditioning process our study. The data we use for training and testing are the same injections during O2 as in  [REF Deep's paper], also aiming to predictict the probability of a detected event of having a neutron star (HasNS) and/or a remnant object (HasREM) that could emit an electromagnetic counterpart. As we utilize supervised ML techniques, we first label the data accordingly.
 
-HasREM Focault remnant mass >0. Requires compactness so it is model dependent. The O2 dataset used 2H EoS. Later we do the training with 23 EoS and do a weighted average according to the Bayes factor of each EoS, obtaining analogous performance.
+HasNS is considered true if $m2_inj< 3M\odot$ as in [REF]. For HasREM and following [REF] we use the Focault formula for the remnant mass and if the result is greater than 0 we label the event as true . However, this formula depends on the Equation of State (EoS) as it utilizes the compactness of the NS. The injections used in our study utilize the 2H EoS, but we relabel the data with a different one as explained later, as the EoS used for labelling the training data will affect the ability of predicting correctly a real event.
 
-Until here is same as Deep.
+Predicting the presence of a NS and the creation of a remnant object like this requires a binary classifier for each of the two tasks. We employ a new approach that utilizes the relationship between HasNS and HasREM to train a single multilabel classifier. We relabel the data into 3 mutually exclusive categories: label 0 if there is no NS and no remnant, label 1 if there is a NS but no remnant, and label 2 if there are both. Our labelling is summarized in table \ref{tab:labels}. This labeling eliminates the possibility of an unphysical classification of the event, where $p(HasREM)>p(HasNS)$, as there is no category for HasREM but no NS.
 
-NEW: Instead of training two different classifiers, one for each feature, as they are in part related (an event cannot have remnant if there is no NS) we build 3 mutually exclusive categories: label 0 if no NS and no remnant, label 1 if NS but no remnant, label 2 if both. This labeling eliminates the posibility of an unphysical classification of the event, where pHasRem>pHasNS, as there is no category for hasREM but no NS. As the categories are mutually exclusive $p(0)+p(1)+p(2)=1$. Trivially p(HasREM)=p(2). And for the NS
-p(hasNS)=p(hasNS and hasREM $\cup$ hasNS and No hasREM)=p(2$\cup$1)=p(2)+p(1)=1-p(0)
-
+As the categories are mutually exclusive, $p(0)+p(1)+p(2)=1$. Therefore, p(HasREM)=p(2) and for the NS, p(hasNS)=p(hasNS and hasREM $\cup$ hasNS and No hasREM)=p(2$\cup$1)=p(2)+p(1)=1-p(0). This approach allows us to use a single classifier while avoiding any unphysical classifications without further treatment of the data or the output.
 
 \begin{table}[h]
 \centering
@@ -23,7 +21,7 @@ HasNS & HasRem & Our label \\ \midrule
 \label{tab:labels}
 \end{table}
 
-We test the performance using random forest (RF) and compare the results with k-nearest neighbors (KNN) [paper Deep] and genetic programming (GP) [paper GP].
+In order to avoid conditioning the results of HasREM too heavily to the equation of state (EOS) selected for training, we labeled the dataset with the 23 EOS selected by the LIGO-Virgo collaboration in [ref] for studies of neutron stars. These EOS cover a wide parameter space, making together a robust estimation for the neutron star composition.
 
-135538 training samples. 58088 for testing. Training/testing dataset: injections in O2 data stream. (Injections time and waveform approximants detailed in Chatterjee et al 2020).
-23 eos, change the rem label
+An algorithm was trained for each of the 23 EOS and predictions were obtained. The final prediction provided is a weighted average between the results of all of them, with the weights determined by the Bayes factor of each EoS, as explained in [ref2]. This approach allows for the consideration of multiple EOS and their relative likelihoods, resulting in a more robust and accurate prediction.
+
