@@ -12,7 +12,7 @@
 
 %\mmt{Finally, the F1 score $F1 = 2(\rm{precision \times sensitivity})/(\rm{precision+sensitivity})$ is a type of score that takes into consideration how precision and %sensitivity compensate each other. A perfect classifier would have a F1 score of 1.}
 
-
+To compare quantitatively the results from RF and KNN we compute the true positive and false positive rate for several threshold values, for both HasNS and HasREM, for the three selected EoS. These are tables \ref{tab:TPbhf}, \ref{tab:TPms1} and \ref{tab:TPsly}. For HasNS the two algorithms perform similarly, with almost the same TP for all threshold values and accross EoSs, although the false positive is smaller always in the RF. For HasREM we obtain that RF performs better than KNN in every case, with not only a smaller false positive rate, but a greater true positive rate.
 
 \begin{table}[]
 \centering
@@ -27,7 +27,7 @@
 0.8                            & 0.967      & 0.014     &   0.966          & 0.043            & 0.957      & 0.001     &  0.845          &   0.001         \\ \bottomrule
 \end{tabular}
 \caption{BHF\_BB2}
-\label{tab:my-table}
+\label{tab:TPbhf}
 \end{table}
 
 
@@ -44,7 +44,7 @@
 0.8                            & 0.968      & 0.011     &    0.967         & 0.031            & 0.967      & 0.001     &   0.899         &   0.004         \\ \bottomrule
 \end{tabular}
 \caption{MS1\_PP}
-\label{tab:my-table}
+\label{tab:TPms1}
 \end{table}
 
 \begin{table}[]
@@ -60,5 +60,5 @@
 0.8                            & 0.965      & 0.012     &   0.965          &           0.040 & 0.958      & 0.001     & 0.848           &  0.001          \\ \bottomrule
 \end{tabular}
 \caption{SLy}
-\label{tab:my-table}
+\label{tab:TPsly}
 \end{table}
