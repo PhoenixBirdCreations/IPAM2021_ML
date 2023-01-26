@@ -1,4 +1,28 @@
 \section{Confidence Intervals}
 \label{sec:confintervals}
 
-\simone{We compute confidence intervals in some way.}
+\simone{In the previous section we have obtained two estimations from different 
+ML algorithms. Now we discuss how we associate a confidence interval to this 
+estimate and also to the \texttt{GstLAL} recovery. 
+Since we want to compute confidence intervals for different prediction methods,
+we use a procedure that is algorithm-independent. 
+The problem can be formulated as follows. 
+\sa{this part is copied from old notes, to clean and write in a more decent way} 
+Consider a vector of variables $y$. We apply a certain transformation $\N$ so
+that we have a new set of variables $s = \N(y)$. Then we construct
+a new transformation $\M$ that satisfies $x=\M(s) = \M(\N(y))$ where
+ $x$ is closest as possible to $y$. If $\N$ is invertible, then the task is trivial
+since we can use $\M=\N^{-1}$ and thus $x=y$. However in general $\N$ is not invertible and we have to
+rely on some heuristics to find $\M$, and the equality $x=y$ is not guaranteed. 
+In other words, $x$ is an estimate of $y$ that we can obtain knowing $s=\N(y)$ and $\M$.
+In our specific case, $y$ are the injected value, $\N$ is the noise introduced by \texttt{GstLAL},
+$s$ are the recovered quantities, $\M$ is a ML algorithm and thus $x$ are the predictions of our
+ML algorithm. The requirement that $x$ must be close to $y$ can be formalized, for example, requiring that $x$ minimizes a loss 
+function. To compute the confidence intervals on the prediction $x$, we need to know the distribution 
+of $y$ values at fixed $x$, namely $f_x(y)$.
+We project
+$\M^i(s_1, s_2,\dots,s_i,\dots)=(x_1,x_2,\dots,x_i,\dots)$ on the $(x^i,y^i)$ plane, so that
+for each value of $x_i$ we can have different values of $y_i$ and thus we can reconstruct $f_{x_i}(y_i)$. 
+Treating each element of the arrays (features) separately means that we assume that the error associate to 
+$x^i$ can be determined knowing only the $y^i$ distribution. 
+}
