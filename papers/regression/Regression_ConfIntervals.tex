@@ -7,7 +7,6 @@ estimate and also to the \texttt{GstLAL} recovery.
 Since we want to compute confidence intervals for different prediction methods,
 we use a procedure that is algorithm-independent. 
 The problem can be formulated as follows. 
-\sa{this part is copied from old notes, to clean and write in a more decent way} 
 Consider a vector of variables $y$. We apply a certain transformation $\N$ so
 that we have a new set of variables $s = \N(y)$. Then we construct
 a new transformation $\M$ that satisfies $x=\M(s) = \M(\N(y))$ where
@@ -17,12 +16,19 @@ rely on some heuristics to find $\M$, and the equality $x=y$ is not guaranteed.
 In other words, $x$ is an estimate of $y$ that we can obtain knowing $s=\N(y)$ and $\M$.
 In our specific case, $y$ are the injected value, $\N$ is the noise introduced by \texttt{GstLAL},
 $s$ are the recovered quantities, $\M$ is a ML algorithm and thus $x$ are the predictions of our
-ML algorithm. The requirement that $x$ must be close to $y$ can be formalized, for example, requiring that $x$ minimizes a loss 
+ML algorithm.
+The requirement that $x$ must be close to $y$ can be formalized, for example, requiring that $x$ minimizes a loss 
 function. To compute the confidence intervals on the prediction $x$, we need to know the distribution 
 of $y$ values at fixed $x$, namely $f_x(y)$.
 We project
-$\M^i(s_1, s_2,\dots,s_i,\dots)=(x_1,x_2,\dots,x_i,\dots)$ on the $(x^i,y^i)$ plane, so that
+$\M^i(s_1, s_2,\dots,s_i,\dots)=(x_1,x_2,\dots,x_i,\dots)$ on the $(x^i, y^i)$ plane, so that
 for each value of $x_i$ we can have different values of $y_i$ and thus we can reconstruct $f_{x_i}(y_i)$. 
-Treating each element of the arrays (features) separately means that we assume that the error associate to 
+Treating each element of the arrays (features) separately means that we assume that the error associated to 
 $x^i$ can be determined knowing only the $y^i$ distribution. 
+Now the problem is reduced to how to compute the $f_{x_i}(y_i)$ distributions. We proceed to
+create a grid in the $(x^i, y^i)$ plane and we populate it with the data from the training set. 
+Then, we count how many points we have in each cell of the grid and we thus create a discrete 
+density surface $\Sigma(x,y)$ that we save in an external file. 
+When we want to compute the confidence interval, we then load the density surface $\Sigma(x,y)$, 
+we interpolate the surface around the prediction $x_p$ and the error-distribution is identified as $f_{x_p}(y) = \Sigma(x_p,y)$.
 }
