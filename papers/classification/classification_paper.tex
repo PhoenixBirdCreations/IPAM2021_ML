@@ -3,6 +3,7 @@
 \documentclass[aps,prd,twocolumn,superscriptaddress,preprintnumbers,floatfix,nofootinbib]{revtex4-2}
 
 \usepackage{graphicx}
+\usepackage{natbib}
 \usepackage{amsmath}
 %\usepackage{mdwlist}
 %\usepackage[caption=false]{subfig}
@@ -56,7 +57,7 @@
 \newcommand{\OleMiss}{\affiliation{Department of Physics and Astronomy,
 		University of Mississippi, University, Mississippi 38677, USA}}
 \newcommand{\Torino}{\affiliation{Dipartimento di Fisica,
-		Universit`a di Torino \& INFN Sezione di Torino, via P. Giuria 1, 10125 Torino, Italy}}
+		Università di Torino \& INFN Sezione di Torino, via P. Giuria 1, 10125 Torino, Italy}}
 \newcommand{\Tubingen}{\affiliation{Theoretical Astrophysics Department, 
 		Eberhard-Karls University of T\"{u}bingen, T\"{u}bingen 72076, Germany}}
 \newcommand{\UAB}{\affiliation{Departament de Matem\`{a}tiques,
@@ -127,13 +128,18 @@
 
 %\input{Improving_Classification.tex}
 %improving? that's not explaining the algo. I would call the section "Algorithms and results" or something similar
+\section{Classification Algorithms}
 \input{KNN.tex}
 \input{RF.tex}
 
 \section{Results}
-Roc curves are bla. Histograms are bla. We present both.
 
-We highlight three reference EoS in color, from which we show results in more detail. We select BHF\_BBB2 because is the model that give the lowest maximum mass, MS1\_PP as the model with the bigger maximum mass, and we also include SLy because is the most accepted EoS for NS modeling [ref], and is the one that was used in the injections that are our dataset.
+In order to decide which method gives a better performance in classifying this kind of events, we can apply them over testing data and finally do a comparison between both. A way to see how data is classified we can construct histograms where the number of events that are classified with a label (\texttt{HasNS/HasRemnant}) \texttt{True} or \texttt{False} will change with a given threshold of the probability. For an algorithm with perfect performance, all the events with label \texttt{True (False)} should be at \textit{p}(\texttt{label}) = 1 (\textit{p}(\texttt{label}) = 0).
+
+Another way to check the algorithm's performance is by building the so-called \textit{Receiver Operating Characteristic (ROC) Curve}. They show the variation of the true-positive rate (or efficiency) with the false-positive rate given a certain threshold for the probability. An algorithm with a proper performance will give a steeper ROC curve, or in other words, will have a higher eficiency with a lower false-positive rate.  
+
+
+In the ROC curves that we will present in the following subsections, we highlight three reference EoS in color, from which we show results in more detail. We select BHF\_BBB2 because is the model that give the lowest maximum mass, MS1\_PP as the model with the bigger maximum mass, and we also include SLy because is the most accepted EoS for NS modeling [ref], and is the one that was used in the injections that are our dataset.
 
 Here are the results for both methods:
 \input{KNN_Results.tex} %plots and comments
@@ -147,8 +153,8 @@ Here are the results for both methods:
 
 \input{Classification_Acknowledgements.tex}
 
-\def\bibsection{\section*{References}}
-
+%\def\bibsection{\section*{References}}
+%\bibliographystyle{aps}
 \bibliography{classification}
 
 \end{document}
