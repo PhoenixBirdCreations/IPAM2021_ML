@@ -36,7 +36,7 @@ recovered as having very high values. With regression, however, one can correct
 for these more extreme cases and predict values that are closer to the injected
 values. Opposite to this overestimation, there is the underestimation of the
 secondary mass. Regardless of the values of the secondary mass injected, the
-recovered value tends to be more often undestimated. Regression is able to
+recovered value tends to be more often understimated. Regression is able to
 counteract this bias and decrease the difference with the injected values. Apart
 from improving the mass estimates, one can see in the bottom panels the effects
 regression has on spins. Although both the recovered and regressed values
@@ -62,7 +62,7 @@ quantities, we show the mean relative error for the masses (top panels) and the
 mean difference for the spins (bottom panels). It is evident that the error
 distributions in all cases are more highly picked towards zero when using
 regression. In addition, we show the mean of the error distributions on the
-count$=0$ horizontal line. Table~\ref{GPR_errors} quantify this errors. Greater
+count$=0$ horizontal line. Table~\ref{tab:errors} quantify this errors. Greater
 improvements are in the primary mass where errors drop from $35.2 \%$ to $12.7
 \%$. The secondary mass still sees a decrease in mean percent error by about
 $14.5 \%$. The mean absolute differences in the spins also decrease by about
@@ -134,7 +134,7 @@ half.}
 
 \begin{table*}
 % >> python3 paper_plots.py --NN -v --errortab --tab_format tex --vars m1m2chi1chi2
-  \caption{\label{tab:NN_errors}  Mean differences in absolute value $|\Delta \bar{y}|=  \frac{1}{N} \Sigma |y^i_{\rm inj} - y^i_{\rm rec/pred}|$
+  \caption{\label{tab:errors}  Mean differences in absolute value $|\Delta \bar{y}|=  \frac{1}{N} \Sigma |y^i_{\rm inj} - y^i_{\rm rec/pred}|$
   and averages of the relative
   differences in absolute value $|\delta \bar{y}| = \frac{1}{N} \Sigma \left( |y^i_{\rm inj} - y^i_{\rm rec/pred}|/y^i_{\rm inj} \right) $ for recovered and predicted data.
  The standard deviation  $\sigma^{\Delta y}$ and $\sigma^{\delta y}$ are computed, respectively, from the difference and relative difference distributions 

@@ -193,8 +193,8 @@ def print_errortab(data):
 
     dashes='-'*120
     print('\n', dashes, sep='', end='')
-    print(header.format('name  ', '  mean_diff_rec', '  mean_err_rec', '        std_rec', 
-                                  ' mean_diff_pred', ' mean_err_pred', '       std_pred'))
+    print(header.format('name', 'mean_diff_rec',  'std_diff_rec',  'mean_err_rec',  'std_err_rec', 
+                                'mean_diff_pred', 'std_diff_pred', 'mean_err_pred', 'std_err_pred'))
     print(dashes)
     
     err_rec    = data.stats['errors_rec']
@@ -205,26 +205,28 @@ def print_errortab(data):
         var_name = data.var_names[i]
         mean_diff_rec  = np.mean(np.abs(diffs_rec[:,i]))
         mean_diff_pred = np.mean(np.abs(diffs_pred[:,i]))
+        std_diff_rec   = np.std(diffs_rec[:,i])
+        std_diff_pred  = np.std(diffs_pred[:,i])
         if var_name=='chi1' or var_name=='chi2':
             mean_err_rec  = np.nan  # then substitute with '/' while printing
             mean_err_pred = np.nan  # then substitute with '/' while printing
-            std_rec       = np.std(diffs_rec[:,i])
-            std_pred      = np.std(diffs_pred[:,i])
+            std_err_rec   = np.nan
+            std_err_pred  = np.nan
         else:
             mean_err_rec  = np.mean(np.abs(err_rec[:,i]))
             mean_err_pred = np.mean(np.abs(err_pred[:,i]))
-            std_rec       = np.std(err_rec[:,i])
-            std_pred      = np.std(err_pred[:,i])
+            std_err_rec   = np.std(err_rec[:,i])
+            std_err_pred  = np.std(err_pred[:,i])
         
         if data.tab_format=='txt':
-            line_format = '{:14s} {:15.3e} {:15.3e} {:15.3e}     {:15.3e} {:15.3e} {:15.3e}'
-            myline = line_format.format(var_name, mean_diff_rec,  mean_err_rec,  std_rec, 
-                                                  mean_diff_pred, mean_err_pred, std_pred) 
+            line_format = '{:14s} {:15.3e} {:15.3e} {:15.3e} {:15.3e}     {:15.3e} {:15.3e} {:15.3e} {:15.3e}'
+            myline = line_format.format(var_name, mean_diff_rec,  std_diff_rec,  mean_err_rec,  std_err_rec, 
+                                                  mean_diff_pred, std_diff_pred, mean_err_pred, std_err_pred) 
         elif data.tab_format=='tex':
             tex_name = data.var_names_tex[i]
-            line_format = escapeLatex('{:14s} & {:s} & {:s} & {:s} & {:s} & {:s} & {:s} \\\\')
-            myline = line_format.format(tex_name, num2tex(mean_diff_rec),  num2tex(mean_err_rec),  num2tex(std_rec), 
-                                                  num2tex(mean_diff_pred), num2tex(mean_err_pred), num2tex(std_pred)) 
+            line_format = escapeLatex('{:14s} & {:s} & {:s} & {:s} & {:s} & {:s} & {:s} & {:s} & {:s} \\\\')
+            myline = line_format.format(tex_name, num2tex(mean_diff_rec),  num2tex(std_diff_rec), num2tex(mean_err_rec),  num2tex(std_err_rec), 
+                                                  num2tex(mean_diff_pred), num2tex(std_diff_pred),num2tex(mean_err_pred), num2tex(std_err_pred)) 
         else:
             raise RuntimeError("'{:s}' is not a valid tab-format".format(data.tab_format))
         print(myline.replace('$nan$', ' / '))
@@ -255,18 +257,20 @@ def print_errortab(data):
     mean_err_pred  = np.mean(np.abs(err_pred))
     mean_diff_rec  = np.mean(np.abs(diffs_rec))
     mean_diff_pred = np.mean(np.abs(diffs_pred))
-    std_rec        = np.std(err_rec)
-    std_pred       = np.std(err_pred)
+    std_err_rec    = np.std(err_rec)
+    std_err_pred   = np.std(err_pred)
+    std_diff_rec   = np.std(diffs_rec)
+    std_diff_pred  = np.std(diffs_pred)
 
     if data.tab_format=='txt':
-        line_format = '{:14s} {:15.3e} {:15.3e} {:15.3e}     {:15.3e} {:15.3e} {:15.3e}'
-        myline = line_format.format(var_name, mean_diff_rec,  mean_err_rec,  std_rec, 
-                                              mean_diff_pred, mean_err_pred, std_pred) 
+        line_format = '{:14s} {:15.3e} {:15.3e} {:15.3e} {:15.3e}    {:15.3e} {:15.3e} {:15.3e} {:15.3e}'
+        myline = line_format.format(var_name, mean_diff_rec,  std_diff_rec,  mean_err_rec,  std_err_rec, 
+                                              mean_diff_pred, std_diff_pred, mean_err_pred, std_err_pred) 
         print(dashes,myline,dashes,sep='\n')
     elif data.tab_format=='tex':
-        line_format = escapeLatex('{:14s} & {:s} & {:s} & {:s} & {:s} & {:s} & {:s} \\\\')
-        myline = line_format.format(tex_name, num2tex(mean_diff_rec),  num2tex(mean_err_rec),  num2tex(std_rec), 
-                                              num2tex(mean_diff_pred), num2tex(mean_err_pred), num2tex(std_pred)) 
+        line_format = escapeLatex('{:14s} & {:s} & {:s} & {:s} & {:s} & {:s} & {:s} & {:s} & {:s} \\\\')
+        myline = line_format.format(tex_name, num2tex(mean_diff_rec),  num2tex(std_diff_rec), num2tex(mean_err_rec),  num2tex(std_err_rec), 
+                                              num2tex(mean_diff_pred), num2tex(std_diff_pred),num2tex(mean_err_pred), num2tex(std_err_pred)) 
         print('\hline',myline,dashes,sep='\n')
 
 
