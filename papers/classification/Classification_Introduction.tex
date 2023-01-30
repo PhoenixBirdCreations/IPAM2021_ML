@@ -14,10 +14,6 @@ Numerical relativity simulations can provide accurate information about the coal
 In the previous observing runs in LIGO and Virgo there were used different matched-filtering pipelines in low latency in order to detect GWs from CBC, such as GstLAL-based inspiral pipeline (GstLAL) ~\cite{Sachdev:2020lfd}, PyCBCLive(Nitz et al. 2018), MBTAOnline(Adams et al. 2016), SPIIR(Chu 2017).+ During the second observing run O2 it was the first time that real-time data was made available to E/M observatories to support follow-up observations. Classification of the binary systems was performed according to the following probabilities. Specifically, the probability that at least one of the objects in the binary is a NS, p(HasNS) and the probability that there was a matter remnant p(HasRemnant). For instance, in a BNS merger both probabilities will be equal to one, while in a BBH merger, both probabilities will be zero. In ~\cite{Chatterjee:2019avs} the authors approach the problem as binary classification and develop a new method based on supervised learning.
 
 
-
-
-- What we suggest, Random Forest classification (what is it, what are the advantages)
-
 In this work, we revisit and extend the problem of classification in low-latency. First, we propose the use of a combined probability of whether there is a NS in the event and whether there is a remnant. By doing so, we exclude the unphysical situation of having a larger probability of having a remnant than having a NS (like in *ref??). In addition, we perform a thorough study of different algorithms, perform several tests and account for different EoSs. We povide a direct comparison between the methods we used, as well as the ones already implemented e.g. in Deep *ref. 
 
 Different methods of classification were considered, such as ... and were tested for the same data. Here, we present the ones that performed best, the Random Forest (RF) and KNeighborClassifier (KNN). The last one is also used in ~\cite{Chatterjee:2019avs} and thus we provide a direct comparison. 
