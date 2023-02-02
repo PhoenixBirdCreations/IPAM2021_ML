@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2021.9.27)  2 FEB 2023 06:49
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2021.9.27)  2 FEB 2023 07:04
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -314,8 +314,7 @@ See the caption package documentation for explanation.
 \c@lotdepth=\count291
 \sf@top=\skip63
 \sf@bottom=\skip64
-)
-No file genetic_programming.aux.
+) (./genetic_programming.aux)
 \openout1 = `genetic_programming.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 10.
@@ -336,6 +335,7 @@ Class revtex4 Info: Unrecognized array package. Please update this document cla
 ss! (Proceeding with fingers crossed.) on input line 10.
 Class revtex4 Info: cite was not loaded (OK!) on input line 10.
 Class revtex4 Info: multicol was not loaded (OK!) on input line 10.
+
 (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count292
@@ -395,9 +395,6 @@ Package natbib Warning: Citation `KarooPYPI' on page 1 undefined on input line
 11.
 
 ) (./methodology.tex
-
-LaTeX Warning: Reference `fig:FPR_TPR' on page 1 undefined on input line 5.
-
 <plots/FPR_TPR/FPR_TPR_NS_MS1_PP.png, id=1, 462.528pt x 346.896pt>
 File: plots/FPR_TPR/FPR_TPR_NS_MS1_PP.png Graphic file (type png)
 <use plots/FPR_TPR/FPR_TPR_NS_MS1_PP.png>
@@ -417,32 +414,25 @@ Package natbib Warning: There were undefined citations.
 
 [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2 <./plots/FPR_TPR/FPR_
 TPR_NS_MS1_PP.png> <./plots/FPR_TPR/FPR_TPR_EMB_MS1_PP.png>]
-(./genetic_programming.aux)
-
-LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right .
-
-
- ) 
+(./genetic_programming.aux) ) 
 Here is how much of TeX's memory you used:
- 8562 strings out of 483065
- 158998 string characters out of 5963550
- 424890 words of memory out of 5000000
+ 8564 strings out of 483065
+ 159046 string characters out of 5963550
+ 424911 words of memory out of 5000000
  23531 multiletter control sequences out of 15000+600000
  538731 words of font info for 38 fonts, out of 8000000 for 9000
  81 hyphenation exceptions out of 8191
- 50i,15n,51p,1199b,563s stack positions out of 5000i,500n,10000p,200000b,80000s
- </home/sushant/.texlive2019/texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm0800.6
-00pk> </home/sushant/.texlive2019/texmf-var/fonts/pk/ljfour/jknappen/ec/ecti100
-0.600pk> </home/sushant/.texlive2019/texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx
-1000.600pk> </home/sushant/.texlive2019/texmf-var/fonts/pk/ljfour/jknappen/ec/e
-cbx0900.600pk> </home/sushant/.texlive2019/texmf-var/fonts/pk/ljfour/jknappen/e
-c/ecrm1000.600pk></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/
-cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.
-pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on genetic_programming.pdf (2 pages, 109033 bytes).
+ 50i,15n,51p,1198b,563s stack positions out of 5000i,500n,10000p,200000b,80000s
+ </home/sushant/.texlive2019/texmf-var/fonts/pk/lj
+four/jknappen/ec/ecrm0800.600pk> </home/sushant/.texlive2019/texmf-var/fonts/pk
+/ljfour/jknappen/ec/ecti1000.600pk> </home/sushant/.texlive2019/texmf-var/fonts
+/pk/ljfour/jknappen/ec/ecbx1000.600pk> </home/sushant/.texlive2019/texmf-var/fo
+nts/pk/ljfour/jknappen/ec/ecbx0900.600pk> </home/sushant/.texlive2019/texmf-var
+/fonts/pk/ljfour/jknappen/ec/ecrm1000.600pk></usr/share/texlive/texmf-dist/font
+s/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type
+1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/publi
+c/amsfonts/cm/cmsy10.pfb>
+Output written on genetic_programming.pdf (2 pages, 109005 bytes).
 PDF statistics:
  158 PDF objects out of 1000 (max. 8388607)
  36 compressed objects within 1 object stream
