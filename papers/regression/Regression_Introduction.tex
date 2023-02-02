@@ -1,8 +1,5 @@
 \section{Introduction}
-%In our introduction we want to start from big picture (LIGO, ML, pipelines)
-%and narrow down to what work we are presenting here and why it is important. We
-%also describe in which ways it is novel and how it compares to previous works
-%like in~\cite{Chatterjee:2019avs}. We may also want to cite~\cite{Sachdev:2020lfd}
+%~\cite{Chatterjee:2019avs}. We may also want to cite~\cite{Sachdev:2020lfd}
 
 % mention BNS Fermi EM observation? Could be added in second paragraph?
 \lorena{More than seven years ago, the first gravitational wave (GW) from a compact
@@ -49,22 +46,12 @@ latency will allow us to better estimate the time and peak luminosity of the
 afterglow emission in the case of a coincident EM signal. It will give the LVK
 astronomy partners an observational head-start.}
 
-%% ALternate wording is commented out below,
-%\lorena{In this work, we present a novel approach to low latency PE using 
-%ML regression algorithms. Specifically, we demonstrate the use for Gaussian 
-%process regression (GPR) and neural networks (NNs) to significantly improve the
-%pipeline estimates of the mass and spin components of CBC detections. Once 
-%trained, results can be obtaines on timescales of ms per event, making this a
-%powerful tool in low-latency. 
-
-\lorena{ML regression analysis has been recently applied to detector
-characterization and data analysis~\cite{Yu:2021swq,Ormiston:2020ele,Moore:2015sza,
-Williams:2019vub,Walker:2018ylg}. However, in this paper we present 
-its first application in low latency PE. Specifically, we demonstrate the use 
-of Gaussian process regression (GPR) and neural networks (NNs) to significantly 
-improve the pipeline estimates of the mass and spin components of CBC detections. 
-Once trained, results can be obtained on timescales of ms per event, making this 
-a powerful tool in low-latency.} 
-
-\lorena{This paper is organized as follows. In Sec. X we describe how the data is
-prepared in order to be fed into GPR and NN....}
+\lorena{Although ML regression analysis has been recently applied to detector
+characterization and data analysis~\cite{Yu:2021swq,Ormiston:2020ele,
+Moore:2015sza,Williams:2019vub,Walker:2018ylg}, in this paper we present its 
+first application in low latency PE. Specifically, we demonstrate that by using 
+Gaussian process regression (GPR) and neural networks (NNs) we can significantly 
+improve pipeline estimates of the masses and spin magnitudes of CBC detections.
+Once trained, results can be obtained on timescales of ms per event, making
+regression a powerful tool in low-latency. This allows us to bridge the gap 
+between the speed and accuracy trade-off.}
