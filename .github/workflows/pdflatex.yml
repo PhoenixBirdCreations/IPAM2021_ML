@@ -24,6 +24,7 @@ jobs:
           git rm -rf .
           git add papers/classification/classification_paper.pdf
           git add papers/regression/regression_paper.pdf
+          git add papers/genetic_programming/main.pdf
           git -c user.name='GitHub Action' -c user.email='action@github.com' commit -m "Built paper"
       - name: Push changes
         uses: ad-m/github-push-action@master
