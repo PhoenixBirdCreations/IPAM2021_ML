@@ -3,8 +3,10 @@
 \begin{figure}
     \centering
     \includegraphics[width=0.45\textwidth]{inj_rec_pred_masses.png}
-    \caption{The left panel shows the injected (teal), recovered (gray), and 
-            regressed (yellow) masses while the right panel shows the spins.
+    \caption{The top panel shows the mass parameter space while the 
+    		bottom panel shows the spin parameter space for the 
+		injected (teal), recovered (gray), and regressed (yellow) 
+		quantities. The regressed quantities shown here are using GPR.
             }
         \label{inj_rec_pred_masses}
 \end{figure}
@@ -12,57 +14,57 @@
 \begin{figure*}[t]
     \centering
     \includegraphics[width=\linewidth]{GPRvsNN_with_hist.png}
-    \caption{The first two panels show the recovered (gray) and regressed
-             masses as a function of the injected values. The last two panels
-             show the same functions for the spin magnitudes. The black line
-             denotes a perfect recovery and regression. Regressed values from
-             GPR are in orange while those from NN are in blue.
+    \caption{The left side panels show the recovered (gray) and regressed
+             masses and spins as functions of the injected values (solid line). 
+             Regressed values from GPR are in orange while those from NN 
+             are in blue. The right side panels show the mean error distributions.
             }
         \label{GPRvsNN}
 \end{figure*}
 
-\lorena{Using GPR and NN to create a map between the injected and recovered
-masses and spins of the O2 dataset allows us to better estimate the instrinsic 
-parameters of a binary system. The advantage of using regression can be seen in
-Fig~\ref{GPRvsNN}, which shows the predictions from the O2
-testing dataset. The gray circles represent the recovered values from the
+
+\lorena{Using GPR and NNs to create a map between the injected and recovered
+masses and spins of the O2 dataset allows us to better estimate the intrinsic 
+parameters of a binary system. Fig.~\ref{inj_rec_pred_masses} shows the mass 
+(top panel) and spin (bottom panel) parameter space of the injections along with 
+the recovered parameters from \texttt{GstLAL} and the regressed values. 
+Although regression does not fully cover the parameter space spanned by the 
+injections, it mimics the features well. For example, compared to the injected 
+binaries, the recovered mass values tend towards a high $m_1$ and low $m_2$, 
+including several systems which are far from the expected mass-space. Instead, 
+regression tries to correct for this tendency and includes the peak at high $m_2$ 
+values without overestimating the $m_1$ range. The spin parameter-space is 
+more complicated as most of the binaries include at least one 
+non-spinning BH, and therefore, there is less training data for most of the spin 
+parameter space. However, the regression algorithm notices this feature and so 
+it mainly populates that area of spin-space.}
+
+\lorena{We further break down regression results by directly comparing the 
+closeness of the recovered/regressed quantities to the injected ones. In 
+Fig.~\ref{GPRvsNN}, the gray circles represent the recovered values from the
 best-fit template, the orange circles are the predictions coming from GPR, and
 the blue circles are predictions from NN. The black lines shows where the
 points would lie if the parameters where perfectly recovered and/or perfectly 
-regressed.}
-
-\lorena{Fig~\ref{GPRvsNN} show how the primary mass is sometimes
-recovered as having very high values. With regression, however, one can correct
-for these more extreme cases and predict values that are closer to the injected
-values. Opposite to this overestimation, there is the underestimation of the
-secondary mass. Regardless of the values of the secondary mass injected, the
-recovered value tends to be more often understimated. Regression is able to
-counteract this bias and decrease the difference with the injected values. Apart
-from improving the mass estimates, one can see in the bottom panels the effects
+regressed. This figure shows how the primary mass is sometimes recovered as 
+having very high values. With regression, however, one can correct for these more 
+extreme cases and predict values that are closer to the injected values. Opposite 
+to this overestimation, there is the underestimation of the secondary mass. 
+Regardless of the values of the secondary mass injected, the recovered value 
+tends to be more often underestimated. Regression is able to counteract this bias 
+and decrease the difference with the injected values. Apart
+from improving the mass estimates, one can see in the bottom left panels the effects
 regression has on spins. Although both the recovered and regressed values
 constitute wide bands around the injected values, the regressed values follow
 the diagonal line closer. In the secondary spin, the areas of parameter space
 furthest away from the true injected values are only populated by recovered
-values but not regressed values.
-}
+values but not regressed values.}
 
-%\begin{figure}
-%    \centering
-%    \includegraphics[width=0.45\textwidth]{m1_m2_chi_error_analysis_wboxes.png}
-%    \caption{The top panels show the distributions of the mean relative errors
-%            for the recovered (gray) and regressed (orange) masses. The bottom
-%            panels show the distributions of the mean difference for the spins
-%            magnitudes. This plot is from GPR.
-%            }
-%        \label{m_chi_comparisons}
-%\end{figure}
-
-\lorena{To get a better understand on the distribution of errors for these four
+\lorena{To get a better understanding on the distribution of errors for these four
 quantities, we show the mean relative error for the masses (top panels) and the
 mean difference for the spins (bottom panels). It is evident that the error
 distributions in all cases are more highly picked towards zero when using
-regression. In addition, we show the mean of the error distributions on the
-count$=0$ horizontal line. Table~\ref{tab:errors} quantify this errors. Greater
+regression. In addition, we show the mean of the error distributions on the 
+horizontal axis. Table~\ref{tab:errors} quantify this errors. Greater
 improvements are in the primary mass where errors drop from $35.2 \%$ to $12.7
 \%$. The secondary mass still sees a decrease in mean percent error by about
 $14.5 \%$. The mean absolute differences in the spins also decrease by about
