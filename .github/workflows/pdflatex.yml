@@ -16,7 +16,7 @@ jobs:
           root_file: |
               classification/classification_paper.tex
               regression/regression_paper.tex
-              genetic_programming/main.tex
+              genetic_programming/genetic_programming.tex
           work_in_root_file_dir: true
       - name: Commit to orphan branch
         run: |
@@ -24,7 +24,7 @@ jobs:
           git rm -rf .
           git add papers/classification/classification_paper.pdf
           git add papers/regression/regression_paper.pdf
-          git add papers/genetic_programming/main.pdf
+          git add papers/genetic_programming/genetic_programming.pdf
           git -c user.name='GitHub Action' -c user.email='action@github.com' commit -m "Built paper"
       - name: Push changes
         uses: ad-m/github-push-action@master
