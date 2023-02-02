@@ -1,13 +1,11 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2021.9.27)  1 FEB 2023 19:26
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.3) (preloaded format=pdflatex 2023.1.16)  2 FEB 2023 09:31
 entering extended mode
- restricted \write18 enabled.
- %&-line parsing enabled.
-**main.tex
-(./main.tex
-LaTeX2e <2020-02-02> patch level 2
-L3 programming layer <2020-02-14>
-(/usr/share/texlive/texmf-dist/tex/latex/revtex4/revtex4.cls
-Document Class: revtex4 2001/08/02 v4.0 (http://publish.aps.org/revtex4/ for do
+**./main.tex
+(main.tex
+LaTeX2e <2020-10-01> patch level 4
+L3 programming layer <2021-02-18>
+(/home/miquelmiravet/.miktex/texmfs/install/tex/latex/revtex4/revtex4.cls
+Document Class: revtex4 2001/08/03 v4.0 (http://publish.aps.org/revtex4/ for do
 cumentation)
  Copyright (c) 2001 The American Physical Society.
  mailto:revtex@aps.org
@@ -17,273 +15,210 @@ http://www.ctan.org/tex-archive/macros/latex/base/lppl.txt
  Based on work by David Carlisle <david@dcarlisle.demon.co.uk>.
 ltxutil: portions licensed from W. E. Baxter (web@superscript.com)
 Class revtex4 Info: Repairing broken LateX \@sect on input line 596.
-\intertabularlinepenalty=\count167
-\@tbpen=\count168
-\@arstrutbox@hline=\box45
+\intertabularlinepenalty=\count179
+\@tbpen=\count180
+\@arstrutbox@hline=\box47
 Class revtex4 Info: Repairing broken LaTeX \@xbitor on input line 1610.
 ltxgrid: portions licensed from W. E. Baxter (web@superscript.com)
-\c@linecount=\count169
-\output=\toks14
-\@protection@box=\box46
-\@topmark@saved=\toks15
-\footins@saved=\box47
-\pagesofar=\box48
-\footbox=\box49
-\pagegrid@col=\count170
+\c@linecount=\count181
+\output=\toks15
+\@protection@box=\box48
+\@topmark@saved=\toks16
+\footins@saved=\box49
+\pagesofar=\box50
+\footbox=\box51
+\pagegrid@col=\count182
 Class revtex4 Info: Incorporating package {textcase}  [1998/11/12 v0.06 Text on
 ly upper/lower case changing (DPC)]. on input line 3682.
-(/usr/share/texlive/texmf-dist/tex/latex/url/url.sty
+(/home/miquelmiravet/.miktex/texmfs/install/tex/latex/url/url.sty
 \Urlmuskip=\muskip16
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 )
-\c@affil=\count171
-\absbox=\box50
-\c@part=\count172
-\c@section=\count173
-\c@subsection=\count174
-\c@subsubsection=\count175
-\c@paragraph=\count176
-\c@subparagraph=\count177
+\c@affil=\count183
+\absbox=\box52
+\c@part=\count184
+\c@section=\count185
+\c@subsection=\count186
+\c@subsubsection=\count187
+\c@paragraph=\count188
+\c@subparagraph=\count189
 \abovecaptionskip=\skip47
 \belowcaptionskip=\skip48
-\c@figure=\count178
-\c@table=\count179
+\c@figure=\count190
+\c@table=\count191
 
-(/usr/share/texlive/texmf-dist/tex/latex/natbib/natbib.sty
+(/home/miquelmiravet/.miktex/texmfs/install/tex/latex/natbib/natbib.sty
 Package: natbib 2010/09/13 8.31b (PWD, AO)
 \bibhang=\skip49
 \bibsep=\skip50
 LaTeX Info: Redefining \cite on input line 694.
-\c@NAT@ctr=\count180
+\c@NAT@ctr=\count192
 )
-\widetext@top=\box51
-\widetext@bot=\box52
+\widetext@top=\box53
+\widetext@bot=\box54
 
-(/usr/share/texlive/texmf-dist/tex/latex/revtex4/revsymb.sty
-Package: revsymb 2001/08/02 v4.0 (http://publish.aps.org/revtex4/ for documenta
+(/home/miquelmiravet/.miktex/texmfs/install/tex/latex/revtex4/revsymb.sty
+Package: revsymb 2001/08/03 v4.0 (http://publish.aps.org/revtex4/ for documenta
 tion)
 LaTeX Info: Redefining \REV@mathfrak on input line 118.
 ))
 
 Class revtex4 Warning: No Society specified, using generic APS style.
 
-(/usr/share/texlive/texmf-dist/tex/latex/revtex4/aps.rtx
-File: aps.rtx 2001/08/02 v4.0 (http://publish.aps.org/revtex4/ for documentatio
+(/home/miquelmiravet/.miktex/texmfs/install/tex/latex/revtex4/aps.rtx
+File: aps.rtx 2001/08/03 v4.0 (http://publish.aps.org/revtex4/ for documentatio
 n)
 )
-(/usr/share/texlive/texmf-dist/tex/latex/revtex4/10pt.rtx
-File: 10pt.rtx 2001/08/02 v4.0 (http://publish.aps.org/revtex4/ for documentati
+(/home/miquelmiravet/.miktex/texmfs/install/tex/latex/revtex4/10pt.rtx
+File: 10pt.rtx 2001/08/03 v4.0 (http://publish.aps.org/revtex4/ for documentati
 on)
 )
-(/usr/share/texlive/texmf-dist/tex/latex/acronym/acronym.sty
-Package: acronym 2019/11/11 v1.42 Support for acronyms (Tobias Oetiker)
+(/home/miquelmiravet/.miktex/texmfs/install/tex/latex/acronym/acronym.sty
+Package: acronym 2020/04/17 v1.47 Support for acronyms (Tobias Oetiker)
 
-(/usr/share/texlive/texmf-dist/tex/latex/bigfoot/suffix.sty
+(/home/miquelmiravet/.miktex/texmfs/install/tex/latex/bigfoot/suffix.sty
 Package: suffix 2006/07/15 1.5a Variant command support
 )
-(/usr/share/texlive/texmf-dist/tex/generic/xstring/xstring.sty
-(/usr/share/texlive/texmf-dist/tex/generic/xstring/xstring.tex
-\integerpart=\count181
-\decimalpart=\count182
+(/home/miquelmiravet/.miktex/texmfs/install/tex/latex/xstring/xstring.sty
+(/home/miquelmiravet/.miktex/texmfs/install/tex/generic/xstring/xstring.tex
+\integerpart=\count193
+\decimalpart=\count194
 )
-Package: xstring 2019/02/06 v1.83 String manipulations (CT)
+Package: xstring 2023/01/14 v1.85 String manipulations (CT)
 )
-\AC@clearlist=\toks16
+\AC@clearlist=\toks17
 )
-(/usr/share/texlive/texmf-dist/tex/latex/xcolor/xcolor.sty
-Package: xcolor 2016/05/11 v2.12 LaTeX color extensions (UK)
+(/home/miquelmiravet/.miktex/texmfs/install/tex/latex/xcolor/xcolor.sty
+Package: xcolor 2022/06/12 v2.14 LaTeX color extensions (UK)
 
-(/usr/share/texlive/texmf-dist/tex/latex/graphics-cfg/color.cfg
+(/home/miquelmiravet/.miktex/texmfs/install/tex/latex/graphics-cfg/color.cfg
 File: color.cfg 2016/01/02 v1.6 sample color configuration
 )
-Package xcolor Info: Driver file: pdftex.def on input line 225.
+Package xcolor Info: Driver file: pdftex.def on input line 227.
 
-(/usr/share/texlive/texmf-dist/tex/latex/graphics-def/pdftex.def
-File: pdftex.def 2018/01/08 v1.0l Graphics/color driver for pdftex
+(/home/miquelmiravet/.miktex/texmfs/install/tex/latex/graphics-def/pdftex.def
+File: pdftex.def 2020/10/05 v1.2a Graphics/color driver for pdftex
 )
-Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1348.
-Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1352.
-Package xcolor Info: Model `RGB' extended on input line 1364.
-Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1366.
-Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1367.
-Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1368.
-Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1369.
-Package xcolor Info: Model `Gray' substituted by `gray' on input line 1370.
-Package xcolor Info: Model `wave' substituted by `hsb' on input line 1371.
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1353.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1357.
+Package xcolor Info: Model `RGB' extended on input line 1369.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1371.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1372.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1373.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1374.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1375.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1376.
+) (/home/miquelmiravet/.miktex/texmfs/install/tex/latex/siunitx/siunitx.sty
+
+! Package siunitx Error: Support package expl3 too old.
+
+See the siunitx package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.44   }
+        %
+You need to update your installation of the bundles 'l3kernel' and 'l3packages'
+.
+Loading\nobreakspace {}siunitx\nobreakspace {}will\nobreakspace {}abort!
+
+) (/home/miquelmiravet/.miktex/texmfs/install/tex/latex/base/fontenc.sty
+Package: fontenc 2020/08/10 v2.0s Standard LaTeX package
 )
-(/usr/share/texlive/texmf-dist/tex/latex/siunitx/siunitx.sty
-(/usr/share/texlive/texmf-dist/tex/latex/l3kernel/expl3.sty
-Package: expl3 2020-02-14 L3 programming layer (loader) 
+(/home/miquelmiravet/.miktex/texmfs/install/tex/latex/graphics/graphicx.sty
+Package: graphicx 2020/09/09 v1.2b Enhanced LaTeX Graphics (DPC,SPQR)
 
-(/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdfmode.def
-File: l3backend-pdfmode.def 2020-02-03 L3 backend support: PDF mode
-\l__kernel_color_stack_int=\count183
-\l__pdf_internal_box=\box53
-))
-(/usr/share/texlive/texmf-dist/tex/latex/l3packages/xparse/xparse.sty
-Package: xparse 2020-02-14 L3 Experimental document command parser
-\l__xparse_current_arg_int=\count184
-\g__xparse_grabber_int=\count185
-\l__xparse_m_args_int=\count186
-\l__xparse_v_nesting_int=\count187
-)
-Package: siunitx 2020/01/15 v2.7u A comprehensive (SI) units package
-
-(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amstext.sty
-Package: amstext 2000/06/29 v2.01 AMS text
-
-(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsgen.sty
-File: amsgen.sty 1999/11/30 v2.0 generic functions
-\@emptytoks=\toks17
-\ex@=\dimen134
-))
-(/usr/share/texlive/texmf-dist/tex/latex/tools/array.sty
-Package: array 2019/08/31 v2.4l Tabular extension package (FMi)
-\col@sep=\dimen135
-\ar@mcellbox=\box54
-\extrarowheight=\dimen136
-\NC@list=\toks18
-\extratabsurround=\skip51
-\backup@length=\skip52
-\ar@cellbox=\box55
-)
-(/usr/share/texlive/texmf-dist/tex/latex/l3packages/l3keys2e/l3keys2e.sty
-Package: l3keys2e 2020-02-14 LaTeX2e option processing using LaTeX3 keys
-)
-\l__siunitx_tmp_box=\box56
-\l__siunitx_tmp_dim=\dimen137
-\l__siunitx_tmp_int=\count188
-\l__siunitx_number_mantissa_length_int=\count189
-\l__siunitx_number_uncert_length_int=\count190
-\l__siunitx_round_int=\count191
-\l__siunitx_process_decimal_int=\count192
-\l__siunitx_process_uncertainty_int=\count193
-\l__siunitx_process_fixed_int=\count194
-\l__siunitx_process_integer_min_int=\count195
-\l__siunitx_process_precision_int=\count196
-\l__siunitx_group_min_int=\count197
-\l__siunitx_angle_marker_box=\box57
-\l__siunitx_angle_unit_box=\box58
-\l__siunitx_angle_marker_dim=\dimen138
-\l__siunitx_angle_unit_dim=\dimen139
-\l__siunitx_unit_int=\count198
-\l__siunitx_unit_denominator_int=\count199
-\l__siunitx_unit_numerator_int=\count266
-\l__siunitx_unit_prefix_int=\count267
-\l__siunitx_unit_prefix_base_int=\count268
-\l__siunitx_unit_prefix_gram_int=\count269
-\l__siunitx_number_product_int=\count270
-\c__siunitx_one_fill_skip=\skip53
-\l__siunitx_table_unit_align_skip=\skip54
-\l__siunitx_table_exponent_dim=\dimen140
-\l__siunitx_table_integer_dim=\dimen141
-\l__siunitx_table_mantissa_dim=\dimen142
-\l__siunitx_table_marker_dim=\dimen143
-\l__siunitx_table_result_dim=\dimen144
-\l__siunitx_table_uncert_dim=\dimen145
-\l__siunitx_table_fill_pre_dim=\dimen146
-\l__siunitx_table_fill_post_dim=\dimen147
-\l__siunitx_table_fill_mid_dim=\dimen148
-\l__siunitx_table_pre_box=\box59
-\l__siunitx_table_post_box=\box60
-\l__siunitx_table_mantissa_box=\box61
-\l__siunitx_table_result_box=\box62
-\l__siunitx_table_number_align_skip=\skip55
-\l__siunitx_table_text_align_skip=\skip56
-
-(/usr/share/texlive/texmf-dist/tex/latex/translator/translator.sty
-Package: translator 2019-05-31 v1.12a Easy translation of strings in LaTeX
-
-(/usr/share/texlive/texmf-dist/tex/latex/graphics/keyval.sty
+(/home/miquelmiravet/.miktex/texmfs/install/tex/latex/graphics/keyval.sty
 Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
-\KV@toks@=\toks19
-)))
-(/usr/share/texlive/texmf-dist/tex/latex/base/fontenc.sty
-Package: fontenc 2020/02/11 v2.0o Standard LaTeX package
+\KV@toks@=\toks18
 )
-(/usr/share/texlive/texmf-dist/tex/latex/graphics/graphicx.sty
-Package: graphicx 2019/11/30 v1.2a Enhanced LaTeX Graphics (DPC,SPQR)
+(/home/miquelmiravet/.miktex/texmfs/install/tex/latex/graphics/graphics.sty
+Package: graphics 2020/08/30 v1.4c Standard LaTeX Graphics (DPC,SPQR)
 
-(/usr/share/texlive/texmf-dist/tex/latex/graphics/graphics.sty
-Package: graphics 2019/11/30 v1.4a Standard LaTeX Graphics (DPC,SPQR)
-
-(/usr/share/texlive/texmf-dist/tex/latex/graphics/trig.sty
+(/home/miquelmiravet/.miktex/texmfs/install/tex/latex/graphics/trig.sty
 Package: trig 2016/01/03 v1.10 sin cos tan (DPC)
 )
-(/usr/share/texlive/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+(/home/miquelmiravet/.miktex/texmfs/install/tex/latex/graphics-cfg/graphics.cfg
 File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
 )
 Package graphics Info: Driver file: pdftex.def on input line 105.
 )
-\Gin@req@height=\dimen149
-\Gin@req@width=\dimen150
-)
-(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsmath.sty
-Package: amsmath 2020/01/20 v2.17e AMS math features
-\@mathmargin=\skip57
+\Gin@req@height=\dimen138
+\Gin@req@width=\dimen139
+) (/home/miquelmiravet/.miktex/texmfs/install/tex/latex/amsmath/amsmath.sty
+Package: amsmath 2021/10/15 v2.17l AMS math features
+\@mathmargin=\skip51
 
 For additional information on amsmath, use the `?' option.
-(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsbsy.sty
+(/home/miquelmiravet/.miktex/texmfs/install/tex/latex/amsmath/amstext.sty
+Package: amstext 2021/08/26 v2.01 AMS text
+
+(/home/miquelmiravet/.miktex/texmfs/install/tex/latex/amsmath/amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0 generic functions
+\@emptytoks=\toks19
+\ex@=\dimen140
+))
+(/home/miquelmiravet/.miktex/texmfs/install/tex/latex/amsmath/amsbsy.sty
 Package: amsbsy 1999/11/29 v1.2d Bold Symbols
-\pmbraise@=\dimen151
+\pmbraise@=\dimen141
 )
-(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsopn.sty
-Package: amsopn 2016/03/08 v2.02 operator names
+(/home/miquelmiravet/.miktex/texmfs/install/tex/latex/amsmath/amsopn.sty
+Package: amsopn 2021/08/26 v2.02 operator names
 )
-\inf@bad=\count271
-LaTeX Info: Redefining \frac on input line 227.
-\uproot@=\count272
-\leftroot@=\count273
-LaTeX Info: Redefining \overline on input line 389.
-\classnum@=\count274
-\DOTSCASE@=\count275
-LaTeX Info: Redefining \ldots on input line 486.
-LaTeX Info: Redefining \dots on input line 489.
-LaTeX Info: Redefining \cdots on input line 610.
-\Mathstrutbox@=\box63
-\strutbox@=\box64
-\big@size=\dimen152
-LaTeX Font Info:    Redeclaring font encoding OML on input line 733.
-LaTeX Font Info:    Redeclaring font encoding OMS on input line 734.
-\macc@depth=\count276
-\c@MaxMatrixCols=\count277
+\inf@bad=\count195
+LaTeX Info: Redefining \frac on input line 234.
+\uproot@=\count196
+\leftroot@=\count197
+LaTeX Info: Redefining \overline on input line 399.
+\classnum@=\count198
+\DOTSCASE@=\count199
+LaTeX Info: Redefining \ldots on input line 496.
+LaTeX Info: Redefining \dots on input line 499.
+LaTeX Info: Redefining \cdots on input line 620.
+\Mathstrutbox@=\box55
+\strutbox@=\box56
+\big@size=\dimen142
+LaTeX Font Info:    Redeclaring font encoding OML on input line 743.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 744.
+\macc@depth=\count266
+\c@MaxMatrixCols=\count267
 \dotsspace@=\muskip17
-\c@parentequation=\count278
-\dspbrk@lvl=\count279
+\c@parentequation=\count268
+\dspbrk@lvl=\count269
 \tag@help=\toks20
-\row@=\count280
-\column@=\count281
-\maxfields@=\count282
+\row@=\count270
+\column@=\count271
+\maxfields@=\count272
 \andhelp@=\toks21
-\eqnshift@=\dimen153
-\alignsep@=\dimen154
-\tagshift@=\dimen155
-\tagwidth@=\dimen156
-\totwidth@=\dimen157
-\lineht@=\dimen158
+\eqnshift@=\dimen143
+\alignsep@=\dimen144
+\tagshift@=\dimen145
+\tagwidth@=\dimen146
+\totwidth@=\dimen147
+\lineht@=\dimen148
 \@envbody=\toks22
-\multlinegap=\skip58
-\multlinetaggap=\skip59
+\multlinegap=\skip52
+\multlinetaggap=\skip53
 \mathdisplay@stack=\toks23
-LaTeX Info: Redefining \[ on input line 2859.
-LaTeX Info: Redefining \] on input line 2860.
+LaTeX Info: Redefining \[ on input line 2938.
+LaTeX Info: Redefining \] on input line 2939.
 )
-(/usr/share/texlive/texmf-dist/tex/latex/subfig/subfig.sty
+(/home/miquelmiravet/.miktex/texmfs/install/tex/latex/subfig/subfig.sty
 Package: subfig 2005/06/28 ver: 1.3 subfig package
 
-(/usr/share/texlive/texmf-dist/tex/latex/caption/caption.sty
-Package: caption 2020/01/03 v3.4h Customizing captions (AR)
+(/home/miquelmiravet/.miktex/texmfs/install/tex/latex/caption/caption.sty
+Package: caption 2022/03/01 v3.6b Customizing captions (AR)
 
-(/usr/share/texlive/texmf-dist/tex/latex/caption/caption3.sty
-Package: caption3 2020/01/03 v1.8h caption3 kernel (AR)
-Package caption3 Info: TeX engine: e-TeX on input line 61.
-\captionmargin=\dimen159
-\captionmargin@=\dimen160
-\captionwidth=\dimen161
-\caption@tempdima=\dimen162
-\caption@indent=\dimen163
-\caption@parindent=\dimen164
-\caption@hangindent=\dimen165
+(/home/miquelmiravet/.miktex/texmfs/install/tex/latex/caption/caption3.sty
+Package: caption3 2022/03/17 v2.3b caption3 kernel (AR)
+\caption@tempdima=\dimen149
+\captionmargin=\dimen150
+\caption@leftmargin=\dimen151
+\caption@rightmargin=\dimen152
+\caption@width=\dimen153
+\caption@indent=\dimen154
+\caption@parindent=\dimen155
+\caption@hangindent=\dimen156
 Package caption Info: Unknown document class (or package),
 (caption)             standard defaults will be used.
 Package caption Info: \@makecaption = \long macro:#1#2->\par \vskip \abovecapti
@@ -291,30 +226,56 @@ onskip \begingroup \small \rmfamily \sbox \@tempboxa {\let \\\heading@cr #1: #2
 }\@ifdim {\wd \@tempboxa >\hsize }{\begingroup \samepage \flushing \let \footno
 te \@footnotemark@gobble #1: #2\par \endgroup }{\global \@minipagefalse \hb@xt@
  \hsize {\hfil \unhbox \@tempboxa \hfil }}\endgroup \vskip \belowcaptionskip  o
-n input line 1082.
+n input line 1176.
 )
 
 Package caption Warning: Unknown document class (or package),
 (caption)                standard defaults will be used.
 See the caption package documentation for explanation.
 
-\c@caption@flags=\count283
-\c@continuedfloat=\count284
+\c@caption@flags=\count273
+\c@continuedfloat=\count274
 )
-\c@KVtest=\count285
-\sf@farskip=\skip60
-\sf@captopadj=\dimen166
-\sf@capskip=\skip61
-\sf@nearskip=\skip62
-\c@subfigure=\count286
-\c@subfigure@save=\count287
-\c@lofdepth=\count288
-\c@subtable=\count289
-\c@subtable@save=\count290
-\c@lotdepth=\count291
-\sf@top=\skip63
-\sf@bottom=\skip64
-) (./main.aux)
+\c@KVtest=\count275
+\sf@farskip=\skip54
+\sf@captopadj=\dimen157
+\sf@capskip=\skip55
+\sf@nearskip=\skip56
+\c@subfigure=\count276
+\c@subfigure@save=\count277
+\c@lofdepth=\count278
+\c@subtable=\count279
+\c@subtable@save=\count280
+\c@lotdepth=\count281
+\sf@top=\skip57
+\sf@bottom=\skip58
+)
+! Extra \endgroup.
+\document ->\endgroup 
+                      \init@documenthook \set@typesize@hook \normalsize \set...
+l.10 \begin{document}
+                     
+Things are pretty mixed up, but I think the worst is over.
+
+
+! LaTeX Error: Missing \begin{document}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.10 \begin{document}
+                     
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+(/home/miquelmiravet/.miktex/texmfs/install/tex/latex/l3backend/l3backend-pdfte
+x.def
+File: l3backend-pdftex.def 2021-03-18 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count282
+\l__pdf_internal_box=\box57
+) (main.aux)
 \openout1 = `main.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 10.
@@ -331,94 +292,103 @@ LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 10.
 LaTeX Font Info:    ... okay on input line 10.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 10.
 LaTeX Font Info:    ... okay on input line 10.
-Class revtex4 Info: Unrecognized array package. Please update this document cla
+Class revtex4 Info: Unrecognized LaTeX tabular. Please update this document cla
 ss! (Proceeding with fingers crossed.) on input line 10.
 Class revtex4 Info: cite was not loaded (OK!) on input line 10.
 Class revtex4 Info: multicol was not loaded (OK!) on input line 10.
 
-(/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+(/home/miquelmiravet/.miktex/texmfs/install/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count292
-\scratchdimen=\dimen167
-\scratchbox=\box65
-\nofMPsegments=\count293
-\nofMParguments=\count294
+\scratchcounter=\count283
+\scratchdimen=\dimen158
+\scratchbox=\box58
+\nofMPsegments=\count284
+\nofMParguments=\count285
 \everyMPshowfont=\toks24
-\MPscratchCnt=\count295
-\MPscratchDim=\dimen168
-\MPnumerator=\count296
-\makeMPintoPDFobject=\count297
+\MPscratchCnt=\count286
+\MPscratchDim=\dimen159
+\MPnumerator=\count287
+\makeMPintoPDFobject=\count288
 \everyMPtoPDFconversion=\toks25
-) (/usr/share/texlive/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
+)
+(/home/miquelmiravet/.miktex/texmfs/install/tex/latex/epstopdf-pkg/epstopdf-bas
+e.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 85.
 
-(/usr/share/texlive/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
-File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
-e
+(/home/miquelmiravet/.miktex/texmfs/install/tex/latex/00miktex/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 ))
-(/usr/share/texlive/texmf-dist/tex/latex/translator/translator-basic-dictionary
--English.dict
-Dictionary: translator-basic-dictionary, Language: English 
-)
-(/usr/share/texlive/texmf-dist/tex/latex/siunitx/siunitx-abbreviations.cfg
-File: siunitx-abbreviations.cfg 2017/11/26 v2.7k siunitx: Abbreviated units
-)
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: subfig package v1.3 is loaded.
 Package caption Info: End \AtBeginDocument code.
-
-(./acronyms.tex) (./introduction.tex) (./methodology.tex
-<plots/FPR_TPR/FPR_TPR_NS_MS1_PP.png, id=1, 462.528pt x 346.896pt>
+ (acronyms.tex) (introduction.tex) (methodology.tex [1{/home/miquelmiravet/.mik
+tex/texmfs/data/pdftex/config/pdftex.map}]
+<plots/FPR_TPR/FPR_TPR_NS_MS1_PP.png, id=12, 462.528pt x 346.896pt>
 File: plots/FPR_TPR/FPR_TPR_NS_MS1_PP.png Graphic file (type png)
 <use plots/FPR_TPR/FPR_TPR_NS_MS1_PP.png>
 Package pdftex.def Info: plots/FPR_TPR/FPR_TPR_NS_MS1_PP.png  used on input lin
 e 24.
 (pdftex.def)             Requested size: 231.26343pt x 173.44757pt.
-<plots/FPR_TPR/FPR_TPR_EMB_MS1_PP.png, id=3, 462.528pt x 346.896pt>
+<plots/FPR_TPR/FPR_TPR_EMB_MS1_PP.png, id=14, 462.528pt x 346.896pt>
 File: plots/FPR_TPR/FPR_TPR_EMB_MS1_PP.png Graphic file (type png)
 <use plots/FPR_TPR/FPR_TPR_EMB_MS1_PP.png>
 Package pdftex.def Info: plots/FPR_TPR/FPR_TPR_EMB_MS1_PP.png  used on input li
 ne 25.
 (pdftex.def)             Requested size: 231.26343pt x 173.44757pt.
-) (./main.bbl
-Underfull \hbox (badness 4995) in paragraph at lines 4--10
- []\T1/cmr/m/n/9 M. Cavaglià, S. Gau-dio, T. Hansen, K. Staats,
- []
-
-[1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
+) (main.bbl
 LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 2
 5.
 
-(/usr/share/texlive/texmf-dist/tex/latex/base/t1cmtt.fd
+(/home/miquelmiravet/.miktex/texmfs/install/tex/latex/base/t1cmtt.fd
 File: t1cmtt.fd 2019/12/16 v2.5j Standard LaTeX font definitions
 )) [2 <./plots/FPR_TPR/FPR_TPR_NS_MS1_PP.png> <./plots/FPR_TPR/FPR_TPR_EMB_MS1_
-PP.png>] (./main.aux) ) 
+PP.png>]
+(main.aux
+
+Package natbib Warning: Citation `Cavaglia_2020' multiply defined.
+
+
+Package natbib Warning: Citation `koza_genetic' multiply defined.
+
+
+Package natbib Warning: Citation `GP_book' multiply defined.
+
+
+Package natbib Warning: Citation `KarooGP' multiply defined.
+
+
+Package natbib Warning: Citation `KarooPYPI' multiply defined.
+
+
+Package natbib Warning: Citation `Kai_thesis' multiply defined.
+
+) ) 
 Here is how much of TeX's memory you used:
- 8628 strings out of 483065
- 160054 string characters out of 5963550
- 425985 words of memory out of 5000000
- 23579 multiletter control sequences out of 15000+600000
- 542946 words of font info for 52 fonts, out of 8000000 for 9000
- 81 hyphenation exceptions out of 8191
- 50i,15n,51p,1183b,563s stack positions out of 5000i,500n,10000p,200000b,80000s
- </home/sushant/.texlive2019/texmf-var/fonts/pk/ljfour/j
-knappen/ec/ectt0900.600pk> </home/sushant/.texlive2019/texmf-var/fonts/pk/ljfou
-r/jknappen/ec/ecti0900.600pk> </home/sushant/.texlive2019/texmf-var/fonts/pk/lj
-four/jknappen/ec/ecrm0800.600pk> </home/sushant/.texlive2019/texmf-var/fonts/pk
-/ljfour/jknappen/ec/ecrm0900.600pk> </home/sushant/.texlive2019/texmf-var/fonts
-/pk/ljfour/jknappen/ec/ecbx1000.600pk> </home/sushant/.texlive2019/texmf-var/fo
-nts/pk/ljfour/jknappen/ec/ecti1000.600pk> </home/sushant/.texlive2019/texmf-var
-/fonts/pk/ljfour/jknappen/ec/ecbx0900.600pk> </home/sushant/.texlive2019/texmf-
-var/fonts/pk/ljfour/jknappen/ec/ecrm1000.600pk></usr/share/texlive/texmf-dist/f
-onts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/t
-ype1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/pu
-blic/amsfonts/cm/cmsy10.pfb>
-Output written on main.pdf (2 pages, 143346 bytes).
+ 6135 strings out of 481257
+ 89612 string characters out of 2907743
+ 403033 words of memory out of 3000000
+ 23298 multiletter control sequences out of 15000+200000
+ 411688 words of font info for 45 fonts, out of 3000000 for 9000
+ 0 hyphenation exceptions out of 8191
+ 71i,15n,79p,1185b,438s stack positions out of 5000i,500n,10000p,200000b,50000s
+{/home/miquelmiravet/.miktex/texmfs/install/fonts/enc/dvips/cm-super/cm-supe
+r-t1.enc}</home/miquelmiravet/.miktex/texmfs/install/fonts/type1/public/amsfont
+s/cm/cmmi10.pfb></home/miquelmiravet/.miktex/texmfs/install/fonts/type1/public/
+amsfonts/cm/cmr10.pfb></home/miquelmiravet/.miktex/texmfs/install/fonts/type1/p
+ublic/amsfonts/cm/cmsy10.pfb></home/miquelmiravet/.miktex/texmfs/install/fonts/
+type1/public/cm-super/sfbx0900.pfb></home/miquelmiravet/.miktex/texmfs/install/
+fonts/type1/public/cm-super/sfbx1000.pfb></home/miquelmiravet/.miktex/texmfs/in
+stall/fonts/type1/public/cm-super/sfrm0800.pfb></home/miquelmiravet/.miktex/tex
+mfs/install/fonts/type1/public/cm-super/sfrm0900.pfb></home/miquelmiravet/.mikt
+ex/texmfs/install/fonts/type1/public/cm-super/sfrm1000.pfb></home/miquelmiravet
+/.miktex/texmfs/install/fonts/type1/public/cm-super/sfti0900.pfb></home/miquelm
+iravet/.miktex/texmfs/install/fonts/type1/public/cm-super/sfti1000.pfb></home/m
+iquelmiravet/.miktex/texmfs/install/fonts/type1/public/cm-super/sftt0900.pfb>
+Output written on main.pdf (2 pages, 238671 bytes).
 PDF statistics:
- 291 PDF objects out of 1000 (max. 8388607)
- 48 compressed objects within 1 object stream
+ 59 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  11 words of extra memory for PDF output out of 10000 (max. 10000000)
 

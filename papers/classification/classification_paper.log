@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.3) (preloaded format=pdflatex 2023.1.16)  26 JAN 2023 15:42
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.3) (preloaded format=pdflatex 2023.1.16)  2 FEB 2023 10:19
 entering extended mode
 **./classification_paper.tex
 (classification_paper.tex
@@ -564,10 +564,10 @@ Package: multirow 2021/03/15 v2.8 Span multiple rows of a table
 \bigstrutjot=\dimen192
 )
 Class revtex4-2 Info: colortbl package is loaded. (Proceeding with fingers cros
-sed.) on input line 68.
-Class revtex4-2 Info: cite was not loaded (OK!) on input line 68.
-Class revtex4-2 Info: mcite was not loaded (OK!) on input line 68.
-Class revtex4-2 Info: multicol was not loaded (OK!) on input line 68.
+sed.) on input line 69.
+Class revtex4-2 Info: cite was not loaded (OK!) on input line 69.
+Class revtex4-2 Info: mcite was not loaded (OK!) on input line 69.
+Class revtex4-2 Info: multicol was not loaded (OK!) on input line 69.
 
 (/home/miquelmiravet/.miktex/texmfs/install/tex/latex/l3backend/l3backend-pdfte
 x.def
@@ -577,24 +577,24 @@ File: l3backend-pdftex.def 2021-03-18 L3 backend support: PDF output (pdfTeX)
 ) (classification_paper.aux)
 \openout1 = `classification_paper.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 68.
-LaTeX Font Info:    ... okay on input line 68.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 68.
-LaTeX Font Info:    ... okay on input line 68.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 68.
-LaTeX Font Info:    ... okay on input line 68.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 68.
-LaTeX Font Info:    ... okay on input line 68.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 68.
-LaTeX Font Info:    ... okay on input line 68.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 68.
-LaTeX Font Info:    ... okay on input line 68.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 68.
-LaTeX Font Info:    ... okay on input line 68.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 68.
-LaTeX Font Info:    ... okay on input line 68.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 68.
-LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 69.
+LaTeX Font Info:    ... okay on input line 69.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 69.
+LaTeX Font Info:    ... okay on input line 69.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 69.
+LaTeX Font Info:    ... okay on input line 69.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 69.
+LaTeX Font Info:    ... okay on input line 69.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 69.
+LaTeX Font Info:    ... okay on input line 69.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 69.
+LaTeX Font Info:    ... okay on input line 69.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 69.
+LaTeX Font Info:    ... okay on input line 69.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 69.
+LaTeX Font Info:    ... okay on input line 69.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 69.
+LaTeX Font Info:    ... okay on input line 69.
 
 (/home/miquelmiravet/.miktex/texmfs/install/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
@@ -619,18 +619,18 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 (/home/miquelmiravet/.miktex/texmfs/install/tex/latex/00miktex/epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 ))
-LaTeX Info: Redefining \microtypecontext on input line 68.
-Package microtype Info: Applying patch `item' on input line 68.
-Package microtype Info: Applying patch `toc' on input line 68.
-Package microtype Info: Applying patch `eqnum' on input line 68.
-Package microtype Info: Applying patch `footnote' on input line 68.
+LaTeX Info: Redefining \microtypecontext on input line 69.
+Package microtype Info: Applying patch `item' on input line 69.
+Package microtype Info: Applying patch `toc' on input line 69.
+Package microtype Info: Applying patch `eqnum' on input line 69.
+Package microtype Info: Applying patch `footnote' on input line 69.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using default protrusion set `alltext'.
 Package microtype Info: Automatic font expansion enabled (level 2),
 (microtype)             stretch: 20, shrink: 20, step: 1, non-selected.
 Package microtype Info: Using default expansion set `alltext-nott'.
-LaTeX Info: Redefining \showhyphens on input line 68.
+LaTeX Info: Redefining \showhyphens on input line 69.
 Package microtype Info: No adjustment of tracking.
 Package microtype Info: No adjustment of interword spacing.
 Package microtype Info: No adjustment of character kerning.
@@ -638,7 +638,7 @@ Package microtype Info: No adjustment of character kerning.
 File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman 
 (RS)
 )
-Package hyperref Info: Link coloring ON on input line 68.
+Package hyperref Info: Link coloring ON on input line 69.
 
 (/home/miquelmiravet/.miktex/texmfs/install/tex/latex/hyperref/nameref.sty
 Package: nameref 2021-04-02 v2.47 Cross-referencing by name of section
@@ -652,19 +652,19 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
 \c@section@level=\count309
 )
-LaTeX Info: Redefining \ref on input line 68.
-LaTeX Info: Redefining \pageref on input line 68.
-LaTeX Info: Redefining \nameref on input line 68.
+LaTeX Info: Redefining \ref on input line 69.
+LaTeX Info: Redefining \pageref on input line 69.
+LaTeX Info: Redefining \nameref on input line 69.
  (classification_paper.out) (classification_paper.out)
 \@outlinefile=\write4
 \openout4 = `classification_paper.out'.
 
-Class revtex4-2 Info: Taking \maketitle back from hyperref on input line 68.
+Class revtex4-2 Info: Taking \maketitle back from hyperref on input line 69.
 \openout3 = `classification_paperNotes.bib'.
 
 
 (Classification_Abstract.tex)
-LaTeX Font Info:    Trying to load font information for U+msa on input line 114
+LaTeX Font Info:    Trying to load font information for U+msa on input line 115
 .
 
 (/home/miquelmiravet/.miktex/texmfs/install/tex/latex/amsfonts/umsa.fd
@@ -673,7 +673,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 (/home/miquelmiravet/.miktex/texmfs/install/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 114
+LaTeX Font Info:    Trying to load font information for U+msb on input line 115
 .
 
 (/home/miquelmiravet/.miktex/texmfs/install/tex/latex/amsfonts/umsb.fd
@@ -683,23 +683,77 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
 LaTeX Font Info:    Trying to load font information for U+rsfs on input line 11
-4.
+5.
 
 (/home/miquelmiravet/.miktex/texmfs/install/tex/latex/jknappen/ursfs.fd
 File: ursfs.fd 1998/03/24 rsfs font definition file (jk)
 )
 (Classification_Introduction.tex
 
-Package natbib Warning: Citation `Chatterjee:2019avs' on page 1 undefined on in
-put line 5.
+Package natbib Warning: Citation `LIGOScientific:2017ync' on page 1 undefined o
+n input line 8.
+
+
+Package natbib Warning: Citation `LIGO:2015' on page 1 undefined on input line 
+8.
+
+
+Package natbib Warning: Citation `Virgo:2015' on page 1 undefined on input line
+ 8.
+
+
+Package natbib Warning: Citation `KAGRA:2019' on page 1 undefined on input line
+ 8.
+
+
+Package natbib Warning: Citation `Abbott:2017_GW170817' on page 1 undefined on 
+input line 8.
+
+
+Package natbib Warning: Citation `grb' on page 1 undefined on input line 8.
+
+
+Package natbib Warning: Citation `Abbott:2017b' on page 1 undefined on input li
+ne 8.
+
+
+Package natbib Warning: Citation `Abbott:2020' on page 1 undefined on input lin
+e 8.
+
+
+Underfull \hbox (badness 4328) in paragraph at lines 8--9
+[]\T1/cmr/m/n/10 (+20) The breakthrough []|   [] detection of |   []
+ []
+
+
+Underfull \hbox (badness 3158) in paragraph at lines 8--9
+|   []   |   []   |   []   |   []   |   [] \T1/cmr/m/n/10 (+20) the
+ []
+
+
+Underfull \hbox (badness 1062) in paragraph at lines 8--9
+\T1/cmr/m/n/10 (+20) them successfully emerges. Among the challenges
+ []
 
 
 Package natbib Warning: Citation `Sachdev:2020lfd' on page 1 undefined on input
- line 5.
+ line 15.
 
 
-Package natbib Warning: Citation `LIGOScientific:2017ync' on page 1 undefined o
-n input line 8.
+Package natbib Warning: Citation `Nitz_2018' on page 1 undefined on input line 
+15.
+
+
+Package natbib Warning: Citation `Adams_2016' on page 1 undefined on input line
+ 15.
+
+
+Package natbib Warning: Citation `Chatterjee:2019avs' on page 1 undefined on in
+put line 15.
+
+
+Package natbib Warning: Citation `Chatterjee:2019avs' on page 1 undefined on in
+put line 21.
 
 ) (Classification_Data_Conditioning.tex [1{/home/miquelmiravet/.miktex/texmfs/d
 ata/pdftex/config/pdftex.map}]) (KNN.tex
@@ -714,85 +768,76 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 ) (RF.tex
+[2]
 
-Package natbib Warning: Citation `Pedregosa:2011' on page 2 undefined on input 
+Package natbib Warning: Citation `Pedregosa:2011' on page 3 undefined on input 
 line 7.
 
-) [2] (KNN_Results.tex
-<././//figs/KNN_confmat_SLy.png, id=108, 545.6385pt x 419.8887pt>
+) (KNN_Results.tex [3]
+<././//figs/KNN_confmat_SLy.png, id=115, 545.6385pt x 419.8887pt>
 File: ././//figs/KNN_confmat_SLy.png Graphic file (type png)
 <use ././//figs/KNN_confmat_SLy.png>
 Package pdftex.def Info: ././//figs/KNN_confmat_SLy.png  used on input line 56.
 
 (pdftex.def)             Requested size: 229.49844pt x 176.60832pt.
-<././//figs/KNN_param_sweep_spin_NS_SLy.png, id=110, 729.2043pt x 875.1897pt>
+<././//figs/KNN_param_sweep_spin_NS_SLy.png, id=117, 729.2043pt x 875.1897pt>
 File: ././//figs/KNN_param_sweep_spin_NS_SLy.png Graphic file (type png)
 <use ././//figs/KNN_param_sweep_spin_NS_SLy.png>
 Package pdftex.def Info: ././//figs/KNN_param_sweep_spin_NS_SLy.png  used on in
 put line 62.
 (pdftex.def)             Requested size: 229.49844pt x 275.44583pt.
-<././//figs/KNN_param_sweep_spin_REM_SLy.png, id=111, 729.2043pt x 875.1897pt>
+<././//figs/KNN_param_sweep_spin_REM_SLy.png, id=118, 729.2043pt x 875.1897pt>
 File: ././//figs/KNN_param_sweep_spin_REM_SLy.png Graphic file (type png)
 <use ././//figs/KNN_param_sweep_spin_REM_SLy.png>
 Package pdftex.def Info: ././//figs/KNN_param_sweep_spin_REM_SLy.png  used on i
 nput line 68.
 (pdftex.def)             Requested size: 229.49844pt x 275.44583pt.
-<././//figs/KNN_BHF_BBB2_NShist.png, id=115, 398.2077pt x 336.0555pt>
+<././//figs/KNN_BHF_BBB2_NShist.png, id=122, 398.2077pt x 336.0555pt>
 File: ././//figs/KNN_BHF_BBB2_NShist.png Graphic file (type png)
 <use ././//figs/KNN_BHF_BBB2_NShist.png>
 Package pdftex.def Info: ././//figs/KNN_BHF_BBB2_NShist.png  used on input line
  76.
 (pdftex.def)             Requested size: 229.49844pt x 193.67651pt.
-<././//figs/KNN_BHF_BBB2_REMhist.png, id=116, 398.2077pt x 336.0555pt>
+<././//figs/KNN_BHF_BBB2_REMhist.png, id=123, 398.2077pt x 336.0555pt>
 File: ././//figs/KNN_BHF_BBB2_REMhist.png Graphic file (type png)
 <use ././//figs/KNN_BHF_BBB2_REMhist.png>
 Package pdftex.def Info: ././//figs/KNN_BHF_BBB2_REMhist.png  used on input lin
 e 77.
 (pdftex.def)             Requested size: 229.49844pt x 193.67651pt.
-<././//figs/KNN_SLy_NShist.png, id=117, 398.2077pt x 336.0555pt>
+<././//figs/KNN_SLy_NShist.png, id=124, 398.2077pt x 336.0555pt>
 File: ././//figs/KNN_SLy_NShist.png Graphic file (type png)
 <use ././//figs/KNN_SLy_NShist.png>
 Package pdftex.def Info: ././//figs/KNN_SLy_NShist.png  used on input line 83.
 (pdftex.def)             Requested size: 229.49844pt x 193.67651pt.
-<././//figs/KNN_SLy_REMhist.png, id=118, 398.2077pt x 336.0555pt>
+<././//figs/KNN_SLy_REMhist.png, id=125, 398.2077pt x 336.0555pt>
 File: ././//figs/KNN_SLy_REMhist.png Graphic file (type png)
 <use ././//figs/KNN_SLy_REMhist.png>
 Package pdftex.def Info: ././//figs/KNN_SLy_REMhist.png  used on input line 84.
 
 (pdftex.def)             Requested size: 229.49844pt x 193.67651pt.
-<././//figs/KNN_MS1_PP_NShist.png, id=119, 398.2077pt x 336.0555pt>
+<././//figs/KNN_MS1_PP_NShist.png, id=126, 398.2077pt x 336.0555pt>
 File: ././//figs/KNN_MS1_PP_NShist.png Graphic file (type png)
 <use ././//figs/KNN_MS1_PP_NShist.png>
 Package pdftex.def Info: ././//figs/KNN_MS1_PP_NShist.png  used on input line 9
 0.
 (pdftex.def)             Requested size: 229.49844pt x 193.67651pt.
-<././//figs/KNN_MS1_PP_REMhist.png, id=120, 398.2077pt x 336.0555pt>
+<././//figs/KNN_MS1_PP_REMhist.png, id=127, 398.2077pt x 336.0555pt>
 File: ././//figs/KNN_MS1_PP_REMhist.png Graphic file (type png)
 <use ././//figs/KNN_MS1_PP_REMhist.png>
 Package pdftex.def Info: ././//figs/KNN_MS1_PP_REMhist.png  used on input line 
 91.
 (pdftex.def)             Requested size: 229.49844pt x 193.67651pt.
-<././//figs/ROC_KNN_NS.png, id=122, 501.5538pt x 321.96284pt>
+<././//figs/ROC_KNN_NS.png, id=129, 501.5538pt x 321.96284pt>
 File: ././//figs/ROC_KNN_NS.png Graphic file (type png)
 <use ././//figs/ROC_KNN_NS.png>
 Package pdftex.def Info: ././//figs/ROC_KNN_NS.png  used on input line 99.
 (pdftex.def)             Requested size: 229.49844pt x 147.32356pt.
-<././//figs/ROC_KNN_REM.png, id=123, 496.85625pt x 321.96284pt>
+<././//figs/ROC_KNN_REM.png, id=130, 496.85625pt x 321.96284pt>
 File: ././//figs/ROC_KNN_REM.png Graphic file (type png)
 <use ././//figs/ROC_KNN_REM.png>
 Package pdftex.def Info: ././//figs/ROC_KNN_REM.png  used on input line 100.
 (pdftex.def)             Requested size: 229.49844pt x 148.71388pt.
-) (RF_Results.tex [3 <././//figs/KNN_confmat_SLy.png>]
-
-LaTeX Warning: A float is stuck (cannot be placed) on input line 6.
-
-
-LaTeX Warning: A float is stuck (cannot be placed) on input line 6.
-
-
-Class revtex4-2 Warning: Deferred float stuck during \clearpage processing.
-
-
+) (RF_Results.tex
 Overfull \hbox (84.22485pt too wide) in paragraph at lines 9--37
  []$[]$ 
  []
@@ -800,83 +845,84 @@ Overfull \hbox (84.22485pt too wide) in paragraph at lines 9--37
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<././//figs/HasNS_roc.png, id=146, 516.0078pt x 328.1058pt>
+[4 <././//figs/KNN_confmat_SLy.png> <././//figs/KNN_param_sweep_spin_NS_SLy.png
+> <././//figs/KNN_param_sweep_spin_REM_SLy.png>]
+
+LaTeX Warning: A float is stuck (cannot be placed) on input line 42.
+
+
+LaTeX Warning: A float is stuck (cannot be placed) on input line 42.
+
+
+Class revtex4-2 Warning: Deferred float stuck during \clearpage processing.
+
+<././//figs/HasNS_roc.png, id=152, 516.0078pt x 328.1058pt>
 File: ././//figs/HasNS_roc.png Graphic file (type png)
 <use ././//figs/HasNS_roc.png>
 Package pdftex.def Info: ././//figs/HasNS_roc.png  used on input line 45.
 (pdftex.def)             Requested size: 229.49844pt x 145.92902pt.
-<././//figs/HasREM_roc.png, id=147, 516.0078pt x 328.1058pt>
+<././//figs/HasREM_roc.png, id=153, 516.0078pt x 328.1058pt>
 File: ././//figs/HasREM_roc.png Graphic file (type png)
 <use ././//figs/HasREM_roc.png>
 Package pdftex.def Info: ././//figs/HasREM_roc.png  used on input line 46.
 (pdftex.def)             Requested size: 229.49844pt x 145.92902pt.
-<././//figs/BHF_BBB2_NShist.png, id=148, 404.35065pt x 338.2236pt>
+<././//figs/BHF_BBB2_NShist.png, id=154, 404.35065pt x 338.2236pt>
 File: ././//figs/BHF_BBB2_NShist.png Graphic file (type png)
 <use ././//figs/BHF_BBB2_NShist.png>
 Package pdftex.def Info: ././//figs/BHF_BBB2_NShist.png  used on input line 52.
 
 (pdftex.def)             Requested size: 229.49844pt x 191.96887pt.
-<././//figs/BHF_BBB2_REMhist.png, id=149, 404.35065pt x 338.2236pt>
+<././//figs/BHF_BBB2_REMhist.png, id=155, 404.35065pt x 338.2236pt>
 File: ././//figs/BHF_BBB2_REMhist.png Graphic file (type png)
 <use ././//figs/BHF_BBB2_REMhist.png>
 Package pdftex.def Info: ././//figs/BHF_BBB2_REMhist.png  used on input line 53
 .
 (pdftex.def)             Requested size: 229.49844pt x 191.96887pt.
-<././//figs/SLy_NShist.png, id=150, 404.35065pt x 338.58495pt>
+<././//figs/SLy_NShist.png, id=156, 404.35065pt x 338.58495pt>
 File: ././//figs/SLy_NShist.png Graphic file (type png)
 <use ././//figs/SLy_NShist.png>
 Package pdftex.def Info: ././//figs/SLy_NShist.png  used on input line 59.
 (pdftex.def)             Requested size: 229.49844pt x 192.17397pt.
-<././//figs/SLy_REMhist.png, id=151, 404.35065pt x 338.58495pt>
+<././//figs/SLy_REMhist.png, id=157, 404.35065pt x 338.58495pt>
 File: ././//figs/SLy_REMhist.png Graphic file (type png)
 <use ././//figs/SLy_REMhist.png>
 Package pdftex.def Info: ././//figs/SLy_REMhist.png  used on input line 60.
 (pdftex.def)             Requested size: 229.49844pt x 192.17397pt.
-<././//figs/MS1_PP_NShist.png, id=152, 404.35065pt x 338.2236pt>
+<././//figs/MS1_PP_NShist.png, id=158, 404.35065pt x 338.2236pt>
 File: ././//figs/MS1_PP_NShist.png Graphic file (type png)
 <use ././//figs/MS1_PP_NShist.png>
 Package pdftex.def Info: ././//figs/MS1_PP_NShist.png  used on input line 66.
 (pdftex.def)             Requested size: 229.49844pt x 191.96887pt.
-<././//figs/MS1_PP_REMhist.png, id=153, 404.35065pt x 338.2236pt>
+<././//figs/MS1_PP_REMhist.png, id=159, 404.35065pt x 338.2236pt>
 File: ././//figs/MS1_PP_REMhist.png Graphic file (type png)
 <use ././//figs/MS1_PP_REMhist.png>
 Package pdftex.def Info: ././//figs/MS1_PP_REMhist.png  used on input line 67.
 (pdftex.def)             Requested size: 229.49844pt x 191.96887pt.
-) (Classification_Results.tex [4 <././//figs/KNN_param_sweep_spin_NS_SLy.png> <
-././//figs/KNN_param_sweep_spin_REM_SLy.png> <././//figs/KNN_BHF_BBB2_NShist.pn
-g> <././//figs/KNN_BHF_BBB2_REMhist.png>]
-
-LaTeX Warning: A float is stuck (cannot be placed) on input line 16.
-
-
-LaTeX Warning: A float is stuck (cannot be placed) on input line 16.
-
-
-Class revtex4-2 Warning: Deferred float stuck during \clearpage processing.
-
-) (Classification_Conclusions.tex) (Classification_Acknowledgements.tex
+) (Classification_Results.tex) (Classification_Conclusions.tex)
+(Classification_Acknowledgements.tex
 
 Package natbib Warning: Citation `Chatterjee:2019avs' on page 5 undefined on in
 put line 3.
 
-[5 <././//figs/KNN_SLy_NShist.png> <././//figs/KNN_SLy_REMhist.png> <././//figs
-/KNN_MS1_PP_NShist.png> <././//figs/KNN_MS1_PP_REMhist.png>]
+[5 <././//figs/KNN_BHF_BBB2_NShist.png> <././//figs/KNN_BHF_BBB2_REMhist.png> <
+././//figs/KNN_SLy_NShist.png> <././//figs/KNN_SLy_REMhist.png>]
 
-LaTeX Warning: A float is stuck (cannot be placed) on input line 26.
+LaTeX Warning: A float is stuck (cannot be placed) on input line 11.
 
 
-LaTeX Warning: A float is stuck (cannot be placed) on input line 26.
+LaTeX Warning: A float is stuck (cannot be placed) on input line 11.
 
 
 Class revtex4-2 Warning: Deferred float stuck during \clearpage processing.
 
-[6 <././//figs/ROC_KNN_NS.png> <././//figs/ROC_KNN_REM.png> <././//figs/HasNS_r
-oc.png> <././//figs/HasREM_roc.png>]
+[6 <././//figs/KNN_MS1_PP_NShist.png> <././//figs/KNN_MS1_PP_REMhist.png> <././
+//figs/ROC_KNN_NS.png> <././//figs/ROC_KNN_REM.png> <././//figs/HasNS_roc.png> 
+<././//figs/HasREM_roc.png>]
 
-LaTeX Warning: A float is stuck (cannot be placed) on input line 26.
+LaTeX Warning: A float is stuck (cannot be placed) on input line 27.
 
 
-LaTeX Warning: A float is stuck (cannot be placed) on input line 26.
+LaTeX Warning: A float is stuck (cannot be placed) on input line 27.
 
 
 Class revtex4-2 Warning: Deferred float stuck during \clearpage processing.
@@ -895,20 +941,29 @@ No file classification_paper.bbl.
 
 Package natbib Warning: There were undefined citations.
 
-[7 <././//figs/BHF_BBB2_NShist.png> <././//figs/BHF_BBB2_REMhist.png> <././//fi
-gs/SLy_NShist.png> <././//figs/SLy_REMhist.png>] [8 <././//figs/MS1_PP_NShist.p
-ng> <././//figs/MS1_PP_REMhist.png>] (classification_paper.aux)
+[7 <././//figs/BHF_BBB2_NShist.png> <././//figs/BHF_BBB2_REMhist.png>]
+
+LaTeX Warning: A float is stuck (cannot be placed) on input line 161.
+
+
+LaTeX Warning: A float is stuck (cannot be placed) on input line 161.
+
+
+Class revtex4-2 Warning: Deferred float stuck during \clearpage processing.
+
+[8 <././//figs/SLy_NShist.png> <././//figs/SLy_REMhist.png>] [9 <././//figs/MS1
+_PP_NShist.png> <././//figs/MS1_PP_REMhist.png>] (classification_paper.aux)
 Package rerunfilecheck Info: File `classification_paper.out' has not changed.
 (rerunfilecheck)             Checksum: D56A3D04AE87D8DEE37C547A51E8BE13;1768.
  ) 
 Here is how much of TeX's memory you used:
- 15445 strings out of 481257
- 229738 string characters out of 2907743
- 615696 words of memory out of 3000000
- 32115 multiletter control sequences out of 15000+200000
- 430296 words of font info for 174 fonts, out of 3000000 for 9000
+ 15451 strings out of 481257
+ 229795 string characters out of 2907743
+ 626153 words of memory out of 3000000
+ 32114 multiletter control sequences out of 15000+200000
+ 430483 words of font info for 177 fonts, out of 3000000 for 9000
  0 hyphenation exceptions out of 8191
- 71i,10n,74p,1019b,415s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 71i,10n,74p,1845b,415s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/home/miquelmiravet/.miktex/texmfs/install/fonts/enc/dvips/cm-super/cm-super
 -t1.enc}</home/miquelmiravet/.miktex/texmfs/install/fonts/type1/public/amsfonts
 /cm/cmmi10.pfb></home/miquelmiravet/.miktex/texmfs/install/fonts/type1/public/a
@@ -933,9 +988,9 @@ c/cm-super/sfrm0800.pfb></home/miquelmiravet/.miktex/texmfs/install/fonts/type1
 /fonts/type1/public/cm-super/sfti0900.pfb></home/miquelmiravet/.miktex/texmfs/i
 nstall/fonts/type1/public/cm-super/sfti1000.pfb></home/miquelmiravet/.miktex/te
 xmfs/install/fonts/type1/public/cm-super/sftt1000.pfb>
-Output written on classification_paper.pdf (8 pages, 1653746 bytes).
+Output written on classification_paper.pdf (9 pages, 1657674 bytes).
 PDF statistics:
- 283 PDF objects out of 1000 (max. 8388607)
- 45 named destinations out of 1000 (max. 500000)
+ 287 PDF objects out of 1000 (max. 8388607)
+ 46 named destinations out of 1000 (max. 500000)
  47816 words of extra memory for PDF output out of 51595 (max. 10000000)
 
