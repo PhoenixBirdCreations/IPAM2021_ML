@@ -1,13 +1,57 @@
+#!/usr/bin/env python
+# S. Albanesi
+# Part of the ML project at IPAM 2021
+
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
 from scipy import interpolate
 
 class ErrorSurface:
+    """ ErrorSurface class
+    
+    During initialization we create a density surface in the 
+    (X,Y) plane, where X are predicted/recovery data
+    and Y are the true values. 
+
+    Given the surface and point x0, we can consider a slice, 
+    compute the fx0(y) distribution (method distribution) and 
+    then the confidence interval (method confidence_interval)
+    
+    Since fx0(y) is discrete, the confidence interval obtained
+    does not always correspond exactly to the requested one 
+    (i.e. if we ask for 0.90 confidence, maybe we get something
+    around ~0.88). To overcome this problem, we add the
+    possibility to spline fx0(y).
+
+    The data can be plotted using the following methods 
+    plot_surf, plot_interp, plot_inst. 
+
+    See algo/classy_NN/GstLAL.ipynb for a working example of 
+    this class.
+    """
+
     def __init__(self, X, Y, Nx=50, Ny=50, 
                  exp_step=False, dx_expstep=1.05, dy_expstep=1.05, 
-                 method='linear', Nx_grid=200, Ny_grid=200):
-        """ Initialize the class to compute the error-surface
+                 method='linear', Nx_igrid=200, Ny_igrid=200):
+        """ Initialize the class to compute the error-surface and
+        then the confidence intervals.
+        
+        The initialization works in this way: 
+          1) Create a grid in the (X,Y) plane according to input. 
+             If the exp_step is False, the grid is uniform with
+             spacing (max(X)-min(X)/Nx and (max(Y)-min(Y))/Ny.
+             If exp_step is True, then the grid is created 
+             according to {dx,dy}_expstep and it is not uniform.
+         
+          2) We count the number of (X,Y) points in each cell,
+             so that we have a discrete density distribution.
+
+          3) The original discrete density distribution is then
+             interpolated on a more refined grid. The new 
+             interpolated grid is always uniform with spancing 
+             (max(X)-min(X))/Nx_igrid and (max(Y)-min(Y))/Ny_igrid.
+
 
         Parameters
         ----------
@@ -15,7 +59,7 @@ class ErrorSurface:
             Predicted or recovered data for a specific feature
         
         Y : 1d-array
-            True values that correspon to X
+            True values that correspond to X
         
         Nx : int
             Number of points used in the x-direction for the non-interpolated surface. 
@@ -26,7 +70,7 @@ class ErrorSurface:
             as Nx, but in the y-direction
         
         exp_step : bool
-            Wse exponential-step instead of uniform. Can be used only if X[i]>=0 and Y[i]>=0 for every i
+            Use exponential-step instead of uniform-step. Can be used only if X[i]>=0 and Y[i]>=0 for every i
         
         dx_expstep : float
             exp_step in the x-direction for the non-interpolated surface (must be >1)
@@ -37,26 +81,27 @@ class ErrorSurface:
         method : str
             Method used for the surface-interpolation. Can be 'nearest', 'linear' or 'cubic'
         
-        Nx_grid : int
+        Nx_igrid : int
             number of points used in the x-direction for the intepolated grid
         
-        Ny_grid : int
-            as Nx_grid, but in the y-direction
+        Ny_igrid : int
+            as Nx_igrid, but in the y-direction
         """
-
         self.X     = X
         self.Y     = Y
         self.X_min = min(X)
         self.X_max = max(X)
         self.Y_min = min(Y)
         self.Y_max = max(Y)
-        # buld non-interpolated grid
+        
+        # build non-interpolated grid
         if exp_step:
             if np.any(X<0):
                 raise ValueError('exp_step=True can be used only if X[i]>=0 for every i')
             step_dict = self.__exp_step(dx_expstep,dy_expstep)
         else:
             step_dict = self.__uniform_step(Nx,Ny)
+        
         self.step_dict = step_dict 
         self.Nx      = step_dict['Nx']
         self.Ny      = step_dict['Ny']
@@ -67,15 +112,22 @@ class ErrorSurface:
         self.y_mid   = step_dict['y_mid']
         self.x_edges = step_dict['x_edges']
         self.y_edges = step_dict['y_edges']
+        
         # interpolation
         self.method  = method
-        self.Nx_grid = Nx_grid
-        self.Ny_grid = Ny_grid
+        self.Nx_igrid = Nx_igrid
+        self.Ny_igrid = Ny_igrid
         self.__interpolate_surface()
+        
         return
 
 
     def __uniform_step(self, Nx, Ny):
+        """ 
+        Create the uniform grid and the corresponding 
+        density surface (not interpolated). Used during
+        initialization.
+        """
         X     = self.X
         Y     = self.Y
         X_min = self.X_min
@@ -116,6 +168,11 @@ class ErrorSurface:
         return step_dict
 
     def __exp_step(self, dx_expstep, dy_expstep):
+        """
+        Create the non-uniform grid and the corresponding 
+        density surface (not interpolated). Used during
+        initialization.
+        """
         X       = self.X
         Y       = self.Y
         X_min   = self.X_min
@@ -175,8 +232,13 @@ class ErrorSurface:
         return xg, yg
     
     def __interpolate_surface(self):
-        Nx_grid = self.Nx_grid
-        Ny_grid = self.Ny_grid
+        """ 
+        Interpolate the surface previously
+        found to a new uniform grid.
+        Used during initialization
+        """
+        Nx_igrid = self.Nx_igrid
+        Ny_igrid = self.Ny_igrid
         method  = self.method
         X_min   = self.X_min
         X_max   = self.X_max
@@ -188,10 +250,9 @@ class ErrorSurface:
         xg0     = self.xg0
         yg0     = self.yg0
         # compute grid to use for interpolation
-        x_interp = np.linspace(X_min, X_max, Nx_grid)
-        y_interp = np.linspace(Y_min, Y_max, Ny_grid)
+        x_interp = np.linspace(X_min, X_max, Nx_igrid)
+        y_interp = np.linspace(Y_min, Y_max, Ny_igrid)
         xg_interp, yg_interp = self.__tmesh(x_interp, y_interp)
-        # put the surface S and the original
         points = np.empty(((Nx-1)*(Ny-1), 2))
         values = np.empty(((Nx-1)*(Ny-1),))
         k = 0
@@ -212,6 +273,19 @@ class ErrorSurface:
         return
     
     def distribution(self, x0, verbose=False):
+        """ 
+        Given a certain x0, compute the corresponding
+        distribution fx0(y) using the interpolated
+        surface. Used for the computation of the confidence
+        interval.
+
+        Parameters
+        ----------
+          x0      : float
+          verbose : bool
+
+        Return y-points of the fx0(y) distribution
+        """
         x_interp = self.x_interp
         y_interp = self.y_interp
         S_interp = self.S_interp
@@ -239,6 +313,49 @@ class ErrorSurface:
         return y_values
     
     def confidence_interval(self, x0, cfi=0.9, verbose=False, nbins=50, spline=False, spline_sample=1000, spline_plot=False):
+        """
+        Compute the confidence interval [xl,xr] for x0 
+        according to the confidence requested (cfi).
+        Note that since the distribution fx0(y) used 
+        is discrete, so the final probabily to have
+        an event in [xl,xr] could be different to the
+        requested confidence (e.g. if cfi=0.90,
+        the probability to have an event in [xl,xr]
+        could be P(x\in[xl,xr]=0.88). 
+        To overcome this problem, it is possible to use
+        a spline on the distribution (spline switched
+        off by default). This reduce the difference
+        between cfi and P(x0\in[xl,xr])
+        
+        Parameters
+        ---------
+          x0 : float
+            Point in which we compute the y-distribution
+
+          cfi : float
+            Nominal confidence
+
+          verbose : bool
+            Print some info
+
+          nbins : int
+            Number of bins to use on the y-points 
+            given in output by self.distribution()
+          
+          spline : bool
+            Use a spline algorithm on the histogram
+            computed from the y-points of self.distribution()
+          
+          spline_sample : int
+            Sampling for the spline algo
+
+          spline_plot : bool
+            Plot the original histogram and 
+            the splined one. Useful to check the
+            spline procedure (not always optimal)
+
+         Return xl, xr and P(x\in[xl,xr])
+        """
         y  = self.distribution(x0,verbose=False)
         hist, bin_edges = np.histogram(y,bins=nbins)
         density = hist/hist.sum()
@@ -302,6 +419,10 @@ class ErrorSurface:
     # Plots
     #---------------------------------------------
     def plot_surf(self, show_grid=True, log_bar=False, log_scale=False, bisectrix=True):
+        """
+        Plot the original density surface
+        (not interpolated)
+        """
         x_mid   = self.x_mid
         y_mid   = self.y_mid
         x_edges = self.x_edges
@@ -357,8 +478,11 @@ class ErrorSurface:
         return
 
     def plot_interp(self, x0_line=None, log_bar=False, log_scale=False):
-        Nx_grid = self.Nx_grid
-        Ny_grid = self.Ny_grid
+        """
+        Plot the interpolated surface  
+        """
+        Nx_igrid = self.Nx_igrid
+        Ny_igrid = self.Ny_igrid
         xg_interp = self.xg_interp
         yg_interp = self.yg_interp
         X_min   = self.X_min
@@ -377,8 +501,8 @@ class ErrorSurface:
             lev_decimals = 0
         levels = np.around(np.linspace(min_S, S_interp_plot.max(), 30), decimals=lev_decimals)
         #S_interp_plot = np.empty(np.shape(S_interp))
-        #for i in range(Nx_grid):
-        #    for j in range(Ny_grid):
+        #for i in range(Nx_igrid):
+        #    for j in range(Ny_igrid):
         #        if np.isnan(S_interp[i,j]):
         #            S_interp[i,j] = 0;
         #        if S_interp[i,j]<1:
@@ -386,13 +510,13 @@ class ErrorSurface:
         #        else:
         #            S_interp_plot[i,j] = np.log10(S_interp[i,j])
         fig,ax=plt.subplots(1,1, figsize=(10,6))
-        cp = ax.contourf(xg_interp, yg_interp, S_interp_plot, cmap=plt.get_cmap('viridis'), levels=levels)
+        cp = ax.contourf(xg_interp, yg_interp, S_interp_plot, cmap=plt.get_cmap('plasma'), levels=levels)
         cb = fig.colorbar(cp)
         ax.set_ylim([Y_min,Y_max])
         ax.set_xlim([X_min,X_max])
         ax.plot(self.x_interp, self.x_interp,c='r',lw=1)
         if x0_line is not None:
-            ax.axvline(x0_line, color=[1,0,1])
+            ax.axvline(x0_line, color=[0,1,0])
         if log_scale:
             ax.set_yscale('log')
             ax.set_xscale('log')
@@ -409,6 +533,10 @@ class ErrorSurface:
         return
 
     def plot_hist(self, x0, nbins=50, axvlines=None):
+        """
+        Plot the y-values of a fx0(y) distribution
+        found with the interpolated surface
+        """
         X_min   = self.X_min
         X_max   = self.X_max
         if x0<X_min or x0>X_max:
