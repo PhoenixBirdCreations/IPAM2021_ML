@@ -1,0 +1,48 @@
+This is BibTeX, Version 0.99d (TeX Live 2019/Debian)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: genetic_programming.aux
+The style file: abbrv.bst
+Database file #1: bibliography.bib
+Warning--empty school in Kai_thesis
+You've used 6 entries,
+            2118 wiz_defined-function locations,
+            531 strings with 4538 characters,
+and the built_in function-call counts, 1609 in all, are:
+= -- 146
+> -- 85
+< -- 0
++ -- 35
+- -- 28
+* -- 96
+:= -- 290
+add.period$ -- 19
+call.type$ -- 6
+change.case$ -- 30
+chr.to.int$ -- 0
+cite$ -- 7
+duplicate$ -- 57
+empty$ -- 129
+format.name$ -- 28
+if$ -- 327
+int.to.chr$ -- 0
+int.to.str$ -- 6
+missing$ -- 5
+newline$ -- 33
+num.names$ -- 12
+pop$ -- 44
+preamble$ -- 1
+purify$ -- 26
+quote$ -- 0
+skip$ -- 42
+stack$ -- 0
+substring$ -- 49
+swap$ -- 5
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 20
+warning$ -- 1
+while$ -- 13
+width$ -- 7
+write$ -- 62
+(There was 1 warning)

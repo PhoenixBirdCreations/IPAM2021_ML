@@ -1,0 +1,37 @@
+\begin{thebibliography}{1}
+
+\bibitem{Cavaglia_2020}
+M.~Cavagli{\`{a}}, S.~Gaudio, T.~Hansen, K.~Staats, M.~Szczepa{\'{n}}czyk, and
+  M.~Zanolin.
+\newblock Improving the background of gravitational-wave searches for core
+  collapse supernovae: a machine learning approach.
+\newblock {\em Machine Learning: Science and Technology}, 1(1):015005, feb
+  2020.
+
+\bibitem{koza_genetic}
+J.~Koza and J.~Rice.
+\newblock {\em Genetic Programming: On the Programming of Computers by Means of
+  Natural Selection}.
+\newblock A Bradford book. Bradford, 1992.
+
+\bibitem{GP_book}
+R.~Poli, W.~B. Langdon, and N.~F. McPhee.
+\newblock {\em A Field Guide to Genetic Programming}.
+\newblock Egham, UK: Lulu Enterprises, Mar 2008.
+
+\bibitem{KarooGP}
+K.~Staats.
+\newblock Karoo gp.
+\newblock \url{https://github.com/kstaats/karoo_gp}.
+
+\bibitem{KarooPYPI}
+K.~Staats.
+\newblock Karoo-gp-pypi.
+\newblock \url{https://pypi.org/project/karoo-gp/}.
+
+\bibitem{Kai_thesis}
+K.~Staats.
+\newblock Genetic programming applied to rfi mitigation in radio astronomy.
+\newblock Master's thesis, 2016.
+
+\end{thebibliography}
