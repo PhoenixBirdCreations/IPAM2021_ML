@@ -1,5 +1,9 @@
 \begin{thebibliography}{1}
 
+\bibitem{gpytorch}
+Gpytorch.
+\newblock \url{https://gpytorch.ai/}.
+
 \bibitem{Cavaglia_2020}
 M.~Cavagli{\`{a}}, S.~Gaudio, T.~Hansen, K.~Staats, M.~Szczepa{\'{n}}czyk, and
   M.~Zanolin.
