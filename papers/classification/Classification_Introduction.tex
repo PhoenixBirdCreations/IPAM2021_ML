@@ -13,7 +13,7 @@ gave answers to long-lasting problems, such as the origin and production of
 short Gamma Ray Bursts (GRBs)~\cite{LIGOScientific:2017ync}, the production of heavy 
 elements during a merger of 
 BNS~\cite{Arcavi:2017xiz,Chornock:2017sdf,2017Sci...358.1570D,2017Natur.551...80K}, 
-ruled out Equations of State (EoS) *cite and alternative theories of 
+ruled out Equations of State (EoS)~\cite{LIGOScientific:2018cki} and alternative theories of 
 gravity~\cite{PhysRevLett.119.251301}. Such simultaneous observations are 
 crucial for a variety of scientific fields, like astrophysics, particle 
 physics, cosmology, and therefore the necessity to coordinate them successfully 
@@ -37,7 +37,7 @@ post-merger mass remnant is a common factor.
 
 
 Numerical relativity (NR) simulations can provide accurate information about the coalesence of the binary system and its aftermath/remnant. However, these simulations are computationally expensive and require a lot of time, making them inapropriate to alert follow-up EM searches. Another approach to computing
-remnant matter is via emperical fits of NR results, which provides an expression for the remnant mass as shown in [13, 14 *cite]. These fits, however, demand more information (like the EoS) than what is available at real-time in detector data [10 *cite]. Another factor adding to the difficulties of estimating the post-merger remnant matter is the inaccuracies of the source parameters calculated by modeled search pipelines in real-time. Consequently, it is important to alert the EM ground and space telescopes quickly and accurately in order to have synchronized EM observations.
+remnant matter is via emperical fits of NR results, which provides an expression for the remnant mass as shown in~\cite{Foucart:2012nc,Foucart:2018rjc}. These fits, however, demand more information (like the EoS) than what is available at real-time in detector data~\cite{Chatterjee:2019avs}. Another factor adding to the difficulties of estimating the post-merger remnant matter is the inaccuracies of the source parameters calculated by modeled search pipelines in real-time. Consequently, it is important to alert the EM ground and space telescopes quickly and accurately in order to have synchronized EM observations.
 
 %Consequently, the necessity of EM follow-up searches is of crucial importance and 
 
@@ -47,7 +47,7 @@ remnant matter is via emperical fits of NR results, which provides an expression
    
 %- Mention empirical fits, Foucart? 
  
-In the previous observing runs in LIGO and Virgo there were used different matched-filtering pipelines in low latency in order to detect GWs from CBC, such as the GstLAL-based inspiral pipeline (GstLAL)~\cite{Sachdev:2020lfd}, the PyCBCLive~\cite{Nitz_2018}, the MBTAOnline~\cite{Adams_2016}. These searches are based on a discrete template bank of CBC waveforms that provide the masses, the dimensionless aligned/anti-aligned spins of the objects along the orbital angular momentum. The best matching template was performed through a detection statistic during the second observing run (O2), which was the first time that real-time data was made available to EM observatories to support follow-up observations. Classification of the binary systems was performed according to the following probabilities: the probability that at least one of the objects in the binary is a NS, p(HasNS) and the probability that there will be a matter remnant p(HasRemnant). For instance, in a BNS merger both probabilities will be equal to one, while in a binary black hole (BBH) merger, both probabilities will be zero. In~\cite{Chatterjee:2019avs} the authors approached the problem as binary classification and implemented machine learning (ML) supervised algorithms, such as KNeighborClassifier (KNN) (Pedregosa et al. 2011) and Random Forest (RF) classifiers. These methods were used during the O3 to calculate the probability that an EM-bright progenitor is present in the system.
+In the previous observing runs in LIGO and Virgo there were used different matched-filtering pipelines in low latency in order to detect GWs from CBC, such as the GstLAL-based inspiral pipeline (GstLAL)~\cite{Sachdev:2020lfd}, the PyCBCLive~\cite{Nitz_2018}, the MBTAOnline~\cite{Adams_2016}. These searches are based on a discrete template bank of CBC waveforms that provide the masses, the dimensionless aligned/anti-aligned spins of the objects along the orbital angular momentum. The best matching template was performed through a detection statistic during the second observing run (O2), which was the first time that real-time data was made available to EM observatories to support follow-up observations. Classification of the binary systems was performed according to the following probabilities: the probability that at least one of the objects in the binary is a NS, p(HasNS) and the probability that there will be a matter remnant p(HasRemnant). For instance, in a BNS merger both probabilities will be equal to one, while in a binary black hole (BBH) merger, both probabilities will be zero. In~\cite{Chatterjee:2019avs} the authors approached the problem as binary classification and implemented machine learning (ML) supervised algorithms, such as KNeighborClassifier (KNN)~\cite{Pedregosa:2011ork} and Random Forest (RF) classifiers. These methods were used during the O3 to calculate the probability that an EM-bright progenitor is present in the system.
 
 %Say a few things about the early recovery of the parameters and explain what Deep does.
 
@@ -55,4 +55,4 @@ In this work, we revisit and extend the problem of classification in low-latency
 
 Different methods of classification were considered, such as KNN, RF, Support Vector Machine and were tested for the same data. Here, we present the ones that performed best, the RF and KNN. The last one is also used in~\cite{Chatterjee:2019avs} and thus we provide a direct comparison. 
 
-The structure of the paper is as follows. In Section 2 there is a detailed description of the data used, as well as the labeling introduced. In Section 3, the classification methods, namely Random Forest and KNN are presented. +   
+The structure of the paper is as follows. In Section 2 there is a detailed description of the data used, as well as the labeling introduced. In Section 3, the classification methods, namely Random Forest and KNN are presented. 
