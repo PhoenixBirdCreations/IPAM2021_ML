@@ -4,7 +4,7 @@ We apply crossvalidation in the number of trees and depth of the forests for the
 
 In table \ref{tab:RFcross} we present a summary of best and second best hyperparameters found in the crossvalidation for each EoS, along the memory the model occupies and the difference in the score. As we can see, usually a forest with many trees has a second best option with far less that is lighter in memory and achieves a similar performance. The optimum maximum depth is always 15. Also the score achieved for every EoS is similar, and so we check that our accuracy is not NS model dependent.
 
-\begin{table}[h]
+\begin{table*}[h]
 \centering
 \begin{tabular}{@{}lcccccccc@{}}
 \toprule
@@ -36,7 +36,7 @@ SLY230A                         & 300   & 15    & 95.5  & 0.96714915            
 \end{tabular}
 \caption{Comparison of the best and second best RF models obtained during crossvalidation for all EoS. We show the file size in MB of the forest, and the difference in score between the two options.}
 \label{tab:RFcross}
-\end{table}
+\end{table*}
 
 To simplify the model and according to the results of crossvalidation, we train the final forests for all EoS with 50 trees and 15 maximum depth. In figure \ref{fig:RF_roc} we show the ROC curves for all models to give an idea of the performance. Notice that HasREM performs better than HasNS. The ourperformance of HasREM against HasNS in RF is even more noticeable in the histograms in figures \ref{fig:RF_hist_BHFBBB2}, \ref{fig:RF_hist_SLY} and \ref{fig:RF_hist_MS1PP} for the highlighted EoS, where the bars of asigned probabilities do not intersect each other and therefore there exists a threshold value for perfect classification in the testing dataset.
 
