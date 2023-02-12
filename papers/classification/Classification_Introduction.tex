@@ -80,8 +80,7 @@ system.
 
 %Say a few things about the early recovery of the parameters and explain what Deep does.
 
-In this work, we revisit and extend the problem of classification in low-latency. 
-First, we propose the use of a combined probability of whether there is a NS 
+In this work, we revisit and extend the problem of classification in low-latency\textcolor{blue}{ by exploring novel algorithms and new classification schemes }. First, we propose the use of a combined probability of whether there is a NS 
 in the event and whether there is a remnant. By doing so, we exclude the 
 unphysical situation of having a larger probability of having a remnant than 
 having a NS. In addition, we perform a thorough study of different algorithms, 
@@ -89,15 +88,15 @@ perform several tests and account for different EoSs. We provide a direct
 comparison between the methods we used, as well as the ones already 
 implemented e.g. in~\cite{Chatterjee:2019avs}. 
 
-Different methods of classification were considered, such as KNN, RF, 
+Different methods of classification were considered, such as KNN, RF, \textcolor{blue}{genetic programming} 
 Support Vector Machine and were tested for the same data. Here, we 
-present the ones that performed best, the RF and KNN. The last one is 
+present the ones that performed best, the RF, \textcolor{blue}{genetic programming} and KNN. The last one is 
 also used in~\cite{Chatterjee:2019avs} and thus we provide a direct 
 comparison. 
 
 The structure of the paper is as follows. In Section 2 there is a detailed 
 description of the data used, as well as the labeling introduced. In 
-Section 3, the classification methods, namely RF and KNN are presented. 
+Section 3, the classification methods, namely RF, KNN, \textcolor{blue}{genetic programming}  are presented. 
 The 4th Section is dedicated to the results of each method and their 
 comparison. Lastly, there is a summary of the work carried out in this 
 paper and the suggestion to use these methods in the next observing 
