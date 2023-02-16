@@ -371,7 +371,7 @@ class ErrorSurface:
             tck = interpolate.splrep(x, y)
             edges_fine = np.linspace(bin_edges[0], bin_edges[-1], spline_sample)
             x_fine     = (edges_fine[0:-1]+edges_fine[1:])/2
-            new_hist    = interpolate.splev(x_fine, tck)
+            new_hist   = interpolate.splev(x_fine, tck)
             new_bin_edges  = edges_fine
             mask = np.argwhere(new_hist<0)
             new_hist[mask] = 0
@@ -477,7 +477,7 @@ class ErrorSurface:
         plt.show()
         return
 
-    def plot_interp(self, x0_line=None, log_bar=False, log_scale=False):
+    def plot_interp(self, x0_line=None, log_bar=False, log_scale=False, log_bar_pad=False):
         """
         Plot the interpolated surface  
         """
@@ -491,8 +491,10 @@ class ErrorSurface:
         Y_max   = self.Y_max
         S_interp = self.S_interp
         if log_bar:
-            np.seterr(divide='ignore', invalid='ignore') 
+            np.seterr(divide='ignore', invalid='ignore')
             S_interp_plot = np.log10(S_interp)
+            if log_bar_pad:
+              S_interp_plot[S_interp<1] = 0
             min_S = max(S_interp_plot.min(), 0)
             lev_decimals = 3
         else:
