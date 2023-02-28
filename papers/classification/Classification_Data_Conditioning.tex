@@ -1,8 +1,29 @@
-\section{Dataset and labeling\label{dataset}}
+\section{Data set\label{dataset}}
 \label{sec:dataset}
-In this section, we discuss the data conditioning process in our study. The data we use for training and testing are the same injections during O2 as in  [REF Deep's paper], also aiming to predictict the probability of a detected event of having a neutron star (HasNS) and/or a remnant object (HasREM) that could emit an electromagnetic counterpart. As we utilize supervised ML techniques, we first label the data accordingly.
 
-HasNS is considered true if $m2_{inj}< 3M\odot$ as in [REF]. For HasREM and following [REF] we use the Focault formula for the remnant mass and if the result is greater than 0 we label the event as true . However, this formula depends on the Equation of State (EoS) as it utilizes the compactness of the NS. The injections used in our study utilize the 2H EoS, but we relabel the data with a different one as explained later, as the EoS used for labelling the training data will affect the ability of predicting correctly a real event.
+In our analysis, we employ the same data set as Ref.\ \todo{chatterjee}. This allows us to directly compare the performance of the various algorithms and the new labeling
+scheme to the performance of the \ac{KNN} algorithm, which was deployed in the latest \ac{LVK} observing run. The data set is described in detail in Ref.\ \todo{chatterjee and messick}. Only its most relevant features are presented below.
+
+We train the \ac{KNN}, \ac{RF}, and \ac{GP} algorithms on \todo{XX} days of data from \ac{LVK}'s \ac{O2} observing run with \todo{XX} synthetic \ac{BNS}, \ac{NSBH}, and \ac{BBH} signals
+injected into it \todo{briefly how the data set was built (replay?) and what's was its purpose (MDC? tests?)}. \todo{Now explain briefly the characteristics of the signals, for example
+their mass range, spin properties, FAR\dots} The \ac{CBC} signals are recovered with one of the standard search \ac{LVK} pipelines \todo{used in\dots deployed for\dots?}, the GstLAL
+pipeline \todo{ref}. \todo{A brief sentence to say how it works? e.g., match-filter?} The dimension of the data set is determined by the number of signals recovered by the pipeline after
+proper selection cuts are applied. Each event is identified by a \todo{X}-dimensional state vector that contains the parameters of the signal recovered by GstLAL and an additional set of
+quantities derived from these parameters. The first \todo{X} elements of the state vector are the two component masses, \todo{the spins\dots complete this} from GstLAL's best matching
+template and the \ac{FAR} of the event. In this work, we restrict our analysis to signals recovered with a \ac{FAR} of \todo{XX}. \todo{Explain why.} The remaining elements of the state
+vector are \todo{list of other derived quantities\dots} 
+
+Each event is classified based on its \hasns\ and \hasrem\ properties. The assigned labels depend on which \ac{EOS} is being considered. Throughout the paper, we consider a set of \todo{XX}
+different EOS \todo{Explain what EOS we consider and give refs}.  Therefore, after labeling, we obtain \todo{XX} distinct data sets that are separately used for training, testing, and
+validation. The results for each \ac{EOS} are then marginalized to assess the overall performance of the methods. We use the \todo{A, B, and C} \ac{EOS} throughout the paper to benchmark
+the performance of the three algorithms on single \ac{EOS} with different \todo{properties? hardness? soft/hard?}. The \todo{A} \ac{EOS} was used in Ref.\ \todo{cite:chattarjee}.
+
+We label an event with ``\hasns\ = \true'' when at least one of the injected component masses is less than the maximum \ac{NS} mass allowed by the \ac{EOS}. The value of the maximum \ac{NS}
+mass ranges from \todo{X} to \todo{Z} across the various \ac{EOS}, and is equal to $XM\odot$, $YM\odot$, and $ZM\odot$, for the \todo{A, B, and C} \ac{EOS}, respectively. To assign the
+\hasrem\ label, we follow Ref.\ \todo{cite:chatterjee} and apply the Focault formula \todo{cite}. An event is labeled ``\hasrem\ = \true'' when \todo{complete\dots}. The \hasrem\ property
+depends on the \ac{EOS} through the compactness of the \ac{NS}.
+
+\todo{not checked below}
 
 Predicting the presence of a NS and the creation of a remnant object like this requires a binary classifier for each of the two tasks. We employ a new approach that utilizes the relationship between HasNS and HasREM to train a single multilabel classifier. We relabel the data into 3 mutually exclusive categories: label 0 if there is no NS and no remnant, label 1 if there is a NS but no remnant, and label 2 if there are both. Our labelling is summarized in table \ref{tab:labels}. This labeling eliminates the possibility of an unphysical classification of the event, where $p(HasREM)>p(HasNS)$, as there is no category for HasREM but no NS.
 

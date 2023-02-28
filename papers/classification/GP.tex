@@ -1,9 +1,14 @@
-\subsection{Genetic Programming}
-\textcolor{blue}{Genetic Programming(GP) is a supervised ML algorithm \cite{koza_genetic}.It is an evolutionary computation that employs naturally occurring genetic operations, a fitness function, and multiple generations of
-Darwinian evolution to resolve a user-defined task \cite{GP_book}. GP can be used to discover a mathematical relationship between the input variables, also called features, in data (regression) or group data into categories (classification). Similar to biological natural selection, GP learns how well the program functions by comparing the output of its multivariate expression to a \emph{fitness score}. Programs with high fitness score are most likely, but not certain, to propagate to next generation. With subsequent generations, programs are more likely to get better at solving the task at hand \cite{Kai_thesis}.} 
+\subsection*{Genetic Programming}
 
-\textcolor{blue}{GP multivariate expressions are classically represented as a syntax tree, where the trees have a root (top center), nodes (mathematical operators), and leaves (operands). Operators can be arithmetic, trigonometric, boolean, etc. and the operands are place-holder variables related to the problem. The tree depth can be varied aiding in evolution of more complex multivariate expression. GP intitially generates a stochastic poplulation of trees, computes fitness scores and randomly selects trees for comparison. The lead scoring trees are selected and  one of the genetic operators (reproduction, mutation, crossover) is randomly applied to carry them forward to next generation. The process repeats until user-defined  conditions are met. The run-time parameters like intial population size, tree depth, tournament size for competing trees, number of generations, and termination criterion can be tuned for better algorithmic performance.} %\cite{make sure from where!}%
+\ac{GP} is a supervised evolutionary algorithm \cite{koza_genetic} that relies on genetic operations inspired by natural selection, a fitness function, and multiple generations of
+programs to perform a user-defined task \cite{GP_book}. Programs with a higher fitness score are more likely to be passed down to future generations. As the population of programs evolves,
+the ability to solve the task at hand increases \cite{Kai_thesis}. \ac{GP} can be used in regression or classification problems to discover mathematical relationships between
+variables or data. 
 
-\textcolor{blue}{The unique aspect of GP algorithm used here is the transparency of its internal workings. Unlike many black box ML algorithms, the evolutionary process can be reviewed at each step which might be quite important to many researchers.\cite{Cavaglia_2020}}
-
-\textcolor{blue}{For our analysis, we used an open source python code, Karoo GP \cite{KarooGP}. Karoo GP package is scalable, with multicore and GPU support enabled by the TensorFlow library and has capacity to work with very large datasets. The latest version of Karoo GP can be found in PyPI \cite{KarooPYPI}.}
+KarooGP \cite{KarooGP,KarooPYPI}, an open-source Python code, is used in this work. The output of the algorithm is a multivariate mathematical expression in the form of a human-readable
+syntax tree, where the nodes are mathematical operators and the leaves are input variables. This aspect makes the method very suitable for the post-processing application of large data
+sets, as the evolutionary process can be reviewed at each step \cite{Cavaglia_2020}. The algorithm is initialized through a stochastic population of trees, which is left to evolve according
+to pre-defined genetic operators such as reproduction, mutation, and crossover. At each generation, the performance of each individual tree in solving the problem is evaluated through a
+fitness score. A random subset of the best-performing trees is carried forward to the next generation. The process repeats until a set of user-defined conditions are met. Parameters such as
+the initial population size, tree depth, tournament size for competing trees, number of generations, and termination criterion can be tuned for better algorithmic performance.
+\todo{citation}.

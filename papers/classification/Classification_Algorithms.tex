@@ -1,20 +1,11 @@
 \section{Classification Algorithms\label{algos}}
+
+In the our analysis we consider three different methods for unsupervised classification: \ac{KNN}, \ac{RF}, and \ac{GP}. These methods were chosen because of\dots \todo{Why? Because they're fast? Versatile? Because they're what Sydney loves...? Explain}
+
+In this section we briefly describe the relevant features of the algorithms and their implementation. 
+
 \input{KNN.tex}
 \input{RF.tex}
 \input{GP.tex}
 
-In order to decide which method gives a better performance in classifying this kind of events, we can apply them over testing data and finally do a comparison between both. A way to see how data is classified we can construct histograms where the number of events that are classified with a label (\texttt{HasNS/HasRemnant}) \texttt{True} or \texttt{False} will change with a given threshold of the probability. For an algorithm with perfect performance, all the events with label \texttt{True (False)} should be at \textit{p}(\texttt{label}) = 1 (\textit{p}(\texttt{label}) = 0).
 
-Another way to check the algorithm's performance is by building the so-called \textit{Receiver Operating Characteristic (ROC) Curve}. They show the variation of the true-positive rate (or efficiency) with the false-positive rate given a certain threshold for the probability. An algorithm with a proper performance will give a steeper ROC curve, or in other words, will have a higher eficiency with a lower false-positive rate.  
-
-
-In the ROC curves that we will present in the following subsections, we highlight three reference EoS in color, from which we show results in more detail. We select BHF\_BBB2 because is the model that give the lowest maximum mass, MS1\_PP as the model with the bigger maximum mass, and we also include SLy because is the most accepted EoS for NS modeling (reference), and is the one that was used in the injections that are our dataset.
-
-Here are the results for the methods:
-
-\input{KNN_Results.tex} %plots and comments
-\input{RF_Results.tex} %plots and comments
-\input{GP_Results.tex}
-
-
-\subsection{Algorithm comparison}
