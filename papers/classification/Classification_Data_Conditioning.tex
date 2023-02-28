@@ -1,6 +1,20 @@
-\section{Dataset and labeling\label{dataset}}
+\section{Data set\label{dataset}}
 \label{sec:dataset}
-In this section, we discuss the data conditioning process in our study. The data we use for training and testing are the same injections during O2 as in  [REF Deep's paper], also aiming to predictict the probability of a detected event of having a neutron star (HasNS) and/or a remnant object (HasREM) that could emit an electromagnetic counterpart. As we utilize supervised ML techniques, we first label the data accordingly.
+
+In our analysis we employ the same data set of Ref.\ \todo{chatterjee}. This allows us to directly compare the performance of the various algorithms and the new labeling
+scheme to the performance of the \ac{KNN} algorithm which was deployed in the latest \ac{LVK} observing run. The data set is described in detail in Ref.\ \todo{chatterjee and messick}. Its most relevant features are presented below.
+
+We train the algorithms on a data set which is built from a number of synthetic \ac{BNS}, \ac{NSBH} and \ac{BBH} signals injected in \todo{XX} days of data from \ac{LVK}'s
+\ac{O2} observing run. \todo{briefly explain which period(s) of O2 the data are from}. The signals are recovered with one of the standard search \ac{LVK} pipelines \todo{used
+in\dots deployed for\dots?}, the GstLAL pipeline \todo{ref}. \todo{A brief sentence to say how it works? e.g., match-filter?} The dimension of the data set is determined by the
+number of signals recovered by the pipeline after proper selection cuts are applied. Each entry \todo{is entry the right word?} in the data set is identified by a
+\todo{X}-dimensional state vector that contains the parameters of the signal as are recovered by GstLAL and additional physical quantities which are derived from the pipeline
+output. The first \todo{X} elements of the state vector are the two component masses, \todo{the spins\dots complete this} from GstLAL's best matching template and the \ac{FAR} of the event. In this work, we restrict our analysis to signals recovered with a \ac{FAR} of \todo{XX}. \todo{Explain why.} Each vector is augmented by \todo{list of other derived quantities\dots} 
+
+
+\todo{After the data set is properly descibed move to describe labeling}
+
+In this section, we discuss the data conditioning process in our study.  As we utilize supervised ML techniques, we first label the data accordingly.
 
 HasNS is considered true if $m2_{inj}< 3M\odot$ as in [REF]. For HasREM and following [REF] we use the Focault formula for the remnant mass and if the result is greater than 0 we label the event as true . However, this formula depends on the Equation of State (EoS) as it utilizes the compactness of the NS. The injections used in our study utilize the 2H EoS, but we relabel the data with a different one as explained later, as the EoS used for labelling the training data will affect the ability of predicting correctly a real event.
 
