@@ -3,7 +3,7 @@
 \ac{RF} is a classification method based on an ensemble of decision trees. The trees are hierarchical models that make decisions by recursively splitting the data into different
 categories based on the values of features. Each tree in the forest is trained independently, and the algorithm combines the results to assign a class \tocheck{not sure I understand this:
 ``based on the modes from the trees.'' What are the modes? There is no mention of modes so far.} The probability of an event belonging to a class is given by the fraction of trees that
-correctly predict it. \ac{RF} is known for its parallelization capabilities, as computations inside each tree are independent from the rest. A \ac{RF} algorithm is usually trained using
+correctly predict it. \ac{RF} is known for its parallelization capabilities, as computations inside each tree are independent from the rest. An \ac{RF} algorithm is usually trained using
 bootstrapping, a technique that randomly assigns subsets of the training dataset to each tree. This helps prevent overfitting, as each individual classifier is not exposed to the same
 data, and encourages pattern recognition by studying the same data from different subsets. The model's performance on the given data set can be optimized by tuning the input
 hyperparameters.
