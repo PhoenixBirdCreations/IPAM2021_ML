@@ -3,3 +3,13 @@
 
 # pyenv
 .python-version
+
+# latex
+
+*.aux
+*.log
+*.out
+*.toc
+*.dvi
+*.pdf
+*.bbl
