@@ -13,36 +13,4 @@ quantities derived from these parameters. The first \todo{X} elements of the sta
 template and the \ac{FAR} of the event. In this work, we restrict our analysis to signals recovered with a \ac{FAR} of \todo{XX}. \todo{Explain why.} The remaining elements of the state
 vector are \todo{list of other derived quantities\dots} 
 
-Each event is classified based on its \hasns\ and \hasrem\ properties. The assigned labels depend on which \ac{EOS} is being considered. Throughout the paper, we consider a set of \todo{XX}
-different EOS \todo{Explain what EOS we consider and give refs}.  Therefore, after labeling, we obtain \todo{XX} distinct data sets that are separately used for training, testing, and
-validation. The results for each \ac{EOS} are then marginalized to assess the overall performance of the methods. We use the \todo{A, B, and C} \ac{EOS} throughout the paper to benchmark
-the performance of the three algorithms on single \ac{EOS} with different \todo{properties? hardness? soft/hard?}. The \todo{A} \ac{EOS} was used in Ref.\ \todo{cite:chattarjee}.
-
-We label an event with ``\hasns\ = \true'' when at least one of the injected component masses is less than the maximum \ac{NS} mass allowed by the \ac{EOS}. The value of the maximum \ac{NS}
-mass ranges from \todo{X} to \todo{Z} across the various \ac{EOS}, and is equal to $XM\odot$, $YM\odot$, and $ZM\odot$, for the \todo{A, B, and C} \ac{EOS}, respectively. To assign the
-\hasrem\ label, we follow Ref.\ \todo{cite:chatterjee} and apply the Focault formula \todo{cite}. An event is labeled ``\hasrem\ = \true'' when \todo{complete\dots}. The \hasrem\ property
-depends on the \ac{EOS} through the compactness of the \ac{NS}.
-
-\todo{not checked below}
-
-Predicting the presence of a NS and the creation of a remnant object like this requires a binary classifier for each of the two tasks. We employ a new approach that utilizes the relationship between HasNS and HasREM to train a single multilabel classifier. We relabel the data into 3 mutually exclusive categories: label 0 if there is no NS and no remnant, label 1 if there is a NS but no remnant, and label 2 if there are both. Our labelling is summarized in table \ref{tab:labels}. This labeling eliminates the possibility of an unphysical classification of the event, where $p(HasREM)>p(HasNS)$, as there is no category for HasREM but no NS.
-
-As the categories are mutually exclusive, $p(0)+p(1)+p(2)=1$. Therefore, p(HasREM)=p(2) and for the NS, p(hasNS)=p(hasNS and hasREM $\cup$ hasNS and No hasREM)=p(2$\cup$1)=p(2)+p(1)=1-p(0). This approach allows us to use a single classifier while avoiding any unphysical classifications without further treatment of the data or the output.\textcolor{blue}{In this work, RF and KNN were trained on data labeled as in \ref{tab:labels}, however, genetic programming algorithm used in this work was trained on binary labels for hasNS and hasRemnant separately because of its limitations in performing multi-label classification}.
-
-\begin{table}[h]
-\centering
-\begin{tabular}{@{}ccc@{}}
-\toprule
-HasNS & HasRem & Our label \\ \midrule
-0     & 0      & 0         \\
-1     & 0      & 1         \\
-1     & 1      & 2         \\ \bottomrule
-\end{tabular}
-\caption{Labelling adopted for classification of having a NS and having a remnant with the same classifier}
-\label{tab:labels}
-\end{table}
-
-In order to avoid conditioning the results of HasREM too heavily to the equation of state (EOS) selected for training, we labeled the dataset with the 23 EOS selected by the LIGO-Virgo collaboration in [ref] for studies of neutron stars. These EOS cover a wide parameter space, making together a robust estimation for the neutron star composition.
-
-\textcolor{blue}{Each algorithm presented here} was trained for each of the 23 EOS and predictions were obtained. The final prediction provided is a weighted average between the results of all of them, with the weights determined by the Bayes factor of each EoS, as explained in [ref2]. This approach allows for the consideration of multiple EOS and their relative likelihoods, resulting in a more robust and accurate prediction.
 

@@ -1,0 +1,71 @@
+\subsection*{Labeling schemas}
+
+
+Each event must be classified based on its \hasns\ and \hasrem\ properties. The assigned labels depend on which \ac{EOS} is being considered. Throughout the paper, we consider a set of
+\tocheck{23} different EOS \todo{Explain what EOS we consider and give refs.}  Therefore, after labeling, we obtain \tocheck{23} distinct data sets that are separately used
+for training, testing, and validation. The results for each \ac{EOS} are then marginalized to assess the overall performance of the methods. We use the \tocheck{A, B, and C} \ac{EOS}
+throughout the paper to benchmark the performance of the three algorithms on single \ac{EOS} with different \todo{properties? hardness? soft/hard?}. The \tocheck{A} \ac{EOS} was used in
+Ref.\ \tocheck{cite:chattarjee}.
+
+\todo{Something from here can be salvaged: Each algorithm presented here was trained for each of the 23 EOS and predictions were obtained. The final prediction provided is a weighted average between the results of all of them, with the weights determined by the Bayes factor of each EoS, as explained in [ref2]. This approach allows for the consideration of multiple EOS and their relative likelihoods, resulting in a more robust and accurate prediction.}
+
+We identify an event with \hasns:\true\ when at least one of the injected component masses is less than the maximum \ac{NS} mass allowed by the \ac{EOS}. The value of the maximum
+\ac{NS} mass ranges from \todo{X} to \todo{Z} across the various \ac{EOS}, and is equal to $XM_\odot$, $YM_\odot$, and $ZM_\odot$, for the \todo{A, B, and C} \ac{EOS}, respectively. To
+identify the \hasrem\ event class, we follow Ref.\ \todo{cite:chatterjee} and apply the Focault formula \todo{cite}. An event is identified as \hasrem:\true\ when \todo{complete\dots}.
+The \hasrem\ property depends on the \ac{EOS} through the compactness of the \ac{NS}.
+
+In previous \ac{LVK} implementations of the algorithm and in Ref.\ \todo{cite:chattarjee}, the \hasns\ and \hasrem\ labels were treated as independent variables, producing disjoint
+binary classifications. In reality, the probability of a system being \ac{EM} bright given the data $X$, $P(R|X)$, is conditional on the probability of having a \ac{NS} in the system,
+$P(N|X)$. By construction, the condition $P(R|X)\subset P(N|X)$ is never violated when the probabilities are computed from the ground truth, i.e., the injected parameters. However, it
+may be violated when the probabilities are calculated by the \ac{ML} algorithms from the detection pipeline output. This happens because of statistical and systematic errors in the
+pipeline's reconstructed signal parameters, as well as the \ac{ML} algorithm's bias and limited accuracy. 
+
+There are two possible approaches to avoid the unphysical condition $P(R|X)\subset P(N|X)$ in the \ac{ML} a output. The first approach consists in introducing a multilabel scheme that
+includes the conditional relation \emph{a priori}, and then perform a single, multilabel classification to calculate the probabilities. The second approach consists in separately
+classifying the events based on the \hasns\ and \hasrem\ labels, calculate disjoint probabilities for these properties, and then include the conditional relation \emph{a posteriori}. Let us briefly look at the two schemes in more detail.
+
+In the multilabel classification approach, we label the data into three mutually exclusive categories, where label 0 denotes the class \hasns:\false, label 1 denotes the class
+\hasns:\true and \hasrem:\false, and label 2 denotes the class \hasns:\true and \hasrem:\true. The labels are summarized in Table \ref{table:multilabels}. This scheme eliminates the
+possibility of an unphysical classification $P(R|X)\subset P(N|X)$ without further \ac{ML} output processing, as there is no category corresponding to \hasrem:\true\ and 
+\hasns:\false. The probability of having an \ac{EM} bright event and the a \ac{NS} in the system are is $P(R|X)=P(2|X)$ and $P(N|X)=P(2\cup 1|X)=P(2|X)+P(1|X)=1-P(0|X)$, respectively. 
+
+
+\todo{Table must be made prettier}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}ccc@{}}
+\toprule
+Class:~\hasns & Class:~\hasrem & Label \\ \midrule
+0     & 0      & 0         \\
+1     & 0      & 1         \\
+1     & 1      & 2         \\ \bottomrule
+\end{tabular}
+\caption{\tocheck{Labeling adopted for classification of having a NS and having a remnant with the same classifier}}
+\label{tab:multilabels}
+\end{table}
+
+In the second approach, the probabilities for \hasns\ and \hasrem\ can be computed with the Bayesian method. Using the Bayes theorem, $P(R|X)$ and $P(N|X)$ can be written as
+%
+\begin{eqnarray}
+P(N|X) &=&\frac{P(X|N)P(N)}{P(X)}\,,\\
+P(R|X) &=& \frac{P(X|R)\cdot(R)}{P(X)}\,,
+\label{eq:scheme1}
+\end{eqnarray}
+%
+respectively. Since we are using two separate binary classifications, \todo{Need to think about this...}
+
+\tocheck{OLD STUFF: Hence, we utilize both hasNS winning expressions and hasRemnant winning expressions for quantifying probabilities $p(hasNS)$ and $p(hasRemnant)$. If XREM denotes the number of hasRemnant winning trees which classifies given set of parameter as true and XNS denotes the number of hasNS winning trees which classifies as true, we compute the probability on the testing set as:}
+
+%\begin{eqnarray}
+%P(N|X_R \cap X_N) &=&\frac{P(X_R \cap X_N|N)P(N)}{P(X_R \cap X_N)}\\
+%P(R|X_R \cap X_N) &=& \frac{P(X_R \cap X_N|R)\cdot(R)}{P(X_R \cap X_N)}
+%\label{eq:scheme1}
+%\end{eqnarray}
+
+
+Which approach to choose is ultimately determined by the \ac{ML} algorithm performance. The latter scheme can be implemented when using \ac{ML} algorithms that perform similarly, or
+better, in multilabel classification compared to binary classifications. Conversely, if the accuracy of the \ac{ML} for multilabel classification is significantly lower than for binary
+classification, it is preferable to adopt the former scheme. This is the case, for instance, for \ac{GP}. Since the accuracy of the \ac{GP} algorithm in its present implementation is
+significantly better for binary classifications, in the following we will perform disjoint binary classifications on \hasns\ and \hasrem\ and then use Eq.~\ref{eq:scheme1} to compute
+$P(N|X)$ and $P(R|X)$. The classification with \ac{KNN} and \ac{RF} will follow the scheme in Table \ref{tab:multilabels}. 

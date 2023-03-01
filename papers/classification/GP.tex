@@ -12,3 +12,9 @@ to pre-defined genetic operators such as reproduction, mutation, and crossover. 
 fitness score. A random subset of the best-performing trees is carried forward to the next generation. The process repeats until a set of user-defined conditions are met. Parameters such as
 the initial population size, tree depth, tournament size for competing trees, number of generations, and termination criterion can be tuned for better algorithmic performance.
 \todo{citation}.
+
+
+\todo{This has not been checked and needs rewriting:} \tocheck{To compute the probabilities for \hasns\ and \hasrem\ we repeat the training process 200 times to get 200 expressions for each label (hasNS and hasRemnant). Due to the stochastic nature of the GP algorithm, the expressions mostly tend to be unique depending upon the complexity of the classification problem. Each expression can then be used to classify the reconstructed source parameters to determine the labels hasNS and hasRemnant by substituting the values in the expression. If the result is greater or equal to zero, we classify the reconsturcted set of prameter as true and false otherwise. The performace of each of the expressions against the testing set for one EoS is shown in Fig \ref{fig:FPR_TPR}. As seen in the plots, the average performace of hasRemnant expressions is better than hasNS expressions. Also the winning expressions are more dispersed in case of hasRemnant.}
+
+
+\tocheck{Shall we explain the reasons: hasNS being simpler classification but contaminated by poor reconstructions by the pipeline. HasRemnant is more complex leading to more variable winning trees.} 
