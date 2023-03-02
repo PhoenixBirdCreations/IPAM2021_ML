@@ -1,4 +1,4 @@
-\subsection*{Labeling schemas}
+\subsection*{Labeling Schemes}
 
 
 Each event must be classified based on its \hasns\ and \hasrem\ properties. The assigned labels depend on which \ac{EOS} is being considered. Throughout the paper, we consider a set of
@@ -45,15 +45,15 @@ Class:~\hasns & Class:~\hasrem & Label \\ \midrule
 \label{tab:multilabels}
 \end{table}
 
-In the second approach, the probabilities for \hasns\ and \hasrem\ can be computed with the Bayesian method. Using the Bayes theorem, $P(R|X)$ and $P(N|X)$ can be written as
+In the second approach, the probabilities for \hasns\ and \hasrem\ can be computed with the Bayesian method. Since we are using two separate binary classifiers, let's define the probability of an event having a label $i$:~\true ($i=$ \hasns, \hasrem) given the $j$ classifier ($j= 1,2$) and the data $X$ as $P(i|\{j,X\})$. The probability of an event to have an \ac{NS} and being \ac{EM} bright, given the data $X$ and the combined outcomes of the two classifiers, are $P(N|X) = P(N|\{1\cap 2,X\})$ and $P(N|X) = P(R|\{1\cap 2,X\})$, respectively. Using the Bayes theorem, $P(N|X)$ and $P(R|X)$ can be written as
 %
 \begin{eqnarray}
-P(N|X) &=&\frac{P(X|N)P(N)}{P(X)}\,,\\
-P(R|X) &=& \frac{P(X|R)\cdot(R)}{P(X)}\,,
+P(N|X) &=&\frac{P(\{1\cap 2,X\}|N)P(N)}{P(\{1\cap 2,X\})}\,,\\
+P(R|X) &=&\frac{P(\{1\cap 2,X\}|R)P(R)}{P(\{1\cap 2,X\})}\,.\\
 \label{eq:scheme1}
 \end{eqnarray}
 %
-respectively. Since we are using two separate binary classifications, \todo{Need to think about this...}
+The probability of an event belonging to a class is given by the fraction of trees that correctly predict it. Therefore, $P(\{1\cap 2,X\}|N)$, $P(\{1\cap 2,X\}|R)$ and $P(\{1\cap 2,X\})$ can be estimated from the data set by counting the fraction of events that are assigned a \true\ label given by the $j$ classifier. Similarly, the priors $P(N)$ and $P(R)$ can be estimated by counting the fraction of events with \true\ labels in the ground truth. \todo{Need to think more about this...}
 
 \tocheck{OLD STUFF: Hence, we utilize both hasNS winning expressions and hasRemnant winning expressions for quantifying probabilities $p(hasNS)$ and $p(hasRemnant)$. If XREM denotes the number of hasRemnant winning trees which classifies given set of parameter as true and XNS denotes the number of hasNS winning trees which classifies as true, we compute the probability on the testing set as:}
 

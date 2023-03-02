@@ -1,17 +1,10 @@
-\subsection*{\mmt{K-nearest neighbors}}
+\subsection*{\mmt{K-Nearest Neighbors}}
 
 \todo{This section needs to be rewritten and expanded. Also, citations must be added. It should start with a brief sentence of what KNN is, then how it works, then what is our implementation. See the GP section ofr inspiration.}
 
-\mmt{The K-nearest neighbors (KNN) is a non-parametric supervised algorithm~\cite{Fix:1951,Cover:1967} that relies on the fact that similar things are near to each other. It captures the idea of similarity by computing the distance between points, and it can be applied in classification problems~\cite{Guo:2004} .}
+\mmt{The K-Nearest Neighbors (KNN) is a non-parametric supervised algorithm~\cite{Fix:1951,Cover:1967} that relies on the fact that similar things are near to each other. It captures the idea of similarity by computing the distance between points, and it can be applied in classification problems~\cite{Guo:2004}, being renamed as KNeighborClassifier.}
 
-\mmt{The KNN classifier (KNeighborClassifier) algorithm works as follows: after dividing the data into training and testing datasets, the algorithm computes the distance between each point of thetesting set and the points of the training set, with a chosen metric. Then, it sorts the points in ascending order vased on the distance to the testing point. By choosing the top $K$ neighbors (training points) from the sorted array, KNN assigns a label to the testing point, which is the most frequent label of the chosen neighbors.}
+\mmt{The KNeighborClassifier algorithm works as follows: the algorithm computes the distance between each point of data and the points of a training dataset, with a chosen metric. Then, it sorts the points in ascending order vased on the distance to the testing point. By choosing the top $K$ neighbors (training points) from the sorted array, KNN assigns a label to the data point, which is the most frequent label of the chosen neighbors.}
 
-\mmt{In this work, we are going to use the KNeighborClassifier implementation of scikit-learn~\cite{Pedregosa:2011}, an open-source Python code. The algorithm is initialized through differemt parameters that should be tuned in order to optimize the performance. [To be continued...]}  
+\mmt{In this work, we are going to use the KNeighborClassifier implementation of scikit-learn~\cite{Pedregosa:2011}, an open-source Python code. The algorithm is initialized through different parameters that should be tuned in order to optimize its performance. The number of neighbors is fixed by the user, and its optimal value turns out to be $K \approx 2n+1$~\cite{Chatterjee:2019avs}, where $n$ is the number of features that each datapoint has. The distance between the different neighbors can be computed with different metrics -euclidean, manhattan, chebysev, mahalanobis-, and the prediction can be weighted by the inverse of the distance or all the points in each neighborhood can be weighted equally. To compute the nearest neighbors, several algorithms are available, such as the BallTree, KDTree or a brute-force search. These are the parameters that we will tune in this work in order to optimize the algorithm for our concrete problem. We will apply cross validation by computing the score, i.e. the fraction of correctly classified events, over a range of possible values for the parameters of the algorithm.} 
 
-
-
-
-
-This algorithm assumes that similar things are near to each other.  It captures the idea of similarity by computing the distance between points in a graph.  It is also a lazy learning algorithm, because it does not have a training phase, it uses all the data for training while classification -the dataset is stored and at the time of classification, it acts on the dataset.
-
-The workflow of the KNN algorithm is the following: first, after splitting the data into training and testing sets, we need to select the number of neighbors, $K$,  which can be any integer.  Then, for each point of the testing dataset we compute the distance between the point and each row of the training data with a chosen metric (\texttt{euclidean, manhattan, chebysev, mahalanobis}), and we sort the points in ascending order based on the distance value.  By choosing the top $K$ neighbors from the sorted array, we assign a class to the test point, which is the most frequent class of the chosen neighbors.

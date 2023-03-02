@@ -147,7 +147,8 @@ class RegressionNN:
         self.nlayers           = len(hlayers_sizes)
         self.function          = 'MSE' # not used, just a memo
         self.hidden_activation = 'relu'
-        
+        #self.m1m2swap          = m1m2swap # swap prediction if m2>m1 (swap also chi1 and chi2 accordingly)
+
         if seed is None:
             seed = np.random.randint(1,10000)
         self.seed = seed
@@ -179,8 +180,8 @@ class RegressionNN:
         """ Load training dataset and define scalers.
         
         """
-        if hasattr(self, 'scaler_x'):
-            raise RuntimeError('scaler_x is already defined, i.e. the train dataset has been already loaded.')
+        #if hasattr(self, 'scaler_x'):
+        #    raise RuntimeError('scaler_x is already defined, i.e. the train dataset has been already loaded.')
         
         # Load training dataset
         if xtrain_data is None:
@@ -290,6 +291,24 @@ class RegressionNN:
         else:
             out = prediction
         
+        #if self.m1m2swap:
+        #    if self.nfeatures!=4:
+        #        raise RuntimeError('m1m2swap can be used only with four features: m1,m2,chi1,chi2')
+        #    # unwrap
+        #    m1   = out[:,0]
+        #    m2   = out[:,1]
+        #    chi1 = out[:,2]
+        #    chi2 = out[:,3]
+        #    # swap 
+        #    mask = m2>m1
+        #    tmp      = m1[mask]
+        #    m1[mask] = m2[mask]
+        #    m2[mask] = tmp
+        #    tmp        = chi1[mask]
+        #    chi1[mask] = chi2[mask]
+        #    chi2[mask] = tmp
+        #    # wrap
+        #    out = np.column_stack((m1,m2,chi1,chi2))
         pred_time = time.perf_counter()-t0
         if verbose:
             print('prediction-time: ', pred_time)
