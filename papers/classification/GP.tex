@@ -1,20 +1,13 @@
 \subsection*{Genetic Programming}
 
-\ac{GP} is a supervised evolutionary algorithm \cite{koza_genetic} that relies on genetic operations inspired by natural selection, a fitness function, and multiple generations of
-programs to perform a user-defined task \cite{GP_book}. Programs with a higher fitness score are more likely to be passed down to future generations. As the population of programs evolves,
-the ability to solve the task at hand increases \cite{Kai_thesis}. \ac{GP} can be used in regression or classification problems to discover mathematical relationships between
-variables or data. 
+\ac{GP} is a supervised evolutionary algorithm \cite{Koza1992} that relies on genetic operations inspired by natural selection, a fitness function, and multiple generations of
+programs to perform a user-defined task. Programs with a higher fitness score are more likely to be passed down to future generations. As the population of programs
+evolves, the ability to solve the task at hand increases \cite{StaatsThesis}. \ac{GP} can be used in regression or classification problems to discover mathematical relationships
+between variables or data. 
 
-KarooGP \cite{KarooGP,KarooPYPI}, an open-source Python code, is used in this work. The output of the algorithm is a multivariate mathematical expression in the form of a human-readable
-syntax tree, where the nodes are mathematical operators and the leaves are input variables. This aspect makes the method very suitable for the post-processing application of large data
-sets, as the evolutionary process can be reviewed at each step \cite{Cavaglia_2020}. The algorithm is initialized through a stochastic population of trees, which is left to evolve according
-to pre-defined genetic operators such as reproduction, mutation, and crossover. At each generation, the performance of each individual tree in solving the problem is evaluated through a
-fitness score. A random subset of the best-performing trees is carried forward to the next generation. The process repeats until a set of user-defined conditions are met. Parameters such as
-the initial population size, tree depth, tournament size for competing trees, number of generations, and termination criterion can be tuned for better algorithmic performance.
-\todo{citation}.
-
-
-\todo{This has not been checked and needs rewriting:} \tocheck{To compute the probabilities for \hasns\ and \hasrem\ we repeat the training process 200 times to get 200 expressions for each label (hasNS and hasRemnant). Due to the stochastic nature of the GP algorithm, the expressions mostly tend to be unique depending upon the complexity of the classification problem. Each expression can then be used to classify the reconstructed source parameters to determine the labels hasNS and hasRemnant by substituting the values in the expression. If the result is greater or equal to zero, we classify the reconsturcted set of prameter as true and false otherwise. The performace of each of the expressions against the testing set for one EoS is shown in Fig \ref{fig:FPR_TPR}. As seen in the plots, the average performace of hasRemnant expressions is better than hasNS expressions. Also the winning expressions are more dispersed in case of hasRemnant.}
-
-
-\tocheck{Shall we explain the reasons: hasNS being simpler classification but contaminated by poor reconstructions by the pipeline. HasRemnant is more complex leading to more variable winning trees.} 
+In this work, we use the KarooGP open-source Python \ac{RF} implementation of \ac{GP} \cite{KarooGP,KarooPYPI}. The output of KarooGP is a multivariate mathematical expression
+in the form of a human-readable syntax tree, where the nodes are mathematical operators and the leaves are input variables. The algorithm is initialized through a stochastic
+population of trees, which is left to evolve according to pre-defined genetic operators such as reproduction, mutation, and crossover. At each generation, the performance of each
+individual tree in solving the problem is evaluated through a fitness score. A random subset of the best-performing trees is carried forward to the next generation. The process
+repeats until a set of user-defined conditions are met. Parameters such as the initial population size, tree depth, tournament size for competing trees, number of generations, and
+termination criterion can be tuned for better algorithmic performance. Due to the stochastic nature of the \ac{GP} algorithm, the training process is typically repeated a number of times to obtain distinct multivariate expressions, which are then independently used to classify the data. 

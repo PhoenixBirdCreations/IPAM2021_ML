@@ -1,10 +1,14 @@
-\subsection*{\mmt{K-Nearest Neighbors}}
+\subsection*{K-Nearest Neighbors}
 
-\todo{This section needs to be rewritten and expanded. Also, citations must be added. It should start with a brief sentence of what KNN is, then how it works, then what is our implementation. See the GP section ofr inspiration.}
+K-Nearest Neighbors is a non-parametric supervised algorithm~\cite{Fix:1951,Cover:1967} that uses the fact that similar points in a data set are ``near'' each other in their
+parameter space. When it is applied to classification problems~\cite{Guo:2004}, the algorithm is usually renamed \ac{KNN}. The algorithm captures the idea of similarity between
+points by computing the distance between each point in a training set and its neighbors according to a pre-determined metric. Next, it sorts the neighbors in ascending order based on
+their distance to the testing point. By choosing the top $K$ neighbors from the sorted array, \ac{KNN} assigns the label to the testing point that corresponds to the most
+frequent neighbor.
 
-\mmt{The K-Nearest Neighbors (KNN) is a non-parametric supervised algorithm~\cite{Fix:1951,Cover:1967} that relies on the fact that similar things are near to each other. It captures the idea of similarity by computing the distance between points, and it can be applied in classification problems~\cite{Guo:2004}, being renamed as KNeighborClassifier.}
-
-\mmt{The KNeighborClassifier algorithm works as follows: the algorithm computes the distance between each point of data and the points of a training dataset, with a chosen metric. Then, it sorts the points in ascending order vased on the distance to the testing point. By choosing the top $K$ neighbors (training points) from the sorted array, KNN assigns a label to the data point, which is the most frequent label of the chosen neighbors.}
-
-\mmt{In this work, we are going to use the KNeighborClassifier implementation of scikit-learn~\cite{Pedregosa:2011}, an open-source Python code. The algorithm is initialized through different parameters that should be tuned in order to optimize its performance. The number of neighbors is fixed by the user, and its optimal value turns out to be $K \approx 2n+1$~\cite{Chatterjee:2019avs}, where $n$ is the number of features that each datapoint has. The distance between the different neighbors can be computed with different metrics -euclidean, manhattan, chebysev, mahalanobis-, and the prediction can be weighted by the inverse of the distance or all the points in each neighborhood can be weighted equally. To compute the nearest neighbors, several algorithms are available, such as the BallTree, KDTree or a brute-force search. These are the parameters that we will tune in this work in order to optimize the algorithm for our concrete problem. We will apply cross validation by computing the score, i.e. the fraction of correctly classified events, over a range of possible values for the parameters of the algorithm.} 
-
+In this work, we use the open-source Python \ac{KNN} implementation of scikit-learn~\cite{Pedregosa:2011}. In this implementation, the distance between the different neighbors can be
+computed using different metrics: Euclidean, Manhattan, Chebyshev, and Mahalanobis \todo{need refs here}. The prediction can be weighted by the inverse of the distance or equally
+weighted in the neighborhood of each data point. The nearest neighbors can be estimated with different methods: BallTree, KDTree, or a brute-force search \todo{need refs here}. All
+these parameters are tunable to optimize the algorithm for the problem at hand. Following Ref.~\cite{Chatterjee:2019avs}, we fix the optimal number of neighbors to $K \approx 2n+1$,
+where $n$ is the number of features of each data point. According to usual practice, we cross-validate the prediction by computing the score, \marco{defined as the
+fraction of correctly classified events, over a range of possible values for the parameters of the algorithm.} \todo{Is this true? So is the ``score'' here the accuracy = (TPR+TNR)/N? If that is true, can we call it accuracy rather than ``score''?}
