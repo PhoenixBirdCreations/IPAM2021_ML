@@ -39,9 +39,9 @@ respectively.
 \begin{tabular}{@{}ccc@{}}
 \toprule
 Class:~\hasns & Class:~\hasrem & Label \\ \midrule
-0     & 0      & 0         \\
-1     & 0      & 1         \\
-1     & 1      & 2         \\ \bottomrule
+\false     & \false      & 0         \\
+\true     & \false      & 1         \\
+\true     & \true      & 2         \\ \bottomrule
 \end{tabular}
 \caption{\tocheck{Labeling adopted for classification of having a NS and having a remnant with the same classifier}}
 
@@ -73,7 +73,7 @@ P(\hasrem|f_{2_+})=\frac{N_{{\rm TP}_2}(f_{2_+})}{N_{{\rm TP}_2}(f_{2_+})+N_{{\r
 P(\hasns|f_{N_+})=1-\frac{N_{{\rm TP}_0}(f_{0_+})}{N_{{\rm TP}_0}(f_{0_+})+N_{{\rm FP}_0}(f_{0_+})}\,.\label{PN}
 \end{align}
 %
-Equations (\ref{PR},\ref{PN}) are generally noisy because they are evaluated on the finite data set $X_t$. Fitting them with sigmoid functions produces smooth probability functions for $P(\hasrem|f_{2_+})$ and $P(\hasns|f_{0_+})$. Given an event, its probabilities of being \ac{EM}-bright or having a \ac{NS} are computed by running the trained classification algorithm on the event and then evaluating the probability functions at $f_{2_+}$ and $f_{0_+}$, respectively.
+\mmt{[What is $f_{N_+}$? Should it be $f_{0_+}$?]} Equations (\ref{PR},\ref{PN}) are generally noisy because they are evaluated on the finite data set $X_t$. Fitting them with sigmoid functions produces smooth probability functions for $P(\hasrem|f_{2_+})$ and $P(\hasns|f_{0_+})$. Given an event, its probabilities of being \ac{EM}-bright or having a \ac{NS} are computed by running the trained classification algorithm on the event and then evaluating the probability functions at $f_{2_+}$ and $f_{0_+}$, respectively.
 
 In the second approach, the probabilities for \hasns\ and \hasrem\ are first calculated as disjoint variables and then the conditional relation $P(\hasrem|X)\subset P(\hasns|X)$ is
 folded in. Since we are dealing with two distinct binary classifiers, let us define the probability of an event being \ac{EM} bright (label: $I=$\hasrem) or having a \ac{NS} in the system (label: $I=$\hasns) given the data $X$ and the combined output of the two classifiers, $\{A_1,A_2\}$, as $P(I|\{A_1\cap A_2\}\cap X)$. According to Bayes theorem, $P(I|\{A_1\cap A_2\}\cap X)$ can be written as
@@ -85,8 +85,8 @@ P(I|\{A_1\cap A_2\} \cap X)=\frac{P(\{A_1\cap A_2\}\cap X|I)P(I)}{P(\{A_1\cap A_
 %
 where $P(\{A_1\cap A_2\}\cap X|I)$ is the likelihood of observing the combined $\{A_1,A_2\}$ outcome of the two classifiers in the data given $I$, $P(I)$ is the probability of observing the $I$, and $P(\{A_1\cap A_2\}\cap X)$ is the probability of observing the combined outcomes in the data $X$. Similar to the multilabel scheme, the algorithm outcomes can be chosen to be any variables of the two classification algorithms. For example, it can be the fractions $f_{1_+}$ and $f_{2_+}$ of the \ac{GP} multivariate expressions predicting an event to be labeled \hasns:\true\ or \hasrem:\true\ from the two classification algorithms. Estimators for the factors in the right hand side of Eq.~(\ref{eq:scheme2}) can be obtained from the data set once the algorithm has been trained as described above in Eq.~(\ref{bayes-est1}-\ref{PN}) for the multilabel scheme with suitable modifications. In this scheme, the probability functions are two-dimensional functions in the $\{f_{1_+},f_{2_+}\}$ space: $P(\hasrem|\{f_{1_+},f_{2_+}\})$ and $P(\hasns|\{f_{1_+},f_{2_+}\})$. They can be smoothed out by a fitting procedure, for example through Gaussian Regression. Given an event, its probabilities of being \ac{EM}-bright or having a \ac{NS} are computed by running the two trained classification algorithms on the event and then evaluating the two probability functions at the same $\{f_{1_+},f_{2_+}\}$ point.
 
-Which approach to choose is ultimately determined by the \ac{ML} algorithm performance. The latter scheme can be implemented when using \ac{ML} algorithms that perform similarly, or
+Which approach to choose is ultimately determined by the \ac{ML} algorithm performance. The \mmt{former} scheme can be implemented when using \ac{ML} algorithms that perform similarly, or
 better, in multilabel classification compared to binary classifications. Conversely, if the accuracy of the \ac{ML} for multilabel classification is significantly lower than for binary
-classification, it is preferable to adopt the former scheme. This is the case, for instance, for \ac{GP}. Since the accuracy of the \ac{GP} algorithm in its present implementation is
+classification, it is preferable to adopt the \mmt{latter} scheme. This is the case, for instance, for \ac{GP}. Since the accuracy of the \ac{GP} algorithm in its present implementation is
 significantly better for binary classifications, in the following we will perform disjoint binary classifications on \hasns\ and \hasrem\ and then use Eq.~\ref{eq:scheme1} to compute
 $P(N|X)$ and $P(R|X)$. The classification with \ac{KNN} and \ac{RF} will follow the scheme in Table \ref{tab:multilabels}. 
