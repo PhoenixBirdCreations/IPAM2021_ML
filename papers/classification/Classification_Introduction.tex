@@ -30,22 +30,28 @@ and add spiir}. These searches are based on discrete template banks of \ac{CBC} 
 dimensionless (anti-)aligned spins of the objects along the orbital angular momentum. These parameters can be used to determine the \emph{\ac{EM} properties} of
 \ac{GW} candidates in low latency through empirical fits of \ac{NR} simulations~\cite{Foucart:2012nc,Foucart:2018rjc}. Low-latency preliminary alerts of candidate
 \ac{GW} events in the \ac{O3} included two \ac{EM}-property metrics identifying whether the \ac{CBC} system contains a \ac{NS}, \hasns, and a post-merger matter
-remnant, \hasrem. Alerts with similar content will continue to be issued in \ac{O4} with a latency of the order of one second after the detection of candidate merger events.  Additionally, \ac{LVK}'s \ac{O4} alerts will include a measure of the \hasgap\ property, i.e., the likelihood that one of the source compact objects has a mass in the lower-mass gap region between \ac{NS}s and \ac{BH}s
+remnant, \hasrem. Alerts with similar content continue to be issued in \ac{O4} with a latency of the order of one second after the detection of candidate merger events.  Additionally, \ac{LVK}'s \ac{O4} alerts will include a measure of the \hasgap\ property, i.e., the likelihood that one of the source compact objects has a mass in the lower-mass gap region between \ac{NS}s and \ac{BH}s.
 
 Classification of \ac{GW} candidate events in real time poses several challenges as the desire for accuracy contrasts with the desire to issue the information as
-quickly as possible. The approach taken in \ac{O3} was to use a supervised \ac{KNN}~\cite{Pedregosa:2011ork} \ac{ML} algorithm with input from the detection pipelines
-and \ac{EOS} models to generate independent \hasns\ and \hasrem\ binary classification scores~\cite{Chatterjee:2019avs}. The \ac{KNN} model was trained on a broad set
+quickly as possible. The approach taken in the last two observing runs has been to use a supervised \ac{KNN}~\cite{Pedregosa:2011ork} \ac{ML} algorithm with input from the detection pipelines
+and \ac{EOS} models to generate independent \hasns\ and \hasrem\ binary classification \emph{scores}~\cite{Chatterjee:2019avs}. The \ac{KNN} model was trained on a broad set
 of synthetic \ac{CBC} signals injected in real detector noise from the \ac{O2}. The advantage of this scheme relies in the capability of the method to handle the
 statistical uncertainties of the parameters from the search pipelines and the non-stationarity of the detectors' power spectral density. This allowed for a marked
 improvement in performance compared to the semi-analytic effective Fisher formalism method which was deployed in \ac{O2}.
 
-In this work, we revisit the problem of real-time production of the \hasns\ and \hasrem\ metrics with the aim of further improving the latency and performance of the
-\ac{ML}-based scheme. To this purpose, we explore a set of new algorithms and classification schemes. In our approach, we first design a scheme that allows for
-conditional \hasns\ and \hasrem\ metrics to include the physical requirement that the probability that a system with a post-merger matter remnant must necessarily
-contain a \ac{NS}. Then we consider an extended set of \ac{EOS} and marginalize the results over this set to minimize possible systematics arising from the \ac{EOS}.
-Finally, we perform a thorough study of alternative \ac{ML} algorithms and compare their performance on the synthetic signals in \ac{O2} data and confident \ac{O3}
-\ac{GW} detections from the \ac{GWTC3} catalog.
+In this work, we revisit the problem of real-time production of \hasns\ and \hasrem\ \emph{probability} metrics with the aim of further improving the latency and performance of the current
+\ac{LVK} \ac{ML}-based scheme ~\cite{Chatterjee:2019avs}. In the current implementation, the validity of the classification outcome for an event is assessed through elements of the algorithm's
+confusion matrix and its \ac{ROC} curve. For example, given a positive prediction, the \ac{LVK} defines the ``probability'' that this prediction is correct as the \ac{TPR} for the given data set.
+However, there is no quantity in the algorithm's confusion matrix that defines a probability in the strictest sense. A second limitation of current \hasns\ and \hasrem\ classification schemas is
+the fact that the \hasns\ and \hasrem\ labels are treated as independent variables. In reality, the probability of a system being \ac{EM} bright is always smaller than the probability of the
+system hosting a \ac{NS}. Therefore, the \hasns\ and \hasrem\ labels cannot be treated as disjoint. In the current \ac{LVK} implementation, this physical condition is not mathematically defined in
+the algorithm implementation, but its validity is data-based, i.e., it is checked a posteriori through (coarse) parameter sweeps. One of the main purposes of this work is to go beyond the above
+scheme and calculate true \emph{conditional Bayesian probabilities} for \hasns\ and \hasrem. 
 
-The structure of the paper is as follows. In Sect.~\ref{algos}, we introduce the classification algorithms. In Sect.~\ref{dataset} we describe the data set and the
-classification schema. Section \ref{results} is dedicated to the results of each method and their comparison. Conclusions and future developments are presented in
-Sect.~\ref{conclusions}.  
+To address these shortcomings, in this paper we perform a thorough study of a set of alternative \ac{ML} algorithms and different classification schemes. We first design a scheme for conditional
+\hasns\ and \hasrem\ metrics that incorporates the physical requirement that a system with a post-merger matter remnant must necessarily contain a \ac{NS}. Then we define and calculate
+\emph{Bayesian probabilities} for \hasns\ and \hasrem. The marginalization over different \ac{EOS} minimizes possible systematics arising from the use of a single EOS. Finally,  we compare the
+different algorithm performance on synthetic  \ac{O3} signals and confident \ac{GW} detections from the latest \ac{GWTC3} catalog.
+
+The structure of the paper is as follows. In Sect.~\ref{algos}, we introduce the classification algorithms. In Sect.~\ref{dataset} we describe the data set and the classification schema. Section
+\ref{results} is dedicated to the results of each method and their comparison. Conclusions and future developments are presented in Sect.~\ref{conclusions}.  
