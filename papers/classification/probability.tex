@@ -1,50 +1,57 @@
 \subsection*{Definition of Event Probabilities}
 
-Let us define the probability of a system having a \ac{NS} and being \ac{EM} bright, given an event in the detector, $X$, and the \emph{outcome} of a classifier, $A$, as $P(\hasns|A\cap X)$ and
-$P(\hasrem|A\cap X)$, respectively. Since a system can be EM-bright only when a \ac{NS} is present in the system, the condition $P(\hasrem|A \cap X)\subset P(\hasns|A \cap X)$ must hold. However,
-whenever the probabilities are calculated disjointly, as in the current \ac{LVK} implementation, this condition may be violated due to statistical and systematic errors in the pipeline's
-reconstructed signal parameters, as well as the \ac{ML} algorithm's bias and limited accuracy. Our approach avoids the occurrence of this inconsistency.
+Let us define the probability of a system having a \ac{NS} (\hasns=\true) and being \ac{EM} bright (\hasrem=\true), given an event $X$ and the outcome of a classifier on its detection pipeline
+output, ${\bf A}_{\bf X}$, as $P(\hasns|{\bf A}_{\bf X})$ and $P(\hasrem|{\bf A}_{\bf X})$, respectively. The classifier outcome can be understood as a map $A:{\bf X}\to {\bf A}_{\bf X}$, where
+$\bf X$ is a vector that identifies the output of the detection pipeline and ${\bf A}_{\bf X}$ is a vector that uniquely identifies the algorithm's output on $\bf X$. 
 
-%There are two possible approaches to avoid the unphysical condition $P(\hasns|X)\subset P(\hasrem|X)$ in the classification output. The first approach consists in introducing a
-%multilabel scheme that includes the conditional relation \emph{a priori}, and then perform a single, multilabel classification to calculate the probabilities. The second approach
-%consists in separately classifying the events based on the \hasns\ and \hasrem\ labels, calculate disjoint probabilities for these properties, and then include the conditional relation
-%\emph{a posteriori}. The first method is the preferred one for efficient multi-label classifiers, such as \ac{KNN} and \ac{RF}. Binary classifiers, or algorithms that are not too efficient in multi-labeling, such as our implementation of \ac{GP}, require the second method to incorporate conditional relations between labels. Let us briefly look at the two schemes in more detail.
+Since a system can be EM-bright only when a \ac{NS} is present in the system, the condition $P(\hasrem|{\bf A}_{\bf X})\subset P(\hasns|{\bf A}_{\bf X})$ must hold. However, if the probabilities
+are calculated disjointly, as in the current \ac{LVK} implementation, this condition may be violated due to statistical and systematic errors in the pipeline's reconstructed signal parameters, as
+well as the \ac{ML} algorithm's bias and limited accuracy. The approach discussed below avoids the occurrence of this inconsistency.
 
-According to Bayes theorem, the probabilities $P(\hasns|A \cap X)$ and $P(\hasrem|A \cap X)$ can be written as
+The ground truth of observed events is unknown. Therefore, the probabilities $P(\hasns|{\bf A}_{\bf X})$ and $P(\hasrem|{\bf A}_{\bf X})$ cannot be calcuated from observations. However,
+estimators for $P(\hasns|{\bf A}_{\bf X})$ and $P(\hasrem|{\bf A}_{\bf X})$ can be calculated from from synthetic events under the assumption that these events are a faithful representation of
+real observations as follows.
+
+Let us consider a data set of $N$ simulated events ${\bf X}'_i$, $D=\{{\bf X}'_i\otimes{\bf L}({\bf X}'_i)\}$, where $i=1\dots N$ and ${\bf L}$ is a map from ${\bf X}'$ to a vector space
+that defines labels for the \hasns\ and \hasrem\ ground truths. According to Bayes theorem, $P(\hasns|{\bf A}_{\bf X})$  can be written as 
 %
 \begin{equation}
-P(I|A \cap X)=\frac{P(A \cap X|I)P(I)}{P(A \cap X)}\,,
+P(\hasns|{\bf A}_{\bf X})=\frac{P({\bf A}_{\bf X}|\hasns)P(\hasns)}{P({\bf A}_{\bf X})}\,,
 \label{bayes}
 \end{equation}
 %
-where $I$=\{\hasns, \hasrem\}, $P(A \cap X|I)$ is the likelihood of observing the classifier outcome given $I$, $P(I)$ is the probability of observing $I$, and $P(A \cap X)$
-is the probability of observing $A$ for the event $X$. Eq.~(\ref{bayes}) can be estimated from a synthetic data set of labeled events, $D$, as follows. The probability $P(\hasns|A \cap X)$ can be approximated as:  
+where $P({\bf A}_{\bf X}|\hasns)$ is the likelihood of observing the classifier's outcome given an event with a \ac{NS} in the system, $P(\hasns)$ is the probability that a system includes a \ac{NS}, and $P({\bf A}_{\bf X})$ is the probability of observing the classifier outcome ${\bf A}_{\bf X}$. The probability $P(\hasns|A_{\bf X})$ can be approximated as:  
 %
 \begin{align}
-P(\hasns|A \cap X)&\cong P(\hasns_+|A \cap X_s)\nonumber\\
-&=\frac{P(A \cap X_s|\hasns_+)P(\hasns_+)}{P(A \cap X_s)}\,,
+P(\hasns|{\bf A}_{\bf X})&\simeq P(\hasns_+|{\bf A}_{{\bf X}'})\nonumber\\
+&=\frac{P({\bf A}_{{\bf X}'}|\hasns_+)P(\hasns_+)}{P({\bf A}_{{\bf X}'})}\,,
 \label{bayes-hasns}
 \end{align}
 %
-where \hasns$_+$ is the positive \hasns\ ground truth label for the observed $X_s$ event in $D$ with outcome $A$. The probability $P(\hasrem|A \cap X)$ can be approximated as:
+where $\hasns_+={\bf L}[{\bf X}'(\hasns=\true)]$ is a label that uniquely identifies elements in $D$ with positive \hasns\ ground truth, ${\bf X}'$ is an element in $D$, and ${\bf A}_{{\bf X}'}$ is the outcome of the classifier on ${\bf X}'$. The probability $P(\hasrem|{\bf A}_{\bf X})$ can be approximated as:
 %
 \begin{align}
-P(&\hasrem|A \cap X)\nonumber\\
-&=P(\hasrem|\hasns \cap (A \cap X))P(\hasns|A \cap X)\nonumber\\
-%&=P(\hasrem|A \cap (X \cap \hasns))P(\hasns|A \cap X)\nonumber\\
-&\cong P(\hasrem_+|A \cap (X_s \cap \hasns_+))P(\hasns_+|A \cap X_s)
+P(&\hasrem|{\bf A}_{\bf X})\nonumber\\
+&=P(\hasrem|\hasns, {\bf A}_{\bf X})P(\hasns|{\bf A}_{\bf X})\nonumber\\
+%&\simeq P(\hasrem_+|\hasns_+,A_{{\bf X}'})P(\hasns_+|A_{X'})\nonumber\\
+&\simeq P(\hasrem_+|{\bf A}_{{\bf X}''})P(\hasns_+|{\bf A}_{{\bf X}'})
 \label{bayes-hasrem}
 \end{align}
 %
-where \hasrem$_+$ is the positive \hasrem\ ground truth label for the observed $X_s$ event in $D$.
+where $\hasrem_+={\bf L}[{\bf X}'(\hasrem=\true)]$ is a label that uniquely identifies elements in $D$ with positive \hasrem\ ground truth and ${\bf X}''= {\bf X}'(\hasns=\true)$.
 
-To evaluate Eqs.~(\ref{bayes-hasns}) and (\ref{bayes-hasrem}) with the \ac{ML} classifier, we divide the synthetic data $D$ in two subsets, $D=D_{TR}\cup D_{TS}$. We use the $D_{TR}$ subset for
-algorithm training and validation and the $D_{TS}$ subset to calculate Eq.~(\ref{bayes-est}). Following customary practice, we use a 70\%--30\% split for $D_{TR}$ and $D_{TS}$, respectively.
-Depending on the \ac{ML} algorithm, we implement different labeling schemes. The preferred scheme for algorithms that can handle multilabel classification, such as \ac{KNN} and \ac{RF}, produces a
-single outcome $A$. This can be obtained by labeling $D$ into three mutually exclusive categories, for example label 0 denoting the class \hasns$_-$, label 1 denoting the class \hasns$_+$ and
-\hasrem$_-$, and label 2 denoting the class \hasns$_+$ and \hasrem$_+$. (See Table \ref{tab:multilabels}.) This scheme can be used to evaluate Eqs.~(\ref{bayes-hasns}) and (\ref{bayes-hasrem})
-with a single training. The preferred scheme for binary classification algorithms, such as \ac{GP}, is to separately assign labels to \hasns\ and \hasrem, and then separately train two classifiers
-on the data set to produce a two-dimensional outcome space.  
+To evaluate Eqs.~(\ref{bayes-hasns}) and (\ref{bayes-hasrem}) with an \ac{ML} classifier, the synthetic data set is divided into two subsets, $D=D_R\oplus D_S$. The $D_R$ subset is used for
+algorithm training and validation. The $D_S$ subset is used to estimate the probabilities. Following customary practice, throughout this paper we use a 70\%--30\% split for $D_R$ and $D_S$,
+respectively.
+
+The choice of the labeling scheme and the algorithm's outcome depend on the \ac{ML} algorithm characteristics. The preferred scheme for multilabel algorithms, such as \ac{KNN} and \ac{RF}, is a
+labeling map with each element in $D$ classified into mutually exclusive categories. The classifier outcome can then be chosen as a two-dimensional vector space  ${\bf A}_{{\bf X}'}\subset
+\mathbb{R}^3$. This scheme allows the calculation of Eqs.~(\ref{bayes-hasns}) and (\ref{bayes-hasrem}) with a single training process. For example, one can label data as  ${\bf L}[{\bf
+X}'(\hasns=\false)]=0$, ${\bf L}[{\bf X}'(\hasns=\true,\hasrem=\false)]=1$, and ${\bf L}[{\bf X}'(\hasns=\true,\hasrem=\true)]=2$ (see Table \ref{tab:multilabels}). With this labeling,
+\hasrem$_+=2$ and \hasns$_+=1\cup 2$, therefore a suitable choice for the algorithm outcome is ${\bf A}_{\bf X}=[f_1({\bf X}')+f_2({\bf X}'),f_2({\bf X}')]\subset[f_0({\bf X}'),f_1({\bf X}'),f_2({\bf X}')]$, where $f_0=1-f_1-f_2$, $f_1$, and $f_2$ are the fractions of \ac{KNN} neighbors or \ac{RF} trees that predict the event to have labels 0, 1, and 2, respectively.
+
+The preferred scheme for binary classification algorithms that cannot efficiently handle multilabel classifications, such as \ac{GP}, is to separately label the events as  ${\bf L}({\bf
+X}'_i)={\bf L}_\hasns({\bf X}'_i)\otimes {\bf L}_\hasrem({\bf X}'_i)$ and separately train for \hasns\ and \hasrem. In this scheme $\hasns_+={\bf L}_\hasns[{\bf X}'(\hasns=\true)]$ and $\hasrem_+={\bf L}_\hasrem[{\bf X}'(\hasrem=\true)]$. As for the previous scheme, the physical condition $P(\hasrem|{\bf A}_{\bf X})\subset P(\hasns|{\bf A}_{\bf X})$ is ensured by the conditional probability definition for $P(\hasrem|{\bf A}_{\bf X})$ in Eq.~(\ref{bayes-hasrem}).
 
 ~\\\todo{Do we need the table?}\\
 
@@ -61,36 +68,17 @@ Class:~\hasns & Class:~\hasrem & Label \\ \midrule
 \label{tab:multilabels}
 \end{table}
 
-
-The outcome $A$ can be chosen as any value of the classification algorithm variable calculated on the data. For example, $A$ can be the fraction $f_+$ of \ac{KNN} neighbors or \ac{RF}
-trees that predict an event to be labeled \hasns$_+$ or \hasrem$_+$. Estimators for the factors in the right-hand side of Eqs.~(\ref{bayes-hasns}) and (\ref{bayes-hasrem}) can be obtained from
-$D_{TS}$ once the algorithm has been trained on $D_{TR}$. For example, the factors in Eq.~(\ref{bayes-hasns}) can be estimated as  
+The factors in the right-hand side of Eqs.~(\ref{bayes-hasns}) and (\ref{bayes-hasrem}) can be obtained from $D_{S}$ once the algorithm has been trained on $D_{R}$. For example, for the \ac{KNN} and \ac{RF} scheme described earlier, the factors in Eq.~(\ref{bayes-hasns}) can be estimated as  
 %
 \begin{align}
 &P(\hasns_+)=\frac{N_{\hasns_+}}{N_s}\,,\nonumber\\
-&P(A \cap X_s|\hasns_+)=\frac{N^+{}_{\hasns_+}(f_+)}{N_{\hasns_+}}\,,\nonumber\\
-&P(A \cap X_s)=\frac{N^+{}_{\hasns_+}(f_+)+N^-{}_{\hasns_+}(f_+)}{N_s}\,,\label{bayes-est}
+&P(A_Xs|\hasns_+)=\frac{N^+{}_{\hasns_+}(f_1+f_2)}{N_{\hasns_+}}\,,\nonumber\\
+&P(A_Xs)=\frac{N^+{}_{\hasns_+}(f_1+f_2)+N^-{}_{\hasns_+}(f_1+f_2)}{N_s}\,,\label{bayes-est}
 \end{align}
 %
-where $N_s=\hbox{dim}\,(D_{TS})$, $N_{\hasns_+}$ is the number of events in the data set with label $\hasns_+$, and $N^+{}_{\hasns_+}(f_+)$ and $N^-{}_{\hasns_+}(f_+)$ are the number of events in $D_{TS}$ that are correctly (incorrectly) classified as ${\hasns_+}$ by the outcome $f_+$. The first factor in the right-hand side of Eq.~(\ref{bayes-hasrem}) can be evaluated similarly to Eq.~(\ref{bayes-est}) by replacing \hasns\ with \hasrem\ and restricting the data set to $D_{TS}(\hasns_+)$.
+where $N_s=\hbox{dim}\,(D_S)$, $N_{\hasns_+}$ is the number of events in the data set with label $\hasns_+$, and $N^+{}_{\hasns_+}(f_1+f_2)$ and $N^-{}_{\hasns_+}(f_1+f_2)$ are the number of events in $D_S$ that are correctly (incorrectly) classified as ${\hasns_+}$ by the outcome $f_1+f_2$. The first factor in the right-hand side of Eq.~(\ref{bayes-hasrem}) can be evaluated similarly to Eq.~(\ref{bayes-est}) by replacing \hasns\ with \hasrem\ and restricting the data set to elements with \hasns$_+$ label.
 
-The probability estimators are generally noisy because they are evaluated on the finite data set $D_{TS}$. To produce smooth probability functions we map them from the $(0,1)$ space to the real line with a logistic function, smooth them with a Savitzky-Golay filter, fit them with a Gaussian Process Regression, and map them back to the $(0,1)$ space. This produces probability tables for 
-$P(\hasns|A \cap X)$ and $P(\hasrem|A \cap X)$ than can be used to compute the probabilities for a new event onece the latter has been classified by the algorithm with a given outcome $A$.  
+The probability estimators are generally noisy because they are evaluated on the finite data set $D_S$. To produce smooth probability functions we map them from the $(0,1)$ space to the real line with a logistic function, smooth them with a Savitzky-Golay filter, fit them with a Gaussian Process Regression, and map them back to the $(0,1)$ space. This produces probability tables for 
+$P(\hasns|{\bf A}_{\bf X})$ and $P(\hasrem|{\bf A}_{\bf X})$ than can be used to compute the probabilities for a new event onece the latter has been classified by the algorithm with a given outcome $A$.  
 
-~\\\todo{Marginalization here? Not checked after this point}\\
-
-In the second approach, the probabilities for \hasns\ and \hasrem\ are first calculated as disjoint variables and then the conditional relation $P(\hasrem|X)\subset P(\hasns|X)$ is
-folded in. Since we are dealing with two distinct binary classifiers, let us define the probability of an event being \ac{EM} bright (label: $I=$\hasrem) or having a \ac{NS} in the system (label: $I=$\hasns) given the data $X$ and the combined output of the two classifiers, $\{A_1,A_2\}$, as $P(I|\{A_1\cap A_2\}\cap X)$. According to Bayes theorem, $P(I|\{A_1\cap A_2\}\cap X)$ can be written as
-%
-\begin{equation}
-P(I|\{A_1\cap A_2\} \cap X)=\frac{P(\{A_1\cap A_2\}\cap X|I)P(I)}{P(\{A_1\cap A_2\}\cap X)}\,,\\
-\label{eq:scheme2}
-\end{equation}
-%
-where $P(\{A_1\cap A_2\}\cap X|I)$ is the likelihood of observing the combined $\{A_1,A_2\}$ outcome of the two classifiers in the data given $I$, $P(I)$ is the probability of observing the $I$, and $P(\{A_1\cap A_2\}\cap X)$ is the probability of observing the combined outcomes in the data $X$. Similar to the multilabel scheme, the algorithm outcomes can be chosen to be any variables of the two classification algorithms. For example, it can be the fractions $f_{1_+}$ and $f_{2_+}$ of the \ac{GP} multivariate expressions predicting an event to be labeled \hasns:\true\ or \hasrem:\true\ from the two classification algorithms. Estimators for the factors in the right hand side of Eq.~(\ref{eq:scheme2}) can be obtained from the data set once the algorithm has been trained as described above in Eq.~(\ref{bayes-est1}-\ref{PN}) for the multilabel scheme with suitable modifications. In this scheme, the probability functions are two-dimensional functions in the $\{f_{1_+},f_{2_+}\}$ space: $P(\hasrem|\{f_{1_+},f_{2_+}\})$ and $P(\hasns|\{f_{1_+},f_{2_+}\})$. They can be smoothed out by a fitting procedure, for example through Gaussian Regression. Given an event, its probabilities of being \ac{EM}-bright or having a \ac{NS} are computed by running the two trained classification algorithms on the event and then evaluating the two probability functions at the same $\{f_{1_+},f_{2_+}\}$ point.
-
-Which approach to choose is ultimately determined by the \ac{ML} algorithm performance. The \mmt{former} scheme can be implemented when using \ac{ML} algorithms that perform similarly, or
-better, in multilabel classification compared to binary classifications. Conversely, if the accuracy of the \ac{ML} for multilabel classification is significantly lower than for binary
-classification, it is preferable to adopt the \mmt{latter} scheme. This is the case, for instance, for \ac{GP}. Since the accuracy of the \ac{GP} algorithm in its present implementation is
-significantly better for binary classifications, in the following we will perform disjoint binary classifications on \hasns\ and \hasrem\ and then use Eq.~\ref{eq:scheme1} to compute
-$P(N|X)$ and $P(R|X)$. The classification with \ac{KNN} and \ac{RF} will follow the scheme in Table \ref{tab:multilabels}. 
+~\\\todo{Describe marginalization here}\\
