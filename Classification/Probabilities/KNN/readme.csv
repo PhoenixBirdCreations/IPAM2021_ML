@@ -71,9 +71,9 @@ KNN_P_REM_given_X2-SKMP-num.png,Plot of Bayesian HasRem probability curve for gi
 KNN_P_REM_given_X2-SKOP-num.png,Plot of Bayesian HasRem probability curve for given EOS,Bayesian_probabilities-final.ipynb,
 KNN_P_REM_given_X2-SLY230A-num.png,Plot of Bayesian HasRem probability curve for given EOS,Bayesian_probabilities-final.ipynb,
 KNN_P_REM_given_X2-SLY2-num.png,Plot of Bayesian HasRem probability curve for given EOS,Bayesian_probabilities-final.ipynb,
-KNN_P_REM_given_X2-SLY9-num.png,Plot of Bayesian HasRem probability curve for given EOS,Bayesian_probabilities-final.ipynb,Values in RF_P_REM_given_X2-fit_an.csv times Bayes factors
-KNN_P_REM_given_X2-SLy-num.png,Plot of Bayesian HasRem probability curve for given EOS,Bayesian_probabilities-final.ipynb,Values in RF_P_REM_given_X2-fit.csv times Bayes factors
-KNN_roc_PNS.png,ROC curve for HasNS,Bayesian_probabilities_ROC_MDC11.ipynb,Values in RF_P_REM_given_X2-num.csv times Bayes factors
+KNN_P_REM_given_X2-SLY9-num.png,Plot of Bayesian HasRem probability curve for given EOS,Bayesian_probabilities-final.ipynb,
+KNN_P_REM_given_X2-SLy-num.png,Plot of Bayesian HasRem probability curve for given EOS,Bayesian_probabilities-final.ipynb,
+KNN_roc_PNS.png,ROC curve for HasNS,Bayesian_probabilities_ROC_MDC11.ipynb,
 KNN_roc_PREM.png,ROC curve for HasNS,Bayesian_probabilities_ROC_MDC11.ipynb,
 KNN_sweep_probabilities.csv,Bayesian probabilities for sweep,Bayesian_probabilities_O3-sweep.ipynb,
 matrix_events_KNN_EOS-APR4_EPP.csv,Classification of O2 testing data,Miquel,
