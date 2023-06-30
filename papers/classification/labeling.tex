@@ -1,10 +1,13 @@
 \subsection*{Labeling Schema}
 
-Each event must be classified based on its \hasns\ and \hasrem\ properties. These properties depend on which \ac{EOS} is used to describe the matter present in the coalescing binary
-system. Throughout the paper, we consider a set of \tocheck{23} different \ac{EOS} that span a wide range of models \todo{Explain what EOS we consider or give refs.} Therefore, we
-produce \tocheck{23} distinct labeled data sets that are separately used for training, testing, and validation. The overall performance of the algorithms is then assessed by marginalizing on the whole set of \ac{EOS}, i.e., by taking a weighted average with weights determined by the Bayes factors of Ref.~\todo{need ref}. Throughout the paper we also show results for three single \ac{EOS} (\tocheck{A, B, and C}) to assess the performance of the \ac{KNN}, \ac{RF}, and \ac{GP} algorithms on physical systems with distinctive properties. The \tocheck{A} \ac{EOS} was used in Ref.~\tocheck{\cite{Chatterjee:2019avs}}. This allow us to directly compare our results with the results of Ref.~\tocheck{\cite{Chatterjee:2019avs}}.
+%Each event must be classified based on its \hasns\ and \hasrem\ properties. These properties depend on which \ac{EOS} is used to describe the matter present in the coalescing binary
+%system. Throughout the paper, we consider a set of \tocheck{23} different \ac{EOS} that span a wide range of models \todo{Explain what EOS we consider or give refs.} Therefore, we
+%produce \tocheck{23} distinct labeled data sets that are separately used for training, testing, and validation. The overall performance of the algorithms is then assessed by marginalizing on the whole set of \ac{EOS}, i.e., by taking a weighted average with weights determined by the Bayes factors of Ref.~\todo{need ref}. Throughout the paper we also show results for three single \ac{EOS} (\tocheck{A, B, and C}) to assess the performance of the \ac{KNN}, \ac{RF}, and \ac{GP} algorithms on physical systems with distinctive properties. The \tocheck{A} \ac{EOS} was used in Ref.~\tocheck{\cite{Chatterjee:2019avs}}. This allow us to directly compare our results with the results of Ref.~\tocheck{\cite{Chatterjee:2019avs}}.
 
-To label the data sets, we follow the practice in use in the \ac{LVK} and identify an event with \hasns:\true\ when at least one of the injected component masses is less than the
+To label the synthetic data sets $D$, we follow the practice in use in the \ac{LVK} and identify an event with \hasns:\true\ when at least one of the injected component masses is less than the
 maximum \ac{NS} mass allowed by the \ac{EOS}. The value of the maximum \ac{NS} mass ranges from \tocheck{X} to \tocheck{Z} across the various \ac{EOS}, and is equal to
 $\tocheck{X}M_\odot$, $\tocheck{Y}M_\odot$, and $\tocheck{Z}M_\odot$, for the \tocheck{A, B, and C} \ac{EOS}, respectively. The \hasrem\ property depends on the \ac{EOS} through the
-compactness of the \ac{NS}. To identify the \hasrem\ event class, we follow Ref.\ \cite{Chatterjee:2019avs} and apply the Focault formula \todo{cite}.
+compactness of the \ac{NS}. To identify the \hasrem\ event class, we follow Ref.\ \cite{Chatterjee:2019avs} and apply the Foucault formula \todo{cite}.
+
+\todo{any volunteer to expand this with more details?}
+

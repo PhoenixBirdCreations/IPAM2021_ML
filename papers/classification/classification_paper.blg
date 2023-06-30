@@ -19,10 +19,7 @@ Reallocated ex_buf (elt_size=1) to 40000 items from 20000.
 Reallocated out_buf (elt_size=1) to 40000 items from 20000.
 Reallocated name_tok (elt_size=4) to 40000 items from 20000.
 Reallocated name_sep_char (elt_size=1) to 40000 items from 20000.
-Warning--entry type for "KarooGP" isn't style-file defined
---line 735 of file classification.bib
-Warning--entry type for "KarooPYPI" isn't style-file defined
---line 743 of file classification.bib
+Warning--I didn't find a database entry for "Nitz:2021zwj"
 Warning--I didn't find a database entry for "gpytorch"
 control{REVTEX42Control}, control.key{N/A}, control.author{N/A}, control.editor{N/A}, control.title{N/A}, control.pages{N/A}, control.year{N/A}, control.eprint{N/A}, 
 control{apsrev42Control}, control.key{N/A}, control.author{08}, control.editor{1}, control.title{0}, control.pages{0}, control.year{1}, control.eprint{N/A}, 
@@ -41,45 +38,46 @@ Warning--empty journal in LIGOScientific:2021djp
 Warning--empty journal in LIGOScientific:2021sio
 Warning--empty journal in LIGOScientific:2021psn
 Warning--empty journal in LIGOScientific:2021aug
-You've used 45 entries,
+Warning--missing institution in Omohundro1989
+You've used 44 entries,
             6079 wiz_defined-function locations,
-            1978 strings with 24077 characters,
-and the built_in function-call counts, 46854 in all, are:
-= -- 3500
-> -- 1048
-< -- 243
-+ -- 333
-- -- 254
-* -- 7271
-:= -- 4454
-add.period$ -- 43
-call.type$ -- 45
-change.case$ -- 215
-chr.to.int$ -- 50
+            1981 strings with 24281 characters,
+and the built_in function-call counts, 46455 in all, are:
+= -- 3472
+> -- 1032
+< -- 241
++ -- 329
+- -- 250
+* -- 7203
+:= -- 4395
+add.period$ -- 42
+call.type$ -- 44
+change.case$ -- 209
+chr.to.int$ -- 49
 cite$ -- 49
-duplicate$ -- 4415
-empty$ -- 3396
-format.name$ -- 620
-if$ -- 9466
+duplicate$ -- 4370
+empty$ -- 3372
+format.name$ -- 607
+if$ -- 9404
 int.to.chr$ -- 6
-int.to.str$ -- 52
-missing$ -- 660
-newline$ -- 181
-num.names$ -- 129
-pop$ -- 1594
+int.to.str$ -- 51
+missing$ -- 663
+newline$ -- 178
+num.names$ -- 126
+pop$ -- 1577
 preamble$ -- 1
-purify$ -- 215
+purify$ -- 210
 quote$ -- 0
-skip$ -- 2084
+skip$ -- 2083
 stack$ -- 0
-substring$ -- 1038
-swap$ -- 4186
-text.length$ -- 100
+substring$ -- 1055
+swap$ -- 4154
+text.length$ -- 97
 text.prefix$ -- 0
 top$ -- 10
-type$ -- 601
-warning$ -- 5
-while$ -- 133
+type$ -- 588
+warning$ -- 6
+while$ -- 132
 width$ -- 0
-write$ -- 457
+write$ -- 450
 (There were 8 warnings)
