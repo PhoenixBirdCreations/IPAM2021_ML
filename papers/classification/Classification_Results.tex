@@ -1,12 +1,61 @@
 \section{Results\label{results}}
+In this section we show the results for our methodology. First we illustrate the good performance of our classifiers, both \ac{RF} and \ac{KNN}. Then we can use them to construct Bayesian probabilities according to their output and finally evaluate new events, synthetic and real.
+
+\subsection{Performance of the algorithms}
+We measure the performance of our algorithms by the true positive and false positive rates, drawn as \textit{Receiver Operating Characteristic} (ROC) curves. They show the variation of the true-positive rate with the false-positive rate given a certain threshold for the probability. The better the classifier, the steeper is the curve achiving a greater number of true positives with very few false classifications.
+
+The curves for \ac{KNN} are in figure \ref{fig:rocO2_KNN}. The results are consistent among all EoSs and represent a good classifier, with slitghly better results in the performance of \ac{HasREM}. The curves for \ac{RF} are in figure \ref{fig:rocO2_RF}. The results are equally good and consistent, showing that both classifiers perform similarly on the testing dataset.
+
+\todo{UNIFY AXIS AND SIZE OF FIGURES}
+
+\begin{figure}[h]
+\includegraphics{roc_testing_KNN_NS}
+\includegraphics{roc_testing_KNN_REM}
+\caption{\label{fig:rocO2_KNN}ROC curves for the testing dataset for \ac{KNN} classfier. All 23 EoS shown in grey, in color the EoSs with minimum and maximum mass, along commonly used SLy.}
+\end{figure}
+
+\begin{figure}[h]
+\includegraphics{ROC_O2testing_NS_RF}
+\includegraphics{ROC_O2testing_REM_RF}
+\caption{\label{fig:rocO2_RF}ROC curves for the testing dataset for \ac{RF} classfier. All 23 EoS shown in grey, in color the EoSs with minimum and maximum mass, along commonly used SLy.}
+\end{figure}
 
 
 
-Here are the results for the methods:
+\subsection{Computation of the probabilities}
+\todo{write the subsection}
+Now that we have seen the performance, we compute the bayesian probs according to section whatever
 
-\input{KNN_Results.tex} %plots and comments
-\input{RF_Results.tex} %plots and comments
-\input{GP_Results.tex}
+plots fits (probability plot) (done I think, Miquel)
+And with that we have probability tables
+
+\subsection{Performance on new events}
+We use the tables constructed \todo{write}
+Table probs O3 detections (I think computed, just make sure it is good) \todo{introduce properly and put clean tables (they are below)}
+
+We use the marginalized Bayesian probabilities obtained with both algorithms to classify the events in MDC11 \todo{explain? or was it explained before?}. We compute the ROC curves according the ground truth of the injected events. We separate the ROC curves for the different pipelines involved in the dataset. Notice that the performance for all of them is good even if the training and computing of probabilities was performed using GstLAL exclusively. Figure \ref{fig:rocMDC_KNN} depicts the curves for KNN. It performs very well for \ac{HasNS} achieving a true positive rate very close to unity with a very small false positive rate. We observe that spiir pipeline deviates from the good behaviour. For \ac{HasREM} the overall performance is slightly worse, getting higher false positive rate, but in turn all pipelines behave equally good. In figure \ref{fig:rocMDC_RF} we showcase the results for \ac{RF}. As with \ac{KNN} the results are very good, with steep ROC curves. For \ac{HasNS} spiir pipeline deviates less from the rest, getting higher positive rates for the same false positives than with \ac{KNN}. In the case of \ac{HasREM} the curves of the different pipelines behave a bit more differently from each other.
+
+\begin{figure}[h]
+\includegraphics{KNN_bayesian_NS}
+\includegraphics{KNN_bayesian_REM}
+\caption{\label{fig:rocMDC_KNN}ROC curves of Bayesian probability marginalized for the 23 EoSs for MDC11 dataset using \ac{KNN} classifier.}
+\end{figure}
+
+\begin{figure}[h]
+\includegraphics{RF_bayesian_NS}
+\includegraphics{RF_bayesian_REM}
+\caption{\label{fig:rocMDC_KNN}ROC curves of Bayesian probability marginalized for the 23 EoSs for MDC11 dataset using \ac{RF} classifier.}
+\end{figure}
+
+
+Parameter sweeps (done, Miquel)
+
+
+%Here are the results for the methods:
+
+%\input{KNN_Results.tex} %plots and comments
+%\input{RF_Results.tex} %plots and comments
+%\input{GP_Results.tex}
 
 
 In order to decide which method gives a better performance in classifying this kind of events, we can apply them over testing data and finally do a comparison between both. A way to see how data is classified we can construct histograms where the number of events that are classified with a label (\texttt{HasNS/HasRemnant}) \texttt{True} or \texttt{False} will change with a given threshold of the probability. For an algorithm with perfect performance, all the events with label \texttt{True (False)} should be at \textit{p}(\texttt{label}) = 1 (\textit{p}(\texttt{label}) = 0).
@@ -33,23 +82,23 @@ In the ROC curves that we will present in the following subsections, we highligh
 
 %\mmt{Finally, the F1 score $F1 = 2(\rm{precision \times sensitivity})/(\rm{precision+sensitivity})$ is a type of score that takes into consideration how precision and %sensitivity compensate each other. A perfect classifier would have a F1 score of 1.}
 
-To compare quantitatively the results from RF and KNN we compute the true positive and false positive rate for several threshold values, for both HasNS and HasREM, for the three selected EoS. These are tables \ref{tab:TPbhf}, \ref{tab:TPms1} and \ref{tab:TPsly}. For HasNS the two algorithms perform similarly, with almost the same TP for all threshold values and accross EoSs, although the false positive is smaller always in the RF. For HasREM we obtain that RF performs better than KNN in every case, with not only a smaller false positive rate, but a greater true positive rate.
+%To compare quantitatively the results from RF and KNN we compute the true positive and false positive rate for several threshold values, for both HasNS and HasREM, for the three selected EoS. These are tables \ref{tab:TPbhf}, \ref{tab:TPms1} and \ref{tab:TPsly}. For HasNS the two algorithms perform similarly, with almost the same TP for all threshold values and accross EoSs, although the false positive is smaller always in the RF. For HasREM we obtain that RF performs better than KNN in every case, with not only a smaller false positive rate, but a greater true positive rate.
 
-\begin{table}[]
-\centering
-\begin{tabular}{@{}c|cccc|cccc@{}}
-\toprule
-\multicolumn{1}{l|}{}          & \multicolumn{4}{c|}{Has NS}                       & \multicolumn{4}{c}{Has REM}                      \\ \midrule
-                               & \multicolumn{2}{c}{RF} & \multicolumn{2}{c|}{KNN} & \multicolumn{2}{c}{RF} & \multicolumn{2}{c}{KNN} \\
-\multicolumn{1}{l|}{Threshold} & TP         & FP        & TP          & FP         & TP         & FP        & TP         & FP         \\ \midrule
-0.1                            & 0.999      & 0.107     &   0.999          &  0.156          & 0.998      & 0.011     &    0.992        &  0.051          \\
-0.3                            & 0.998      & 0.068     &   0.996        &  0.117          & 0.993      & 0.005     &   0.974         &  0.017          \\
-0.5                            & 0.994      & 0.042     &   0.991          &  0.088           & 0.985      & 0.003     &   0.937         &  0.006          \\
-0.8                            & 0.967      & 0.014     &   0.966          & 0.043            & 0.957      & 0.001     &  0.845          &   0.001         \\ \bottomrule
-\end{tabular}
-\caption{BHF\_BB2}
-\label{tab:TPbhf}
-\end{table}
+%\begin{table}[]
+%\centering
+%\begin{tabular}{@{}c|cccc|cccc@{}}
+%\toprule
+%\multicolumn{1}{l|}{}          & \multicolumn{4}{c|}{Has NS}                       & \multicolumn{4}{c}{Has REM}                      \\ \midrule
+%                               & \multicolumn{2}{c}{RF} & \multicolumn{2}{c|}{KNN} & \multicolumn{2}{c}{RF} & \multicolumn{2}{c}{KNN} \\
+%\multicolumn{1}{l|}{Threshold} & TP         & FP        & TP          & FP         & TP         & FP        & TP         & FP         \\ \midrule
+%0.1                            & 0.999      & 0.107     &   0.999          &  0.156          & 0.998      & 0.011     &    0.992        &  0.051          \\
+%0.3                            & 0.998      & 0.068     &   0.996        &  0.117          & 0.993      & 0.005     &   0.974         &  0.017          \\
+%0.5                            & 0.994      & 0.042     &   0.991          &  0.088           & 0.985      & 0.003     &   0.937         &  0.006          \\
+%0.8                            & 0.967      & 0.014     &   0.966          & 0.043            & 0.957      & 0.001     &  0.845          &   0.001         \\ %\bottomrule
+%\end{tabular}
+%\caption{BHF\_BB2}
+%\label{tab:TPbhf}
+%\end{table}
 
 
 
@@ -107,7 +156,7 @@ GW200316                      & G368545               & 0.000                   
 GW200322                      & G369200               & 0.012                   & 0.000                    & 0.031                   & 0.000                   & 0.000                    & 0.001                   \\ \cline{1-1} \cline{3-4} \cline{6-7}
 \hline
 \end{tabular}
-\caption{PROBAB TABLE REAL DATA}
+\caption{PROBAB TABLE REAL DATA - from algo. Update to marginalized bayesian or remove.}
 \label{tab:real_data}
 \end{table}
 
@@ -126,7 +175,7 @@ GW190924                      & G351423               & 0.037                   
 GW200115                      & G360364               & 0.997                   & 0.987                   & 0.006                   & 0.000                           \\
 \hline
 \end{tabular}
-\caption{Short table with probabilities for O3 real events.}
+\caption{Short table with probabilities (from algo) for O3 real events. I don't think we want this anymore.}
 \label{tab:real_data_short}
 \end{table}
 
@@ -143,7 +192,7 @@ GW190924                      & G351423               & 0.0122                  
 GW200115                      & G360364               & 0.9976                   & 0.9885                   & 0.0                  & 0.0                           \\
 \hline
 \end{tabular}
-\caption{Short table with BAYESIAN probabilities for O3 real events.}
+\caption{Short table with BAYESIAN probabilities for O3 real events. Marginalized, right?}
 \label{tab:real_data_bayesian}
 \end{table}
 
