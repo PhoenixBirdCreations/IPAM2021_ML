@@ -8,8 +8,8 @@ Since a system can be EM-bright only when a \ac{NS} is present in the system, th
 are calculated disjointly, as in the current \ac{LVK} implementation, this condition may be violated because of statistical and systematic errors in the pipeline's reconstructed signal
 parameters, as well as bias and limited accuracy of the \ac{ML} algorithm. The approach discussed below avoids the occurrence of this inconsistency.
 
-The ground truth of observed events is unknown. Therefore, the probabilities $P(\hasns|{\bf A}_{\bf X})$ and $P(\hasrem|{\bf A}_{\bf X})$ cannot be calcuated from observations. However,
-estimators for $P(\hasns|{\bf A}_{\bf X})$ and $P(\hasrem|{\bf A}_{\bf X})$ can be calculated from from synthetic events under the assumption that these events are a faithful representation of
+The ground truth of observed events is unknown. Therefore, the probabilities $P(\hasns|{\bf A}_{\bf X})$ and $P(\hasrem|{\bf A}_{\bf X})$ cannot be calculated from observations. However,
+estimators for $P(\hasns|{\bf A}_{\bf X})$ and $P(\hasrem|{\bf A}_{\bf X})$ can be calculated from synthetic events under the assumption that these events are a faithful representation of
 real observations.
 
 Consider a data set of $N$ simulated events ${\bf X}'_i$, $D=\{{\bf X}'_i\otimes{\bf L}({\bf X}'_i)\}$, where $i=1\dots N$ and ${\bf L}$ is a map from ${\bf X}'$ to a vector space
@@ -96,10 +96,11 @@ where $N_s=\hbox{dim}\,(D_S)$, $N_{\hasns_+}$ is the number of events in $D_S$ w
 The probability estimators are generally noisy because they are evaluated on a finite data set. Smooth probability functions can be obtained by mapping them from the $(0,1)$ space to the real
 line with a logistic function, smoothing them with a Savitzky-Golay filter, fitting them with a Gaussian Process Regression, and finally mapping them back to the $(0,1)$ space.   
 
-Both $P(\hasns|{\bf A}_{\bf X})$ and $P(\hasrem|{\bf A}_{\bf X})$ depend on the \ac{EOS} that is used to label the synthetic events. \todo{we need a bit more here, for example what difference soft EOS and hard EOS produce on the max NS mass, existence of remnant, etc. Any volunteer?} As the true \ac{EOS} of matter at \ac{NS} densities is unknown, in order to minimize the systematics that arise in adopting a specific \ac{EOS} we consider a set of 23 different \ac{EOS} and marginalize Eqs.~(\ref{bayes-hasns}) and (\ref{bayes-hasrem}) over them. The marginalized probabilities $P_M(\hasns|{\bf A}_{\bf X})$ and $P_M(\hasrem|{\bf A}_{\bf X})$ are defined as
+Both $P(\hasns|{\bf A}_{\bf X})$ and $P(\hasrem|{\bf A}_{\bf X})$ depend on the \ac{EOS} that is used to label the synthetic events. \todo{we need a bit more here, for example what difference soft EOS and hard EOS produce on the max NS mass, existence of remnant, etc. Any volunteer?}
+\mmt{[MMT: I added some information related to the compactness of the NS and its effects on \hasrem\ in the labeling section]} As the true \ac{EOS} of matter at \ac{NS} densities is unknown, in order to minimize the systematics that arise in adopting a specific \ac{EOS} we consider a set of 23 different \ac{EOS} and marginalize Eqs.~(\ref{bayes-hasns}) and (\ref{bayes-hasrem}) over them. The marginalized probabilities $P_M(\hasns|{\bf A}_{\bf X})$ and $P_M(\hasrem|{\bf A}_{\bf X})$ are defined as
 %
 \begin{equation}
 P_M(I|{\bf A}_{\bf X})=\frac{\sum_J\beta_J P_J(I|{\bf A}_{\bf X})}{\sum_J\beta_J}\,,\label{bayes-marginalized}
 \end{equation}
 %
-where $I=$\hasns\ or \hasrem, $P_J(I|{\bf A}_{\bf X})$ ($J=1,\dots 23$) are the Bayesian probabilities in Eqs.~(\ref{bayes-hasns}) and (\ref{bayes-hasrem}) calculated from the data set $D_S$ with labels assigned according to the $J$-th \ac{EOS}, and $\beta_J$ are Bayes factors.  \todo{need to say where the Bayes factors come from.} The probabilities $P_J(I|{\bf A}_{\bf X})$ in Eq.~(\ref{bayes-marginalized}) can be tabulated and used to compute the marginalized probabilities $P_M(\hasns|{\bf A}_{\bf E})$ and $P_M(\hasrem|{\bf A}_{\bf E})$ for any new event $\bf E$ with algorithm outcome $\bf A_{E}$.
+where $I=$\hasns\ or \hasrem, $P_J(I|{\bf A}_{\bf X})$ ($J=1,\dots 23$) are the Bayesian probabilities in Eqs.~(\ref{bayes-hasns}) and (\ref{bayes-hasrem}) calculated from the data set $D_S$ with labels assigned according to the $J$-th \ac{EOS}, and $\beta_J$ are Bayes factors.  \todo{need to say where the Bayes factors come from.} \mmt{[MMT: Sushant might know?]}The probabilities $P_J(I|{\bf A}_{\bf X})$ in Eq.~(\ref{bayes-marginalized}) can be tabulated and used to compute the marginalized probabilities $P_M(\hasns|{\bf A}_{\bf E})$ and $P_M(\hasrem|{\bf A}_{\bf E})$ for any new event $\bf E$ with algorithm outcome $\bf A_{E}$.
