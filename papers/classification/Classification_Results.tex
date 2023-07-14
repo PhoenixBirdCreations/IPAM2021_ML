@@ -36,14 +36,14 @@ Table probs O3 detections (I think computed, just make sure it is good) \todo{in
 We use the marginalized Bayesian probabilities obtained with both algorithms to classify the events in MDC11 \todo{explain? or was it explained before?}. We compute the ROC curves according the ground truth of the injected events. We separate the ROC curves for the different pipelines involved in the dataset. Notice that the performance for all of them is good even if the training and computing of probabilities was performed using GstLAL exclusively. Figure \ref{fig:rocMDC_KNN} depicts the curves for KNN. It performs very well for \hasns achieving a true positive rate very close to unity with a very small false positive rate. We observe that spiir pipeline deviates from the good behaviour. For \hasrem the overall performance is slightly worse, getting higher false positive rate, but in turn all pipelines behave equally good. In figure \ref{fig:rocMDC_RF} we showcase the results for \ac{RF}. As with \ac{KNN} the results are very good, with steep ROC curves. For \hasns spiir pipeline deviates less from the rest, getting higher positive rates for the same false positives than with \ac{KNN}. In the case of \hasrem the curves of the different pipelines behave a bit more differently from each other.
 
 \begin{figure}[h]
-\includegraphics{KNN_bayesian_NS}
-\includegraphics{KNN_bayesian_REM}
+\includegraphics[width=0.45\textwidth]{KNN_bayesian_NS}
+\includegraphics[width=0.45\textwidth]{KNN_bayesian_REM}
 \caption{\label{fig:rocMDC_KNN}ROC curves of Bayesian probability marginalized for the 23 EoSs for MDC11 dataset using \ac{KNN} classifier.}
 \end{figure}
 
 \begin{figure}[h]
-\includegraphics{RF_bayesian_NS}
-\includegraphics{RF_bayesian_REM}
+\includegraphics[width=0.45\textwidth]{RF_bayesian_NS}
+\includegraphics[width=0.45\textwidth]{RF_bayesian_REM}
 \caption{\label{fig:rocMDC_KNN}ROC curves of Bayesian probability marginalized for the 23 EoSs for MDC11 dataset using \ac{RF} classifier.}
 \end{figure}
 
@@ -58,15 +58,15 @@ Parameter sweeps (done, Miquel)
 %\input{GP_Results.tex}
 
 
-In order to decide which method gives a better performance in classifying this kind of events, we can apply them over testing data and finally do a comparison between both. A way to see how data is classified we can construct histograms where the number of events that are classified with a label (\texttt{HasNS/HasRemnant}) \texttt{True} or \texttt{False} will change with a given threshold of the probability. For an algorithm with perfect performance, all the events with label \texttt{True (False)} should be at \textit{p}(\texttt{label}) = 1 (\textit{p}(\texttt{label}) = 0).
+%In order to decide which method gives a better performance in classifying this kind of events, we can apply them over testing data and finally do a comparison between both. A way to see how data is classified we can construct histograms where the number of events that are classified with a label (\texttt{HasNS/HasRemnant}) \texttt{True} or \texttt{False} will change with a given threshold of the probability. For an algorithm with perfect performance, all the events with label \texttt{True (False)} should be at \textit{p}(\texttt{label}) = 1 (\textit{p}(\texttt{label}) = 0).
 
-Another way to check the algorithm's performance is by building the so-called \textit{Receiver Operating Characteristic (ROC) Curve}. They show the variation of the true-positive rate (or efficiency) with the false-positive rate given a certain threshold for the probability. An algorithm with a proper performance will give a steeper ROC curve, or in other words, will have a higher eficiency with a lower false-positive rate.  
-
-
-In the ROC curves that we will present in the following subsections, we highlight three reference EoS in color, from which we show results in more detail. We select BHF\_BBB2 because is the model that give the lowest maximum mass, MS1\_PP as the model with the bigger maximum mass, and we also include SLy because is the most accepted EoS for NS modeling (reference), and is the one that was used in the injections that are our dataset.
+%Another way to check the algorithm's performance is by building the so-called \textit{Receiver Operating Characteristic (ROC) Curve}. They show the variation of the true-positive rate (or efficiency) with the false-positive rate given a certain threshold for the probability. An algorithm with a proper performance will give a steeper ROC curve, or in other words, will have a higher eficiency with a lower false-positive rate.  
 
 
-\subsection{Algorithm comparison}
+%In the ROC curves that we will present in the following subsections, we highlight three reference EoS in color, from which we show results in more detail. We select BHF\_BBB2 because is the model that give the lowest maximum mass, MS1\_PP as the model with the bigger maximum mass, and we also include SLy because is the most accepted EoS for NS modeling (reference), and is the one that was used in the injections that are our dataset.
+
+
+%\subsection{Algorithm comparison}
 
 
 %Here we talk about overall results and specifically from each algorithm in the
