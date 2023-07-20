@@ -1,10 +1,10 @@
 \section{Data set\label{dataset}}
 \label{sec:dataset}
 
-In our analysis, we employ the same data set as Ref.\ \todo{chatterjee}. This allows us to directly compare the performance of the various algorithms and the new labeling
-scheme to the performance of the \ac{KNN} algorithm, which was deployed in the latest \ac{LVK} observing run. The data set is described in detail in Ref.\ \todo{chatterjee and messick}. Only its most relevant features are presented below.
+In our analysis, we employ the same data set as Ref. \cite{Chatterjee:2019avs} This allows us to directly compare the performance of the various algorithms and the new labeling
+scheme to the performance of the \ac{KNN} algorithm, which was deployed in the latest \ac{LVK} observing run. The data set is described in detail in Ref.\ \todo{chatterjee and messick} \mmt{[MMT: which paper is this?]}. Only its most relevant features are presented below.
 
-We train the \ac{KNN}, \ac{RF}, and \ac{GP} algorithms on \todo{XX} days of data from \ac{LVK}'s \ac{O2} observing run with \todo{XX} synthetic \ac{BNS}, \ac{NSBH}, and \ac{BBH} signals
+We train the \ac{KNN}, \ac{RF}, and \ac{GP} algorithms on \todo{XX} days of data \mmt{[MMT: Sushant?]} from \ac{LVK}'s \ac{O2} observing run with \todo{XX} synthetic \ac{BNS}, \ac{NSBH}, and \ac{BBH} signals
 injected into it \todo{briefly how the data set was built (replay?) and what's was its purpose (MDC? tests?)}. \todo{Now explain briefly the characteristics of the signals, for example
 their mass range, spin properties, FAR\dots} The \ac{CBC} signals are recovered with one of the standard search \ac{LVK} pipelines \todo{used in\dots deployed for\dots?}, the GstLAL
 pipeline \todo{ref}. \todo{A brief sentence to say how it works? e.g., match-filter?} The dimension of the data set is determined by the number of signals recovered by the pipeline after
@@ -14,4 +14,4 @@ template and the \ac{FAR} of the event. In this work, we restrict our analysis t
 vector are \todo{list of other derived quantities\dots} 
 
 
-\todo{For the RF we use events with 5 features: the two masses, their corresponding spins and the SNR of the detection.}
+\todo{For both algorithms we use events with 5 features: the two masses, their corresponding spins and the SNR of the detection.}
