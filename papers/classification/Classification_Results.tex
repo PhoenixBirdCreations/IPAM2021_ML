@@ -2,9 +2,9 @@
 In this section we show the results for our methodology. First we illustrate the good performance of our classifiers, both \ac{RF} and \ac{KNN}. Then we can use them to construct Bayesian probabilities according to their output and finally evaluate new events, synthetic and real.
 
 \subsection{Performance of the algorithms}
-We measure the performance of our algorithms by the true positive and false positive rates, drawn as \textit{Receiver Operating Characteristic} (ROC) curves. They show the variation of the true-positive rate with the false-positive rate given a certain threshold for the probability. The better the classifier, the steeper is the curve achiving a greater number of true positives with very few false classifications.
+We measure the performance of our algorithms by the true positive and false positive rates, drawn as \textit{Receiver Operating Characteristic} (ROC) curves. They show the variation of the true-positive rate  with the false-positive rate given a certain threshold for the probability.  The better the classifier, the steeper the curve,  achieving a greater number of true positives with few false classifications. We use the testing set that with synthetic data from LVK's O2 run. 
 
-The curves for \ac{KNN} are in figure \ref{fig:rocO2_KNN}. The results are consistent among all EoSs and represent a good classifier, with slitghly better results in the performance of \hasrem. The curves for \ac{RF} are in figure \ref{fig:rocO2_RF}. The results are equally good and consistent, showing that both classifiers perform similarly on the testing dataset.
+The curves for \ac{KNN} are in Figure \ref{fig:rocO2_KNN}. The results are consistent among all equations of state and depict a good classification, with slitghly better results in the performance of \hasrem. The curves for \ac{RF} are in Figure \ref{fig:rocO2_RF}. The results are consistent with the ones given by \ac{KNN}, showing that both classifiers perform similarly on the testing dataset.We highlight 3 concrete cases: BHF BBB2 (EOS with lowest maximum mass for the NS), MS1 PP (EOS with largest maximum mass for the NS) and SLy (the most accepted case \mmt{[?]})
 
 \todo{UNIFY AXIS AND SIZE OF FIGURES}
 
@@ -24,9 +24,8 @@ The curves for \ac{KNN} are in figure \ref{fig:rocO2_KNN}. The results are consi
 
 \subsection{Computation of the probabilities}
 \todo{write the subsection}
-Now that we have seen the performance, we compute the bayesian probs according to section whatever
 
-plots fits (probability plot): Figures \ref{fig:bayesian_prob_fits_KNN} and \ref{fig:bayesian_prob_fits_RF}.
+Once the algorithms are trained and tested,  we compute the Bayesian probabilities defined in Section \ref{sec:bayesian_probs},  in terms of the output of the algorithms (fractions of neighbors and fractions of trees, respectively).  In order to obtain the probabilities given in Equations \ref{bayes-hasns} and \ref{bayes-hasrem} one needs to apply the algorithm on known events \mmt{[MMT: applied on O2, right?]}. 
 
 \begin{figure*}[h]
 \includegraphics[width=\textwidth]{KNN_3_eos_prob_plots}
@@ -38,7 +37,7 @@ plots fits (probability plot): Figures \ref{fig:bayesian_prob_fits_KNN} and \ref
 \caption{\label{fig:bayesian_prob_fits_RF} .}
 \end{figure*}
 
-And with that we have probability tables
+In Figures \ref{fig:bayesian_prob_fits_KNN} and \ref{fig:bayesian_prob_fits_RF} , we show the fits of  the results with a Gaussian Process Regression,   performed as explained in Section \ref{sec:bayesian_probs}. In this figures we show the fits for each EOS, but one can always get a single marginalized probability applying the Bayes factors.  The fitted curves are monothonic and have a sigmoid-like shape, but that depends on the choice of the EOS. We again highlight the same equations of state as in Figures \ref{fig:rocO2_KNN} and \ref{fig:rocO2_RF}.
 
 \subsection{Performance on new events}
 We use the tables constructed \todo{write}
