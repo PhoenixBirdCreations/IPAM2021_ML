@@ -4,7 +4,9 @@ In this section we show the results for our methodology. First we illustrate the
 \subsection{Performance of the algorithms}
 We measure the performance of our algorithms by the true positive and false positive rates, drawn as \textit{Receiver Operating Characteristic} (ROC) curves. They show the variation of the true-positive rate  with the false-positive rate given a certain threshold for the probability.  The better the classifier, the steeper the curve,  achieving a greater number of true positives with few false classifications. We use the testing set that with synthetic data from LVK's O2 run. 
 
-The curves for \ac{KNN} are in Figure \ref{fig:rocO2_KNN}. The results are consistent among all equations of state and depict a good classification, with slitghly better results in the performance of \hasrem. The curves for \ac{RF} are in Figure \ref{fig:rocO2_RF}. The results are consistent with the ones given by \ac{KNN}, showing that both classifiers perform similarly on the testing dataset.We highlight 3 concrete cases: BHF BBB2 (EOS with lowest maximum mass for the NS), MS1 PP (EOS with largest maximum mass for the NS) and SLy (the most accepted case \mmt{[?]})
+The curves for \ac{KNN}  and \ac{RF} are in Figures \ref{fig:rocO2_KNN} and \ref{fig:rocO2_RF}, respectively.  We show the curves for each EOS, but we highlight 3 concrete cases: BHF BBB2 (EOS with lowest maximum mass for the NS), MS1 PP (EOS with largest maximum mass for the NS) and SLy (the most accepted case \mmt{[?]}). The results are consistent among all equations of state and depict a true positive rate around 0.99 for a threshold of 0.5 and for both labels, but with a higher false positive rate in the case of \hasns, which means that the algorithms perform better when dealing with \hasrem.
+
+Both algorithms perform similarly on the testing dataset, but \ac{RF} gives slightly higher true positive rates and lower false positive rates for a given threshold. 
 
 \todo{UNIFY AXIS AND SIZE OF FIGURES}
 
@@ -23,7 +25,6 @@ The curves for \ac{KNN} are in Figure \ref{fig:rocO2_KNN}. The results are consi
 
 
 \subsection{Computation of the probabilities}
-\todo{write the subsection}
 
 Once the algorithms are trained and tested,  we compute the Bayesian probabilities defined in Section \ref{sec:bayesian_probs},  in terms of the output of the algorithms (fractions of neighbors and fractions of trees, respectively).  In order to obtain the probabilities given in Equations \ref{bayes-hasns} and \ref{bayes-hasrem} one needs to apply the algorithm on known events \mmt{[MMT: applied on O2, right?]}. 
 
@@ -37,13 +38,19 @@ Once the algorithms are trained and tested,  we compute the Bayesian probabiliti
 \caption{\label{fig:bayesian_prob_fits_RF} .}
 \end{figure*}
 
-In Figures \ref{fig:bayesian_prob_fits_KNN} and \ref{fig:bayesian_prob_fits_RF} , we show the fits of  the results with a Gaussian Process Regression,   performed as explained in Section \ref{sec:bayesian_probs}. In this figures we show the fits for each EOS, but one can always get a single marginalized probability applying the Bayes factors.  The fitted curves are monothonic and have a sigmoid-like shape, but that depends on the choice of the EOS. We again highlight the same equations of state as in Figures \ref{fig:rocO2_KNN} and \ref{fig:rocO2_RF}.
+In Figures \ref{fig:bayesian_prob_fits_KNN} and \ref{fig:bayesian_prob_fits_RF} , we show the fits of  the results with a Gaussian Process Regression,   performed as explained in Section \ref{sec:bayesian_probs}. In this figures we show the fits for each EOS, but one can always get a single marginalized probability applying the Bayes factors.  The fitted curves are monothonic and have a sigmoid-like shape, but that  depends on the choice of the EOS.  Both \ac{KNN} and \ac{RF} give fits that have a similar shape. Indeed, both show a slower increase of $P(\hasrem)$ for a low fraction $f_2$ compared to $P(\hasns)$. However, \ac{RF} shows a small plateau on the $P(\hasns)$ (and also on $P(\hasrem)$) for fractions of trees around 0.8, and that is  something that \ac{KNN} does not reproduce. We highlight the same equations of state as in Figures \ref{fig:rocO2_KNN} and \ref{fig:rocO2_RF}.
 
 \subsection{Performance on new events}
-We use the tables constructed \todo{write}
-Table probs O3 detections: Table \ref{tab:real_data_bayesian}.
 
-We use the marginalized Bayesian probabilities obtained with both algorithms to classify the events in MDC11 \todo{explain? or was it explained before?}. We compute the ROC curves according the ground truth of the injected events. We separate the ROC curves for the different pipelines involved in the dataset. Notice that the performance for all of them is good even if the training and computing of probabilities was performed using GstLAL exclusively. Figure \ref{fig:rocMDC_KNN} depicts the curves for KNN. It performs very well for \hasns achieving a true positive rate very close to unity with a very small false positive rate. We observe that spiir pipeline deviates from the good behaviour. For \hasrem the overall performance is slightly worse, getting higher false positive rate, but in turn all pipelines behave equally good. In figure \ref{fig:rocMDC_RF} we showcase the results for \ac{RF}. As with \ac{KNN} the results are very good, with steep ROC curves. For \hasns spiir pipeline deviates less from the rest, getting higher positive rates for the same false positives than with \ac{KNN}. In the case of \hasrem the curves of the different pipelines behave a bit more differently from each other.
+As stated in Section \ref{sec:bayesian_probs}, the fits of the probabilities $P_J(I|{\bf A}_{\bf X})$ for each EOS ($J=1,\dots 23$) can be tabulated and used to compute the marginalized probabilities $P_M(\hasns|{\bf A}_{\bf E})$ and $P_M(\hasrem|{\bf A}_{\bf E})$ for any new event $\bf E$ with algorithm outcome $\bf A_{E}$.  We classify the events from MDC11 \todo{explain? or was it explained before?} and compute the ROC curves according the ground truth of the injected events, which can be seen in Figures \ref{fig:rocMDC_KNN} and \ref{fig:rocMDC_RF}. We separate the ROC curves for the different pipelines involved in the dataset (GstLAL,  PyCBC \cite{pycbc:2016},  SPIIR \cite{spiir:2020} and MBTA \cite{mbta:2016}). Notice that the curves are very similar even though the algorithms were trained (and also the Bayesian probabilities were fitted) using exclusively GstLAL.
+
+Figure \ref{fig:rocMDC_KNN} depicts the curves for \ac{KNN}.  In the case of \hasns\ (left panel), it gives a true positive rate of $\sim 0.975$ for a threshold of 0.5 and less than a false positive rate of 0.2 for all the pipelines except of SPIIR.  Regarding \hasrem\ (right panel), \ac{KNN}. gives a false positive rate slightly higher than 0.2 for all the pipelines except of GstLAL when fixing the threshold to 0.5, but the true positive rate stays around 0.975. In this case, SPIIR behaves similarly to the rest of the pipelines.  
+
+In Figure \ref{fig:rocMDC_RF} we showcase the results for \ac{RF}.  The curves are similar to the ones in Figure \ref{fig:rocMDC_KNN}, having a steeper shape for \hasns\ (left panel) and thus giving high true positive rates and low false positive rates at a given threshold. SPIIR also performs poorly for \ac{RF}. When it comes to \hasrem\ (right panel), the false positive rates increase as for \ac{KNN}, but again all the pipelines behave similarly. One can note that \ac{RF} gives slightly steeper ROC curves than \ac{KNN},  which results in higher true positive rates at lower false positive rates. 
+
+\begin{comment}
+performs very well for \hasns achieving a true positive rate very close to unity with a very small false positive rate. We observe that spiir pipeline deviates from the good behaviour. For \hasrem the overall performance is slightly worse, getting higher false positive rate, but in turn all pipelines behave equally good. In figure \ref{fig:rocMDC_RF} we showcase the results for \ac{RF}. As with \ac{KNN} the results are very good, with steep ROC curves. For \hasns spiir pipeline deviates less from the rest, getting higher positive rates for the same false positives than with \ac{KNN}. In the case of \hasrem the curves of the different pipelines behave a bit more differently from each other.
+\end{comment}
 
 \begin{figure*}[h]
 \includegraphics[width=0.45\textwidth]{KNN_bayesian_NS}
@@ -54,8 +61,29 @@ We use the marginalized Bayesian probabilities obtained with both algorithms to 
 \begin{figure*}[h]
 \includegraphics[width=0.45\textwidth]{RF_bayesian_NS}
 \includegraphics[width=0.45\textwidth]{RF_bayesian_REM}
-\caption{\label{fig:rocMDC_KNN}ROC curves of Bayesian probability marginalized for the 23 EoSs for MDC11 dataset using \ac{RF} classifier.}
+\caption{\label{fig:rocMDC_RF}ROC curves of Bayesian probability marginalized for the 23 EoSs for MDC11 dataset using \ac{RF} classifier.}
 \end{figure*}
+
+We also applied the tabulated Bayesian probabilities to classify real events from the O3 LVK run \cite{gwtc-2:2021, LIGOScientific:2021djp}.  In Table \ref{tab:real_data_bayesian} we depict some of the most significant events of the LVK third observing run, labeling them with their event ID and the GraceDB\footnote{\href{https://gracedb.ligo.org/}https://gracedb.ligo.org/} ID. 
+
+
+
+\begin{table}[]
+\begin{tabular}{c|c|cc|cc}
+\hline
+\multicolumn{1}{c|}{}         & \multicolumn{1}{l|}{} & \multicolumn{2}{c|}{$P_M(\hasns|{\bf A}_{\bf E})$}                                                & \multicolumn{2}{c}{$P_M(\hasrem|{\bf A}_{\bf E})$}                                                \\ \hline
+\multicolumn{1}{c|}{event ID} & grace\_id             & \multicolumn{1}{c}{RF} & \multicolumn{1}{c}{KNN}  & \multicolumn{1}{c}{RF} & \multicolumn{1}{c}{KNN} \\ \hline
+GW170817                      & G298048               & 0.9977                   & 0.9885                    & 0.9970                   & 0.9847                                  \\
+GW190425                      & G330564               & 0.9977                   & 0.9885                    & 0.9969                   & 0.9847                             \\
+GW190426                      & G330687               & 0.9971                   & 0.9847                    & 0.0003                   & 0.0                     \\
+GW190814                      & G347305               & 0.0418                   & 0.5665                   & 0.0                  & 0.0                      \\
+GW190924                      & G351423               & 0.0122                   & 0.0536                   & 0.0                   & 0.0                       \\               
+GW200115                      & G360364               & 0.9976                   & 0.9885                   & 0.0                  & 0.0                           \\
+\hline
+\end{tabular}
+\caption{Short table with BAYESIAN probabilities for O3 real events. Marginalized, right? \mmt{[MMT: Yes, marginalized.]}}
+\label{tab:real_data_bayesian}
+\end{table}
 
 
 Parameter sweeps:  Figures \ref{fig:param_sweep_KNN} and \ref{fig:param_sweep_RF}.
@@ -181,7 +209,7 @@ GW200322                      & G369200               & 0.012                   
 \end{table}
 \end{comment}
 
-
+\begin{comment}
 \begin{table}[]
 \begin{tabular}{c|c|cc|cc}
 \hline
@@ -198,21 +226,7 @@ GW200115                      & G360364               & 0.997                   
 \caption{Short table with probabilities (from algo) for O3 real events. I don't think we want this anymore. \mmt{[MMT: we can remove, let's see what Marco thinks.]}}
 \label{tab:real_data_short}
 \end{table}
+\end{comment}
 
-\begin{table}[]
-\begin{tabular}{c|c|cc|cc}
-\hline
-\multicolumn{1}{c|}{}         & \multicolumn{1}{l|}{} & \multicolumn{2}{c|}{$P_M(\hasns|{\bf A}_{\bf E})$}                                                & \multicolumn{2}{c}{$P_M(\hasrem|{\bf A}_{\bf E})$}                                                \\ \hline
-\multicolumn{1}{c|}{event ID} & grace\_id             & \multicolumn{1}{c}{RF} & \multicolumn{1}{c}{KNN}  & \multicolumn{1}{c}{RF} & \multicolumn{1}{c}{KNN} \\ \hline
-GW170817                      & G298048               & 0.9977                   & 0.9885                    & 0.9970                   & 0.9847                                  \\
-GW190425                      & G330564               & 0.9977                   & 0.9885                    & 0.9969                   & 0.9847                             \\
-GW190426                      & G330687               & 0.9971                   & 0.9847                    & 0.0003                   & 0.0                     \\
-GW190814                      & G347305               & 0.0418                   & 0.5665                   & 0.0                  & 0.0                      \\
-GW190924                      & G351423               & 0.0122                   & 0.0536                   & 0.0                   & 0.0                       \\               
-GW200115                      & G360364               & 0.9976                   & 0.9885                   & 0.0                  & 0.0                           \\
-\hline
-\end{tabular}
-\caption{Short table with BAYESIAN probabilities for O3 real events. Marginalized, right? \mmt{[MMT: Yes, marginalized.]}}
-\label{tab:real_data_bayesian}
-\end{table}
+
 
