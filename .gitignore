@@ -13,3 +13,5 @@
 *.dvi
 *.pdf
 *.bbl
+*.blg
+*.synctex.gz
