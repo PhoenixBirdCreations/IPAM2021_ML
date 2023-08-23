@@ -35,7 +35,7 @@ Both algorithms perform similarly on the testing dataset, but \ac{RF} gives slig
 \subsection{Computation of the probabilities}
 
 Once the algorithms are trained and tested, we compute the Bayesian
-probabilities defined in Section~\ref{bayesian_probs},in terms of the output of the algorithms (fractions of neighbors and fractions of trees, respectively). In order to obtain the probabilities given in Equations \ref{bayes-hasns} and \ref{bayes-hasrem} one needs to apply the algorithm on known events \mmt{[MMT: applied on O2, right?]}. 
+probabilities defined in the Section~\nameref{bayesian_probs}, in terms of the output of the algorithms (fractions of neighbors and fractions of trees, respectively). In order to obtain the probabilities given in Equations~\ref{bayes-hasns} and~\ref{bayes-hasrem} one needs to apply the algorithm on known events \mmt{[MMT: applied on O2, right?]}. 
 
 \begin{figure*}%[h]
 \includegraphics[width=0.65\linewidth]{KNN_3_eos_prob_plots}
@@ -51,9 +51,9 @@ probabilities defined in Section~\ref{bayesian_probs},in terms of the output of 
 
 In Figs.~\ref{fig:bayesian_prob_fits_KNN} and~\ref{fig:bayesian_prob_fits_RF}, 
 we show the fits of  the results with a Gaussian Process Regression,
-performed as explained in Section~\ref{bayesian_probs}. In this figures we show
+performed as explained in the Section~\nameref{bayesian_probs}. In this figures we show
 the fits for each EOS, but one can always get a single marginalized probability
-applying the Bayes factors. The fitted curves are monothonic and have a
+applying the Bayes factors. The fitted curves are monotonic and have a
 sigmoid-like shape, but that depends on the choice of the EOS. Both \ac{KNN}
 and \ac{RF} give fits that have a similar shape. Indeed, both show a slower
 increase of $P(\hasrem)$ for a low fraction $f_2$ compared to $P(\hasns)$.
@@ -64,7 +64,7 @@ Figs.~\ref{fig:rocO2_KNN} and~\ref{fig:rocO2_RF}.
 
 \subsection{Performance on new events}
 
-As stated in Section~\ref{bayesian_probs}, the fits of the probabilities
+As stated in the Section~\nameref{bayesian_probs}, the fits of the probabilities
 $P_J(I|{\bf A}_{\bf X})$ for each EOS ($J=1,\dots 23$) can be tabulated and
 used to compute the marginalized probabilities $P_M(\hasns|{\bf A}_{\bf E})$
 and $P_M(\hasrem|{\bf A}_{\bf E})$ for any new event $\bf E$ with algorithm
@@ -76,21 +76,23 @@ involved in the dataset (GstLAL,  PyCBC~\cite{pycbc:2016},
 SPIIR~\cite{spiir:2020} and MBTA~\cite{mbta:2016}). Notice that the curves are very similar even though the algorithms were trained (and also the Bayesian probabilities were fitted) using exclusively GstLAL.
 
 Figure~\ref{fig:rocMDC_KNN} depicts the curves for \ac{KNN}.  In the case of
-\hasns (left panel), it gives a true positive rate of $\sim 0.975$ for a
+\hasns\ (left panel), it gives a true positive rate of $\sim 0.975$ for a
 threshold of $0.5$ and less than a false positive rate of $0.2$ for all the
-pipelines except of SPIIR. Regarding \hasrem (right panel), \ac{KNN}. gives a
+pipelines except of SPIIR. Regarding \hasrem\ (right panel), \ac{KNN}. gives a
 false positive rate slightly higher than $0.2$ for all the pipelines except of
 GstLAL when fixing the threshold to $0.5$, but the true positive rate stays
 around $0.975$. In this case, SPIIR behaves similarly to the rest of the pipelines.  
 
 In Fig.~\ref{fig:rocMDC_RF} we showcase the results for \ac{RF}.  The curves
-are similar to the ones in Fig.~\ref{fig:rocMDC_KNN}, having a steeper shape for \hasns (left panel) and thus giving high true positive rates and low false positive rates at a given threshold. SPIIR also performs poorly for \ac{RF}. When it comes to \hasrem (right panel), the false positive rates increase as for \ac{KNN}, but again all the pipelines behave similarly. One can note that \ac{RF} gives slightly steeper ROC curves than \ac{KNN},  which results in higher true positive rates at lower false positive rates. 
+are similar to the ones in Fig.~\ref{fig:rocMDC_KNN}, having a steeper shape for \hasns\ (left panel) and thus giving high true positive rates and low false positive rates at a given threshold. SPIIR also performs poorly for \ac{RF}. When it comes to \hasrem\ (right panel), the false positive rates increase as for \ac{KNN}, but again all the pipelines behave similarly. One can note that \ac{RF} gives slightly steeper ROC curves than \ac{KNN},  which results in higher true positive rates at lower false positive rates. 
 
+%\begin{comment}
 %performs very well for \hasns achieving a true positive rate very close to
 %unity with a very small false positive rate. We observe that SPIIR pipeline
 %deviates from the good behaviour. For \hasrem the overall performance is
 %slightly worse, getting higher false positive rate, but in turn all
 %pipelines behave equally good. In Fig.~\ref{fig:rocMDC_RF} we showcase the results for \ac{RF}. As with \ac{KNN} the results are very good, with steep ROC curves. For \hasns spiir pipeline deviates less from the rest, getting higher positive rates for the same false positives than with \ac{KNN}. In the case of \hasrem the curves of the different pipelines behave a bit more differently from each other.
+%\end{comment}
 
 \begin{figure*}%[h]
 \includegraphics[width=0.45\linewidth]{KNN_bayesian_NS}
@@ -108,7 +110,7 @@ are similar to the ones in Fig.~\ref{fig:rocMDC_KNN}, having a steeper shape for
 \end{figure*}
 
 We also applied the tabulated Bayesian probabilities to classify real events
-from the O3 LVK run~\cite{gwtc-2:2021, LIGOScientific:2021djp}.  In Table~\ref{tab:real_data_bayesian} we depict some of the most significant events of the LVK third observing run, labeling them with their event ID and the GraceDB\footnote{\href{https://gracedb.ligo.org/}https://gracedb.ligo.org/} ID.  We show the marginalized Bayesian probabilities for both \hasns and \hasrem computed with 
+from the O3 LVK run~\cite{gwtc-2:2021, LIGOScientific:2021djp}.  In Table~\ref{tab:real_data_bayesian} we depict some of the most significant events of the LVK third observing run, labeling them with their event ID and the GraceDB\footnote{\href{https://gracedb.ligo.org/}https://gracedb.ligo.org/} ID.  We show the marginalized Bayesian probabilities for both \hasns\ and \hasrem\ computed with 
 \ac{RF} and \ac{KNN}. For the first two events (GW170817 and GW190425),
 $P_M(\hasns)$ and $P_M(\hasrem)$ are very close to 1, meaning that these events
 correspond to BNS mergers, as shown in~\cite{gwtc-2:2021,LIGOScientific:2021djp}. 
@@ -132,7 +134,7 @@ GW190924                      & G351423               & 0.012                   
 GW200115                      & G360364               & 0.998                   & 0.989                   & 0.000                  & 0.000                           \\
 \hline
 \end{tabular}
-\caption{Short table with BAYESIAN probabilities for O3 real events. Marginalized, right? \mmt{[MMT: Yes, marginalized.]}}
+\caption{Short table with marginalized BAYESIAN probabilities for O3 real events.}
 \label{tab:real_data_bayesian}
 \end{table}
 
@@ -204,67 +206,67 @@ Parameter sweeps:  Figs.~\ref{fig:param_sweep_KNN} and~\ref{fig:param_sweep_RF}.
 %\end{table}
 
 
-\begin{comment}
-\begin{table}[]
-\begin{tabular}{c|c|ccr|ccr}
-\hline
-\multicolumn{1}{c|}{}         & \multicolumn{1}{l|}{} & \multicolumn{3}{c|}{p(HasNS)}                                                & \multicolumn{3}{c}{p(HasREM)}                                                \\ \hline
-\multicolumn{1}{c|}{event ID} & grace\_id             & \multicolumn{1}{c}{RF} & \multicolumn{1}{c}{KNN} & \multicolumn{1}{c|}{GP} & \multicolumn{1}{c}{RF} & \multicolumn{1}{c}{KNN} & \multicolumn{1}{c|}{GP} \\ \hline
-GW170823                      & G298936               & 0.000                   & 0.000                    & 0.014                   & 0.000                   & 0.000                    & 0.001                   \\
-GW170817                      & G298048               & 1.000                   & 1.000                    & 0.999                   & 1.000                   & 1.000                    & 0.995                   \\
-GW170814                      & G297595               & 0.000                   & 0.000                    & 0.013                   & 0.000                   & 0.000                    & 0.001                   \\
-GW170809                      & G296853               & 0.002                   & 0.000                    & 0.013                   & 0.000                   & 0.000                    & 0.001                   \\
-GW190408                      & G329243               & 0.000                   & 0.000                    & 0.013                   & 0.000                   & 0.000                    & 0.001                   \\
-GW190412                      & G329483               & 0.000                   & 0.000                    & 0.021                   & 0.000                   & 0.000                    & 0.001                   \\
-GW190413-052954               & G329577               & 0.000                   & 0.000                    & 0.013                   & 0.000                   & 0.000                    & 0.001                   \\
-GW190413-134308               & G329615               & 0.000                   & 0.000                    & 0.010                   & 0.000                   & 0.000                    & 0.001                   \\
-GW190421                      & G330300               & 0.000                   & 0.000                    & 0.017                   & 0.000                   & 0.000                    & 0.001                   \\
-GW190425                      & G330564               & 1.000                   & 1.000                    & 0.999                   & 0.999                   & 1.000                    & 0.994                   \\
-GW190426                      & G330687               & 0.996                   & 1.000                    & 0.980                   & 0.009                   & 0.000                    & 0.008                   \\
-GW190503                      & G331315               & 0.000                   & 0.000                    & 0.032                   & 0.000                   & 0.000                    & 0.001                   \\
-GW190512                      & G332169               & 0.000                   & 0.000                    & 0.014                   & 0.000                   & 0.000                    & 0.001                   \\
-GW190513                      & G332333               & 0.000                   & 0.000                    & 0.014                   & 0.000                   & 0.000                    & 0.001                   \\
-GW190517                      & G333132               & 0.000                   & 0.000                    & 0.010                   & 0.000                   & 0.000                    & 0.001                   \\
-GW190519                      & G333443               & 0.000                   & 0.000                    & 0.014                   & 0.000                   & 0.000                    & 0.001                   \\
-GW190521-074359               & G333664               & 0.000                   & 0.000                    & 0.013                   & 0.000                   & 0.000                    & 0.001                   \\
-GW190602                      & G335015               & 0.000                   & 0.000                    & 0.061                   & 0.000                   & 0.000                    & 0.001                   \\
-GW190630                      & G337426               & 0.000                   & 0.000                    & 0.014                   & 0.000                   & 0.000                    & 0.001                   \\
-GW190706                      & G337919               & 0.015                   & 0.000                    & 0.019                   & 0.000                   & 0.000                    & 0.001                   \\
-GW190707                      & G337978               & 0.000                   & 0.000                    & 0.096                   & 0.000                   & 0.000                    & 0.001                   \\
-GW190708                      & G338125               & 0.000                   & 0.002                    & 0.070                   & 0.000                   & 0.000                    & 0.001                   \\
-GW190720                      & G344653               & 0.004                   & 0.000                    & 0.024                   & 0.000                   & 0.000                    & 0.001                   \\
-GW190727                      & G345173               & 0.011                   & 0.000                    & 0.013                   & 0.000                   & 0.000                    & 0.001                   \\
-GW190728                      & G345315               & 0.000                   & 0.000                    & 0.013                   & 0.000                   & 0.000                    & 0.001                   \\
-GW190814                      & G347305               & 0.098                   & 0.647                    & 0.878                   & 0.000                   & 0.000                    & 0.002                   \\
-GW190828-063405               & G348500               & 0.002                   & 0.000                    & 0.014                   & 0.000                   & 0.000                    & 0.001                   \\
-GW190828-065509               & G348519               & 0.001                   & 0.000                    & 0.019                   & 0.000                   & 0.000                    & 0.001                   \\
-GW190915                      & G350491               & 0.000                   & 0.000                    & 0.009                   & 0.000                   & 0.000                    & 0.001                   \\
-GW190924                      & G351423               & 0.037                   & 0.075                    & 0.100                   & 0.000                   & 0.000                    & 0.001                   \\
-GW190930                      & G351993               & 0.000                   & 0.000                    & 0.079                   & 0.000                   & 0.000                    & 0.001                   \\
-GW191109                      & G354231               & 0.000                   & 0.000                    & 0.036                   & 0.000                   & 0.000                    & 0.001                   \\
-GW191129                      & G355916               & 0.004                   & 0.000                    & 0.024                   & 0.000                   & 0.000                    & 0.001                   \\
-GW191204-171526               & G356500               & 0.000                   & 0.000                    & 0.026                   & 0.000                   & 0.000                    & 0.001                   \\
-GW191215                      & G357403               & 0.000                   & 0.000                    & 0.017                   & 0.000                   & 0.000                    & 0.001                   \\
-GW191216                      & G357490               & 0.000                   & 0.000                    & 0.125                   & 0.000                   & 0.000                    & 0.001                   \\
-GW191222                      & G358088               & 0.000                   & 0.000                    & 0.028                   & 0.000                   & 0.000                    & 0.001                   \\
-GW200112                      & G359994               & 0.000                   & 0.000                    & 0.015                   & 0.000                   & 0.000                    & 0.001                   \\
-GW200115                      & G360364               & 0.997                   & 1.000                    & 0.987                   & 1.000                   & 0.000                    & 0.011                   \\
-GW200129                      & G361581               & 0.000                   & 0.000                    & 0.015                   & 0.000                   & 0.000                    & 0.001                   \\
-GW200219                      & G364596               & 0.000                   & 0.000                    & 0.027                   & 0.000                   & 0.000                    & 0.001                   \\
-GW200224                      & G365371               & 0.014                   & 0.000                    & 0.027                   & 0.000                   & 0.000                    & 0.001                   \\
-GW200225                      & G365427               & 0.001                   & 0.000                    & 0.013                   & 0.000                   & 0.000                    & 0.001                   \\
-GW200302                      & G366190               & 0.000                   & 0.000                    & 0.014                   & 0.000                   & 0.000                    & 0.001                   \\
-GW200311                      & G367788               & 0.000                   & 0.000                    & 0.01                    & 0.000                   & 0.000                    & 0.001                   \\
-GW200316                      & G368545               & 0.000                   & 0.000                    & 0.068                   & 0.000                   & 0.000                    & 0.001                   \\
-GW200322                      & G369200               & 0.012                   & 0.000                    & 0.031                   & 0.000                   & 0.000                    & 0.001                   \\ \cline{1-1} \cline{3-4} \cline{6-7}
-\hline
-\end{tabular}
-\caption{PROBAB TABLE REAL DATA - from algo. Update to marginalized bayesian or remove.}
-\label{tab:real_data}
-\end{table}
-\end{comment}
+%\begin{comment}
+%\begin{table}[]
+%\begin{tabular}{c|c|ccr|ccr}
+%\hline
+%\multicolumn{1}{c|}{}         & \multicolumn{1}{l|}{} & \multicolumn{3}{c|}{p(HasNS)}                                                & \multicolumn{3}{c}{p(HasREM)}                                                \\ \hline
+%\multicolumn{1}{c|}{event ID} & grace\_id             & \multicolumn{1}{c}{RF} & \multicolumn{1}{c}{KNN} & \multicolumn{1}{c|}{GP} & \multicolumn{1}{c}{RF} & \multicolumn{1}{c}{KNN} & \multicolumn{1}{c|}{GP} \\ \hline
+%GW170823                      & G298936               & 0.000                   & 0.000                    & 0.014                   & 0.000                   & 0.000                    & 0.001                   \\
+%GW170817                      & G298048               & 1.000                   & 1.000                    & 0.999                   & 1.000                   & 1.000                    & 0.995                   \\
+%GW170814                      & G297595               & 0.000                   & 0.000                    & 0.013                   & 0.000                   & 0.000                    & 0.001                   \\
+%GW170809                      & G296853               & 0.002                   & 0.000                    & 0.013                   & 0.000                   & 0.000                    & 0.001                   \\
+%GW190408                      & G329243               & 0.000                   & 0.000                    & 0.013                   & 0.000                   & 0.000                    & 0.001                   \\
+%GW190412                      & G329483               & 0.000                   & 0.000                    & 0.021                   & 0.000                   & 0.000                    & 0.001                   \\
+%GW190413-052954               & G329577               & 0.000                   & 0.000                    & 0.013                   & 0.000                   & 0.000                    & 0.001                   \\
+%GW190413-134308               & G329615               & 0.000                   & 0.000                    & 0.010                   & 0.000                   & 0.000                    & 0.001                   \\
+%GW190421                      & G330300               & 0.000                   & 0.000                    & 0.017                   & 0.000                   & 0.000                    & 0.001                   \\
+%GW190425                      & G330564               & 1.000                   & 1.000                    & 0.999                   & 0.999                   & 1.000                    & 0.994                   \\
+%GW190426                      & G330687               & 0.996                   & 1.000                    & 0.980                   & 0.009                   & 0.000                    & 0.008                   \\
+%GW190503                      & G331315               & 0.000                   & 0.000                    & 0.032                   & 0.000                   & 0.000                    & 0.001                   \\
+%GW190512                      & G332169               & 0.000                   & 0.000                    & 0.014                   & 0.000                   & 0.000                    & 0.001                   \\
+%GW190513                      & G332333               & 0.000                   & 0.000                    & 0.014                   & 0.000                   & 0.000                    & 0.001                   \\
+%GW190517                      & G333132               & 0.000                   & 0.000                    & 0.010                   & 0.000                   & 0.000                    & 0.001                   \\
+%GW190519                      & G333443               & 0.000                   & 0.000                    & 0.014                   & 0.000                   & 0.000                    & 0.001                   \\
+%GW190521-074359               & G333664               & 0.000                   & 0.000                    & 0.013                   & 0.000                   & 0.000                    & 0.001                   \\
+%GW190602                      & G335015               & 0.000                   & 0.000                    & 0.061                   & 0.000                   & 0.000                    & 0.001                   \\
+%GW190630                      & G337426               & 0.000                   & 0.000                    & 0.014                   & 0.000                   & 0.000                    & 0.001                   \\
+%GW190706                      & G337919               & 0.015                   & 0.000                    & 0.019                   & 0.000                   & 0.000                    & 0.001                   \\
+%GW190707                      & G337978               & 0.000                   & 0.000                    & 0.096                   & 0.000                   & 0.000                    & 0.001                   \\
+%GW190708                      & G338125               & 0.000                   & 0.002                    & 0.070                   & 0.000                   & 0.000                    & 0.001                   \\
+%GW190720                      & G344653               & 0.004                   & 0.000                    & 0.024                   & 0.000                   & 0.000                    & 0.001                   \\
+%GW190727                      & G345173               & 0.011                   & 0.000                    & 0.013                   & 0.000                   & 0.000                    & 0.001                   \\
+%GW190728                      & G345315               & 0.000                   & 0.000                    & 0.013                   & 0.000                   & 0.000                    & 0.001                   \\
+%GW190814                      & G347305               & 0.098                   & 0.647                    & 0.878                   & 0.000                   & 0.000                    & 0.002                   \\
+%GW190828-063405               & G348500               & 0.002                   & 0.000                    & 0.014                   & 0.000                   & 0.000                    & 0.001                   \\
+%GW190828-065509               & G348519               & 0.001                   & 0.000                    & 0.019                   & 0.000                   & 0.000                    & 0.001                   \\
+%GW190915                      & G350491               & 0.000                   & 0.000                    & 0.009                   & 0.000                   & 0.000                    & 0.001                   \\
+%GW190924                      & G351423               & 0.037                   & 0.075                    & 0.100                   & 0.000                   & 0.000                    & 0.001                   \\
+%GW190930                      & G351993               & 0.000                   & 0.000                    & 0.079                   & 0.000                   & 0.000                    & 0.001                   \\
+%GW191109                      & G354231               & 0.000                   & 0.000                    & 0.036                   & 0.000                   & 0.000                    & 0.001                   \\
+%GW191129                      & G355916               & 0.004                   & 0.000                    & 0.024                   & 0.000                   & 0.000                    & 0.001                   \\
+%GW191204-171526               & G356500               & 0.000                   & 0.000                    & 0.026                   & 0.000                   & 0.000                    & 0.001                   \\
+%GW191215                      & G357403               & 0.000                   & 0.000                    & 0.017                   & 0.000                   & 0.000                    & 0.001                   \\
+%GW191216                      & G357490               & 0.000                   & 0.000                    & 0.125                   & 0.000                   & 0.000                    & 0.001                   \\
+%GW191222                      & G358088               & 0.000                   & 0.000                    & 0.028                   & 0.000                   & 0.000                    & 0.001                   \\
+%GW200112                      & G359994               & 0.000                   & 0.000                    & 0.015                   & 0.000                   & 0.000                    & 0.001                   \\
+%GW200115                      & G360364               & 0.997                   & 1.000                    & 0.987                   & 1.000                   & 0.000                    & 0.011                   \\
+%GW200129                      & G361581               & 0.000                   & 0.000                    & 0.015                   & 0.000                   & 0.000                    & 0.001                   \\
+%GW200219                      & G364596               & 0.000                   & 0.000                    & 0.027                   & 0.000                   & 0.000                    & 0.001                   \\
+%GW200224                      & G365371               & 0.014                   & 0.000                    & 0.027                   & 0.000                   & 0.000                    & 0.001                   \\
+%GW200225                      & G365427               & 0.001                   & 0.000                    & 0.013                   & 0.000                   & 0.000                    & 0.001                   \\
+%GW200302                      & G366190               & 0.000                   & 0.000                    & 0.014                   & 0.000                   & 0.000                    & 0.001                   \\
+%GW200311                      & G367788               & 0.000                   & 0.000                    & 0.01                    & 0.000                   & 0.000                    & 0.001                   \\
+%GW200316                      & G368545               & 0.000                   & 0.000                    & 0.068                   & 0.000                   & 0.000                    & 0.001                   \\
+%GW200322                      & G369200               & 0.012                   & 0.000                    & 0.031                   & 0.000                   & 0.000                    & 0.001                   \\ \cline{1-1} \cline{3-4} \cline{6-7}
+%\hline
+%\end{tabular}
+%\caption{PROBAB TABLE REAL DATA - from algo. Update to marginalized bayesian or remove.}
+%\label{tab:real_data}
+%\end{table}
+%\end{comment}
 
-\begin{comment}
+%\begin{comment}
 \begin{table}[]
 \begin{tabular}{c|c|cc|cc}
 \hline
@@ -281,7 +283,7 @@ GW200115                      & G360364               & 0.997                   
 \caption{Short table with probabilities (from algo) for O3 real events. I don't think we want this anymore. \mmt{[MMT: we can remove, let's see what Marco thinks.]}}
 \label{tab:real_data_short}
 \end{table}
-\end{comment}
+%\end{comment}
 
 
 
