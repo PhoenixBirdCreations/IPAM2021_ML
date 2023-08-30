@@ -141,20 +141,19 @@ GW200115                      & G360364               & 0.998                   
 \label{tab:real_data_bayesian}
 \end{table}
 
+In Figs.~\ref{fig:param_sweep_KNN} and~\ref{fig:param_sweep_RF} we depict parameter sweeps that are built using the Bayesian probabilities computed with KNN and RF, respectively.  These figures show the Bayesian probability for \hasns\ (left column) and for \hasrem\ (right column) for given component masses of the binary system, being $m_1$ the larger mass. The  columns stand for different fixed values of the component spins. The SNR is fixed to 10. One can see that both algorithms perform in a similar way. Regarding $P_M(\hasns)$,  there are no notable differences between the choice of spin values.  There is a small difference between the algorithms: for the third column ($\chi_1 = 0.0$ and $\chi_2$), $P_M(\hasns)$ is larger for bigger $m_1$ in the case of KNN.   For $P_M(\hasrem)$, both algorithms give almost the same results. The sweeps show that, for a large $\chi_1$, the probability of having a remnant increases for bigger values of the first component mass, $m_1$. As expected, the region in which $P_M(\hasrem) \sim 1$ is inside the region in which $P_M(\hasns) \sim 1$.
 
-
-
-Parameter sweeps:  Figs.~\ref{fig:param_sweep_KNN} and~\ref{fig:param_sweep_RF}.
+Moreover, the Bayesian probabilities seem to be more uniform for RF in all the cases, and KNN gives some blobs of larger probability \mmt{[MMT: I don't know how to explain this]}.
 
 \begin{figure*}%[h]
 \includegraphics[width=0.7\linewidth]{KNN_parameter_sweep}
-    \caption{}
+    \caption{Parameter sweep obtained with KNN. The Bayesian probabilities are shown as a function of the component masses of the binary, where $m_1$ (the bigger mass) is in the horizontal axes and $m_2$, in the vertical. The left panels show $P_M(\hasns)$ and the right panels, $P_M(\hasrem)$. We choose different values of the spin components to evaluate the probability, and they appear in the different rows of the figure.   The SNR is fixed to 10. }
 \label{fig:param_sweep_KNN}
 \end{figure*}
 
 \begin{figure*}%[h]
 \includegraphics[width=0.7\linewidth]{RF_parameter_sweep}
- \caption{.}
+ \caption{Same as Figure~\ref{fig:param_sweep_KNN}, but now for RF.}
 \label{fig:param_sweep_RF}
 \end{figure*}
 
