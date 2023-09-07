@@ -1,16 +1,10 @@
-\section{Data Set} \label{dataset}
+\section{Data set\label{dataset}}
+\label{sec:dataset}
 
-In our analysis, we employ the same data set as Ref.~\cite{Chatterjee:2019avs} This allows us to directly compare the performance of the various algorithms and the new labeling
-scheme to the performance of the \ac{KNN} algorithm, which was deployed in the latest \ac{LVK} observing run. The data set is described in detail in Ref. \todo{chatterjee and messick} \mmt{[MMT: which paper is this?]}. Only its most relevant features are presented below.
+In our analysis, we employ the same data set as Ref.\ \todo{chatterjee}. This allows us to directly compare the performance of the various algorithms and the new labeling
+scheme to the performance of the \ac{KNN} algorithm, which was deployed in the latest \ac{LVK} observing run. 
 
-We train the \ac{KNN}, \ac{RF}, and \ac{GP} algorithms on \todo{XX} days of data \mmt{[MMT: Sushant?]} from \ac{LVK}'s \ac{O2} observing run with \todo{XX} synthetic \ac{BNS}, \ac{NSBH}, and \ac{BBH} signals
-injected into it \todo{briefly how the data set was built (replay?) and what's was its purpose (MDC? tests?)}. \todo{Now explain briefly the characteristics of the signals, for example
-their mass range, spin properties, FAR\dots} The \ac{CBC} signals are recovered with one of the standard search \ac{LVK} pipelines \todo{used in\dots deployed for\dots?}, the GstLAL
-pipeline \todo{ref}. \todo{A brief sentence to say how it works? e.g., match-filter?} The dimension of the data set is determined by the number of signals recovered by the pipeline after
-proper selection cuts are applied. Each event is identified by a \todo{X}-dimensional state vector that contains the parameters of the signal recovered by GstLAL and an additional set of
-quantities derived from these parameters. The first \todo{X} elements of the state vector are the two component masses, \todo{the spins\dots complete this} from GstLAL's best matching
-template and the \ac{FAR} of the event. In this work, we restrict our analysis to signals recovered with a \ac{FAR} of \todo{XX}. \todo{Explain why.} The remaining elements of the state
-vector are \todo{list of other derived quantities\dots} 
+We train the \ac{KNN} and \ac{RF} algorithms on a broad injection campign where the injections were made in two detector operations from \ac{O2} observing run with synthetic \ac{BNS}, \ac{NSBH}, and \ac{BBH} signals. The injection population contains uniform/loguniform distribution of the masses, with both aligned and isotropic distributions of spins and was used primarily for the spacetime volume sensitivity analysis for the GstLAL search in Abbott et al. \todo{cite this paper from GstLAL}(2019b). Further details on the injection waveforms and quantitive info of masses and spins can be found in \todo{chatterjee}. The \ac{CBC} signals are recovered with one of the standard search \ac{LVK} pipelines, the GstLAL pipeline. It a stream-based matched filtering algorithm capable of detecting \ac{GW} signals within seconds of their arrival on Earth \todo{cite Messick, Tsukada, Ewing}. Because of the signal strength and reduced detector senstivity, not all injections were found by the search. The injections that were found, along with its pipeline recovered counterpart, were used to make the dataset. Each recovered triggers is assigned a false-alarm rate (FAR) based on the frequency of background triggers and quntifies the significance of the detection. In order to select more sigificant recovered triggers, we imposed a cut of $FAR <= 1/month$ in this work.  
 
+The dimension of the data set is determined by the number of signals recovered by the pipeline after proper cuts are applied ($\sim2.0X10^5$). The intrinsic source properties of the merger: primary and secondary masses and spins ({$m_1$,$m_2$,$\chi_1$,$\chi_2$}) and the recovered signal to noise ratio (SNR) were used for training RF and KNN algorithms.
 
-\todo{For both algorithms we use events with 5 features: the two masses, their corresponding spins and the SNR of the detection.}
