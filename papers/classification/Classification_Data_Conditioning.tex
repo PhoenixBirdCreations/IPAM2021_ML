@@ -1,10 +1,13 @@
-\section{Data set\label{dataset}}
+\subsection{Data set\label{dataset}}
 \label{sec:dataset}
 
-In our analysis, we employ the same data set as Ref.\ \todo{chatterjee}. This allows us to directly compare the performance of the various algorithms and the new labeling
-scheme to the performance of the \ac{KNN} algorithm, which was deployed in the latest \ac{LVK} observing run. 
+We use a large data set $D$ of simulated \ac{BNS}, \ac{NSBH}, and \ac{BBH} events that was first used for the space-time volume sensitivity analysis of the \ac{LVK} GstLAL search
+\todo{cite Messick, Tsukada, Ewing} and later employed in Ref.~\cite{Chatterjee:2019avs}. This allows us to directly compare the performance of the various algorithms and the new labeling
+scheme to the performance of the \ac{KNN} algorithm that is deployed in the current \ac{LVK} observing run. 
 
-We train the \ac{KNN} and \ac{RF} algorithms on a broad injection campign where the injections were made in two detector operations from \ac{O2} observing run with synthetic \ac{BNS}, \ac{NSBH}, and \ac{BBH} signals. The injection population contains uniform/loguniform distribution of the masses, with both aligned and isotropic distributions of spins and was used primarily for the spacetime volume sensitivity analysis for the GstLAL search in Abbott et al. \todo{cite this paper from GstLAL}(2019b). Further details on the injection waveforms and quantitive info of masses and spins can be found in \todo{chatterjee}. The \ac{CBC} signals are recovered with one of the standard search \ac{LVK} pipelines, the GstLAL pipeline. It a stream-based matched filtering algorithm capable of detecting \ac{GW} signals within seconds of their arrival on Earth \todo{cite Messick, Tsukada, Ewing}. Because of the signal strength and reduced detector senstivity, not all injections were found by the search. The injections that were found, along with its pipeline recovered counterpart, were used to make the dataset. Each recovered triggers is assigned a false-alarm rate (FAR) based on the frequency of background triggers and quntifies the significance of the detection. In order to select more sigificant recovered triggers, we imposed a cut of $FAR <= 1/month$ in this work.  
-
-The dimension of the data set is determined by the number of signals recovered by the pipeline after proper cuts are applied ($\sim2.0X10^5$). The intrinsic source properties of the merger: primary and secondary masses and spins ({$m_1$,$m_2$,$\chi_1$,$\chi_2$}) and the recovered signal to noise ratio (SNR) were used for training RF and KNN algorithms.
+The simulated signals are coherently injected in two-detector data from the \ac{O2} \ac{LVK} observing run. The injection population is built with uniform/loguniform \todo{What does
+uniform/loguniform means? it is uniform or loguniform?} distribution of the \todo{component? total? chirp?} masses. The component spins are aligned and injected according to isotropic
+distributions. Further details on the waveforms and injection parameters can be found in Ref.~\cite{Chatterjee:2019avs}. The data set $D$ includes approximately 200,000 injected signals
+that are recovered by the GstLAL pipeline with a \ac{FAR} $\le$ 1/month. The \ac{RF} and \ac{KNN} algorithms are trained and tested on the injected and recovered intrinsic source
+properties (primary and secondary masses and spins) and on the recovered \ac{SNR}. 
 

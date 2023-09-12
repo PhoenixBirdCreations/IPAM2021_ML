@@ -1,33 +1,33 @@
 \section{Results} \label{results}
-In this section we show the results for our methodology. First we illustrate the good performance of our classifiers, both \ac{RF} and \ac{KNN}. Then we can use them to construct Bayesian probabilities according to their output and finally evaluate new events, synthetic and real.
+In this section we first discuss the performance of the trained \ac{RF} and \ac{KNN} classifiers on the testing data set $D_S$ and use the latter to derive the Bayesian probabilities $P_M(I|{\bf A}$). Then we evaluate $P_M(I|{\bf A})$ on two independent data sets: a population of simulated \ac{CBC} events injected in the \ac{MDC} real-time replay of \ac{LVK} \ac{O3} data~\cite{Chaudhary:2023vec}, and the set of confident detections from the \ac{GWTC3} catalog~\cite{LIGOScientific:2021djp}.
 
 \subsection{Performance of the algorithms}
-We measure the performance of our algorithms by the true positive and false positive rates, drawn as \textit{Receiver Operating Characteristic} (ROC) curves. They show the variation of the true-positive rate  with the false-positive rate given a certain threshold for the probability. The better the classifier, the steeper the curve,  achieving a greater number of true positives with few false classifications. We use the testing set that with synthetic data from LVK's O2 run. 
+We measure the performance of our algorithms by the \ac{TPR} and the \ac{FPR} on the events in $D_S$, drawn as \ac{ROC} curves. The \ac{ROC} show the variation of the true-positive rate with the false-positive rate given thresholds for the probabilities $P_M(I|{\bf A})$.  
 
-\begin{figure*}%[h]
+\begin{figure*}[h]
 \includegraphics[width=0.45\linewidth]{roc_testing_KNN_NS}
 \includegraphics[width=0.45\linewidth]{roc_testing_KNN_REM}
-\caption{ROC curves for the testing dataset for \ac{KNN}
-    classifier. All 23 EoS shown in grey, in color the EoSs with minimum and
-    maximum mass, along commonly used SLy.}
+\caption{\ac{ROC} curves for the testing dataset $D_S$ for the \ac{KNN} classifier. The \ac{ROC} of the 23 \ac{EOS} are shown in grey. The \ac{ROC} curves for the \ac{EOS}s with minimum mass ({\tt BHF\_BBB2}), maximum mass ({\tt MS1\_PP}), and {\tt SLy} are highlighted in red, green, and blue, respectively. The circle, triangle, and square markers denote values for Bayesian probability thresholds of 0.1, 0.5, and 0.9, respectively.}
 \label{fig:rocO2_KNN}
 \end{figure*}
 
-\begin{figure*}%[h]
+\begin{figure*}[h]
 \includegraphics[width=0.45\linewidth]{ROC_O2testing_NS_RF}
 \includegraphics[width=0.45\linewidth]{ROC_O2testing_REM_RF}
-\caption{ROC curves for the testing dataset for \ac{RF} classifier. All 23 EoS shown in grey, in color the EoSs with minimum and maximum mass, along commonly used SLy. \mmt{[MMT: Please unify x axis and size of the plot.]}}
+\caption{\ac{ROC} curves for the testing dataset $D_S$ for the \ac{RF} classifier. The \ac{ROC} of the 23 \ac{EOS} are shown in grey. The \ac{ROC} curves for the \ac{EOS}s with minimum mass ({\tt BHF\_BBB2}), maximum mass ({\tt MS1\_PP}), and {\tt SLy} are highlighted in red, green, and blue, respectively. The circle, triangle, and square markers denote values for Bayesian probability thresholds of 0.1, 0.5, and 0.9, respectively.}
 \label{fig:rocO2_RF}
 \end{figure*}
 
-The curves for \ac{KNN} and \ac{RF} are in Figures~\ref{fig:rocO2_KNN}
-and~\ref{fig:rocO2_RF}, respectively. We show the curves for each EOS, but we
-highlight 3 concrete cases: BHF BBB2 (EOS with lowest maximum mass for the NS),
-MS1 PP (EOS with largest maximum mass for the NS) and SLy (the most accepted
-case \mmt{[?]}). The results are consistent among all equations of state and
-depict a true positive rate around $0.99$ for a threshold of $0.5$ and for both labels, but with a higher false positive rate in the case of \hasns, which means that the algorithms perform better when dealing with \hasrem.
+The left and right panels of Fig.~\ref{fig:rocO2_KNN} show the \hasns\ and \hasrem\ \ac{ROC} curves for the \ac{KNN} algorithm, respectively. The analogous curves for the \ac{RF}
+classifier are shown in Fig.~\ref{fig:rocO2_RF}. The \ac{ROC} curves for the 23 \ac{EOS} are plotted in grey with three of them highlighted in color: {\tt BHF\_BBB2}, the \ac{EOS} with
+lowest maximum mass for the NS \todo{ref needed here}, {\tt MS1\_PP}, the \ac{EOS} with largest maximum mass for the \ac{NS} \todo{ref needed here}, and {\tt SLy}, which allows for a
+maximum mass of $2.05 M_\odot$ and is the standard \ac{EOS} used in \ac{LVK} low-latency investigations~\cite{Chaudhary:2023vec}. The markers denote different thresholds for the Bayesian
+probabilities $P_M(I|{\bf A})$. 
 
-Both algorithms perform similarly on the testing dataset, but \ac{RF} gives slightly higher true positive rates and lower false positive rates for a given threshold. 
+The two classifiers perform consistently across all \ac{EOS}s. The \ac{TPR} for a probability threshold of $0.5$ is around $0.99$ for both \hasns\ and \hasrem. A comparison of the
+\hasns\ and \hasrem\ \ac{ROC} curves for each algorithm shows that the \ac{FPR} for \hasns\ is generally higher than the \ac{FPR} for \hasrem\ at a given threshold. Thus the algorithms
+typically do a better job in classifying \hasrem\ than \hasns. A separate comparison of the \ac{KNN} and \ac{RF} \ac{ROC} curves for \hasns\ and \hasrem\ shows that both algorithms perform
+similarly on the testing dataset, with \ac{RF} giving slightly higher \ac{TPR} and lower \ac{FPR} than \ac{KNN} at a fixed threshold. 
 
 \todo{UNIFY AXIS AND SIZE OF FIGURES}
 
