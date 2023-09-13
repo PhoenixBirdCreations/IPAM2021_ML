@@ -39,12 +39,13 @@ P(&\hasrem|{\bf A}_{\bf X}) \\
 where $\hasrem_+={\bf L}[{\bf X}'(\hbox{\hasrem:\true})]$ is a label that uniquely identifies elements in $D$ with positive \hasrem\ ground truth and ${\bf X}''= {\bf X}'(\hbox{\hasns:\true})$.
 
 To evaluate Eqs.~\eqref{bayes-hasns} and~\eqref{bayes-hasrem} with an \ac{ML} classifier, the synthetic data set is divided into two subsets, $D=D_R\oplus D_S$. The $D_R$ subset is used for
-algorithm training and validation. The $D_S$ subset is used to estimate the probabilities. Following customary practice, throughout this paper we use a $70\%--30\%$ split for $D_R$ and $D_S$,
+algorithm training and validation. The $D_S$ subset is used to estimate the probabilities. Following customary practice, throughout this paper we use a 70\% -- 30\% split for $D_R$ and $D_S$,
 respectively.
 
 The choice of the labeling scheme and the algorithm's outcome depend on the \ac{ML} algorithm characteristics. Throughout this paper we implement a multi-label classification scheme, where each
 element in $D$ is classified into $n$ mutually exclusive categories that uniquely define the $n$ possible physical states of the system. The classifier outcome can then be chosen as a
-two-dimensional vector space ${\bf A}_{{\bf X}'}\subset \mathbb{R}^n$. This scheme allows the calculation of Eqs.(~\ref{bayes-hasns}) and (~\ref{bayes-hasrem}) with a single training process. In
+two-dimensional vector space ${\bf A}_{{\bf X}'}\subset \mathbb{R}^n$. This scheme allows the calculation of Eqs.~\eqref{bayes-hasns} and \eqref{bayes-hasrem} with a single training process. In
+>>>>>>> f0f9f200c29e2bdd65d8abb301da76c6b965b4e6
 the problem at hand, there are three possible physical states and a suitable labeling
 map is 
 %
@@ -81,7 +82,7 @@ have labels 0, 1, and 2, respectively.
 %\label{tab:multilabels}
 %\end{table}
 
-The factors in the right-hand side of Eqs. (~\ref{bayes-hasns}) and (~\ref{bayes-hasrem}) can be obtained from $D_{S}$ once the algorithm has been trained on $D_{R}$. For example, for the \ac{KNN} and \ac{RF} scheme described earlier, the factors in Eq. (~\ref{bayes-hasns}) can be estimated as  
+The factors in the right-hand side of Eqs.\eqref{bayes-hasns} and \eqref{bayes-hasrem} can be obtained from $D_{S}$ once the algorithm has been trained on $D_{R}$. For example, for the \ac{KNN} and \ac{RF} scheme described earlier, the factors in Eq.~\eqref{bayes-hasns} can be estimated as  
 %
 \begin{equation}
 \begin{aligned}
@@ -98,8 +99,7 @@ $\hasns_+$, and $N^+{}_{\hasns_+}(f_1+f_2)$ and $N^-{}_{\hasns_+}(f_1+f_2)$ are 
 The probability estimators are generally noisy because they are evaluated on a finite data set. Smooth probability functions can be obtained by mapping them from the $(0,1)$ space to the real
 line with a logistic function, smoothing them with a Savitzky-Golay filter, fitting them with a Gaussian Process Regression, and finally mapping them back to the $(0,1)$ space.   
 
-Both $P(\hasns|{\bf A}_{\bf X})$ and $P(\hasrem|{\bf A}_{\bf X})$ depend on the \ac{EOS} that is used to label the synthetic events. \todo{we need a bit more here, for example what difference soft EOS and hard EOS produce on the max NS mass, existence of remnant, etc. Any volunteer?}
-\mmt{[MMT: I added some information related to the compactness of the NS and its effects on \hasrem\ in the labeling section]} As the true \ac{EOS} of matter at \ac{NS} densities is unknown, in order to minimize the systematics that arise in adopting a specific \ac{EOS} we consider a set of 23 different \ac{EOS} and marginalize Eqs. (~\ref{bayes-hasns}) and (~\ref{bayes-hasrem}) over them. The marginalized probabilities $P_M(\hasns|{\bf A}_{\bf X})$ and $P_M(\hasrem|{\bf A}_{\bf X})$ are defined as
+Both $P(\hasns|{\bf A}_{\bf X})$ and $P(\hasrem|{\bf A}_{\bf X})$ depend on the \ac{EOS} that is used to label the synthetic events. As the true \ac{EOS} of matter at \ac{NS} densities is unknown, in order to minimize the systematics that arise in adopting a specific \ac{EOS} we consider a set of 23 different \ac{EOS} and marginalize Eqs.~\eqref{bayes-hasns} and \eqref{bayes-hasrem} over them. The marginalized probabilities $P_M(\hasns|{\bf A}_{\bf X})$ and $P_M(\hasrem|{\bf A}_{\bf X})$ are defined as
 %
 \begin{equation}
 \begin{aligned}
@@ -108,4 +108,4 @@ P_M(I|{\bf A}_{\bf X})=\frac{\sum_J\beta_J P_J(I|{\bf A}_{\bf X})}{\sum_J\beta_J
 \end{aligned}
 \end{equation}
 %
-where $I=$\hasns\ or \hasrem, $P_J(I|{\bf A}_{\bf X})$ ($J=1,\dots 23$) are the Bayesian probabilities in Eqs. (~\ref{bayes-hasns}) and (~\ref{bayes-hasrem}) calculated from the data set $D_S$ with labels assigned according to the $J$-th \ac{EOS}, and $\beta_J$ are Bayes factors~\cite{Ghosh:2021eqv}.  \todo{need to say where the Bayes factors come from.} \mmt{[MMT: Reference added]}The probabilities $P_J(I|{\bf A}_{\bf X})$ in Eq. (~\ref{bayes-marginalized}) can be tabulated and used to compute the marginalized probabilities $P_M(\hasns|{\bf A}_{\bf E})$ and $P_M(\hasrem|{\bf A}_{\bf E})$ for any new event $\bf E$ with algorithm outcome $\bf A_{E}$.
+where $I=$\hasns\ or \hasrem, $P_J(I|{\bf A}_{\bf X})$ ($J=1,\dots 23$) are the Bayesian probabilities in Eqs.~\eqref{bayes-hasns} and \eqref{bayes-hasrem} calculated from the data set $D_S$ with labels assigned according to the $J$-th \ac{EOS}, and $\beta_J$ are Bayes factors~\cite{Ghosh:2021eqv}. The probabilities $P_J(I|{\bf A}_{\bf X})$ in Eq.~\eqref{bayes-marginalized} can be tabulated and used to compute the marginalized probabilities $P_M(\hasns|{\bf A}_{\bf E})$ and $P_M(\hasrem|{\bf A}_{\bf E})$ for any new event $\bf E$ with algorithm outcome $\bf A_{E}$.

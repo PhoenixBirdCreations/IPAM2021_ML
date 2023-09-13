@@ -1,4 +1,4 @@
-This is BibTeX, Version 0.99d (TeX Live 2023)
+This is BibTeX, Version 0.99d (TeX Live 2019/Debian)
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: classification_paper.aux
 The style file: apsrev4-2.bst
@@ -13,12 +13,6 @@ Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 Database file #1: classification_paperNotes.bib
 Database file #2: classification.bib
-Reallocated buffer (elt_size=1) to 40000 items from 20000.
-Reallocated sv_buffer (elt_size=1) to 40000 items from 20000.
-Reallocated ex_buf (elt_size=1) to 40000 items from 20000.
-Reallocated out_buf (elt_size=1) to 40000 items from 20000.
-Reallocated name_tok (elt_size=4) to 40000 items from 20000.
-Reallocated name_sep_char (elt_size=1) to 40000 items from 20000.
 control{REVTEX42Control}, control.key{N/A}, control.author{N/A}, control.editor{N/A}, control.title{N/A}, control.pages{N/A}, control.year{N/A}, control.eprint{N/A}, 
 control{apsrev42Control}, control.key{N/A}, control.author{08}, control.editor{1}, control.title{0}, control.pages{0}, control.year{1}, control.eprint{N/A}, 
 Warning--jnrlst (dependency: not reversed) set 1
@@ -37,66 +31,85 @@ Warning--empty journal in LIGOScientific:2021sio
 Warning--empty journal in LIGOScientific:2021psn
 Warning--empty journal in LIGOScientific:2021aug
 Warning--missing institution in Omohundro1989
-Reallocated str_pool (elt_size=1) to 130000 items from 65000.
-Reallocated str_pool (elt_size=1) to 195000 items from 130000.
-Reallocated str_pool (elt_size=1) to 260000 items from 195000.
-Reallocated buffer (elt_size=1) to 60000 items from 40000.
-Reallocated sv_buffer (elt_size=1) to 60000 items from 40000.
-Reallocated ex_buf (elt_size=1) to 60000 items from 40000.
-Reallocated out_buf (elt_size=1) to 60000 items from 40000.
-Reallocated name_tok (elt_size=4) to 60000 items from 40000.
-Reallocated name_sep_char (elt_size=1) to 60000 items from 40000.
-Reallocated buffer (elt_size=1) to 80000 items from 60000.
-Reallocated sv_buffer (elt_size=1) to 80000 items from 60000.
-Reallocated ex_buf (elt_size=1) to 80000 items from 60000.
-Reallocated out_buf (elt_size=1) to 80000 items from 60000.
-Reallocated name_tok (elt_size=4) to 80000 items from 60000.
-Reallocated name_sep_char (elt_size=1) to 80000 items from 60000.
-Reallocated buffer (elt_size=1) to 100000 items from 80000.
-Reallocated sv_buffer (elt_size=1) to 100000 items from 80000.
-Reallocated ex_buf (elt_size=1) to 100000 items from 80000.
-Reallocated out_buf (elt_size=1) to 100000 items from 80000.
-Reallocated name_tok (elt_size=4) to 100000 items from 80000.
-Reallocated name_sep_char (elt_size=1) to 100000 items from 80000.
-You've used 50 entries,
+"J. High Energy Phys." is a string literal, `journal' is a missing field
+---they aren't the same literal types for entry Chaudhary:2023vec
+while executing---line 3516 of file apsrev4-2.bst
+"J. High Energ. Phys." is a string literal, `journal' is a missing field
+---they aren't the same literal types for entry Chaudhary:2023vec
+while executing---line 3516 of file apsrev4-2.bst
+"JHEP" is a string literal, `journal' is a missing field
+---they aren't the same literal types for entry Chaudhary:2023vec
+while executing---line 3516 of file apsrev4-2.bst
+"Journal of Cosmology and Astroparticle Physics" is a string literal, `journal' is a missing field
+---they aren't the same literal types for entry Chaudhary:2023vec
+while executing---line 3516 of file apsrev4-2.bst
+"J. Cosmol. Astropart. Phys." is a string literal, `journal' is a missing field
+---they aren't the same literal types for entry Chaudhary:2023vec
+while executing---line 3516 of file apsrev4-2.bst
+"JCAP" is a string literal, `journal' is a missing field
+---they aren't the same literal types for entry Chaudhary:2023vec
+while executing---line 3516 of file apsrev4-2.bst
+"Journal of Instrumentation" is a string literal, `journal' is a missing field
+---they aren't the same literal types for entry Chaudhary:2023vec
+while executing---line 3516 of file apsrev4-2.bst
+"J. Instrum." is a string literal, `journal' is a missing field
+---they aren't the same literal types for entry Chaudhary:2023vec
+while executing---line 3516 of file apsrev4-2.bst
+"JINST" is a string literal, `journal' is a missing field
+---they aren't the same literal types for entry Chaudhary:2023vec
+while executing---line 3516 of file apsrev4-2.bst
+"Journal of Statistical Mechanics" is a string literal, `journal' is a missing field
+---they aren't the same literal types for entry Chaudhary:2023vec
+while executing---line 3516 of file apsrev4-2.bst
+"J. of Stat. Mech." is a string literal, `journal' is a missing field
+---they aren't the same literal types for entry Chaudhary:2023vec
+while executing---line 3516 of file apsrev4-2.bst
+"J. Stat. Mech.: Theory Exp." is a string literal, `journal' is a missing field
+---they aren't the same literal types for entry Chaudhary:2023vec
+while executing---line 3516 of file apsrev4-2.bst
+"JSTAT" is a string literal, `journal' is a missing field
+---they aren't the same literal types for entry Chaudhary:2023vec
+while executing---line 3516 of file apsrev4-2.bst
+Warning--missing journal in Chaudhary:2023vec
+You've used 49 entries,
             6079 wiz_defined-function locations,
-            2021 strings with 52034 characters,
-and the built_in function-call counts, 188811 in all, are:
-= -- 5376
-> -- 10984
-< -- 1665
-+ -- 3175
-- -- 3084
-* -- 39051
-:= -- 13409
-add.period$ -- 48
-call.type$ -- 50
-change.case$ -- 239
-chr.to.int$ -- 55
+            2017 strings with 25099 characters,
+and the built_in function-call counts, 50933 in all, are:
+= -- 3886
+> -- 1078
+< -- 253
++ -- 346
+- -- 256
+* -- 7827
+:= -- 4855
+add.period$ -- 47
+call.type$ -- 49
+change.case$ -- 234
+chr.to.int$ -- 53
 cite$ -- 55
-duplicate$ -- 16185
-empty$ -- 12245
-format.name$ -- 6293
-if$ -- 38731
-int.to.chr$ -- 6
-int.to.str$ -- 57
-missing$ -- 2158
-newline$ -- 196
-num.names$ -- 144
-pop$ -- 4603
+duplicate$ -- 4795
+empty$ -- 3716
+format.name$ -- 638
+if$ -- 10319
+int.to.chr$ -- 7
+int.to.str$ -- 56
+missing$ -- 729
+newline$ -- 193
+num.names$ -- 141
+pop$ -- 1735
 preamble$ -- 1
-purify$ -- 240
+purify$ -- 235
 quote$ -- 0
-skip$ -- 5175
+skip$ -- 2318
 stack$ -- 0
-substring$ -- 1178
-swap$ -- 20153
-text.length$ -- 1512
+substring$ -- 1190
+swap$ -- 4518
+text.length$ -- 96
 text.prefix$ -- 0
 top$ -- 10
-type$ -- 2071
-warning$ -- 6
-while$ -- 147
+type$ -- 646
+warning$ -- 7
+while$ -- 146
 width$ -- 0
-write$ -- 509
-(There were 6 warnings)
+write$ -- 498
+(There were 13 error messages)
