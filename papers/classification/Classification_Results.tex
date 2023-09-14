@@ -14,8 +14,8 @@ We measure the performance of our algorithms by the \ac{TPR} and the \ac{FPR} on
 \end{figure*}
 
 \begin{figure*}[h]
-\includegraphics[width=0.45\linewidth]{ROC_O2testing_NS_RF}
-\includegraphics[width=0.45\linewidth]{ROC_O2testing_REM_RF}
+\includegraphics[width=0.45\linewidth]{roc_testing_RF_NS}
+\includegraphics[width=0.45\linewidth]{roc_testing_RF_REM}
 \caption{\ac{ROC} curves for the testing dataset $D_S$ for the \ac{RF} classifier. The \ac{ROC} of the 23 \ac{EOS} are shown in grey. The \ac{ROC} curves for the \ac{EOS}s with minimum mass ({\tt BHF\_BBB2}), maximum mass ({\tt MS1\_PP}), and {\tt SLy} are highlighted in red, green, and blue, respectively. The circle, triangle, and square markers denote values for Bayesian probability thresholds of 0.1, 0.5, and 0.9, respectively.}
 \label{fig:rocO2_RF}
 \end{figure*}
@@ -100,16 +100,16 @@ are similar to the ones in Fig.~\ref{fig:rocMDC_KNN}, having a steeper shape for
 %\end{comment}
 
 \begin{figure*}%[h]
-\includegraphics[width=0.45\linewidth]{KNN_bayesian_NS}
-\includegraphics[width=0.45\linewidth]{KNN_bayesian_REM}
+\includegraphics[width=0.45\linewidth]{roc_mdc_KNN_NS}
+\includegraphics[width=0.45\linewidth]{roc_mdc_KNN_REM}
 \caption{ROC curves of Bayesian probability marginalized
     for the 23 EoSs for MDC11 dataset using \ac{KNN} classifier.}
 \label{fig:rocMDC_KNN}
 \end{figure*}
 
 \begin{figure*}%[h]
-\includegraphics[width=0.45\linewidth]{RF_bayesian_NS}
-\includegraphics[width=0.45\linewidth]{RF_bayesian_REM}
+\includegraphics[width=0.45\linewidth]{roc_mdc_RF_NS}
+\includegraphics[width=0.45\linewidth]{roc_mdc_RF_REM}
 \caption{ROC curves of Bayesian probability marginalized for the 23 EoSs for MDC11 dataset using \ac{RF} classifier.}
 \label{fig:rocMDC_RF}
 \end{figure*}
