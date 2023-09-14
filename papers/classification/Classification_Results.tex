@@ -23,7 +23,7 @@ We measure the performance of our algorithms by the \ac{TPR} and the \ac{FPR} on
 The left and right panels of Fig.~\ref{fig:rocO2_KNN} show the \hasns\ and \hasrem\ \ac{ROC} curves for the \ac{KNN} algorithm, respectively. The analogous curves for the \ac{RF}
 classifier are shown in Fig.~\ref{fig:rocO2_RF}. The \ac{ROC} curves for the 23 \ac{EOS} are plotted in grey with three of them highlighted in color: {\tt BHF\_BBB2}, the \ac{EOS} with
 lowest maximum mass for the NS \todo{ref needed here}, {\tt MS1\_PP}, the \ac{EOS} with largest maximum mass for the \ac{NS} \todo{ref needed here}, and {\tt SLy}, which allows for a
-maximum mass of $2.05 M_\odot$ and is the standard \ac{EOS} used in \ac{LVK} low-latency investigations~\cite{Chaudhary:2023vec}. The markers denote different thresholds for the Bayesian
+maximum mass of $2.05 M_\odot$ and is the standard \ac{EOS} used in \ac{LVK} low-latency investigations~\cite{Chaudhary:2023vec} \mmt{[MMT: I got the masses from the em bright git, maybe Sushant knows the references]}. The markers denote different thresholds for the Bayesian
 probabilities $P_M(I|{\bf A})$. 
 
 The two classifiers perform consistently across all \ac{EOS}s. The \ac{TPR} for a probability threshold of $0.5$ is around $0.99$ for both \hasns\ and \hasrem. A comparison of the
@@ -33,7 +33,7 @@ similarly on the testing dataset, with \ac{RF} giving slightly higher \ac{TPR} a
 
 \todo{UNIFY AXIS AND SIZE OF FIGURES}
 
-\subsection{Computation of the probabilities}
+\subsection{Computation of the \mmt{Bayesian} probabilities}
 
 Once the algorithms are trained and tested, we compute the Bayesian
 probabilities defined in the Section~\ref{bayesian_probs}, in terms of the 
