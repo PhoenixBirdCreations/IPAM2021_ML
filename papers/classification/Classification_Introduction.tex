@@ -41,7 +41,7 @@ was deployed in \ac{O2}.
 
 In this work, we revisit the problem of the real-time production of \hasns\ and \hasrem\ \emph{probability} metrics with the aim of further improving the latency and performance of the current
 \ac{LVK} \ac{ML}-based scheme~\cite{Chatterjee:2019avs}. In the current implementation, the validity of the classification outcome for an event is assessed through elements of the algorithm's
-confusion matrix and its \ac{ROC} curve. For example, given a positive prediction, the \ac{LVK} defines a ``probability'' that this prediction is correct as the \ac{TPR} for the given data
+confusion matrix and its \ac{ROC} curve. For example, given a positive prediction, the \ac{LVK} defines a ``score'' that this prediction is correct as the \ac{TPR} for the given data
 set. However, there is no quantity in the algorithm's confusion matrix that defines a probability in the strictest sense. A second limitation of current \hasns\ and \hasrem\ classification
 schemas is the fact that the \hasns\ and \hasrem\ labels are treated as independent variables. In reality, the probability of a system being \ac{EM} bright is always smaller than the probability
 of the system hosting a \ac{NS}. Therefore, the \hasns\ and \hasrem\ labels cannot be treated as disjoint. In the current \ac{LVK} implementation, this physical condition is data-based rather
