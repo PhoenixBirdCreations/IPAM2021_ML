@@ -38,17 +38,17 @@ probabilities defined in the Section~\ref{bayesian_probs}, in terms of the
 output of the algorithms (fractions of neighbors and fractions of trees, 
 respectively). In order to obtain the probabilities given in 
 Equations~\ref{bayes-hasns} and~\ref{bayes-hasrem} one needs to apply
- the algorithm on known events, \mmt{which are the events from the O2 data set, already used for training and testing the algorithms in the previous subsection}. 
+ the algorithm on known events, which are the events from the O2 data set, already used for training and testing the algorithms in the previous subsection. 
 
 \begin{figure*}%[h]
 \includegraphics[width=0.65\linewidth]{KNN_3_eos_prob_plots}
-\caption{Fits of the Bayesian probabilities as functions of the fraction of neighbors from KNN. The left panel corresponds to the probability for \hasns\ and the right panel, to \hasrem\ . The different colors denote the equations of state. Except of one EOS, all the cases increase monotonically with the fraction of neighbors. \mmt{MB: do they increase monotonically? I doubt just seeing the picture. MMT: Well, there is only one case that slightly decreases at some point. I've modified the sentence.}}
+\caption{Fits of the Bayesian probabilities as functions of the fraction of neighbors from \ac{KNN}. The left panel corresponds to the probability for \hasns\ and the right panel, to \hasrem\ . The different colors denote the equations of state. Generally, the curves increase with the fraction of neighbors, except of some fluctuations due to having a finite data set.}
 \label{fig:bayesian_prob_fits_KNN}
 \end{figure*}
 
 \begin{figure*}%[h]
 \includegraphics[width=0.65\linewidth]{RF_3_eos_prob_plots}
-\caption{Fits of the Bayesian probabilities as functions of the fraction of trees from RF. As in Figure~\ref{fig:bayesian_prob_fits_KNN}, the left panel corresponds to the probability for \hasns\ and the right panel, to \hasrem\ . Again, the different colors denote the equations of state. In this case all the fits increase monotonically with the fraction of trees.}
+\caption{Fits of the Bayesian probabilities as functions of the fraction of trees from \ac{RF}. As in Figure~\ref{fig:bayesian_prob_fits_KNN}, the left panel corresponds to the probability for \hasns\ and the right panel, to \hasrem\ . Again, the different colors denote the equations of state. In this case all the fits increase with the fraction of trees.}
 \label{fig:bayesian_prob_fits_RF}
 \end{figure*}
 
@@ -56,7 +56,7 @@ In Figs.~\ref{fig:bayesian_prob_fits_KNN} and~\ref{fig:bayesian_prob_fits_RF},
 we show the fits of  the results with a Gaussian Process Regression,
 performed as explained in the Section~\ref{bayesian_probs}. In this figures we show
 the fits for each EOS, but one can always get a single marginalized probability
-applying the Bayes factors. The fitted curves are monotonic and have a
+applying the Bayes factors. The fitted curves generally increase with the number of neighbors/trees, except of some fluctuations due to the fact that the data set is finite, which results in some noise. The fits also have a
 sigmoid-like shape, but that depends on the choice of the EOS. Both \ac{KNN}
 and \ac{RF} give fits that have a similar shape. Indeed, both show a slower
 increase of $P(\hasrem)$ for a low fraction $f_2$ compared to $P(\hasns)$.
@@ -84,10 +84,12 @@ threshold of $0.5$ and less than a false positive rate of $0.2$ for all the
 pipelines except of SPIIR. Regarding \hasrem\ (right panel), \ac{KNN}. gives a
 false positive rate slightly higher than $0.2$ for all the pipelines except of
 GstLAL when fixing the threshold to $0.5$, but the true positive rate stays
-around $0.975$. In this case, SPIIR behaves similarly to the rest of the pipelines.  
+around $0.975$. In this case, SPIIR behaves similarly to the rest of the pipelines. 
 
 In Fig.~\ref{fig:rocMDC_RF} we showcase the results for \ac{RF}.  The curves
-are similar to the ones in Fig.~\ref{fig:rocMDC_KNN}, having a steeper shape for \hasns\ (left panel) and thus giving high true positive rates and low false positive rates at a given threshold. SPIIR also performs poorly for \ac{RF}. When it comes to \hasrem\ (right panel), the false positive rates increase as for \ac{KNN}, but again all the pipelines behave similarly. One can note that \ac{RF} gives slightly steeper ROC curves than \ac{KNN},  which results in higher true positive rates at lower false positive rates. 
+are similar to the ones in Fig.~\ref{fig:rocMDC_KNN}, having a steeper shape for \hasns\ (left panel) and thus giving high true positive rates and low false positive rates at a given threshold. SPIIR also performs poorly for \ac{RF}. When it comes to \hasrem\ (right panel), the false positive rates increase as for \ac{KNN}, and it outperforms on GstLAL compared to the rest of the pipelines.  
+
+One can note that, when applied to a new data set, the algorithms perform better on \hasns\ rather than on \hasrem\, as opposed to what happenned with the testing data set from O2 (see Figs.~\ref{fig:rocO2_KNN} and~\ref{fig:rocO2_RF}). Moreover, \ac{KNN} outperforms \ac{RF} when it comes to \hasrem\, and both algorithms work better for events injected on GstLAL, which is the pipeline exclusively used in the training data set. Due to the hard cuts applied by \ac{RF} and the fact that it has been trained only with GstLAL injections, this algorithm is less adaptable than \ac{KNN}, and that is the ROC curves are not as steep as for \ac{KNN} when it comes to different pipelines. 
 
 %\begin{comment}
 %performs very well for \hasns achieving a true positive rate very close to
@@ -121,39 +123,38 @@ For GW190426 and GW200115, $P_M(\hasns) \sim 1$, but
 $P_M(\hasrem) = 0$, which correspond to NSBH mergers, and agree 
 with~\cite{LIGOScientific:2020ibl, LIGOScientific:2021djp}. Finally, GW190814 and GW190924,
 have non-zero $P_M(\hasns)$ (indeed, \ac{KNN} gives a probability higher than
-0.5 for GW190814). The results in~\cite{LIGOScientific:2020ibl, LIGOScientific:2021djp} show that these events are high mass-ratio BBH mergers. The fact that the component masses are very different from each other (and the lower mass is close to the NS limit) might have led to these non-zero probabilities. 
-
+0.5 for GW190814). The results in~\cite{LIGOScientific:2020ibl, LIGOScientific:2021djp} show that these events are high mass-ratio BBH mergers. The fact that the component masses are very different from each other (and the lower mass is close to the NS limit) might have led to these non-zero probabilities. Moreover, for GW190814 \ac{KNN} gives a probability higher than 0.5 for \hasns, which differs considerably from what \ac{RF} predicts, which is only a 0.042. This is because for this event, regarding at the posterior of the secondary mass, only three out of twenty three equations of state are compatible with a NS. Since \ac{RF} applies a hard cut on the EOS, $P_M(\hasns|{\bf A}_{\bf E})$ will be low. However, \ac{KNN} depends on the neighbors surrounding the event, and the mass gap is not filled enough in the training dataset, which makes that the closer neighbors are NSs. 
 
 \begin{table}[]
-\begin{tabular}{c|c|cc|cc}
+\begin{tabular}{c|cc|cc}
 \hline
 \multicolumn{1}{c|}{}         & \multicolumn{1}{l|}{} & \multicolumn{2}{c|}{$P_M(\hasns|{\bf A}_{\bf E})$}                                                & \multicolumn{2}{c}{$P_M(\hasrem|{\bf A}_{\bf E})$}                                                \\ \hline
-\multicolumn{1}{c|}{event ID} & grace\_id             & \multicolumn{1}{c}{RF} & \multicolumn{1}{c}{KNN}  & \multicolumn{1}{c}{RF} & \multicolumn{1}{c}{KNN} \\ \hline
-GW170817                      & G298048               & 0.998                   & 0.989                    & 0.997                   & 0.985                                  \\
-GW190425                      & G330564               & 0.998                   & 0.989                    & 0.997                   & 0.985                            \\
-GW190426                      & G330687               & 0.997                   & 0.985                    & 0.000                   & 0.000                     \\
-GW190814                      & G347305               & 0.042                   & 0.567                   & 0.000                  & 0.000                      \\
-GW190924                      & G351423               & 0.012                   & 0.054                   & 0.000               & 0.000                       \\               
-GW200115                      & G360364               & 0.998                   & 0.989                   & 0.000                  & 0.000                           \\
+\multicolumn{1}{c|}{event ID}   & \multicolumn{1}{c}{RF} & \multicolumn{1}{c}{KNN}  & \multicolumn{1}{c}{RF} & \multicolumn{1}{c}{KNN} \\ \hline
+GW170817                                   & 0.998                   & 0.989                    & 0.997                   & 0.985                                  \\
+GW190425                                   & 0.998                   & 0.989                    & 0.997                   & 0.985                            \\
+GW190426                                   & 0.997                   & 0.985                    & 0.000                   & 0.000                     \\
+GW190814                                   & 0.042                   & 0.567                   & 0.000                  & 0.000                      \\
+GW190924                                   & 0.012                   & 0.054                   & 0.000               & 0.000                       \\               
+GW200115                                   & 0.998                   & 0.989                   & 0.000                  & 0.000                           \\
 \hline
 \end{tabular}
-\caption{Short table with marginalized BAYESIAN probabilities for O3 real events.}
+\caption{Bayesian probabilities of some real GW events from the O3 observing run. GW170817 and GW190425 actually correspond to BNS mergers; GW190426 and GW200115 are NSBH mergers, and GW190814 and GW190924 are BBH mergers. The reason why $P_M(\hasns|{\bf A}_{\bf E})$ is not zero for GW190814 and GW190924 is because the inferred secondary mass is located close to the threshold value of the mass of a NS. The probabilities are truncated to $10^{-3}$, which means that there is not a zero Bayesian probability, but it is actually smaller than $10^{-3}$.}
 \label{tab:real_data_bayesian}
 \end{table}
 
-In Figs.~\ref{fig:param_sweep_KNN} and~\ref{fig:param_sweep_RF} we depict parameter sweeps that are built using the Bayesian probabilities computed with KNN and RF, respectively.  These figures show the Bayesian probability for \hasns\ (left column) and for \hasrem\ (right column) for given component masses of the binary system, being $m_1$ the larger mass. The  columns stand for different fixed values of the component spins. The SNR is fixed to 10. One can see that both algorithms perform in a similar way. Regarding $P_M(\hasns)$,  there are no notable differences between the choice of spin values.  There is a small difference between the algorithms: for the third column ($\chi_1 = 0.0$ and $\chi_2$), $P_M(\hasns)$ is larger for bigger $m_1$ in the case of KNN.   For $P_M(\hasrem)$, both algorithms give almost the same results. The sweeps show that, for a large $\chi_1$, the probability of having a remnant increases for bigger values of the first component mass, $m_1$. As expected, the region in which $P_M(\hasrem) \sim 1$ is inside the region in which $P_M(\hasns) \sim 1$.
+In Figs.~\ref{fig:param_sweep_KNN} and~\ref{fig:param_sweep_RF} we depict parameter sweeps that are built using the Bayesian probabilities computed with \ac{KNN} and \ac{RF}, respectively.  These figures show the Bayesian probability for \hasns\ (left column) and for \hasrem\ (right column) for given component masses of the binary system, being $m_1$ the larger mass. The  columns stand for different fixed values of the component spins. The SNR is fixed to 10. One can see that both algorithms perform in a similar way. Regarding $P_M(\hasns)$,  there are no notable differences between the choice of spin values.  There is a small difference between the algorithms: for the third column ($\chi_1 = 0.0$ and $\chi_2$), $P_M(\hasns)$ is larger for bigger $m_1$ in the case of \ac{KNN}. For $P_M(\hasrem)$, both algorithms give almost the same results. The sweeps show that, for a large $\chi_1$, the probability of having a remnant increases for bigger values of the first component mass, $m_1$. As expected, the region in which $P_M(\hasrem) \sim 1$ is inside the region in which $P_M(\hasns) \sim 1$.
 
-Moreover, the Bayesian probabilities seem to be more uniform for RF in all the cases, and KNN gives some blobs of larger probability \mmt{[MMT: I don't know how to explain this]}.
+Moreover, the parameter sweeps of $P_M(\hasns)$ (left column) for \ac{KNN} seem to be noisier for large primary masses. This is because the algorithm just looks at the closest neighbors, and it only needs few neighbors that are labelled differently to provide a higher probability in a certain region. On the other hand, \ac{RF} applies a hard cut on large primary masses, resulting in a more uniform probability in that region. 
 
 \begin{figure*}%[h]
 \includegraphics[width=0.7\linewidth]{KNN_parameter_sweep}
-    \caption{Parameter sweep obtained with KNN. The Bayesian probabilities are shown as a function of the component masses of the binary, where $m_1$ (the bigger mass) is in the horizontal axes and $m_2$, in the vertical. The left panels show $P_M(\hasns)$ and the right panels, $P_M(\hasrem)$. We choose different values of the spin components to evaluate the probability, and they appear in the different rows of the figure.   The SNR is fixed to 10. }
+    \caption{Parameter sweep obtained with \ac{KNN}. The Bayesian probabilities are shown as a function of the component masses of the binary, where $m_1$ (the bigger mass) is in the horizontal axes and $m_2$, in the vertical. The left panels show $P_M(\hasns)$ and the right panels, $P_M(\hasrem)$. We choose different values of the spin components to evaluate the probability, and they appear in the different rows of the figure.   The SNR is fixed to 10. }
 \label{fig:param_sweep_KNN}
 \end{figure*}
 
 \begin{figure*}%[h]
 \includegraphics[width=0.7\linewidth]{RF_parameter_sweep}
- \caption{Same as Figure~\ref{fig:param_sweep_KNN}, but now for RF.}
+ \caption{Same as Figure~\ref{fig:param_sweep_KNN}, but now for \ac{RF}.}
 \label{fig:param_sweep_RF}
 \end{figure*}
 
