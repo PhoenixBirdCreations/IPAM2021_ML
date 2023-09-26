@@ -1,10 +1,39 @@
 \section{Conclusions\label{conclusions}}
 
+%Brief summary of the problem we are facing: we need rapid identification of the components of the binary merger, we apply ML to do so. \\
+
+In this paper, we have presented a new scheme for real-time classification of \ac{GW} \ac{CBC} signals detected by the LIGO, Virgo, and KAGRA detectors. The method uses the
+output of the \ac{LVK} low-latency pipelines to identify whether the GW source progenitor contains a \ac{NS} (\hasns) and a post-merger matter remnant is produced in the merger
+(\hasrem). Estimates of these metrics are included in public alerts for candidate \ac{GW} events issued by the \ac{LVK}. Determining these metrics in low latency is crucial to
+enabling coincident \ac{MMA} observations of GW and \ac{EM} signatures.
+
+We have assessed the viability and measured the performance of two classifiers, \ac{KNN} and \ac{RF}, on two sets of real detector data augmented with synthetic GW injections of
+GW signals that were generated for space-time volume sensitivity analyses of \ac{O2} \ac{LVK} \ac{GW} searches \todo{[cite Messick, Tsukada, Ewing]} and a \ac{MDC} real-time
+replay of \ac{O3} data~\cite{Chaudhary:2023vec}. 
+
+%Say what we did: tested and compared the algorithms on O2, with the scores. Then we come with the Bayesian probs and we make some fits to quickly get the probabilities when there is a real time event.
+
+One important novel ingredient of the proposed scheme is the computation of Bayesian probabilities for \hasns\ and \hasrem. Until now, the information that has been passed to
+astronomers in public alerts has been in the form of binary classification scores for these metrics. Here, we provide a method to compute \hasns\ and \hasrem\ as actual
+probabilities that the \ac{GW} source is characterized by these properties. Therefore, our scheme provides more direct and easily interpretable information to aid the community
+of astronomers in deciding whether to follow up on \ac{GW} candidate events with \ac{EM} observatories.
+
+%Discuss the results (MOST IMPORTANT THING): tested in O2, the algorithms perform better for \hasrem\, and RF does it better than KNN. When applied on O3 (this applies for both the scores and the Bayesian probs), the algorithms are better on \hasns\ (and RF still outperforms), but they get worse at \hasrem\, and even KNN is slowly better in this case. It seems that Sushant's assumption is right, and RF finds it more difficult to classify different pipelines and new events (O3 instead of O2) -> it is less adaptable. \\
+
+To construct the Bayesian probabilities for \hasns\ and \hasrem, we train and test the classifiers on the \ac{O2} data set following the customary 70\% -- 30\% split between
+training and testing data. After evaluating the performance of the classifiers with standard \ac{ROC} metrics, we use the testing set to generate numerical Bayesian probability
+expressions for the models. This minimizes potential bias that may result from the use of data sets with different properties while ensuring that the Bayesian fits are built with
+data that is independent from the data used for training the classifiers. The effectiveness of the Bayesian fits is then evaluated on fully independent data sets using the
+\ac{O3} set and real detections. Both methods outperform the \ac{KNN} algorithm currently used in the \ac{LVK} low-latency infrastructure on the O2 testing set, with \ac{RF}
+slightly outperforming \ac{KNN} for \hasrem. \todo{[Please check whether the previous sentence is correct]} In comparison to \ac{O2}, both algorithms perform better with \hasns\
+on \ac{O3}. However, they both underperform the O2 result for \hasrem, with \ac{KNN} outperforming \ac{RF} by a small margin \todo{[is it accurate to say small?]}. This seems to
+suggest that \ac{RF} is less portable than \ac{KNN} across different data sets and different pipelines. \todo{[we need to write, somewhere earlier (in IV.c? as a new short
+section between IV.b and IV.c as we do for III.b?) that the O3 set has all pipelines but O2 is only gstlal. we need to write the important differences between the two sets that
+may explain the discrepancy in the results]}  The decrease in performance for \hasrem\ between \ac{O2} and \ac{O3} of both algorithms can be attributed to \todo{\dots} The lower performance of \ac{RF} across different pipelines compared to \ac{KNN} can be explained by \todo{\dots} 
+
 TO DO LIST:
 \\
-- Brief summary of the problem we are facing: we need rapid identification of the components of the binary merger, we apply ML to do so. \\
-- Say what we did: tested and compared the algorithms on O2, with the scores. Then we come with the Bayesian probs and we make some fits to quickly get the probabilities when there is a real time event. \\
-- Discuss the results (MOST IMPORTANT THING): tested in O2, the algorithms perform better for \hasrem\, and RF does it better than KNN. When applied on O3 (this applies for both the scores and the Bayesian probs), the algorithms are better on \hasns\ (and RF still outperforms), but they get worse at \hasrem\, and even KNN is slowly better in this case. It seems that Sushant's assumption is right, and RF finds it more difficult to classify different pipelines and new events (O3 instead of O2) -> it is less adaptable. \\
+
 - This is already mentioned in the results, but state again that RF applies hard cuts on the equations of state, whereas KNN relies more on the data surrounding the event of interest. This makes the probabilities from both algorithms to be different when it comes to classifying events located around the mass gap, e.g. GW190824. 
 -Also mentioned in the results: the differences in the parameter sweeps. RF applies a hard cut for large primary masses, and that is why the probability in that region for \hasns\ is so uniform, as opposed to KNN, which gives a noisier parameter sweep, because it only needs few neighbors that are labelled differently to provide a higher probability in a certain region.  \\
 - Possible future applications: use a training dataset that includes all the pipelines to improve the performance of RF on events provided by pipelines different from GstLAL; provide more data located in the mass gap to improve KNN on the classification of events located in that region. 
