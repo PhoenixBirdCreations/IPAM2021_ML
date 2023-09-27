@@ -29,11 +29,21 @@ slightly outperforming \ac{KNN} for \hasrem. \todo{[Please check whether the pre
 on \ac{O3}. However, they both underperform the O2 result for \hasrem, with \ac{KNN} outperforming \ac{RF} by a small margin \todo{[is it accurate to say small?]}. This seems to
 suggest that \ac{RF} is less portable than \ac{KNN} across different data sets and different pipelines. \todo{[we need to write, somewhere earlier (in IV.c? as a new short
 section between IV.b and IV.c as we do for III.b?) that the O3 set has all pipelines but O2 is only gstlal. we need to write the important differences between the two sets that
-may explain the discrepancy in the results]}  The decrease in performance for \hasrem\ between \ac{O2} and \ac{O3} of both algorithms can be attributed to \todo{\dots} The lower performance of \ac{RF} across different pipelines compared to \ac{KNN} can be explained by \todo{\dots} 
+may explain the discrepancy in the results]}  The decrease in performance for \hasrem\ between \ac{O2} and \ac{O3} of both algorithms may be attributed to \ac{RF} \todo{\dots} The lower performance of \ac{RF} across different pipelines compared to \ac{KNN} may be explained by \todo{\dots} 
+
+\todo{[anything else to say here?]}
+
+This work provides an improved scheme for \hasns\ and \hasrem\ classification of candidate events that is ready for deployment in the current \ac{LVK} infrastructure if the \ac{LVK} decides
+to implement Bayesian probabilities for \hasns\ and \hasrem. Our method can also be easily extended to other properties of \ac{GW} signals that are or will be released with low latency, such
+as \hasgap\ and \hasssm, a new proposed metric for distinguishing \ac{GW} signals from systems with a sub-solar mass component. Other future extensions of this work include improving
+algorithm training and Bayesian fit estimation with updated data sets of simulated injections in \ac{LVK} \ac{O4} data generated with different pipelines and with better coverage of the mass
+gap region than the \ac{O2} data set. It would also be worthwhile to investigate the use of additional ML classifiers that could further improve the process's accuracy, computational
+resources required, and latency. Finally, a similar infrastructure could be designed and deployed to aid in the rapid parameter estimation of pipeline outputs, but with a focus on feature regression rather than classification. This latter line of investigation will be presented in a future publication.
+
+\todo{[anything else to say here?]}
 
 TO DO LIST:
 \\
 
 - This is already mentioned in the results, but state again that RF applies hard cuts on the equations of state, whereas KNN relies more on the data surrounding the event of interest. This makes the probabilities from both algorithms to be different when it comes to classifying events located around the mass gap, e.g. GW190824. 
 -Also mentioned in the results: the differences in the parameter sweeps. RF applies a hard cut for large primary masses, and that is why the probability in that region for \hasns\ is so uniform, as opposed to KNN, which gives a noisier parameter sweep, because it only needs few neighbors that are labelled differently to provide a higher probability in a certain region.  \\
-- Possible future applications: use a training dataset that includes all the pipelines to improve the performance of RF on events provided by pipelines different from GstLAL; provide more data located in the mass gap to improve KNN on the classification of events located in that region. 
