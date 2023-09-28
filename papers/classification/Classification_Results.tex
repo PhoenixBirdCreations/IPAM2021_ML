@@ -1,8 +1,8 @@
 \section{Results} \label{results}
 
-In this section we first discuss the performance of the trained \ac{RF} and \ac{KNN} classifiers on the testing data set $D_S$ and use the latter to derive the Bayesian probabilities $P_M(I|{\bf A})$.
-Then we evaluate $P_M(I|{\bf A})$ on two independent data sets: a population of simulated \ac{CBC} events injected in the \ac{MDC} real-time replay of \ac{LVK} \ac{O3} data~\cite{Chaudhary:2023vec},
-and the set of confident detections from the \ac{GWTC3} catalog~\cite{LIGOScientific:2021djp}.
+In this section we first discuss the performance of the trained \ac{RF} and \ac{KNN} classifiers on the testing data set $D_S$ and use the latter to derive the Bayesian probabilities $P_M(I|{\bf
+A})$. Then we evaluate $P_M(I|{\bf A})$ on two independent data sets. The first data set includes a population of simulated \ac{CBC} events that were injected in the real-time replay of \ac{O3} data. This set was used for the \ac{LVK} \ac{MDC}~\cite{Chaudhary:2023vec}. The second set contains the confident \ac{LVK} \ac{O3} detections that are reported in the \ac{LVK}'s \ac{GWTC3}
+catalog~\cite{LIGOScientific:2021djp}.
 
 \subsection{Performance of the algorithms}
 \mmt{We fix the hyperparameters of our algorithms by applying a cross-validation over the D data set, considering all the 23 equations of state. We choose the parameters that give a higher accuracy and that also work well for all the equations of state. For KNN, we use $K = 8$ neighbors (instead of $K = 2n+1 = 11$ as in~\cite{Chatterjee:2019avs}), the Manhattan metric, the {\tt BallTree} algorithm and the neighbors are weighted by the inverse of their distance to the event. For RF, we use 50 trees, a maximum depth of 15 and {\tt sqrt} features.} 
@@ -70,11 +70,11 @@ Figs.~\ref{fig:rocO2_KNN} and~\ref{fig:rocO2_RF}.
 
 \subsection{Performance on new events}
 
-As stated in the Section~\ref{bayesian_probs}, the fits of the probabilities $P_J(I|{\bf A}_{\bf X})$ for each EOS ($J=1,\dots 23$) can be tabulated and used to compute the marginalized probabilities
-$P_M(\hasns|{\bf A}_{\bf E})$ and $P_M(\hasrem|{\bf A}_{\bf E})$ for any new event $\bf E$ with algorithm outcome $\bf A_{E}$.  We classify the events from MDC and compute the ROC curves according to
-the ground truth of the injected events, which can be seen in Figs.~\ref{fig:rocMDC_KNN} and~\ref{fig:rocMDC_RF}. Contrarily to the \ac{O2} data set, the \ac{MDC} set contains outputs from different
-pipelines. Therefore, we separate the ROC curves for the different pipelines involved in the dataset (GstLAL,  PyCBC~\cite{Usman:2015kfa}, SPIIR~\cite{Chu:2020pjv} and MBTA~\cite{Adams:2015ulm}).
-Notice that the curves are very similar even though the algorithms were trained (and also the Bayesian probabilities were fitted) using exclusively GstLAL.
+As stated in the Section~\ref{bayesian_probs}, the fits of the probabilities $P_J(I|{\bf A}_{\bf X})$ for each EOS ($J=1,\dots 23$) can be tabulated and used to compute the marginalized
+probabilities $P_M(\hasns|{\bf A}_{\bf E})$ and $P_M(\hasrem|{\bf A}_{\bf E})$ for any new event $\bf E$ with algorithm outcome $\bf A_{E}$.  We classify the events from MDC and compute the ROC
+curves according to the ground truth of the injected events, which can be seen in Figs.~\ref{fig:rocMDC_KNN} and~\ref{fig:rocMDC_RF}. In contrast to the \ac{O2} data set, the \ac{MDC} set contains
+outputs from different pipelines. Therefore, we separate the ROC curves for the different pipelines involved in the dataset (GstLAL,  PyCBC~\cite{Usman:2015kfa}, SPIIR~\cite{Chu:2020pjv} and
+MBTA~\cite{Adams:2015ulm}). Notice that the curves are very similar even though the algorithms were trained (and also the Bayesian probabilities were fitted) using exclusively GstLAL.
 
 Figure~\ref{fig:rocMDC_KNN} depicts the curves for \ac{KNN}.  In the case of
 \hasns\ (left panel), it gives a true positive rate of $\sim 0.975$ for a
