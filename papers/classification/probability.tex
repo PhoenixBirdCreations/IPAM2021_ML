@@ -31,7 +31,7 @@ P(\hasns|{\bf A}_{\bf X})&\simeq P(\hasns_+|{\bf A}_{{\bf X}'}) \nonumber \\
 where $\hasns_+={\bf L}[{\bf X}'(\hbox{\hasns:\true})]$ is a label that uniquely identifies elements in $D$ with positive \hasns\ ground truth, ${\bf X}'$ is an element in $D$, and ${\bf A}_{{\bf X}'}$ is the outcome of the classifier on ${\bf X}'$. The probability $P(\hasrem|{\bf A}_{\bf X})$ can be approximated as:
 \begin{align}
 \label{bayes-hasrem}
-P(&\hasrem|{\bf A}_{\bf X}) \\
+P(&\hasrem|{\bf A}_{\bf X}) \nonumber  \\
 &=P(\hasrem|\hasns, {\bf A}_{\bf X})P(\hasns|{\bf A}_{\bf X}) \nonumber \\
 %&\simeq P(\hasrem_+|\hasns_+,A_{{\bf X}'})P(\hasns_+|A_{X'})\nonumber\\
 &\simeq P(\hasrem_+|{\bf A}_{{\bf X}''})P(\hasns_+|{\bf A}_{{\bf X}'}),
@@ -45,8 +45,7 @@ respectively.
 The choice of the labeling scheme and the algorithm's outcome depend on the \ac{ML} algorithm characteristics. Throughout this paper we implement a multi-label classification scheme, where each
 element in $D$ is classified into $n$ mutually exclusive categories that uniquely define the $n$ possible physical states of the system. The classifier outcome can then be chosen as a
 two-dimensional vector space ${\bf A}_{{\bf X}'}\subset \mathbb{R}^n$. This scheme allows the calculation of Eqs.~\eqref{bayes-hasns} and \eqref{bayes-hasrem} with a single training process. In
->>>>>>> f0f9f200c29e2bdd65d8abb301da76c6b965b4e6
-the problem at hand, there are three possible physical states and a suitable labeling
+the problem at hand, there are three possible physical states. A suitable labeling is
 map is 
 %
 \begin{align}
