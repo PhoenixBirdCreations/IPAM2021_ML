@@ -1,7 +1,8 @@
 \section{Results} \label{results}
 In this section we first discuss the performance of the trained \ac{RF} and
 \ac{KNN} classifiers on the testing data set $D_S$ and use the latter to derive
-the Bayesian probabilities $P_M(I|{\bf A})$. Then we evaluate $P_M(I|{\bf A})$ on two independent data sets: a population of simulated \ac{CBC} events injected in the \ac{MDC} real-time replay of \ac{LVK} \ac{O3} data~\cite{Chaudhary:2023vec}, and the set of confident detections from the \ac{GWTC3} catalog~\cite{LIGOScientific:2021djp}. \mmt{The MDC data set contains outputs from other pipelines (MBTA, PyCBC and spiir), apart from GstLAL, the only pipeline in the data set $D$.}
+
+the Bayesian probabilities $P_M(I|{\bf A})$. Then we evaluate $P_M(I|{\bf A})$ on two independent data sets: a population of simulated \ac{CBC} events injected in the \ac{MDC} real-time replay of \ac{LVK} \ac{O3} data~\cite{Chaudhary:2023vec} \todo{https://arxiv.org/abs/2308.04545}, and the set of confident detections from the \ac{GWTC3} catalog~\cite{LIGOScientific:2021djp}.\mmt{The MDC data set contains outputs from other pipelines (MBTA, PyCBC and spiir), apart from GstLAL, the only pipeline in the data set $D$.}
 
 \subsection{Performance of the algorithms}
 \mmt{We fix the hyperparameters of our algorithms by applying a cross-validation over the D data set, considering all the 23 equations of state. We choose the parameters that give a higher accuracy and that also work well for all the equations of state. For KNN, we use $K = 8$ neighbors (instead of $K = 2n+1 = 11$ as in~\cite{Chatterjee:2019avs}), the Manhattan metric, the {\tt BallTree} algorithm and the neighbors are weighted by the inverse of their distance to the event. For RF, we use 50 trees, a maximum depth of 15 and {\tt sqrt} features.} 
@@ -23,9 +24,10 @@ We measure the performance of our algorithms by the \ac{TPR} and the \ac{FPR} on
 
 The left and right panels of Fig.~\ref{fig:rocO2_KNN} show the \hasns\ and \hasrem\ \ac{ROC} curves for the \ac{KNN} algorithm, respectively. The analogous curves for the \ac{RF}
 classifier are shown in Fig.~\ref{fig:rocO2_RF}. The \ac{ROC} curves for the 23 \ac{EOS} are plotted in grey with three of them highlighted in color: {\tt BHF\_BBB2}, the \ac{EOS} with
-lowest maximum mass for the NS \todo{ref needed here}, {\tt MS1\_PP}, the \ac{EOS} with largest maximum mass for the \ac{NS}~\cite{Ghosh:2021eqv}, and {\tt SLy}, which allows for a
-maximum mass of $2.05 M_\odot$ and is the standard \ac{EOS} used in \ac{LVK} low-latency investigations~\cite{Chaudhary:2023vec}. The markers denote different thresholds for the \mmt{\sout{Bayesian
-probabilities $P_M(I|{\bf A})$} scores}. 
+lowest maximum mass for the NS \todo{ref needed here}, {\tt MS1\_PP}, the \ac{EOS} with largest maximum mass for the \ac{NS} \todo{ref needed here}, and {\tt SLy}, which allows for a
+maximum mass of $2.05 M_\odot$ and is the standard \ac{EOS} used in \ac{LVK} low-latency investigations~\cite{Chaudhary:2023vec} \mmt{[MMT: I got the masses from the em bright git, maybe Sushant knows the references : https://arxiv.org/pdf/2104.08681.pdf Link to Shaon's Paper]}. The markers denote different thresholds for the Bayesian
+probabilities $P_M(I|{\bf A})$. 
+
 
 The two classifiers perform consistently across all \ac{EOS}s. The \ac{TPR} for a score threshold of $0.5$ is around $0.99$ for both \hasns\ and \hasrem. A comparison of the
 \hasns\ and \hasrem\ \ac{ROC} curves for each algorithm shows that the \ac{FPR} for \hasns\ is generally higher than the \ac{FPR} for \hasrem\ at a given threshold. Thus the algorithms
