@@ -62,9 +62,9 @@ the fits for each EOS, but one can always get a single marginalized probability
 applying the Bayes factors. The fitted curves generally increase with the number of neighbors/trees, except of some fluctuations due to the fact that the data set is finite, which results in some noise. The fits also have a
 sigmoid-like shape, but that depends on the choice of the EOS. Both \ac{KNN}
 and \ac{RF} give fits that have a similar shape. Indeed, both show a slower
-increase of $P(\hasrem)$ for a low fraction $f_2$ compared to $P(\hasns)$.
-However, \ac{RF} shows a small plateau on the $P(\hasns)$ (and also on
-$P(\hasrem)$) for fractions of trees around $0.8$, and that is something that
+increase of $P_J(\hasrem |\bf{A_X})$ for a low fraction $f_2$ compared to $P_J(\hasns |\bf{A_X})$.
+However, \ac{RF} shows a small plateau on the $P_J(\hasns |\bf{A_X})$ (and also on
+$P_J(\hasrem |\bf{A_X})$) for fractions of trees around $0.8$, and that is something that
 \ac{KNN} does not reproduce. We highlight the same equations of state as in
 Figs.~\ref{fig:rocO2_KNN} and~\ref{fig:rocO2_RF}.
 
@@ -115,10 +115,10 @@ One can note that, when applied to a new data set, the algorithms perform better
 We also applied the tabulated Bayesian probabilities to classify real events
 from the O3 LVK run~\cite{LIGOScientific:2020ibl, LIGOScientific:2021djp}.  In Table~\ref{tab:real_data_bayesian} we depict some of the most significant events of the LVK third observing run, labeling them with their event ID and the GraceDB\footnote{\href{https://gracedb.ligo.org/}https://gracedb.ligo.org/} ID.  We show the marginalized Bayesian probabilities for both \hasns\ and \hasrem\ computed with 
 \ac{RF} and \ac{KNN}. For the first two events (GW170817 and GW190425),
-$P_M(\hasns)$ and $P_M(\hasrem)$ are very close to 1, meaning that these events
+$P_M(\hasns |\bf{A_E})$ and $P_M(\hasrem |\bf{A_E})$ are very close to 1, meaning that these events
 correspond to BNS mergers, as shown in~\cite{LIGOScientific:2020ibl,LIGOScientific:2021djp}. 
-For GW190426 and GW200115, $P_M(\hasns) \sim 1$, but
-$P_M(\hasrem) = 0$, which correspond to NSBH mergers, and agree 
+For GW190426 and GW200115, $P_M(\hasns |\bf{A_E}) \sim 1$, but
+$P_M(\hasrem |\bf{A_E}) = 0$, which correspond to NSBH mergers, and agree 
 with~\cite{LIGOScientific:2020ibl, LIGOScientific:2021djp}. Finally, GW190814 and GW190924,
 have non-zero $P_M(\hasns)$ (indeed, \ac{KNN} gives a probability higher than
 0.5 for GW190814). The results in~\cite{LIGOScientific:2020ibl, LIGOScientific:2021djp} show that these events are high mass-ratio BBH mergers. The fact that the component masses are very different from each other (and the lower mass is close to the NS limit) might have led to these non-zero probabilities. Moreover, for GW190814 \ac{KNN} gives a probability higher than 0.5 for \hasns, which differs considerably from what \ac{RF} predicts, which is only a 0.042. This is because for this event, regarding at the posterior of the secondary mass, only three out of twenty three equations of state are compatible with a NS. Since \ac{RF} applies a hard cut on the EOS, $P_M(\hasns|{\bf A}_{\bf E})$ will be low. However, \ac{KNN} depends on the neighbors surrounding the event, and the mass gap is not filled enough in the training dataset, which makes that the closer neighbors are NSs. 
@@ -140,13 +140,13 @@ GW200115                                   & 0.998                   & 0.989    
 \label{tab:real_data_bayesian}
 \end{table}
 
-In Figs.~\ref{fig:param_sweep_KNN} and~\ref{fig:param_sweep_RF} we depict parameter sweeps that are built using the Bayesian probabilities computed with \ac{KNN} and \ac{RF}, respectively.  These figures show the Bayesian probability for \hasns\ (left column) and for \hasrem\ (right column) for given component masses of the binary system, being $m_1$ the larger mass. The  columns stand for different fixed values of the component spins. The SNR is fixed to 10. One can see that both algorithms perform in a similar way. Regarding $P_M(\hasns)$,  there are no notable differences between the choice of spin values.  There is a small difference between the algorithms: for the third column ($\chi_1 = 0.0$ and $\chi_2$), $P_M(\hasns)$ is larger for bigger $m_1$ in the case of \ac{KNN}. For $P_M(\hasrem)$, both algorithms give almost the same results. The sweeps show that, for a large $\chi_1$, the probability of having a remnant increases for bigger values of the first component mass, $m_1$. As expected, the region in which $P_M(\hasrem) \sim 1$ is inside the region in which $P_M(\hasns) \sim 1$.
+In Figs.~\ref{fig:param_sweep_KNN} and~\ref{fig:param_sweep_RF} we depict parameter sweeps that are built using the Bayesian probabilities computed with \ac{KNN} and \ac{RF}, respectively.  These figures show the Bayesian probability for \hasns\ (left column) and for \hasrem\ (right column) for given component masses of the binary system, being $M_1$ the larger mass. The  columns stand for different fixed values of the component spins. The SNR is fixed to 10. One can see that both algorithms perform in a similar way. Regarding $P_M(\hasns |\bf{A_E})$,  there are no notable differences between the choice of spin values.  There is a small difference between the algorithms: for the third column ($\chi_1 = 0.0$ and $\chi_2$), $P_M(\hasns |\bf{A_E})$ is larger for bigger $M_1$ in the case of \ac{KNN}. For $P_M(\hasrem |\bf{A_E})$, both algorithms give almost the same results. The sweeps show that, for a large $\chi_1$, the probability of having a remnant increases for bigger values of the first component mass, $M_1$. As expected, the region in which $P_M(\hasrem |\bf{A_E}) \sim 1$ is inside the region in which $P_M(\hasns |\bf{A_E}) \sim 1$.
 
-Moreover, the parameter sweeps of $P_M(\hasns)$ (left column) for \ac{KNN} seem to be noisier for large primary masses. This is because the algorithm just looks at the closest neighbors, and it only needs few neighbors that are labelled differently to provide a higher probability in a certain region. On the other hand, \ac{RF} applies a hard cut on large primary masses, resulting in a more uniform probability in that region. 
+Moreover, the parameter sweeps of $P_M(\hasns |\bf{A_E})$ (left column) for \ac{KNN} seem to be noisier for large primary masses. This is because the algorithm just looks at the closest neighbors, and it only needs few neighbors that are labelled differently to provide a higher probability in a certain region. On the other hand, \ac{RF} applies a hard cut on large primary masses, resulting in a more uniform probability in that region. 
 
 \begin{figure*}%[h]
 \includegraphics[width=0.7\linewidth]{KNN_parameter_sweep}
-    \caption{Parameter sweep obtained with \ac{KNN}. The Bayesian probabilities are shown as a function of the component masses of the binary, where $m_1$ (the bigger mass) is in the horizontal axes and $m_2$, in the vertical. The left panels show $P_M(\hasns)$ and the right panels, $P_M(\hasrem)$. We choose different values of the spin components to evaluate the probability, and they appear in the different rows of the figure.   The SNR is fixed to 10. }
+    \caption{Parameter sweep obtained with \ac{KNN}. The Bayesian probabilities are shown as a function of the component masses of the binary, where $M_1$ (the bigger mass) is in the horizontal axes and $M_2$, in the vertical. The left panels show $P_M(\hasns |\bf{A_E})$ and the right panels, $P_M(\hasrem |\bf{A_E})$. We choose different values of the spin components to evaluate the probability, and they appear in the different rows of the figure.   The SNR is fixed to 10. }
 \label{fig:param_sweep_KNN}
 \end{figure*}
 
