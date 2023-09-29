@@ -29,7 +29,7 @@ slightly outperforming \ac{KNN} for \hasrem. \todo{[Please check whether the pre
 on \ac{O3}. However, they both underperform the O2 result for \hasrem, with \ac{KNN} outperforming \ac{RF} by a small margin \todo{[is it accurate to say small?]}. This seems to
 suggest that \ac{RF} is less portable than \ac{KNN} across different data sets and different pipelines. \todo{[we need to write, somewhere earlier (in IV.c? as a new short
 section between IV.b and IV.c as we do for III.b?) that the O3 set has all pipelines but O2 is only gstlal. we need to write the important differences between the two sets that
-may explain the discrepancy in the results]}  The decrease in performance for \hasrem\ between \ac{O2} and \ac{O3} of both algorithms may be attributed to \ac{RF} \todo{\dots} The lower performance of \ac{RF} across different pipelines compared to \ac{KNN} may be explained by \todo{\dots} 
+may explain the discrepancy in the results]}  The decrease in performance for \hasrem\ between \ac{O2} and \ac{O3} of both algorithms may be attributed to \ac{RF} \todo{\dots} The lower performance of \ac{RF} across different pipelines compared to \ac{KNN} may be explained by \mmt{the more accurate pattern recognition of the algorithm, since each pipeline recovers the event parameters differently. While \ac{KNN} captures then main different between events, \ac{RF} learns from the specific recovery of parameters of gstLAL.}
 
 \todo{[anything else to say here?]}
 
