@@ -6,7 +6,7 @@ catalog~\cite{LIGOScientific:2021djp}.
 
 \subsection{Performance of the algorithms}
 
-We measure the performance of our algorithms by the \ac{TPR} and the \ac{FPR} on the events in $D_S$, drawn as \ac{ROC} curves \mmt{, obtained from the scores provided by the algorithms}. The \ac{ROC} show the variation of the true-positive rate with the false-positive rate given thresholds for the \mmt{\sout{probabilities $P_M(I|{\bf A})$} scores}.  
+We measure the performance of our algorithms by the \ac{TPR} and the \ac{FPR} on the events in $D_S$, drawn as \ac{ROC} curves, obtained from the scores provided by the algorithms. The \ac{ROC} show the variation of the true-positive rate with the false-positive rate given thresholds for the scores.  
 
 \begin{figure*}[h]
 \includegraphics[width=0.45\linewidth]{roc_testing_KNN_NS}
@@ -25,7 +25,7 @@ We measure the performance of our algorithms by the \ac{TPR} and the \ac{FPR} on
 The left and right panels of Fig.~\ref{fig:rocO2_KNN} show the \hasns\ and \hasrem\ \ac{ROC} curves for the \ac{KNN} algorithm, respectively. The analogous curves for the \ac{RF}
 classifier are shown in Fig.~\ref{fig:rocO2_RF}. The \ac{ROC} curves for the 23 \ac{EOS} are plotted in grey with three of them highlighted in color: {\tt BHF\_BBB2}, the \ac{EOS} with
 lowest maximum mass for the NS \todo{ref needed here}, {\tt MS1\_PP}, the \ac{EOS} with largest maximum mass for the \ac{NS} \todo{ref needed here}, and {\tt SLy}, which allows for a
-maximum mass of $2.05 M_\odot$ and is the standard \ac{EOS} used in \ac{LVK} low-latency investigations~\cite{Chaudhary:2023vec} \mmt{[MMT: I got the masses from the em bright git, maybe Sushant knows the references : https://arxiv.org/pdf/2104.08681.pdf Link to Shaon's Paper]}. The markers denote different thresholds for the Bayesian
+maximum mass of $2.05 M_\odot$ and is the standard \ac{EOS} used in \ac{LVK} low-latency investigations~\cite{Chaudhary:2023vec} \mmt{[MMT:https://arxiv.org/pdf/2104.08681.pdf Link to Shaon's Paper]}. The markers denote different thresholds for the Bayesian
 probabilities $P_M(I|{\bf A})$. 
 
 
