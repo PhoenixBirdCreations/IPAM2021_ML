@@ -13,7 +13,7 @@ estimators for $P(\hasns|{\bf A}_{\bf X})$ and $P(\hasrem|{\bf A}_{\bf X})$ can 
 real observations.
 
 Consider a data set of $N$ simulated events ${\bf X}'_i$, $D=\{{\bf X}'_i\otimes{\bf L}({\bf X}'_i)\}$, where $i=1\dots N$ and ${\bf L}$ is a map from ${\bf X}'$ to a vector space
-that defines labels for the \hasns\ and \hasrem\ ground truths. According to Bayes theorem, $P(\hasns|{\bf A}_{\bf X})$  can be written as 
+that defines labels for the \hasns\ and \hasrem\ ground truths. According to Bayes' theorem, $P(\hasns|{\bf A}_{\bf X})$  can be written as 
 %
 \begin{equation}
 P(\hasns|{\bf A}_{\bf X})=\frac{P({\bf A}_{\bf X}|\hasns)P(\hasns)}{P({\bf A}_{\bf X})}\,,
@@ -80,7 +80,7 @@ have labels 0, 1, and 2, respectively.
 %\label{tab:multilabels}
 %\end{table}
 
-The factors in the right-hand side of Eqs.\eqref{bayes-hasns} and \eqref{bayes-hasrem} can be obtained from $D_{S}$ once the algorithm has been trained on $D_{R}$. For example, for the \ac{KNN} and \ac{RF} scheme described earlier, the factors in Eq.~\eqref{bayes-hasns} can be estimated as  
+The factors in the right-hand side of Eqs.~\eqref{bayes-hasns} and~\eqref{bayes-hasrem} can be obtained from $D_{S}$ once the algorithm has been trained on $D_{R}$. For example, for the \ac{KNN} and \ac{RF} scheme described earlier, the factors in Eq.~\eqref{bayes-hasns} can be estimated as  
 %
 \begin{equation}
 \begin{aligned}
@@ -92,7 +92,7 @@ The factors in the right-hand side of Eqs.\eqref{bayes-hasns} and \eqref{bayes-h
 \end{equation}
 %
 where $N_s=\hbox{dim}\,(D_S)$, $N_{\hasns_+}$ is the number of events in $D_S$ with label 
-$\hasns_+$, and $N^+{}_{\hasns_+}(f_1+f_2)$ and $N^-{}_{\hasns_+}(f_1+f_2)$ are the number of events in $D_S$ that are correctly (incorrectly) classified as ${\hasns_+}$ by the outcome $f_1+f_2$. The first factor in the right-hand side of Eq. (~\ref{bayes-hasrem}) can be evaluated similarly to Eq. (~\ref{bayes-est}) by replacing \hasns\ with \hasrem\ and restricting $D_S$ to elements with \hasns$_+$ label.
+$\hasns_+$, and $N^+{}_{\hasns_+}(f_1+f_2)$ and $N^-{}_{\hasns_+}(f_1+f_2)$ are the number of events in $D_S$ that are correctly (incorrectly) classified as ${\hasns_+}$ by the outcome $f_1+f_2$. The first factor in the right-hand side of Eq. ~\eqref{bayes-hasrem} can be evaluated similarly to Eq.~\eqref{bayes-est} by replacing \hasns\ with \hasrem\ and restricting $D_S$ to elements with \hasns$_+$ label.
 
 The probability estimators are generally noisy because they are evaluated on a finite data set. Smooth probability functions can be obtained by mapping them from the $(0,1)$ space to the real
 line with a logistic function, smoothing them with a Savitzky-Golay filter, fitting them with a Gaussian Process Regression, and finally mapping them back to the $(0,1)$ space.   
@@ -106,4 +106,4 @@ P_M(I|{\bf A}_{\bf X})=\frac{\sum_J\beta_J P_J(I|{\bf A}_{\bf X})}{\sum_J\beta_J
 \end{aligned}
 \end{equation}
 %
-where $I=$\hasns\ or \hasrem, $P_J(I|{\bf A}_{\bf X})$ ($J=1,\dots 23$) are the Bayesian probabilities in Eqs.~\eqref{bayes-hasns} and \eqref{bayes-hasrem} calculated from the data set $D_S$ with labels assigned according to the $J$-th \ac{EOS}, and $\beta_J$ are Bayes factors~\cite{Ghosh:2021eqv}. The probabilities $P_J(I|{\bf A}_{\bf X})$ in Eq.~\eqref{bayes-marginalized} can be tabulated and used to compute the marginalized probabilities $P_M(\hasns|{\bf A}_{\bf E})$ and $P_M(\hasrem|{\bf A}_{\bf E})$ for any new event $\bf E$ with algorithm outcome $\bf A_{E}$.
+where $I=$ \hasns\ or \hasrem, $P_J(I|{\bf A}_{\bf X})$ ($J=1,\dots 23$) are the Bayesian probabilities in Eqs.~\eqref{bayes-hasns} and \eqref{bayes-hasrem} calculated from the data set $D_S$ with labels assigned according to the $J$-th \ac{EOS}, and $\beta_J$ are Bayes' factors~\cite{Ghosh:2021eqv}. The probabilities $P_J(I|{\bf A}_{\bf X})$ in Eq.~\eqref{bayes-marginalized} can be tabulated and used to compute the marginalized probabilities $P_M(\hasns|{\bf A}_{\bf E})$ and $P_M(\hasrem|{\bf A}_{\bf E})$ for any new event $\bf E$ with algorithm outcome $\bf A_{E}$.
