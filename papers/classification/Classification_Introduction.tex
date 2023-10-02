@@ -8,8 +8,8 @@ The first detection of a \ac{GW} signal from a pair of coalescing black holes in
 a powerful tool for the exploration of the cosmos~\cite{LIGOScientific:2016aoc,LIGOScientific:2017vwq,LIGOScientific:2018cki}. The third \ac{LVK} catalog of transient \ac{GW} signals
 \ac{GWTC3}~\cite{LIGOScientific:2021djp} has shown that \ac{GW} astronomy has entered its mature phase, becoming a true observational branch of astronomy. \ac{MMA} allows scientists to explore
 in depth the origin and structure of black holes~\cite{Schmidt:2020ekt,Nitz:2021zwj,Barack:2018yly}, neutron stars~\cite{Ruiz:2021gsv,Baiotti:2016qnr,Lasky:2015uia} and gamma-ray bursts~\cite{Murase:2019tjj,Ciolfi:2018tal}, test general
-relativity~\cite{Berti:2018cxi,Berti:2018vdi,Bhagwat:2021kwv}, probe the fundamental nature of gravity~\cite{LISA:2022yao,Barausse:2020rsu,Piorkowska-Kurpas:2022idw}, and measure the evolution of the
-universe~\cite{LIGOScientific:2021sio,LIGOScientific:2021psn,LIGOScientific:2021aug}.
+relativity~\cite{LIGOScientific:2021sio,Berti:2018cxi,Berti:2018vdi,Isi:2019aib}, probe the fundamental nature of gravity~\cite{LISA:2022yao,Barausse:2020rsu,Piorkowska-Kurpas:2022idw}, and measure the evolution of the
+universe~\cite{LIGOScientific:2021psn,LIGOScientific:2021aug}.
 
 A wealth of new detections is being amassed to achieve these science goals~\cite{LIGOScientific:2014pky,VIRGO:2014yos}. The rate of detections in \ac{LVK}'s \ac{O4} is close to one per day and
 is expected to further increase in the \ac{O5}~\cite{KAGRA:2013rdx}. Over the course of \ac{O4} and the next observing runs, the \ac{LVK} collaboration will analyze hundreds of \ac{BBH} and
@@ -24,19 +24,18 @@ DES:2017kbs, Tanvir:2017pws}. The presence of a post-merger matter remnant, whic
 the potential of a \ac{GW} source to become an \ac{EM} emitter and enabling coincident observations of these systems by \ac{EM} and \ac{GW} observatories in low latency are crucial for the success
 of \ac{MMA}.
 
-The \ac{LVK} employs different matched-filtering pipelines for low-latency \ac{GW} searches~\cite{Sachdev:2020lfd,Nitz:2018rgo,Adams:2015ulm,Kovalam:2021bgg,Hooper:2011rb}. These searches are
+The \ac{LVK} employs different matched-filtering pipelines for low-latency \ac{GW} searches~\cite{Sachdev:2020lfd,Nitz:2018rgo,Adams:2015ulm,Chu:2020pjv,Klimenko:2015ypf}. These searches are
 based on discrete template banks of \ac{CBC} waveforms that provide, among other parameters, the component masses and the dimensionless (anti-)aligned spins of the objects along the orbital
 angular momentum. These parameters can be used to determine the \ac{EM} properties of \ac{GW} candidates in real time through empirical fits of \ac{NR}
 simulations~\cite{Foucart:2012nc,Foucart:2018rjc}. Preliminary alerts of candidate \ac{GW} events that included two \ac{EM}-property metrics identifying whether the \ac{CBC} system
-contains a \ac{NS}, \hasns, and a post-merger matter remnant, \hasrem\ were issued in \ac{O3} with a median latency of the order of a few minutes after detection. Alerts with similar content continue to be issued in \ac{O4} with even lower latency.  Additionally, \ac{LVK}'s \ac{O4} alerts include a measure of the \hasgap\ property, i.e., the likelihood that one of the
-source compact objects has a mass in the lower-mass gap region between \ac{NS}s and \ac{BH}s~\cite{Farah:2021qom} 
-%(see online user guide~\cite{UserGuide}). 
+contains a \ac{NS}, \hasns, and a post-merger matter remnant, \hasrem, were issued in \ac{O3} with a median latency of the order of a few minutes after detection. Alerts with similar content continue to be issued in \ac{O4} with even lower latency.  Additionally, \ac{LVK}'s \ac{O4} alerts include a measure of the \hasgap\ property, i.e., the likelihood that one of the
+source compact objects has a mass in the lower-mass gap region between \ac{NS}s and \ac{BH}s~\cite{Farah:2021qom} (see online user guide~\cite{UserGuide}). 
 
 Classification of \ac{GW} candidate events in low latency poses several challenges as the desire for accuracy contrasts with the desire to issue the information as quickly as possible. The
-approach taken by the \ac{LVK} so far has been to use a supervised \ac{KNN}~\cite{Pedregosa:2011ork} \ac{ML} algorithm with input from the detection pipelines and \ac{EOS} models to generate
+approach taken by the \ac{LVK} so far has been to use a supervised \ac{KNN} \ac{ML} algorithm~\cite{Pedregosa:2011ork} with input from the detection pipelines and \ac{EOS} models to generate
 independent \hasns\ and \hasrem\ binary classification \emph{scores}~\cite{Chatterjee:2019avs}. The \ac{KNN} model is trained on a broad set of synthetic \ac{CBC} signals injected in real
 detector noise from the \ac{O2}. The advantage of this scheme relies in the capability of the method to handle the statistical uncertainties of the parameters from the search pipelines and the
-non-stationarity of the detectors' power spectral density. This approached allowed for a marked improvement in performance compared to the semi-analytic effective Fisher formalism method that
+non-stationarity of the detectors' power spectral density. This approach allowed for a marked improvement in performance compared to the semi-analytic effective Fisher formalism method that
 was deployed in \ac{O2}.
 
 In this work, we revisit the problem of the real-time production of \hasns\ and \hasrem\ \emph{probability} metrics with the aim of further improving the latency and performance of the current
@@ -51,7 +50,7 @@ main purposes of this work is to go beyond the above scheme and calculate true \
 To achieve this, we design a new classification scheme and perform a thorough study and comparison of two alternative \ac{ML} algorithms. We first implement a definition for conditional \hasns\
 and \hasrem\ metrics that incorporates \emph{ab initio} the physical requirement that a system with a post-merger matter remnant must necessarily contain a \ac{NS}. Then we calculate
 \emph{Bayesian probabilities} for \hasns\ and \hasrem. We also implement a marginalization procedure over a set of \ac{EOS} that minimizes possible systematics arising from the use of a single
-\ac{EOS}. Finally, test the performance of the scheme and the algorithms on synthetic \ac{O3} signals and confident \ac{GW} detections from the latest \ac{GWTC3} catalog.
+\ac{EOS}. Finally, we test the performance of the scheme and the algorithms on synthetic \ac{O3} signals and confident \ac{GW} detections from the latest \ac{GWTC3} catalog.
 
 The structure of the paper is as follows. Section~\ref{algos} introduces the classification algorithms. Bayesian probabilities for \hasns\ and \hasrem\ and the labeling scheme are defined in
-Sec.~\ref{probability}. The data set is described in Sec.~\ref{dataset}. Results and algorithm comparison are reported in Sec.~\ref{results}. Conclusions and future developments are presented in Sec.~\ref{conclusions}.  
+Sec.~\ref{probability}. The data set is described in Sec.~\ref{dataset}. Results and algorithm comparisons are reported in Sec.~\ref{results}. Conclusions and future developments are presented in Sec.~\ref{conclusions}.  
