@@ -11,14 +11,14 @@ We measure the performance of our algorithms by the \ac{TPR} and the \ac{FPR} on
 \begin{figure*}[h]
 \includegraphics[width=0.45\linewidth]{roc_testing_KNN_NS}
 \includegraphics[width=0.45\linewidth]{roc_testing_KNN_REM}
-\caption{\ac{ROC} curves for the testing dataset $D_S$ for the \ac{KNN} classifier. The \ac{ROC} of the 23 \ac{EOS} are shown in grey. The \ac{ROC} curves for the \ac{EOS}s with minimum mass ({\tt BHF\_BBB2}), maximum mass ({\tt MS1\_PP}), and {\tt SLy} are highlighted in red, green, and blue, respectively. The circle, triangle, and square markers denote values for score thresholds of 0.1, 0.5, and 0.9, respectively.}
+\caption{\ac{ROC} curves using the O2 testing data set $D_S$ for the \ac{KNN} classifier. The \ac{ROC} of the 23 \ac{EOS} are shown in grey. The \ac{ROC} curves for the \ac{EOS}s with minimum mass ({\tt BHF\_BBB2}), maximum mass ({\tt MS1\_PP}), and {\tt SLy} are highlighted in red, green, and blue, respectively. The circle, triangle, and square markers denote values for score thresholds of 0.1, 0.5, and 0.9, respectively.}
 \label{fig:rocO2_KNN}
 \end{figure*}
 
 \begin{figure*}[h]
 \includegraphics[width=0.45\linewidth]{roc_testing_RF_NS}
 \includegraphics[width=0.45\linewidth]{roc_testing_RF_REM}
-\caption{\ac{ROC} curves for the testing dataset $D_S$ for the \ac{RF} classifier. The \ac{ROC} of the 23 \ac{EOS} are shown in grey. The \ac{ROC} curves for the \ac{EOS}s with minimum mass ({\tt BHF\_BBB2}), maximum mass ({\tt MS1\_PP}), and {\tt SLy} are highlighted in red, green, and blue, respectively. The circle, triangle, and square markers denote values for score thresholds of 0.1, 0.5, and 0.9, respectively.}
+\caption{\ac{ROC} curves using the O2 testing data set $D_S$ for the \ac{RF} classifier. The \ac{ROC} of the 23 \ac{EOS} are shown in grey. The \ac{ROC} curves for the \ac{EOS}s with minimum mass ({\tt BHF\_BBB2}), maximum mass ({\tt MS1\_PP}), and {\tt SLy} are highlighted in red, green, and blue, respectively. The circle, triangle, and square markers denote values for score thresholds of 0.1, 0.5, and 0.9, respectively.}
 \label{fig:rocO2_RF}
 \end{figure*}
 
@@ -32,7 +32,7 @@ probabilities $P_M(I|{\bf A})$.
 The two classifiers perform consistently across all \ac{EOS}s. The \ac{TPR} for a score threshold of $0.5$ is around $0.99$ for both \hasns\ and \hasrem. A comparison of the
 \hasns\ and \hasrem\ \ac{ROC} curves for each algorithm shows that the \ac{FPR} for \hasns\ is generally higher than the \ac{FPR} for \hasrem\ at a given threshold. Thus the algorithms
 typically do a better job in classifying \hasrem\ than \hasns. A separate comparison of the \ac{KNN} and \ac{RF} \ac{ROC} curves for \hasns\ and \hasrem\ shows that both algorithms perform
-similarly on the testing dataset, with \ac{RF} giving slightly higher \ac{TPR} and lower \ac{FPR} than \ac{KNN} at a fixed threshold. 
+similarly on the O2 testing data set, with \ac{RF} giving slightly higher \ac{TPR} and lower \ac{FPR} than \ac{KNN} at a fixed threshold. 
 
 \subsection{Computation of the Bayesian probabilities}
 
@@ -41,7 +41,7 @@ probabilities defined in the Section~\ref{bayesian_probs}, in terms of the
 output of the algorithms (fractions of neighbors and fractions of trees, 
 respectively). In order to obtain the probabilities given in 
 Equations~\ref{bayes-hasns} and~\ref{bayes-hasrem} one needs to apply
- the algorithm on known events, which are the events from the data set $D$, already used for training and testing the algorithms in the previous subsection. More concretely, we evaluate these probabilities on the testing set $D_S$.
+ the algorithm on known events, which are the events from the O2 data set $D$, already used for training and testing the algorithms in the previous subsection. More concretely, we evaluate these probabilities on the testing set $D_S$.
 
 \begin{figure*}%[h]
 \includegraphics[width=0.45\linewidth]{KNN_3_eos_prob_plots_HasNS}
@@ -72,24 +72,26 @@ Figs.~\ref{fig:rocO2_KNN} and~\ref{fig:rocO2_RF}.
 
 \subsection{Performance on new events}
 
-As stated in the Section~\ref{bayesian_probs}, the fits of the probabilities $P_J(I|{\bf A}_{\bf X})$ for each EOS ($J=1,\dots 23$) can be tabulated and used to compute the marginalized
+As stated in Section~\ref{bayesian_probs}, the fits of the probabilities $P_J(I|{\bf A}_{\bf X})$ for each EOS ($J=1,\dots 23$) can be tabulated and used to compute the marginalized
 probabilities $P_M(\hasns|{\bf A}_{\bf E})$ and $P_M(\hasrem|{\bf A}_{\bf E})$ for any new event $\bf E$ with algorithm outcome $\bf A_{E}$.  We classify the events from MDC and compute the ROC
 curves according to the ground truth of the injected events, which can be seen in Figs.~\ref{fig:rocMDC_KNN} and~\ref{fig:rocMDC_RF}. In contrast to the \ac{O2} data set, the \ac{MDC} set contains
-outputs from different pipelines. Therefore, we separate the ROC curves for the different pipelines involved in the dataset (GstLAL,  PyCBC~\cite{Usman:2015kfa}, SPIIR~\cite{Chu:2020pjv} and
-MBTA~\cite{Adams:2015ulm}). Notice that the curves are very similar even though the algorithms were trained (and also the Bayesian probabilities were fitted) using exclusively GstLAL.
+outputs from different matched-filtering pipelines. Therefore, we separate the ROC curves for the different pipelines involved in the data set (GstLAL,  PyCBC~\cite{Usman:2015kfa}, SPIIR~\cite{Chu:2020pjv} and
+MBTA~\cite{Adams:2015ulm}). 
+
+%Notice that the curves are very similar even though the algorithms were trained (and also the Bayesian probabilities were fitted) using exclusively GstLAL.
 
 Figure~\ref{fig:rocMDC_KNN} depicts the curves for \ac{KNN}.  In the case of
 \hasns\ (left panel), it gives a true positive rate of $\sim 0.975$ for a
-threshold of $0.5$ and less than a false positive rate of $0.2$ for all the
-pipelines except of SPIIR. Regarding \hasrem\ (right panel), \ac{KNN}. gives a
+threshold of $0.5$ and a false positive rate of less than $0.2$ for all the
+pipelines except of SPIIR. Regarding \hasrem\ (right panel), \ac{KNN} gives a
 false positive rate slightly higher than $0.2$ for all the pipelines except of
 GstLAL when fixing the threshold to $0.5$, but the true positive rate stays
 around $0.975$. In this case, SPIIR behaves similarly to the rest of the pipelines. 
 
 In Fig.~\ref{fig:rocMDC_RF} we showcase the results for \ac{RF}.  The curves
-are similar to the ones in Fig.~\ref{fig:rocMDC_KNN}, having a steeper shape for \hasns\ (left panel) and thus giving high true positive rates and low false positive rates at a given threshold. SPIIR also performs poorly for \ac{RF}. When it comes to \hasrem\ (right panel), the false positive rates increase as for \ac{KNN}, and it outperforms on GstLAL compared to the rest of the pipelines.  
+are similar to the ones in Fig.~\ref{fig:rocMDC_KNN}, having a steeper shape for \hasns\ (left panel) and thus giving high true positive rates and low false positive rates at a given threshold. \ac{RF} also performs poorly for SPIIR. When it comes to \hasrem\ (right panel), the false positive rates increase as for \ac{KNN}, and it outperforms on GstLAL compared to the rest of the pipelines.  
 
-One can note that, when applied to a new data set, the algorithms perform better on \hasns\ rather than on \hasrem\, as opposed to what happenned with the testing data set $D_S$ from O2 (see Figs.~\ref{fig:rocO2_KNN} and~\ref{fig:rocO2_RF}). Moreover, \ac{KNN} outperforms \ac{RF} when it comes to \hasrem\ (especially on other pipelines than GstLAL), and both algorithms work better for events injected on GstLAL, which is the pipeline exclusively used in the training data set. Due to the hard cuts applied by \ac{RF} and the fact that it has been trained only with GstLAL injections, this algorithm is less adaptable than \ac{KNN}, and that is why the ROC curves are not as steep as for \ac{KNN} when classifying data from other pipelines. 
+One can note that, when applied to a new data set, the algorithms perform better on \hasns\ rather than on \hasrem\, as opposed to what happenned with the testing data set $D_S$ from O2 (see Figs.~\ref{fig:rocO2_KNN} and~\ref{fig:rocO2_RF}). Moreover, \ac{KNN} outperforms \ac{RF} when it comes to \hasrem\ (especially on other pipelines than GstLAL), and both algorithms work better for events injected on GstLAL, which is the pipeline exclusively used in the O2 training data set, $D_R$. Due to the hard cuts applied by \ac{RF} and the fact that it has been trained only with GstLAL injections, this algorithm is less adaptable than \ac{KNN}, and that is why the ROC curves are not as steep as for \ac{KNN} when classifying data from other pipelines. 
 
 %\begin{comment}
 %performs very well for \hasns achieving a true positive rate very close to
@@ -102,28 +104,28 @@ One can note that, when applied to a new data set, the algorithms perform better
 \begin{figure*}%[h]
 \includegraphics[width=0.45\linewidth]{roc_mdc_KNN_NS}
 \includegraphics[width=0.45\linewidth]{roc_mdc_KNN_REM}
-\caption{ROC curves of Bayesian probability marginalized
-    for the 23 EoSs for MDC11 dataset using \ac{KNN} classifier.}
+\caption{ROC curves of the Bayesian probability marginalized
+    over 23 equations of state using the O3 MDC data set, for the \ac{KNN} classifier. The left panel depicts the curve for \hasns\, and the right panel, for \hasrem\. Each color represents different matched-filtering pipelines.}
 \label{fig:rocMDC_KNN}
 \end{figure*}
 
 \begin{figure*}%[h]
 \includegraphics[width=0.45\linewidth]{roc_mdc_RF_NS}
 \includegraphics[width=0.45\linewidth]{roc_mdc_RF_REM}
-\caption{ROC curves of Bayesian probability marginalized for the 23 EoSs for MDC11 dataset using \ac{RF} classifier.}
+\caption{Same as Figure~\ref{fig:rocMDC_KNN}, but for the \ac{RF} classifier.}
 \label{fig:rocMDC_RF}
 \end{figure*}
 
 We also applied the tabulated Bayesian probabilities to classify real events
-from the O3 LVK run~\cite{LIGOScientific:2020ibl, LIGOScientific:2021djp}.  In Table~\ref{tab:real_data_bayesian} we depict some of the most significant events of the LVK third observing run, labeling them with their event ID and the GraceDB\footnote{\href{https://gracedb.ligo.org/}https://gracedb.ligo.org/} ID.  We show the marginalized Bayesian probabilities for both \hasns\ and \hasrem\ computed with 
+from the O3 LVK run~\cite{LIGOScientific:2020ibl, LIGOScientific:2021djp}.  In Table~\ref{tab:real_data_bayesian} we depict some of the most significant events, labeled with their event ID.  We show the marginalized Bayesian probabilities for both \hasns\ and \hasrem\ computed with 
 \ac{RF} and \ac{KNN}. For the first two events (GW170817 and GW190425),
 $P_M(\hasns |\bf{A_E})$ and $P_M(\hasrem |\bf{A_E})$ are very close to 1, meaning that these events
 correspond to BNS mergers, as shown in~\cite{LIGOScientific:2020ibl,LIGOScientific:2021djp}. 
-For GW190426 and GW200115, $P_M(\hasns |\bf{A_E}) \sim 1$, but
-$P_M(\hasrem |\bf{A_E}) = 0$, which correspond to NSBH mergers, and agree 
+For GW190426 and GW200115, $P_M(\hasns |{\bf{A_E}}) \sim 1$, but
+$P_M(\hasrem |{\bf{A_E}}) = 0$ (they are actually non-zero, but smaller than $10^{-3}$), which correspond to NSBH mergers, and agree 
 with~\cite{LIGOScientific:2020ibl, LIGOScientific:2021djp}. Finally, GW190814 and GW190924,
 have non-zero $P_M(\hasns |\bf{A_E})$ (indeed, \ac{KNN} gives a probability higher than
-0.5 for GW190814). The results in~\cite{LIGOScientific:2020ibl, LIGOScientific:2021djp} show that these events are high mass-ratio BBH mergers. The fact that the component masses are very different from each other (and the lower mass is close to the NS limit) might have led to these non-zero probabilities. Moreover, for GW190814 \ac{KNN} gives a probability higher than 0.5 for \hasns, which differs considerably from what \ac{RF} predicts, which is only a 0.042. This is because for this event, regarding at the posterior of the secondary mass, only three out of twenty three equations of state are compatible with a NS. Since \ac{RF} applies a hard cut on the EOS, $P_M(\hasns|{\bf A}_{\bf E})$ will be low. However, \ac{KNN} depends on the neighbors surrounding the event, and the mass gap is not filled enough in the training dataset, which makes that the closer neighbors are NSs. 
+0.5 for GW190814). The results in~\cite{LIGOScientific:2020ibl, LIGOScientific:2021djp} show that these events are high mass-ratio BBH mergers. The fact that the component masses are very different from each other (and the lower mass is close to the NS limit) might have led to these non-zero probabilities. Moreover, for GW190814 \ac{KNN} gives a probability higher than 0.5 for \hasns, which differs considerably from what \ac{RF} predicts, which is only a 0.042. This is because for this event, regarding at the posterior of the secondary mass, only three out of twenty three equations of state are compatible with a NS. Since \ac{RF} applies a hard cut on the EOS, $P_M(\hasns|{\bf A}_{\bf E})$ will be low. However, \ac{KNN} depends on the neighbors surrounding the event, and the mass gap is not filled enough in the training data set, which makes that the closer neighbors are NSs. 
 
 \begin{table}[]
 \begin{tabular}{c|cc|cc}
