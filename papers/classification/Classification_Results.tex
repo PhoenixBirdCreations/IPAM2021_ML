@@ -37,7 +37,7 @@ The two classifiers perform consistently across all \ac{EOS}s. The \ac{TPR} for 
 typically do a better job in classifying \hasrem\ than \hasns. A separate comparison of the \ac{KNN} and \ac{RF} \ac{ROC} curves for \hasns\ and \hasrem\ shows that both algorithms perform
 similarly on the O2 testing data set, with \ac{RF} giving slightly higher \ac{TPR} and lower \ac{FPR} than \ac{KNN} at a fixed threshold. 
 
-\subsection{Computation of the Bayesian probabilities}
+\subsection{Computation of the Bayesian Probabilities}
 
 Once the algorithms are trained and tested, we compute the Bayesian
 probabilities defined in the Section~\ref{bayesian_probs}, in terms of the 
@@ -73,7 +73,7 @@ $P_J(\hasrem |\bf{A_X})$) for fractions of trees around $0.8$, which
 \ac{KNN} does not reproduce. We highlight the same equations of state as in
 Figs.~\ref{fig:rocO2_KNN} and~\ref{fig:rocO2_RF}.
 
-\subsection{Performance on new events}
+\subsection{Performance on New Events}
 
 As stated in Section~\ref{bayesian_probs}, the fits of the probabilities $P_J(I|{\bf A}_{\bf X})$ for each EOS ($J=1,\dots 23$) can be tabulated and used to compute the marginalized
 probabilities $P_M(\hasns|{\bf A}_{\bf E})$ and $P_M(\hasrem|{\bf A}_{\bf E})$ for any new event $\bf E$ with algorithm outcome $\bf A_{E}$.  We classify the events from the MDC data set and compute the ROC
