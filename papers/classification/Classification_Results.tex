@@ -11,14 +11,18 @@ We measure the performance of our algorithms by the \ac{TPR} and the \ac{FPR} on
 \begin{figure*}[h]
 \includegraphics[width=0.45\linewidth]{roc_testing_KNN_NS}
 \includegraphics[width=0.45\linewidth]{roc_testing_KNN_REM}
-\caption{\ac{ROC} curves using the O2 testing data set $D_S$ for the \ac{KNN} classifier. The \ac{ROC} of the 23 \ac{EOS} are shown in grey. The \ac{ROC} curves for the \ac{EOS}s with minimum mass ({\tt BHF\_BBB2}), maximum mass ({\tt MS1\_PP}), and {\tt SLy} are highlighted in red, green, and blue, respectively. The circle, triangle, and square markers denote values for score thresholds of 0.1, 0.5, and 0.9, respectively.}
+\caption{\ac{ROC} curves obtained from the \ac{O2} testing data set $D_S$ for the \ac{KNN} classifier (left: \hasns, right: \hasrem). The curves for the 23 different \ac{EOS}s are displayed in
+gray, with the curves for {\tt BHF\_BBB2}, {\tt MS1\_PP}, and {\tt SLy} highlighted in red, green, and blue, respectively. The circle, triangle, and square markers denote score thresholds of
+$0.1$, $0.5$, and $0.9$, respectively.}
 \label{fig:rocO2_KNN}
 \end{figure*}
 
 \begin{figure*}[h]
 \includegraphics[width=0.45\linewidth]{roc_testing_RF_NS}
 \includegraphics[width=0.45\linewidth]{roc_testing_RF_REM}
-\caption{\ac{ROC} curves using the O2 testing data set $D_S$ for the \ac{RF} classifier. The \ac{ROC} of the 23 \ac{EOS} are shown in grey. The \ac{ROC} curves for the \ac{EOS}s with minimum mass ({\tt BHF\_BBB2}), maximum mass ({\tt MS1\_PP}), and {\tt SLy} are highlighted in red, green, and blue, respectively. The circle, triangle, and square markers denote values for score thresholds of 0.1, 0.5, and 0.9, respectively.}
+\caption{\ac{ROC} curves obtained from the \ac{O2} testing data set $D_S$ for the \ac{RF} classifier (left: \hasns, right: \hasrem). The curves for the 23 different \ac{EOS}s are displayed in
+gray, with the curves for {\tt BHF\_BBB2}, {\tt MS1\_PP}, and {\tt SLy} highlighted in red, green, and blue, respectively. The circle, triangle, and square markers denote score thresholds of
+$0.1$, $0.5$, and $0.9$, respectively.}
 \label{fig:rocO2_RF}
 \end{figure*}
 
@@ -36,7 +40,7 @@ similarly on the O2 testing data set, with \ac{RF} giving slightly higher \ac{TP
 \subsection{Computation of the Bayesian probabilities}
 
 Once the algorithms are trained and tested, we compute the Bayesian
-probabilities defined in the Section~\eqref{bayesian_probs}, in terms of the 
+probabilities defined in the Section~\ref{bayesian_probs}, in terms of the 
 output of the algorithms (fractions of neighbors and fractions of trees, 
 respectively). In order to obtain the probabilities given in 
 Equations~\eqref{bayes-hasns} and~\eqref{bayes-hasrem}, one needs to apply
@@ -45,19 +49,19 @@ Equations~\eqref{bayes-hasns} and~\eqref{bayes-hasrem}, one needs to apply
 \begin{figure*}%[h]
 \includegraphics[width=0.45\linewidth]{KNN_3_eos_prob_plots_HasNS}
 \includegraphics[width=0.45\linewidth]{KNN_3_eos_prob_plots_HasRem}
-\caption{Fits of the Bayesian probabilities as functions of the fraction of neighbors from \ac{KNN}. The left panel corresponds to the probability for \hasns\ and the right panel, to \hasrem\ . The different colors denote the equations of state. Generally, the curves increase with the fraction of neighbors, except of some fluctuations due to having a finite data set.}
+\caption{Left panel: Bayesian probability fit for \hasns\ as a function of the fraction of \ac{KNN} neighbors $f_1+f_2$. Right panel: Bayesian probability fit for \hasrem\ as a function of the fraction of \ac{KNN} neighbors $f_2$. Fits for the {\tt BHF\_BBB2}, {\tt MS1\_PP}, and {\tt SLy} \ac{EOS}s are highlighted in red, green, and blue, respectively. The fits exhibit an upward trend with the fraction of neighbors.  Non-monotonic fluctuations are due to the data set's finite size.}
 \label{fig:bayesian_prob_fits_KNN}
 \end{figure*}
 
 \begin{figure*}%[h]
 \includegraphics[width=0.45\linewidth]{RF_3_eos_prob_plots_HasNS}
 \includegraphics[width=0.45\linewidth]{RF_3_eos_prob_plots_HasRem}
-\caption{Fits of the Bayesian probabilities as functions of the fraction of trees from \ac{RF}. As in Figure~\ref{fig:bayesian_prob_fits_KNN}, the left panel corresponds to the probability for \hasns\ and the right panel, to \hasrem\ . Again, the different colors denote the equations of state. In this case all the fits increase with the fraction of trees.}
+\caption{Left panel: Bayesian probability fit for \hasns\ as a function of the fraction of \ac{RF} trees $f_1+f_2$. Right panel: Bayesian probability fit for \hasrem\ as a function of the fraction of \ac{RF} Trees $f_2$. Fits for the {\tt BHF\_BBB2}, {\tt MS1\_PP}, and {\tt SLy} \ac{EOS}s are highlighted in red, green, and blue, respectively. The fits exhibit an upward trend with the fraction of trees.  Non-monotonic fluctuations are due to the data set's finite size.}
 \label{fig:bayesian_prob_fits_RF}
 \end{figure*}
 
 In Figs.~\ref{fig:bayesian_prob_fits_KNN} and~\ref{fig:bayesian_prob_fits_RF}, 
-we show the fits of the results with Gaussian Process Regression,
+we show the fits of the results with \ac{GPR},
 performed as explained in the Section~\ref{bayesian_probs}. In these figures, we show
 the fits for each EOS, but one can always get a single marginalized probability
 applying the Bayes' factors. The fitted curves generally increase with the number of neighbors/trees, except for some fluctuations due to the fact that the data set is finite resulting in some noise. The fits also have a
@@ -103,15 +107,15 @@ One can note that, when applied to a new data set, the algorithms perform better
 \begin{figure*}%[h]
 \includegraphics[width=0.45\linewidth]{roc_mdc_KNN_NS}
 \includegraphics[width=0.45\linewidth]{roc_mdc_KNN_REM}
-\caption{ROC curves of the Bayesian probability marginalized
-    over 23 equations of state using the O3 MDC data set, for the \ac{KNN} classifier. The left panel depicts the curve for \hasns\, and the right panel, for \hasrem\. Each color represents different matched-filtering pipelines.}
+\caption{\ac{ROC} curves obtained from the \ac{O3} \ac{MDC} data set for the \ac{KNN} classifier (left: \hasns, right: \hasrem). The different \ac{LVK} matched-filtering pipelines are indicated by different colors (GstLAL: red; PyCBC: green; gold: SPIIR; blue: MBTA). The results for all pipelines are shown in black. The circle, triangle, and square markers denote probability thresholds of $0.1$, $0.5$, and $0.9$, respectively.}
 \label{fig:rocMDC_KNN}
 \end{figure*}
+
 
 \begin{figure*}%[h]
 \includegraphics[width=0.45\linewidth]{roc_mdc_RF_NS}
 \includegraphics[width=0.45\linewidth]{roc_mdc_RF_REM}
-\caption{Same as Figure~\ref{fig:rocMDC_KNN}, but for the \ac{RF} classifier.}
+\caption{\ac{ROC} curves obtained from the \ac{O3} \ac{MDC} data set for the \ac{RF} classifier (left: \hasns, right: \hasrem). The different \ac{LVK} matched-filtering pipelines are indicated by different colors (GstLAL: red; PyCBC: green; gold: SPIIR; blue: MBTA). The results for all pipelines are shown in black. The circle, triangle, and square markers denote probability thresholds of $0.1$, $0.5$, and $0.9$, respectively.}
 \label{fig:rocMDC_RF}
 \end{figure*}
 
@@ -154,7 +158,7 @@ GW200115                                   & 0.998                   & 0.989    
 \label{tab:real_data_bayesian}
 \end{table}
 
-In Figs.~\ref{fig:param_sweep_KNN} and~\ref{fig:param_sweep_RF} we depict parameter sweeps that are built using the Bayesian probabilities computed with \ac{KNN} and \ac{RF}, respectively.  These figures show the Bayesian probabilities for \hasns\ (left column) and for \hasrem\ (right column) for given component masses of the binary system, $M_1$ being the larger mass. The  columns stand for different fixed values of the component spins. The SNR is fixed to 10. One can see that both algorithms perform in a similar way. Regarding $P_M(\hasns |\bf{A_E})$,  there are no notable differences between the choice of spin values.  There is a small difference between the algorithms: for the third column ($\chi_1 = 0.0$ and $\chi_2$), $P_M(\hasns |\bf{A_E})$ is larger for bigger $M_1$ in the case of \ac{KNN}. For $P_M(\hasrem |\bf{A_E})$, both algorithms give almost the same results. The sweeps show that, for a large $\chi_1$, the probability of having a remnant increases for bigger values of the first component mass, $M_1$. As expected, the region in which $P_M(\hasrem |\bf{A_E}) \sim 1$ is inside the region in which $P_M(\hasns |\bf{A_E}) \sim 1$.
+In Figs.~\ref{fig:param_sweep_KNN} and~\ref{fig:param_sweep_RF} we depict parameter sweeps that are built using the Bayesian probabilities computed with \ac{KNN} and \ac{RF}, respectively.  These figures show the Bayesian probabilities for \hasns\ (left column) and for \hasrem\ (right column) for given component masses of the binary system, $M_1$ being the larger mass. The rows stand for different fixed values of the component spins. The SNR is fixed to 10. One can see that both algorithms perform in a similar way. Regarding $P_M(\hasns |\bf{A_E})$,  there are no notable differences between the choice of spin values.  There is a small difference between the algorithms: for the third row ($\chi_1 = 0.0$ and $\chi_2=1.0$), $P_M(\hasns |\bf{A_E})$ is larger for bigger $M_1$ in the case of \ac{KNN}. For $P_M(\hasrem |\bf{A_E})$, both algorithms give almost the same results. The sweeps show that, for a large $\chi_1$, the probability of having a remnant increases for bigger values of the first component mass, $M_1$. As expected, the region in which $P_M(\hasrem |\bf{A_E}) \sim 1$ is inside the region in which $P_M(\hasns |\bf{A_E}) \sim 1$.
 
 Moreover, the parameter sweeps of $P_M(\hasns |\bf{A_E})$ (left column) for \ac{KNN} seem to be noisier for large primary masses. This is because the algorithm just looks at the closest neighbors, and it only needs few neighbors that are labelled differently to provide a higher probability in a certain region. On the other hand, \ac{RF} applies a hard cut on large primary masses, resulting in a more uniform probability in that region. 
 

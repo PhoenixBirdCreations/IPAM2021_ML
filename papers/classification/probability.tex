@@ -95,7 +95,7 @@ where $N_s=\hbox{dim}\,(D_S)$, $N_{\hasns_+}$ is the number of events in $D_S$ w
 $\hasns_+$, and $N^+{}_{\hasns_+}(f_1+f_2)$ and $N^-{}_{\hasns_+}(f_1+f_2)$ are the number of events in $D_S$ that are correctly (incorrectly) classified as ${\hasns_+}$ by the outcome $f_1+f_2$. The first factor in the right-hand side of Eq. ~\eqref{bayes-hasrem} can be evaluated similarly to Eq.~\eqref{bayes-est} by replacing \hasns\ with \hasrem\ and restricting $D_S$ to elements with \hasns$_+$ label.
 
 The probability estimators are generally noisy because they are evaluated on a finite data set. Smooth probability functions can be obtained by mapping them from the $(0,1)$ space to the real
-line with a logistic function, smoothing them with a Savitzky-Golay filter, fitting them with a Gaussian Process Regression, and finally mapping them back to the $(0,1)$ space.   
+line with a logistic function, smoothing them with a Savitzky-Golay filter, fitting them with \ac{GPR}, and finally mapping them back to the $(0,1)$ space.   
 
 Both $P(\hasns|{\bf A}_{\bf X})$ and $P(\hasrem|{\bf A}_{\bf X})$ depend on the \ac{EOS} that is used to label the synthetic events. As the true \ac{EOS} of matter at \ac{NS} densities is unknown, in order to minimize the systematics that arise in adopting a specific \ac{EOS} we consider a set of 23 different \ac{EOS} and marginalize Eqs.~\eqref{bayes-hasns} and \eqref{bayes-hasrem} over them. The marginalized probabilities $P_M(\hasns|{\bf A}_{\bf X})$ and $P_M(\hasrem|{\bf A}_{\bf X})$ are defined as
 %
