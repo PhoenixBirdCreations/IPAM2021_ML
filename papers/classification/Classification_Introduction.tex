@@ -7,7 +7,7 @@
 The first detection of a \ac{GW} signal from a pair of coalescing black holes in 2015 and the first observation of a coalescing binary neutron star system two years later have established \ac{MMA} as
 a powerful tool for the exploration of the cosmos~\cite{LIGOScientific:2016aoc,LIGOScientific:2017vwq,LIGOScientific:2018cki}. The third \ac{LVK} catalog of transient \ac{GW} signals
 \ac{GWTC3}~\cite{LIGOScientific:2021djp} has shown that \ac{GW} astronomy has entered its mature phase, becoming a true observational branch of astronomy. \ac{MMA} allows scientists to explore
-in depth the origin and structure of black holes~\cite{Schmidt:2020ekt,Nitz:2021zwj,Barack:2018yly}, neutron stars~\cite{Ruiz:2021gsv,Baiotti:2016qnr,Lasky:2015uia} and gamma-ray bursts~\cite{Murase:2019tjj,Ciolfi:2018tal}, test general
+in depth the origin and structure of \acp{BH}~\cite{Schmidt:2020ekt,Nitz:2021zwj,Barack:2018yly}, \acp{NS}~\cite{Ruiz:2021gsv,Baiotti:2016qnr,Lasky:2015uia} and \acp{GRB}~\cite{Murase:2019tjj,Ciolfi:2018tal}, test general
 relativity~\cite{LIGOScientific:2021sio,Berti:2018cxi,Berti:2018vdi,Isi:2019aib}, probe the fundamental nature of gravity~\cite{LISA:2022yao,Barausse:2020rsu,Piorkowska-Kurpas:2022idw}, and measure the evolution of the
 universe~\cite{LIGOScientific:2021psn,LIGOScientific:2021aug}.
 
@@ -31,7 +31,7 @@ simulations~\cite{Foucart:2012nc,Foucart:2018rjc}. Preliminary alerts of candida
 contains a \ac{NS}, \hasns, and a post-merger matter remnant, \hasrem, were issued in \ac{O3} with a median latency of the order of a few minutes after detection. Alerts with similar content continue to be issued in \ac{O4} with even lower latency.  Additionally, \ac{LVK}'s \ac{O4} alerts include a measure of the \hasgap\ property, i.e., the likelihood that one of the
 source compact objects has a mass in the lower-mass gap region between \ac{NS}s and \ac{BH}s~\cite{Farah:2021qom} (see online user guide~\cite{UserGuide}). 
 
-Classification of \ac{GW} candidate events in low latency poses several challenges as the desire for accuracy contrasts with the desire to issue the information as quickly as possible. The
+Classification of \ac{GW} candidate events in low latency poses several challenges as the need for accuracy contrasts with the urgency to issue the information as quickly as possible. The
 approach taken by the \ac{LVK} so far has been to use a supervised \ac{KNN} \ac{ML} algorithm~\cite{Pedregosa:2011ork} with input from the detection pipelines and \ac{EOS} models to generate
 independent \hasns\ and \hasrem\ binary classification \emph{scores}~\cite{Chatterjee:2019avs}. The \ac{KNN} model is trained on a broad set of synthetic \ac{CBC} signals injected in real
 detector noise from the \ac{O2}. The advantage of this scheme relies on its capability to handle the statistical uncertainties in the parameters recovered by the search pipelines. This approach allowed for a marked improvement in performance compared to the semi-analytic effective Fisher formalism method that
@@ -40,11 +40,11 @@ was deployed in \ac{O2}.
 In this work, we revisit the problem of the real-time production of \hasns\ and \hasrem\ \emph{probability} metrics with the aim of further improving the latency and performance of the current
 \ac{LVK} \ac{ML}-based scheme~\cite{Chatterjee:2019avs}. In the current implementation, the validity of the classification outcome for an event is assessed through elements of the algorithm's
 confusion matrix and its \ac{ROC} curve. For example, given a positive prediction, the \ac{LVK} collaborations define a ``score'' that this prediction is correct as the \ac{TPR} for the given data
-set. However, there is no quantity in the algorithm's confusion matrix that defines a probability in the strictest sense. A second limitation of current \hasns\ and \hasrem\ classification
-schemas is the fact that the \hasns\ and \hasrem\ labels are treated as independent variables. In reality, the probability of a system being \ac{EM} bright is always smaller than the probability
-of the system hosting a \ac{NS}. Therefore, the \hasns\ and \hasrem\ labels cannot be treated as disjoint. In the current \ac{LVK} implementation, this physical condition is data-based rather
-than being mathematically defined, i.e., the algorithm potentially allows for violations and the absence of inversions is only checked a posteriori through (coarse) parameter sweeps. One of the
-main purposes of this work is to go beyond the above scheme and calculate true \emph{conditional Bayesian probabilities} for \hasns\ and \hasrem. 
+set. However, there is no quantity in the algorithm's confusion matrix that defines a probability in the strictest sense. A second limitation of the current \hasns\ and \hasrem\ classification
+implementation is the fact that the \hasns\ and \hasrem\ labels are treated as independent variables. In reality, the probability of a system being \ac{EM} bright is always smaller than the
+probability of the system hosting a \ac{NS}. Therefore, the \hasns\ and \hasrem\ labels cannot be treated as disjoint. In the current \ac{LVK} implementation, this physical condition is data-based
+rather than being mathematically defined, i.e., the algorithm potentially allows for violations and the absence of inversions is only checked a posteriori through (coarse) parameter sweeps. One of
+the main purposes of this work is to go beyond the above scheme and calculate true \emph{conditional Bayesian probabilities} for \hasns\ and \hasrem. 
 
 To achieve this, we design a new classification scheme and perform a thorough study and comparison of two \ac{ML} algorithms. We first implement a definition for conditional \hasns\
 and \hasrem\ metrics that incorporates \emph{ab initio} the physical requirement that a system with a post-merger matter remnant must necessarily contain a \ac{NS}. Then we calculate

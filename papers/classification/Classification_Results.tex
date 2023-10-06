@@ -28,7 +28,7 @@ $0.1$, $0.5$, and $0.9$, respectively.}
 \label{fig:rocO2_RF}
 \end{figure*}
 
-The \hasns\ and \hasrem\ \ac{ROC} curves for the  \ac{KNN} algorithm are displayed in the left and right panels of Fig.~\ref{fig:rocO2_KNN}, respectively. Figure \ref{fig:rocO2_RF} displays the analogous curves for the \ac{RF} classifier. The \ac{ROC} curves for the 23 \ac{EOS} are plotted in grey, with three of them highlighted in color: {\tt BHF\_BBB2}, the \ac{EOS}
+The \hasns\ and \hasrem\ \ac{ROC} curves for the  \ac{KNN} algorithm are displayed in the left and right panels of Fig.~\ref{fig:rocO2_KNN}, respectively. Figure \ref{fig:rocO2_RF} displays the analogous curves for the \ac{RF} classifier. The \ac{ROC} curves for the 23 \ac{EOS} are plotted in gray, with three of them highlighted in color: {\tt BHF\_BBB2}, the \ac{EOS}
 with the lowest maximum mass for the NS; {\tt MS1\_PP}, the \ac{EOS} with the largest maximum mass for the \ac{NS}; and {\tt SLy}, which allows for a maximum mass of $2.05 M_\odot$ and is
 the standard \ac{EOS} used in \ac{LVK} low-latency investigations~\cite{Ghosh:2021eqv}. The markers denote different thresholds for the algorithm scores. 
 
@@ -73,11 +73,11 @@ MBTA~\cite{Adams:2015ulm}). Therefore, we present separate \ac{ROC} curves for t
 
 %Notice that the curves are very similar even though the algorithms were trained (and also the Bayesian probabilities were fitted) using exclusively GstLAL.
 
-In the case of \hasns, \ac{KNN} yields a \ac{TPR} of 0.975 and an \ac{FPR} smaller than 0.2 for a probability threshold of 0.5 across all pipelines, with the exception of SPIIR. SPIIR's poorer
-performance on \ac{EM} property classifications with the \ac{O3} \ac{MDC} set is a known effect that has been reported in other investigations~\cite{Chaudhary:2023vec}. In regard to \hasrem,
-\ac{KNN} yields a \ac{TPR} around 0.975 and an \ac{FPR} slightly higher than 0.2 for the same threshold across all pipelines, with the exception of GstLAL. \ac{RF}'s results are similar to
-\ac{KNN}'s results. The \ac{RF} \ac{ROC} curves for \hasns\ typically have steeper slopes than for \ac{KNN}, resulting in higher \ac{TPR} and lower \ac{FPR} at a given threshold. In the case of
-\hasrem, \ac{RF} performs better than \ac{KNN} for GstLAL, but worse for other pipelines.
+In the case of \hasns, \ac{KNN} yields a \ac{TPR} between 0.95 and 0.98 and an \ac{FPR} smaller than 0.20 for a probability threshold of 0.5 across all pipelines, with the exception of SPIIR. SPIIR's
+poorer performance on \ac{EM} property classifications with the \ac{O3} \ac{MDC} set is a known effect that has been reported in other investigations~\cite{Chaudhary:2023vec}. In regard to \hasrem,
+\ac{KNN} yields a \ac{TPR} around 0.975 and an \ac{FPR} slightly higher than 0.2 for the same threshold across all pipelines, with the exception of GstLAL. \ac{RF}'s results are similar to \ac{KNN}'s
+results. The \ac{RF} \ac{ROC} curves for \hasns\ typically have steeper slopes than for \ac{KNN}, resulting in a comparable \ac{TPR} but a lower \ac{FPR} at a given threshold. In the case of \hasrem,
+\ac{RF} performs similarly to \ac{KNN} for GstLAL but worse for the other pipelines.
 
 A few interesting results are worth mentioning.  On the \ac{MDC} set, both algorithms perform better for \hasns\ than \hasrem, whereas on the \ac{O2} set, the reverse is true (see Figs.~\ref{fig:rocO2_KNN} and~\ref{fig:rocO2_RF}). \ac{KNN} performs better than \ac{RF} on \hasrem, but does worse on \hasns. However, on events recovered by GstLAL, the pipeline on which the algorithms have been trained, both algorithms exhibit comparable (high) performance. This seems to indicate that when used with other pipelines, \ac{RF} is less flexible than \ac{KNN}. The conclusions provide more details about this and a possible explanation for this effect.
  
@@ -104,11 +104,10 @@ A few interesting results are worth mentioning.  On the \ac{MDC} set, both algor
 \label{fig:rocMDC_RF}
 \end{figure*}
 
-Finally, we apply the method to derive Bayesian probabilities for the events in the \ac{LVK} \ac{GWTC3} catalog~\cite{LIGOScientific:2020ibl, LIGOScientific:2021djp}.  In
-Table~\ref{tab:real_data_bayesian} we report the results for some of the most significant \ac{GWTC3} events, labeled with their event ID. The $P_M(\hasns |\bf{A_E})$ and $P_M(\hasrem |\bf{A_E})$ probabilities for GW170817 and GW190425, the two confirmed \ac{BNS}
-detections~\cite{LIGOScientific:2020ibl,LIGOScientific:2021djp}, are $\sim 1$ as expected.  The probabilities for GW190426 and GW200115 (\ac{NSBH} mergers~\cite{LIGOScientific:2020ibl,
-LIGOScientific:2021djp}) are $P_M(\hasns |{\bf{A_E}}) \sim 1$ and $P_M(\hasrem |{\bf{A_E}}) < 10^{-3}$. The two remaining significant events with non-zero probabilities are GW190814 and
-GW190924. These events were reported as high mass-ratio BBH mergers~\cite{LIGOScientific:2020ibl, LIGOScientific:2021djp}. 
+Finally, we apply the method to derive Bayesian probabilities for the events in the \ac{LVK} \ac{GWTC3} catalog~\cite{LIGOScientific:2021djp}.  In Table~\ref{tab:real_data_bayesian} we report the
+results for some of the most significant \ac{GWTC3} events, labeled with their event ID. The $P_M(\hasns |\bf{A_E})$ and $P_M(\hasrem |\bf{A_E})$ probabilities for GW170817 and GW190425, the two
+confirmed \ac{BNS} detections are $\sim 1$ as expected.  The probabilities for GW190426 and GW200115 (\ac{NSBH} mergers) are $P_M(\hasns |{\bf{A_E}}) \sim 1$ and $P_M(\hasrem |{\bf{A_E}}) < 10^{-3}$.
+The two remaining significant events with non-zero probabilities are GW190814 and GW190924. These events were reported as high mass-ratio BBH mergers. 
 
 The fact that the system's component masses differ greatly from one another can be used to explain why $P_M(\hasns |\bf{A_E})$ for these events is not zero. In particular, the discrepancy
 between \ac{RF} and \ac{KNN} for GW190814 can be understood from the different ways the two algorithms operate. \ac{RF} applies hard cuts on decision trees to evaluate its outcome. \ac{KNN}
@@ -136,7 +135,7 @@ GW200115                                   & 0.998                   & 0.989    
 Figures~\ref{fig:param_sweep_KNN} and~\ref{fig:param_sweep_RF} show parameter sweeps in the space of the binary component masses for the \ac{KNN} and \ac{RF} Bayesian probabilities,
 respectively. Different rows correspond to different values of the component spins. Both algorithms perform in a similar way for $P_M(\hasns |\bf{A_E})$. However, the parameter sweeps for
 $P_M(\hasns |\bf{A_E})$ for \ac{KNN} are noisier than \ac{RF} for large primary masses. As was noted above, the \ac{KNN} algorithm operates by looking at the closest neighbors. If neighbors with
-different label are present in the region of interest, the outcome is bound to be noisy. The \ac{RF} algorithm applies hard selection cuts to primary masses. This results in a more uniform
+different labels are present in the region of interest, the outcome is bound to be noisy. The \ac{RF} algorithm applies hard selection cuts to primary masses. This results in a more uniform
 probability. Changes in spin seem to not significantly affect the outcome.  Similar behaviors for \ac{KNN} and \ac{RF} can also be observed in the case of $P_M(\hasrem |\bf{A_E})$. As expected
 from the Foucart formula, $P_M(\hasrem |\bf{A_E})$ increases with the primary mass for large primary spins, and the region with $P_M(\hasrem |\bf{A_E}) \sim 1$ is included in the region where
 $P_M(\hasns |\bf{A_E}) \sim 1$.

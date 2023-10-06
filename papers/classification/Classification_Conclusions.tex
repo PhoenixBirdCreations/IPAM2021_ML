@@ -2,26 +2,26 @@
 
 %Brief summary of the problem we are facing: we need rapid identification of the components of the binary merger, we apply ML to do so. \\
 
-In this paper, we have presented a new scheme for real-time classification of \ac{GW} \ac{CBC} signals detected by the LIGO, Virgo, and KAGRA detectors. The method uses the
+In this paper, we have presented a new scheme for real-time classification of \ac{GW} \ac{CBC} signals detected by the \ac{LVK} detectors. The method uses the
 output of the \ac{LVK} low-latency pipelines to identify whether the GW source progenitor contains a \ac{NS} (\hasns) and a post-merger matter remnant is produced in the merger
 (\hasrem). Estimates of these metrics are included in public alerts for candidate \ac{GW} events issued by the \ac{LVK}. Determining these metrics in low latency is crucial to
 enabling coincident \ac{MMA} observations of GW and \ac{EM} signatures.
 
 We have assessed the viability and measured the performance of two classifiers, \ac{KNN} and \ac{RF}, on two sets of real detector data augmented with synthetic GW injections of
-GW signals that were generated for space-time volume sensitivity analyses of \ac{O2} \ac{LVK} \ac{GW} searches \cite{Chatterjee:2019avs} and a \ac{MDC} real-time
+GW signals that were generated for space-time volume sensitivity analyses of \ac{O2} \ac{LVK} \ac{GW} searches \cite{Chatterjee:2019avs} and an \ac{MDC} real-time
 replay of \ac{O3} data~\cite{Chaudhary:2023vec}. 
 
 %Say what we did: tested and compared the algorithms on O2, with the scores. Then we come with the Bayesian probs and we make some fits to quickly get the probabilities when there is a real time event.
 
 One important novel ingredient of the proposed scheme is the computation of Bayesian probabilities for \hasns\ and \hasrem. Until now, the information that has been passed to
 astronomers in public alerts has been in the form of binary classification scores for these metrics. Here, we provide a method to compute \hasns\ and \hasrem\ as actual
-probabilities that the \ac{GW} source is characterized by these properties. Therefore, our scheme provides more direct and easily interpretable information to aid the community
+probabilities that the \ac{GW} source includes a neutron star and post-merger matter remnant. Therefore, our scheme provides more direct and easily interpretable information to aid the community
 of astronomers in deciding whether to follow up on \ac{GW} candidate events with \ac{EM} observatories.
 
 %Discuss the results (MOST IMPORTANT THING): tested in O2, the algorithms perform better for \hasrem\, and RF does it better than KNN. When applied on O3 (this applies for both the scores and the Bayesian probs), the algorithms are better on \hasns\ (and RF still outperforms), but they get worse at \hasrem\, and even KNN is slowly better in this case. It seems that Sushant's assumption is right, and RF finds it more difficult to classify different pipelines and new events (O3 instead of O2) -> it is less adaptable. \\
 
 To construct the Bayesian probabilities for \hasns\ and \hasrem, we train and test the classifiers on the \ac{O2} data set following the customary 70\% -- 30\% split between
-training and testing data. After evaluating the performance of the classifiers with standard \ac{ROC} metrics, we use the testing set to generate numerical Bayesian probability
+training and testing data. After evaluating the performance of the classifiers with standard \ac{ROC} curves, we use the testing set to generate numerical Bayesian probability
 expressions for the models. This minimizes potential bias that may result from the use of data sets with different properties while ensuring that the Bayesian fits are built with
 data that is independent from the data used for training the classifiers. The effectiveness of the Bayesian fits is then evaluated on fully independent data sets using the
 \ac{O3} set and real detections. 
@@ -34,15 +34,15 @@ both \ac{RF} and \ac{KNN} are consistent with \ac{O2}. \ac{RF}'s performance on 
 imply that \ac{RF} is less portable than \ac{KNN} across different data sets and pipelines. The different ways \ac{RF} and \ac{KNN} operate, as well as the different characteristics
 of the sets, may explain their behavior.
 
-The RF classifier is a decision tree-based classifier that sets decision rules by implementing specific cuts (conditions) on input features. The \ac{KNN} algorithm implements decision rules by computing the nearest neighbors of input features in the parameter space for the data point of interest. \ac{RF} is designed to construct hard boundaries based on input parameters, whereas the \ac{KNN} algorithm is designed to produce an outcome based on differences between features. As a result, the \ac{RF} algorithm's nature may make it more suitable for classifying events with \hasns, which is based on a well-defined, hard boundary between positive and negative outcomes, such as the secondary mass value. To distinguish between systems with zero and nonzero post-remnant matter in \hasrem, the algorithms must learn Foucart's fit from the recovered parameters. Foucart's formula is dependent on the \ac{EOS} under consideration, as well as the pipeline that recovers the injection. Because \ac{RF} and \ac{KNN} are trained on injections that are only recovered by GstLAL, \ac{RF} is more affected than \ac{KNN}, making it less portable across pipelines.
+The RF classifier is a decision tree-based classifier that sets decision rules by implementing specific cuts (conditions) on input features. The \ac{KNN} algorithm implements decision rules by computing the nearest neighbors of input features in the parameter space for the data point of interest. \ac{RF} is designed to construct hard boundaries based on input parameters, whereas the \ac{KNN} algorithm is designed to produce an outcome based on differences between features. As a result, the \ac{RF} algorithm's nature may make it more suitable for classifying events with \hasns, which is based on a well-defined, hard boundary between positive and negative outcomes, such as the secondary mass value. To distinguish between systems with zero and nonzero post-remnant matter in \hasrem, the algorithms must learn Foucart's fit from the recovered parameters. Foucart's formula is dependent on the \ac{EOS} under consideration, as well as the pipeline that recovers the injection. Because \ac{RF} and \ac{KNN} are trained on injections that are only recovered by GstLAL, \ac{RF} is more affected than \ac{KNN}.
 
-This work provides an improved scheme for \hasns\ and \hasrem\ classification of candidate events that is ready for deployment in the current \ac{LVK} infrastructure if the \ac{LVK}
-decides to implement Bayesian probabilities for \hasns\ and \hasrem. Our method can also be easily extended to other properties of \ac{GW} signals that are being or may be released
-with low latency, such as \hasgap\ and \hasssm, a new proposed metric for distinguishing \ac{GW} signals from systems with a sub-solar mass component. Other future extensions of
-this work include improving algorithm training and Bayesian fit estimation with updated data sets of simulated injections in \ac{LVK} \ac{O4} data generated with different pipelines
-and with better coverage of the mass gap region than the \ac{O2} data set. It would also be worthwhile to investigate the use of additional ML classifiers that could further improve
-the process's accuracy, computational resources required, and latency. Finally, a similar infrastructure could be designed and deployed to aid in the rapid parameter estimation of
-pipeline outputs, but with a focus on feature regression rather than classification. This latter line of investigation will be presented in a future publication.
+This work provides an improved scheme to implement Bayesian probabilities for \hasns\ and \hasrem\ classification of candidate events that would be straightforward to deploy in the existing LVK
+infrastructure. Our method can also be easily extended to other properties of \ac{GW} signals that are being or may be released in low latency, such as \hasgap\ and \hasssm, a new proposed metric for
+distinguishing \ac{GW} signals from systems with a sub-solar mass component. Other future extensions of this work include improving algorithm training and Bayesian fit estimation with updated data
+sets of simulated injections in \ac{LVK} \ac{O4} data generated with different pipelines and with better coverage of the mass gap region than the \ac{O2} data set. It would also be worthwhile to
+investigate the use of additional ML classifiers that could further improve the process's accuracy, reduce the need for computational resources, and decrease latency. Finally, a similar
+infrastructure could be designed and deployed to aid in the rapid parameter estimation of pipeline outputs, but with a focus on feature regression rather than classification. This latter line of
+investigation will be presented in a future publication.
 
 %TO DO LIST:
 
