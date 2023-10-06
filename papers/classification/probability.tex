@@ -4,7 +4,7 @@ Let us define the probability of a system having a \ac{NS} (\hasns:\true) and be
 output, ${\bf A}_{\bf X}$, as $P(\hasns|{\bf A}_{\bf X})$ and $P(\hasrem|{\bf A}_{\bf X})$, respectively. The classifier outcome can be understood as a map $A:{\bf X}\to {\bf A}_{\bf X}$, where
 $\bf X$ is a vector that identifies the output of the detection pipeline and ${\bf A}_{\bf X}$ is a vector that uniquely identifies the algorithm's output for $\bf X$. 
 
-Since a system can be EM-bright only when a \ac{NS} is present in the system, the condition $P(\hasrem|{\bf A}_{\bf X})\subset P(\hasns|{\bf A}_{\bf X})$ must hold. However, if the probabilities
+Since a system can be EM-bright only when a \ac{NS} is present in the system, the condition $P(\hasrem|{\bf A}_{\bf X})\le P(\hasns|{\bf A}_{\bf X})$ must hold. However, if the probabilities
 are calculated disjointly, this condition may be violated because of statistical and systematic errors in the pipeline's reconstructed signal
 parameters, as well as bias and limited accuracy of the \ac{ML} algorithm. The approach discussed below avoids the occurrence of this inconsistency.
 
