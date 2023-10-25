@@ -1,8 +1,4 @@
 \section{Introduction} \label{intro}
-%In our introduction we want to start from big picture (LIGO, ML, pipelines)
-%and narrow down to what work we are presenting here and why it is important. We
-%also describe in which ways it is novel and how it compares to previous works
-%like in~\cite{Chatterjee:2019avs}. We may also want to cite~\cite{Sachdev:2020lfd}.
 
 The first detection of a \ac{GW} signal from a pair of coalescing black holes in 2015 and the first observation of a coalescing binary neutron star system two years later have established \ac{MMA} as
 a powerful tool for the exploration of the cosmos~\cite{LIGOScientific:2016aoc,LIGOScientific:2017vwq,LIGOScientific:2018cki}. The third \ac{LVK} catalog of transient \ac{GW} signals
@@ -17,7 +13,9 @@ is expected to further increase in the \ac{O5}~\cite{KAGRA:2013rdx}. Over the co
 dozens of \ac{BNS} and \ac{NSBH} detections, several of which could be \ac{MMA} sources. Among the challenges that this new phase of \ac{GW} astronomy brings is the necessity to coordinate the
 activities of \ac{EM} and \ac{GW} observatories in real time. 
 
-One of the most interesting areas of study in \ac{MMA} is the physics of gravity-matter interaction in \ac{GW} sources. Tidally disrupted matter in an \ac{NSBH} system may form a
+One of the most interesting areas of study in \ac{MMA} is the physics of
+gravity-matter interaction in \ac{GW} sources. Tidally disrupted matter in
+systems with a \ac{NS} may form a
 high-temperature accretion disk around the \ac{BH} and trigger the creation of a prompt \ac{EM} emission in the form of a short \ac{GRB}. If the system ejecta are unbound, r-process
 nucleosynthesis may lead to a kilonova~\cite{Lattimer:1974slx, Li:1998bw, Korobkin:2012uy, Barnes:2013wka, Tanaka:2013ana, Kasen:2014toa}. These phenomena could also arise in \ac{BNS}
 post-mergers through the expulsion of neutron-rich material even when tidal forces are weak~\cite{LIGOScientific:2017ync, Arcavi:2017xiz, Coulter:2017wya, Kasliwal:2017ngb, Lipunov:2017dwd,
@@ -29,19 +27,26 @@ The \ac{LVK} employs different matched-filtering pipelines for low-latency \ac{G
 based on discrete template banks of \ac{CBC} waveforms that provide, among other parameters, the component masses and the dimensionless (anti-)aligned spins of the objects along the orbital
 angular momentum. These parameters can be used to determine the \ac{EM} properties of \ac{GW} candidates in real time through empirical fits of \ac{NR}
 simulations~\cite{Foucart:2012nc,Foucart:2018rjc}. Preliminary alerts of candidate \ac{GW} events that included two \ac{EM}-property metrics identifying whether the \ac{CBC} system
-contains a \ac{NS}, \hasns, and a post-merger matter remnant, \hasrem, were issued in \ac{O3} with a median latency of the order of a few minutes after detection. Alerts with similar content continue to be issued in \ac{O4} with even lower latency.  Additionally, \ac{LVK}'s \ac{O4} alerts include a measure of the \hasgap\ property, i.e., the likelihood that one of the
+contains a \ac{NS}, \hasns, and a post-merger matter remnant, \hasrem, 
+\footnote{The label used in alerts is {\tt HasRemnant} but we shorted it to 
+\hasrem.} were issued in \ac{O3} with a median latency of the order of a few minutes after detection. Alerts with similar content continue to be issued in \ac{O4} with even lower latency.  Additionally, \ac{LVK}'s \ac{O4} alerts include a measure of the \hasgap\ property, i.e., the likelihood that one of the
 source compact objects has a mass in the lower-mass gap region between \acp{NS} and \acp{BH}~\cite{Farah:2021qom} (see the \ac{LVK} online user guide~\cite{UserGuide}). 
 
 Classification of \ac{GW} candidate events in low latency poses several challenges as the need for accuracy contrasts with the urgency to issue the information as quickly as possible. The approach taken by the \ac{LVK} so far has been to use a specific implementation of a supervised KNeighborClassifier (\ac{KNN}) machine learning (\ac{ML}) algorithm~\cite{Pedregosa:2011ork} with input from the detection pipelines and \ac{EOS} models to generate
 independent \hasns\ and \hasrem\ binary classification \emph{scores}~\cite{Chatterjee:2019avs}. The \ac{KNN} model is trained on a broad set of synthetic \ac{CBC} signals injected in real
-detector noise from the \ac{O2}. The advantage of this scheme relies on its capability to handle the statistical uncertainties in the parameters recovered by the search pipelines. This approach allowed for a marked improvement in performance compared to the semi-analytic effective Fisher formalism method that
+detector noise from the \ac{O2}. The advantage of this scheme relies on its
+capability to handle the statistical systematic uncertainties in the parameters
+recovered by the search pipelines. This approach allowed for a marked
+improvement in speed compared to the semi-analytic effective Fisher formalism method that
 was deployed in \ac{O2}.
 
 In this work, we revisit the problem of the real-time production of \hasns\ and \hasrem\ \emph{probability} metrics with the aim of further improving the latency and performance of the current
 \ac{LVK} \ac{ML}-based scheme~\cite{Chatterjee:2019avs}. In the current implementation, the validity of the classification outcome for an event is assessed through elements of the algorithm's
 confusion matrix and its \ac{ROC} curve. For example, given a positive prediction, the \ac{LVK} collaborations define a ``score'' that this prediction is correct as the \ac{TPR} for the given data
 set. However, there is no quantity in the algorithm's confusion matrix that defines a probability in the strictest sense. A second limitation of the current \hasns\ and \hasrem\ classification
-implementation is the fact that the \hasns\ and \hasrem\ labels are treated as independent variables. In reality, the probability of a system being \ac{EM} bright is always smaller than the
+implementation is the fact that the \hasns\ and \hasrem\ labels are treated as
+independent variables. In reality, the probability of the formation of tidally
+disrupted matter, i.e. an \ac{EM} bright event, is always smaller than the
 probability of the system hosting a \ac{NS}. Therefore, the \hasns\ and \hasrem\ labels cannot be treated as disjoint. In the current \ac{LVK} implementation, this physical condition is data-based
 rather than being mathematically defined, i.e., the algorithm potentially allows for violations and the absence of inversions is only checked a posteriori through (coarse) parameter sweeps. One of
 the main purposes of this work is to go beyond the above scheme and calculate true \emph{conditional Bayesian probabilities} for \hasns\ and \hasrem. 
