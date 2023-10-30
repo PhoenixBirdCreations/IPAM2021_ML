@@ -1,12 +1,5 @@
 \subsection{KNN Results}
 
-%\mmt{We are only using 5 features, the independent variables: 
-%\begin{equation*}
-	%\big[m_1,m_2,\chi_1,\chi_2, \rm{SNR}\big]\,.
-%\end{equation*}}
-
-%\subsubsection{Finding the optimal hyperparameters}
-
 We apply cross validation in order to fix the different hyperparameters of the algorithm.  To do so, we compute the score over a range of different parameters. We consider a number of neighbors between 1 and 20; the different metrics we test are the \texttt{euclidean}, \texttt{manhattan} and \texttt{cityblock}; the algorithms to compute the nearest neighbors can be \texttt{BallTree}, \texttt{KDTree} and the brute-force search, and the possible weight functions are the uniform weights (all points are weighted equally) and the \textit{distance} weights (points are weighted by the inverse of their distance). 
 
 Considering all these possibilities, we apply the \texttt{cross val score} function from \texttt{scikit-learn} using a 10-fold cross validation to all the 23 datasets with different EOS.  We find that the optimal metric, algorithm and weights are the same for all the EOS, being the  \texttt{manhattan} metric, the \texttt{BallTree} algorithm (with a leaf size of 30) and the \textit{distance} weights. The only parameter that differs is the number of neighbors, that goes from 8 to 12. One can find the optimal hyperparameters and the corresponding score for each EOS in Table~\ref{tab:KNN_CV}. Doing an average weighting by the Bayes factor of each EOS, we finally get an optimal number of neighbors of 10. The mean score from the cross validation goes from 0.941 (for H4 EOS) to 0.953 (for APR4 EPP), as one can see in Table~\ref{tab:KNN_CV}.  

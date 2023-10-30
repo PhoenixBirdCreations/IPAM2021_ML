@@ -1,14 +1,14 @@
 \section{Results} \label{results}
 
 In this section, we first discuss the performance of the trained \ac{RF} and \ac{KNN} classifiers on the testing data set $D_S$ and use the latter to calculate the Bayesian probabilities
-$P_M(I|{\bf A})$. Then we evaluate $P_M(I|{\bf A})$ on two independent data sets. The first set includes a population of simulated \ac{CBC} events that were injected in the real-time replay of
-\ac{O3} data and was used for the \ac{LVK} \ac{MDC}~\cite{Chaudhary:2023vec}. The second set contains the confident \ac{LVK} \ac{O3} detections that are reported in \ac{LVK}'s \ac{GWTC3}
-catalog~\cite{LIGOScientific:2021djp}.
+$P_M(I|{\bf A})$. Then we evaluate $P_M(I|{\bf A})$ on two independent data sets. The first set includes a population of simulated \ac{CBC} events that were injected in the real-time
+replay of \ac{O3} data and was used for the \ac{LVK} \ac{MDC}~\cite{Chaudhary:2023vec}. The second set contains the confident \ac{LVK} \ac{O3} detections that are reported in \ac{LVK}'s
+\ac{GWTC3} catalog~\cite{LIGOScientific:2021djp}.
 
-\subsection{Performance on the \ac{O2} Testing Set}
+\subsection{Performance on the O2 Testing Set}
 
-We assess the performance of the classifiers by measuring the \ac{TPR} and the \ac{FPR} of the events in $D_S$. We present our findings as \ac{ROC} curves that illustrate how the \ac{TPR} varies
-for various score thresholds as a function of the \ac{FPR}.
+We assess the performance of the classifiers by measuring the \ac{TPR} and the \ac{FPR} of the events in $D_S$. We present our findings as \ac{ROC} curves that illustrate how the \ac{TPR}
+varies for various score thresholds as a function of the \ac{FPR}.
 
 \begin{figure*}%[h]
 \includegraphics[width=0.47\linewidth]{roc_testing_KNN_NS}
@@ -28,17 +28,20 @@ $0.1$, $0.5$, and $0.9$, respectively.}
 \label{fig:rocO2_RF}
 \end{figure*}
 
-The \hasns\ and \hasrem\ \ac{ROC} curves for the  \ac{KNN} algorithm are displayed in the left and right panels of Fig.~\ref{fig:rocO2_KNN}, respectively. Figure \ref{fig:rocO2_RF} displays the analogous curves for the \ac{RF} classifier. The \ac{ROC} curves for the 23 \ac{EOS} are plotted in gray, with three of them highlighted in color: {\tt BHF\_BBB2}, the \ac{EOS}
-with the lowest maximum mass for the NS; {\tt MS1\_PP}, the \ac{EOS} with the largest maximum mass for the \ac{NS}; and {\tt SLy}, which allows for a maximum mass of $2.05 M_\odot$ and is
-the standard \ac{EOS} used in \ac{LVK} low-latency investigations~\cite{Ghosh:2021eqv}. The markers denote different thresholds for the algorithm scores. 
+The \hasns\ and \hasrem\ \ac{ROC} curves for the  \ac{KNN} algorithm are displayed in the left and right panels of Fig.~\ref{fig:rocO2_KNN}, respectively. Figure \ref{fig:rocO2_RF}
+displays the analogous curves for the \ac{RF} classifier. The \ac{ROC} curves for the 23 \ac{EOS} are plotted in gray, with three of them highlighted in color: {\tt BHF\_BBB2}, the
+\ac{EOS} with the lowest maximum mass for the NS; {\tt MS1\_PP}, the \ac{EOS} with the largest maximum mass for the \ac{NS}; and {\tt SLy}, which allows for a maximum mass of $2.05
+M_\odot$ and is the standard \ac{EOS} used in \ac{LVK} low-latency investigations~\cite{Ghosh:2021eqv}. The markers denote different thresholds for the algorithm scores. 
 
-The two classifiers perform consistently across all \ac{EOS}s. The \ac{TPR} for a score threshold of $0.5$ is around $0.99$ for both \hasns\ and \hasrem. A comparison of the
-\hasns\ and \hasrem\ \ac{ROC} curves for each algorithm shows that the \ac{FPR} for \hasns\ is generally higher than the \ac{FPR} for \hasrem\ at a given threshold. Thus, the algorithms
-typically do a better job in classifying \hasrem\ than \hasns. Separate comparisons of the \ac{KNN} and \ac{RF} \ac{ROC} curves for \hasns\ and \hasrem\ reveal that at a given threshold, \ac{RF} produces slightly higher \ac{TPR} and lower \ac{FPR} than \ac{KNN}.
+The two classifiers perform consistently across all \ac{EOS}s. The \ac{TPR} for a score threshold of $0.5$ is around $0.99$ for both \hasns\ and \hasrem. A comparison of the \hasns\ and
+\hasrem\ \ac{ROC} curves for each algorithm shows that the \ac{FPR} for \hasns\ is generally higher than the \ac{FPR} for \hasrem\ at a given threshold. Thus, the algorithms typically do
+a better job in classifying \hasrem\ than \hasns. Separate comparisons of the \ac{KNN} and \ac{RF} \ac{ROC} curves for \hasns\ and \hasrem\ reveal that at a given threshold, \ac{RF}
+produces slightly higher \ac{TPR} and lower \ac{FPR} than \ac{KNN}.
 
-\subsection{Bayesian Probabilities for the \ac{O3} Sets}
+\subsection{Bayesian Probabilities for the O3 Sets}
 
-After the algorithms have been trained and tested, we compute the Bayesian probabilities defined in Sec.~\ref{bayesian_probs} in terms of their outcomes. Equations~\eqref{bayes-hasns} and \eqref{bayes-hasrem} must be assessed on a data set independent of the training data set, as stated in Sec.~\ref{bayesian_probs}. To do so, we employ $D_S$.
+After the algorithms have been trained and tested, we compute the Bayesian probabilities defined in Sec.~\ref{bayesian_probs} in terms of their outcomes. Equations~\eqref{bayes-hasns} and
+\eqref{bayes-hasrem} must be assessed on a data set independent of the training data set, as stated in Sec.~\ref{bayesian_probs}. To do so, we employ $D_S$.
 
 \begin{figure*}%[h]
 \includegraphics[width=0.45\linewidth]{KNN_3_eos_prob_plots_HasNS}
@@ -54,40 +57,29 @@ After the algorithms have been trained and tested, we compute the Bayesian proba
 \label{fig:bayesian_prob_fits_RF}
 \end{figure*}
 
-The \ac{KNN} and \ac{RF} probability estimators are shown for each of the 23 \ac{EOS} in Figs.~\ref{fig:bayesian_prob_fits_KNN} and~\ref{fig:bayesian_prob_fits_RF}, respectively. As expected, the
-\hasns\ and \hasrem\ probabilities increase with the fractions of \ac{KNN} neighbors (\ac{RF} trees). Local fluctuations in the probabilities are due to noise arising from the finiteness of the data
-set. 
-
-%The probability curves exhibit a sigmoid-like shapes that depend on the choice of the \ac{EOS}. Indeed, both show a slower
-%increase of $P_J(\hasrem |\bf{A_X})$ for a low fraction $f_2$ compared to $P_J(\hasns |\bf{A_X})$. However, \ac{RF} shows a small plateau on the $P_J(\hasns |\bf{A_X})$ (and also on $P_J(\hasrem
-%|\bf{A_X})$) for fractions of trees around $0.8$, which  \ac{KNN} does not reproduce. We highlight the same equations of state as in Figs.~\ref{fig:rocO2_KNN} and~\ref{fig:rocO2_RF}.
-
-%\subsection{Performance on New Events}
+The \ac{KNN} and \ac{RF} probability estimators are shown for each of the 23 \ac{EOS} in Figs.~\ref{fig:bayesian_prob_fits_KNN} and~\ref{fig:bayesian_prob_fits_RF}, respectively. As
+expected, the \hasns\ and \hasrem\ probabilities increase with the fractions of \ac{KNN} neighbors (\ac{RF} trees). Local fluctuations in the probabilities are due to noise arising from
+the finiteness of the data set. 
 
 The probabilities in Figs.~\ref{fig:bayesian_prob_fits_KNN} and~\ref{fig:bayesian_prob_fits_RF} can be tabulated and used to compute the marginalized probabilities $P_M(\hasns|{\bf
 A}_{\bf E})$ and $P_M(\hasrem|{\bf A}_{\bf E})$ as in Eq.~\eqref{bayes-marginalized}. To evaluate the method, we classify the events from the \ac{MDC} data set and compute the \ac{ROC}
 curves based on the ground truth using Bayesian probability (rather than score) thresholds. The \ac{ROC} curves are shown in Figs.~\ref{fig:rocMDC_KNN} and \ref{fig:rocMDC_RF} for
 \ac{KNN} and \ac{RF}, respectively. In contrast to the \ac{O2} data set, the \ac{MDC} set contains outputs from four matched-filtering pipelines
-(GstLAL~\cite{Sachdev:2019vvd,PhysRevD.95.042001,Sachdev:2020lfd},  \tocheck{PyCBC~\cite{Nitz:2018rgo,DalCanton:2020vpm}}, SPIIR~\cite{Chu:2020pjv}, and MBTA~\cite{Adams:2015ulm}). Therefore, we present separate \ac{ROC} curves
-for these pipelines. 
+(GstLAL~\cite{Sachdev:2019vvd,PhysRevD.95.042001,Sachdev:2020lfd},  PyCBC~\cite{Nitz:2018rgo,DalCanton:2020vpm}, SPIIR~\cite{Chu:2020pjv}, and MBTA~\cite{Adams:2015ulm}). Therefore, we
+present separate \ac{ROC} curves for these pipelines. 
 
-%Notice that the curves are very similar even though the algorithms were trained (and also the Bayesian probabilities were fitted) using exclusively GstLAL.
+In the case of \hasns, \ac{KNN} yields a \ac{TPR} between 0.95 and 0.98 and an \ac{FPR} smaller than 0.20 for a probability threshold of 0.5 across all pipelines, with the exception of
+SPIIR. It is not surprising that our classifier performs poorly on SPIIR triggers. A similar result has been reported by other investigations~\cite{Chaudhary:2023vec}. Because the
+algorithm was not trained on multiple pipelines, a decrease in performance on triggers recovered by pipelines other than the training pipeline is to be expected. Even though the \ac{ML}
+algorithms are generally portable across pipelines and data sets, accurate results critically depend on the training set's faithful representation of the observations. In regard to
+\hasrem, \ac{KNN} yields a \ac{TPR} around 0.975 and an \ac{FPR} slightly higher than 0.2 for the same threshold across all pipelines, with the exception of GstLAL. \ac{RF}'s results are
+similar to \ac{KNN}'s results. The \ac{RF} \ac{ROC} curves for \hasns\ typically have steeper slopes than for \ac{KNN}, resulting in a comparable \ac{TPR} but a lower \ac{FPR} at a given
+threshold. In the case of \hasrem, \ac{RF} performs similarly to \ac{KNN} for GstLAL but worse for the other pipelines.
 
-In the case of \hasns, \ac{KNN} yields a \ac{TPR} between 0.95 and 0.98 and an \ac{FPR} smaller than 0.20 for a probability threshold of 0.5 across all pipelines, with the exception of SPIIR. \tocheck{\sout{SPIIR’s poorer performance on EM property classifications with the O3 MDC set is a known effect that has been reported in other investigations~\cite{Chaudhary:2023vec}.}} \tocheck{It is not surprising that our classifier performs poorly on SPIIR triggers. A similar result has been reported by other investigations~\cite{Chaudhary:2023vec}. Because the algorithm was not trained on multiple pipelines, a decrease in performance on triggers recovered by pipelines other than the training pipeline is to be expected. Even though the \ac{ML} algorithms are generally portable across pipelines and data sets, accurate results critically depend on the training set's faithful representation of the observations.}
-In regard to \hasrem,
-\ac{KNN} yields a \ac{TPR} around 0.975 and an \ac{FPR} slightly higher than 0.2 for the same threshold across all pipelines, with the exception of GstLAL. \ac{RF}'s results are similar to \ac{KNN}'s
-results. The \ac{RF} \ac{ROC} curves for \hasns\ typically have steeper slopes than for \ac{KNN}, resulting in a comparable \ac{TPR} but a lower \ac{FPR} at a given threshold. In the case of \hasrem,
-\ac{RF} performs similarly to \ac{KNN} for GstLAL but worse for the other pipelines.
-
-A few interesting results are worth mentioning.  On the \ac{MDC} set, both algorithms perform better for \hasns\ than \hasrem, whereas on the \ac{O2} set, the reverse is true (see Figs.~\ref{fig:rocO2_KNN} and~\ref{fig:rocO2_RF}). \ac{KNN} performs better than \ac{RF} on \hasrem, but does worse on \hasns. However, on events recovered by GstLAL, the pipeline on which the algorithms have been trained, both algorithms exhibit comparable (high) performance. This seems to indicate that when used with other pipelines, \ac{RF} is less flexible than \ac{KNN}. The conclusions provide more details about this and a possible explanation for this effect.
- 
-%\begin{comment}
-%performs very well for \hasns achieving a true positive rate very close to
-%unity with a very small false positive rate. We observe that SPIIR pipeline
-%deviates from the good behaviour. For \hasrem the overall performance is
-%slightly worse, getting higher false positive rate, but in turn all
-%pipelines behave equally good. In Fig.~\ref{fig:rocMDC_RF} we showcase the results for \ac{RF}. As with \ac{KNN} the results are very good, with steep ROC curves. For \hasns spiir pipeline deviates less from the rest, getting higher positive rates for the same false positives than with \ac{KNN}. In the case of \hasrem the curves of the different pipelines behave a bit more differently from each other.
-%\end{comment}
+A few interesting results are worth mentioning.  On the \ac{MDC} set, both algorithms perform better for \hasns\ than \hasrem, whereas on the \ac{O2} set, the reverse is true (see
+Figs.~\ref{fig:rocO2_KNN} and~\ref{fig:rocO2_RF}). \ac{KNN} performs better than \ac{RF} on \hasrem, but does worse on \hasns. However, on events recovered by GstLAL, the pipeline on
+which the algorithms have been trained, both algorithms exhibit comparable (high) performance. This seems to indicate that when used with other pipelines, \ac{RF} is less flexible than
+\ac{KNN}. The conclusions provide more details about this and a possible explanation for this effect.
 
 \begin{figure*}%[h]
 \includegraphics[width=0.45\linewidth]{roc_mdc_KNN_NS}
@@ -96,7 +88,6 @@ A few interesting results are worth mentioning.  On the \ac{MDC} set, both algor
 \label{fig:rocMDC_KNN}
 \end{figure*}
 
-
 \begin{figure*}%[h]
 \includegraphics[width=0.45\linewidth]{roc_mdc_RF_NS}
 \includegraphics[width=0.45\linewidth]{roc_mdc_RF_REM}
@@ -104,16 +95,17 @@ A few interesting results are worth mentioning.  On the \ac{MDC} set, both algor
 \label{fig:rocMDC_RF}
 \end{figure*}
 
-Finally, we apply the method to derive Bayesian probabilities for the events in the \ac{LVK} \ac{GWTC3} catalog~\cite{LIGOScientific:2021djp}.  In Table~\ref{tab:real_data_bayesian} we report the
-results for some of the most significant \ac{GWTC3} events, labeled with their event ID. The $P_M(\hasns |\bf{A_E})$ and $P_M(\hasrem |\bf{A_E})$ probabilities for GW170817 and GW190425, the two
-confirmed \ac{BNS} detections are $\sim 1$ as expected.  The probabilities for GW190426 and GW200115 (\ac{NSBH} mergers) are $P_M(\hasns |{\bf{A_E}}) \sim 1$ and $P_M(\hasrem |{\bf{A_E}}) < 10^{-3}$.
-The two remaining significant events with non-zero probabilities are GW190814 and GW190924. These events were reported as high mass-ratio BBH mergers. 
+Finally, we apply the method to derive Bayesian probabilities for the events in the \ac{LVK} \ac{GWTC3} catalog~\cite{LIGOScientific:2021djp}.  In Table~\ref{tab:real_data_bayesian} we
+report the results for some of the most significant \ac{GWTC3} events, labeled with their event ID. The $P_M(\hasns |\bf{A_E})$ and $P_M(\hasrem |\bf{A_E})$ probabilities for GW170817 and
+GW190425, the two confirmed \ac{BNS} detections are $\sim 1$ as expected.  The probabilities for GW190426 and GW200115 (\ac{NSBH} mergers) are $P_M(\hasns |{\bf{A_E}}) \sim 1$ and
+$P_M(\hasrem |{\bf{A_E}}) < 10^{-3}$. The two remaining significant events with non-zero probabilities are GW190814 and GW190924. These events were reported as high mass-ratio BBH
+mergers. 
 
 The fact that the system's component masses differ greatly from one another can be used to explain why $P_M(\hasns |\bf{A_E})$ for these events is not zero. In particular, the discrepancy
-between \ac{RF} and \ac{KNN} for GW190814 can be understood from the different ways the two algorithms operate. \ac{RF} applies hard cuts on decision trees to evaluate its outcome. \ac{KNN}
-looks at the fractions of neighbors surrounding the event. The detection pipeline returned a secondary mass compatible with an \ac{NS} for three of the 23 \ac{EOS}. However, since the region of
-the parameter space close to the mass gap, i.e., the region between high \ac{NS} masses and low \ac{BH} masses, is not well covered in the \ac{O2} training data set, \ac{KNN} overestimates the
-effect of the three \ac{EOS} predicting a secondary mass in the \ac{NS} region. 
+between \ac{RF} and \ac{KNN} for GW190814 can be understood from the different ways the two algorithms operate. \ac{RF} applies hard cuts on decision trees to evaluate its outcome.
+\ac{KNN} looks at the fractions of neighbors surrounding the event. The detection pipeline returned a secondary mass compatible with an \ac{NS} for three of the 23 \ac{EOS}. However,
+since the region of the parameter space close to the mass gap, i.e., the region between high \ac{NS} masses and low \ac{BH} masses, is not well covered in the \ac{O2} training data set,
+\ac{KNN} overestimates the effect of the three \ac{EOS} predicting a secondary mass in the \ac{NS} region. 
 
 \begin{table}[]
 \begin{tabular}{c|cc|cc}
@@ -134,11 +126,11 @@ GW200115                                   & 0.998                   & 0.989    
 
 Figures~\ref{fig:param_sweep_KNN} and~\ref{fig:param_sweep_RF} show parameter sweeps in the space of the binary component masses for the \ac{KNN} and \ac{RF} Bayesian probabilities,
 respectively. Different rows correspond to different values of the component spins. Both algorithms perform in a similar way for $P_M(\hasns |\bf{A_E})$. However, the parameter sweeps for
-$P_M(\hasns |\bf{A_E})$ for \ac{KNN} are noisier than \ac{RF} for large primary masses. As was noted above, the \ac{KNN} algorithm operates by looking at the closest neighbors. If neighbors with
-different labels are present in the region of interest, the outcome is bound to be noisy. The \ac{RF} algorithm applies hard selection cuts to primary masses. This results in a more uniform
-probability. Changes in spin seem to not significantly affect the outcome.  Similar behaviors for \ac{KNN} and \ac{RF} can also be observed in the case of $P_M(\hasrem |\bf{A_E})$. As expected
-from the Foucart formula, $P_M(\hasrem |\bf{A_E})$ increases with the primary mass for large primary spins, and the region with $P_M(\hasrem |\bf{A_E}) \sim 1$ is included in the region where
-$P_M(\hasns |\bf{A_E}) \sim 1$.
+$P_M(\hasns |\bf{A_E})$ for \ac{KNN} are noisier than \ac{RF} for large primary masses. As was noted above, the \ac{KNN} algorithm operates by looking at the closest neighbors. If
+neighbors with different labels are present in the region of interest, the outcome is bound to be noisy. The \ac{RF} algorithm applies hard selection cuts to primary masses. This results
+in a more uniform probability. Changes in spin seem to not significantly affect the outcome.  Similar behaviors for \ac{KNN} and \ac{RF} can also be observed in the case of $P_M(\hasrem
+|\bf{A_E})$. As expected from the Foucart formula, $P_M(\hasrem |\bf{A_E})$ increases with the primary mass for large primary spins, and the region with $P_M(\hasrem |\bf{A_E}) \sim 1$ is
+included in the region where $P_M(\hasns |\bf{A_E}) \sim 1$.
 
 \begin{figure*}%[h]
 \includegraphics[width=0.9\linewidth]{KNN_parameter_sweep}
@@ -151,54 +143,3 @@ $P_M(\hasns |\bf{A_E}) \sim 1$.
     \caption{Parameter sweeps for $P_M(\hasns |\bf{A_E})$ (left panels) and $P_M(\hasrem |\bf{A_E})$ (right panels) for the \ac{RF} algorithm. $M_1$ and $M_2$ are the primary and secondary component masses of the binary. $\chi_1$ and $\chi_2$ are their effective spins. The \ac{SNR} is fixed to 10.}
 \label{fig:param_sweep_RF}
 \end{figure*}
-
-
-%Here are the results for the methods:
-
-%\input{KNN_Results.tex} %plots and comments
-%\input{RF_Results.tex} %plots and comments
-%\input{GP_Results.tex}
-
-
-%In order to decide which method gives a better performance in classifying this kind of events, we can apply them over testing data and finally do a comparison between both. A way to see how data is classified we can construct histograms where the number of events that are classified with a label (\texttt{HasNS/HasRemnant}) \texttt{True} or \texttt{False} will change with a given threshold of the probability. For an algorithm with perfect performance, all the events with label \texttt{True (False)} should be at \textit{p}(\texttt{label}) = 1 (\textit{p}(\texttt{label}) = 0).
-
-%Another way to check the algorithm's performance is by building the so-called \textit{Receiver Operating Characteristic (ROC) Curve}. They show the variation of the true-positive rate (or efficiency) with the false-positive rate given a certain threshold for the probability. An algorithm with a proper performance will give a steeper ROC curve, or in other words, will have a higher eficiency with a lower false-positive rate.  
-
-
-%In the ROC curves that we will present in the following subsections, we highlight three reference EoS in color, from which we show results in more detail. We select BHF\_BBB2 because is the model that give the lowest maximum mass, MS1\_PP as the model with the bigger maximum mass, and we also include SLy because is the most accepted EoS for NS modeling (reference), and is the one that was used in the injections that are our dataset.
-
-
-%\subsection{Algorithm comparison}
-
-
-%Here we talk about overall results and specifically from each algorithm in the
-%subsections below.  \mmt{[MMT: Below I described how to check the performance of the algorithms. Maybe a table with all the scores/sensitivities/precisions from both %KNN and RF would be useful (already got it in a google doc)]}
-
-%\mmt{To measure the performance of the classifiers we use some common statistical quantities.  The score is the number of correctly predicted events over the number %of total events (a perfect classifier has a score of 1).  It works best when there is an equal number of events for each label in the training set. It does not %consider the importance of misclassification, or that the training data can be biased towards one specific label.}
-
-%\mmt{The mean score is computed by training the algorithm on the $90\%$ of the dataset and testing it on the remaining $10\%$, cycling the train/test combination over %the full dataset. To do that, we are going to use the training dataset, since it's the larger one.  In order to train and test the model and create the different %plots, we are going to use the training and testing files. }
-
-%\mmt{Another useful quantity is the sensitivity. It is the ratio between the true positives and the sum of the true positives and false negatives.  It measures how %much the algorithm predicts \textit{true} (in our case it would be that the event has NS or has REM), when it is actually \textit{true}.Having a sensitivity equal to %1 would mean that our method predicts \textit{true} for every event. Therefore, a method with high sensitivity will barely miss true alarms. }
-
-%\mmt{A quantity that measures how much you can trust a method when it predicts \textit{true} is the precision.  It is the ratio between the true positives and the %some of the true  and the false positives. A precision equal to 1 means that the method never predicts \textit{true} when it is actually \textit{false}. This means %that the method will never give false alarms. }
-
-%\mmt{Finally, the F1 score $F1 = 2(\rm{precision \times sensitivity})/(\rm{precision+sensitivity})$ is a type of score that takes into consideration how precision and %sensitivity compensate each other. A perfect classifier would have a F1 score of 1.}
-
-%To compare quantitatively the results from RF and KNN we compute the true positive and false positive rate for several threshold values, for both HasNS and HasREM, for the three selected EoS. These are tables \ref{tab:TPbhf}, \ref{tab:TPms1} and \ref{tab:TPsly}. For HasNS the two algorithms perform similarly, with almost the same TP for all threshold values and accross EoSs, although the false positive is smaller always in the RF. For HasREM we obtain that RF performs better than KNN in every case, with not only a smaller false positive rate, but a greater true positive rate.
-
-%\begin{table}[]
-%\centering
-%\begin{tabular}{@{}c|cccc|cccc@{}}
-%\toprule
-%\multicolumn{1}{l|}{}          & \multicolumn{4}{c|}{Has NS}                       & \multicolumn{4}{c}{Has REM}                      \\ \midrule
-%                               & \multicolumn{2}{c}{RF} & \multicolumn{2}{c|}{KNN} & \multicolumn{2}{c}{RF} & \multicolumn{2}{c}{KNN} \\
-%\multicolumn{1}{l|}{Threshold} & TP         & FP        & TP          & FP         & TP         & FP        & TP         & FP         \\ \midrule
-%0.1                            & 0.999      & 0.107     &   0.999          &  0.156          & 0.998      & 0.011     &    0.992        &  0.051          \\
-%0.3                            & 0.998      & 0.068     &   0.996        &  0.117          & 0.993      & 0.005     &   0.974         &  0.017          \\
-%0.5                            & 0.994      & 0.042     &   0.991          &  0.088           & 0.985      & 0.003     &   0.937         &  0.006          \\
-%0.8                            & 0.967      & 0.014     &   0.966          & 0.043            & 0.957      & 0.001     &  0.845          &   0.001         \\ %\bottomrule
-%\end{tabular}
-%\caption{BHF\_BB2}
-%\label{tab:TPbhf}
-%\end{table}
-
