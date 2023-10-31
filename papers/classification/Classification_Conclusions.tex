@@ -17,8 +17,7 @@ deciding whether to follow up on \ac{GW} candidate events with \ac{EM} observato
 
 To construct the Bayesian probabilities for \hasns\ and \hasrem, we train and test the classifiers on the \ac{O2} data set following the customary 70\% -- 30\% split between training and
 testing data. After evaluating the performance of the classifiers with standard \ac{ROC} curves, we use the testing set to generate numerical Bayesian probability expressions for the
-models. This minimizes potential bias that may result from the use of data sets with different properties while ensuring that the Bayesian fits are built with data that is independent
-from the data used for training the classifiers. The effectiveness of the Bayesian fits is then evaluated on fully independent data sets using the \ac{O3} set and real detections. 
+models. This minimizes potential bias that may result from the use of data sets with different properties while ensuring that the Bayesian fits are built with data that is independent of the data used for training the classifiers. The effectiveness of the Bayesian fits is then evaluated on fully independent data sets using the \ac{O3} set and real detections. 
 
 Both our methods outperform the specific \ac{KNN} algorithm implementation that is currently used in the \ac{LVK} low-latency infrastructure when tested on the (GstLAL-only) \ac{O2} set
 of recovered injections, with \ac{RF} outperforming \ac{KNN} for both \hasns\ and \hasrem. When tested on the \ac{O3} set, both algorithms improve on \hasns\ while underperforming on
