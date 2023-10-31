@@ -64,7 +64,7 @@ With this labeling, \hasrem$_+=2$ and \hasns$_+=1\cup 2$. Therefore a natural ch
 where $f_0({\bf X}')=1-f_1({\bf X}')-f_2({\bf X}')$, $f_1({\bf X}')$, and $f_2({\bf X}')$ are the fractions of \ac{KNN} neighbors or \ac{RF} trees that predict the event to
 have labels 0, 1, and 2, respectively.
 
-The factors in the right-hand side of Eqs.~\eqref{bayes-hasns} and~\eqref{bayes-hasrem} can be obtained from $D_{S}$ once the algorithm has been trained on $D_{R}$. For example, for the \ac{KNN} and \ac{RF} scheme described earlier, the factors in Eq.~\eqref{bayes-hasns} can be estimated as  
+The factors on the right-hand side of Eqs.~\eqref{bayes-hasns} and~\eqref{bayes-hasrem} can be obtained from $D_{S}$ once the algorithm has been trained on $D_{R}$. For example, for the \ac{KNN} and \ac{RF} scheme described earlier, the factors in Eq.~\eqref{bayes-hasns} can be estimated as  
 %
 \begin{align}
 &P(\hasns_+)=\frac{N_{\hasns_+}}{N_s}\,,\nonumber\\
@@ -74,7 +74,7 @@ The factors in the right-hand side of Eqs.~\eqref{bayes-hasns} and~\eqref{bayes-
 \end{align}
 %
 where $N_s=\hbox{dim}\,(D_S)$, $N_{\hasns_+}$ is the number of events in $D_S$ with label  $\hasns_+$, and $N^+{}_{\hasns_+}(f_1+f_2)$ and $N^-{}_{\hasns_+}(f_1+f_2)$ are the number of
-events in $D_S$ that are correctly and incorrectly classified as ${\hasns_+}$ by the outcome $f_1+f_2$, respectively. The first factor in the right-hand side of Eq. ~\eqref{bayes-hasrem}
+events in $D_S$ that are correctly and incorrectly classified as ${\hasns_+}$ by the outcome $f_1+f_2$, respectively. The first factor on the right-hand side of Eq. ~\eqref{bayes-hasrem}
 can be evaluated similarly to Eq.~\eqref{bayes-hasns} by replacing \hasns\ with \hasrem\ and restricting $D_S$ to elements with \hasns$_+$ label.
 
 The probability estimators are generally noisy because they are evaluated on a finite data set. Smooth probability functions can be obtained by mapping them from the $(0,1)$ space to the
