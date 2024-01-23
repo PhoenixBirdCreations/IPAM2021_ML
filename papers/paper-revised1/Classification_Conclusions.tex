@@ -32,7 +32,7 @@ parameters, whereas the \ac{KNN} algorithm is designed to produce an outcome bas
 for classifying events with \hasns, which is based on a well-defined, hard boundary between positive and negative outcomes, such as the secondary mass value. To distinguish between
 systems with zero and nonzero post-remnant matter in \hasrem, the algorithms must learn Foucart's fit from the recovered parameters. Foucart's formula is dependent on the \ac{EOS} under
 consideration, as well as the pipeline that recovers the injection. Because \ac{RF} and \ac{KNN} are trained on injections that are only recovered by GstLAL, \ac{RF} is more affected than
-\ac{KNN}. \tocheck{However, it might be a bit premature to state that \ac{KNN} is more flexible than \ac{RF}. A more thorough test with data sets from new observing runs and different pipelines would be required to check this fact.}
+\ac{KNN}. \tocheck{However, a comprehensive evaluation, involving datasets from new observing runs and diverse pipelines, would be needed to assert that \ac{KNN} is more flexible than \ac{RF}.}
 
 This work provides an improved scheme to implement Bayesian probabilities for \hasns\ and \hasrem\ classification of candidate events that would be straightforward to deploy in the
 existing LVK infrastructure. Our method can also be easily extended to other properties of \ac{GW} signals that are being or may be released in low latency, such as \hasgap\ among other

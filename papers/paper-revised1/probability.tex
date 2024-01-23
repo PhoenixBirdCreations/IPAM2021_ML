@@ -40,13 +40,13 @@ P(&\hasrem|{\bf A}_{\bf X}) \nonumber  \\
 \end{align}
 where $\hasrem_+={\bf L}[{\bf X}'(\hbox{\hasrem:\true})]$ is a label that uniquely identifies elements in $D$ with positive \hasrem\ ground truth and ${\bf X}''= {\bf X}'(\hbox{\hasns:\true})$.
 
-To evaluate Eqs.~\eqref{bayes-hasns} and~\eqref{bayes-hasrem} with an \ac{ML} classifier, the synthetic data set is divided into two subsets, $D=D_R\oplus D_S$\tocheck{, where the $\oplus$ sign indicates complementary data sets} . The $D_R$ subset is used
+To evaluate Eqs.~\eqref{bayes-hasns} and~\eqref{bayes-hasrem} with an \ac{ML} classifier, the synthetic data set is divided into two subsets, $D=D_R\oplus D_S$\tocheck{, where the $\oplus$ sign indicates complementary  subsets} . The $D_R$ subset is used
 for algorithm training and validation. The $D_S$ subset is used to estimate the probabilities. Following customary practice, throughout this paper we use a 70\% -- 30\% split for $D_R$
 and $D_S$, respectively.
 
 The choice of the labeling scheme and the algorithm's outcome depend on the \ac{ML} algorithm characteristics. Throughout this paper we implement a multi-label classification scheme,
 where each element in $D$ is classified into $n$ mutually exclusive categories that uniquely define the $n$ possible physical states of the system. The classifier outcome can then be
-chosen as a two-dimensional vector space \tocheck{\sout{${\bf A}_{{\bf X}'}\subset \mathbb{R}^n$} ${\bf A}_{{\bf X}'}\subset \mathbb{R}^2$}. This scheme allows the calculation of Eqs.~\eqref{bayes-hasns} and \eqref{bayes-hasrem} with a single
+chosen as a \tocheck{\sout{two-dimensional vector space} vector in a two-dimensional slice of the vector space ${\bf A}_{{\bf X}'}\subset \mathbb{R}^n$}. This scheme allows the calculation of Eqs.~\eqref{bayes-hasns} and \eqref{bayes-hasrem} with a single
 training process. In the problem at hand, there are three possible physical states. A suitable labeling is
 %
 \begin{align}
