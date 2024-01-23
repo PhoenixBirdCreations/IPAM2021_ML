@@ -1,12 +1,12 @@
 \appendix
 
-\section{Cross validation of the ML algorithms}
+\section{Cross validation of the ML algorithms}  \label{app:crossval}
 
 To obtain the optimal hyperparameters of our \ac{ML} algorithms, we perform a cross validation across different values of the algorihtms' parameters. We apply the algorithms on our O2 dataset for different choices of parameters, and we select the combination that gives the highest accuracy. 
 
 \subsection{K-Nearest Neighbors}
 
-Regarding the \ac{KNN} algorithm, $k$-fold cross validation implemented in scikit-learn~\cite{Pedregosa:2011ork} was used, with $k = 10$ folds.  The dataset employed to cross validate is $D=D_R\oplus D_S$. 
+Regarding the \ac{KNN} algorithm, $k$-fold cross validation implemented in scikit-learn~\cite{Pedregosa:2011ork} was used, with $k = 10$ folds, . as this choice is commonly used in applied machine learning. As consistency checks, we also applied different numbers of folds ($k = 4$ and $k=5$) and obtained consistent results for all the cases.  The dataset employed to cross validate is $D=D_R\oplus D_S$. 
 
 The characteristic hyperparameters of the \ac{KNN} algorithm are the number of neighbors ($K$), the metric used distance computation, the algorithm to obtain the nearest neigbors, and the weight function for prediction. In table~\ref{tab:KNN_crossval_tab} we depict several combinations of these parameters and the resulting accuracy after cross validating. One can note that the accuracy is practically insensitive to the choice of hyperparameters.
 
@@ -80,6 +80,22 @@ In Figure~\ref{fig:crossvalRF} we plot the scores obtained during crossvalidatio
 \caption{Dependence of the accuracy of the RF algorithm with the number of trees. The red (blue) color corresponds to "sqrt" ("all") features and the dots (crosses), to "entropy" ("gini") criteria.  The depth of the trees is fixed to 15.  The accuracy lays between 0.960 and 0.965 in all cases.}
 \label{fig:crossvalRF}
 \end{figure*}
+
+\section{Comparison between our algorithms and the current LVK implementation}  \label{app:comparison}
+
+\tocheck{[TO REPHRASE A LITTLE BIT]}
+
+The plots shown below directly compares the currently employed low-latency classifier  with multi label RF and KNN scheme presented in the paper. For fair comparison, we trained KNN classifier for two cases (hasNS and hasRemnant) independently with the hyperparameters currently set in low-latency implementation. These two classifiers were trained in the same 70$\%$ O2 dataset as the multilabel KNN/RF. The ROC curve below, is made on the remaining 30$\%$ of the dataset. As evident, multilabel RF approach has high TPR across the range of FPR for both hasNS and hasRemnant. Both multilabel KNN and binary label KNN perform similarly for both scenarios.
+
+Note: In current LIGO implementation, the algorithm is trained on the entirety of the dataset which leave us without enough testing. In the paper, we chose a 70-30 split and hence made a comparison accordingly. Also these ROC curves comparison is done before defining Bayesian probabilities since they are constructed from the testing set.
+
+\begin{figure*}%[h]
+\includegraphics[width=0.47\linewidth]{ROC_O2testing_all_impl-NS}
+\includegraphics[width=0.45\linewidth]{ROC_O2testing_all_impl-REM}
+\caption{.}
+\label{fig:rocO2_all}
+\end{figure*}
+
 
 
 
