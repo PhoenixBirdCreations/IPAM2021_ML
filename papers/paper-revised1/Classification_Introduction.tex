@@ -38,7 +38,7 @@ speed compared to the semi-analytic effective Fisher formalism method that was d
 
 In this work, we revisit the problem of the real-time production of \hasns\ and \hasrem\ \emph{probability} metrics with the aim of further improving the latency and performance of the
 current \ac{LVK} \ac{ML}-based scheme~\cite{Chatterjee:2019avs}. In the current implementation, the validity of the classification outcome for an event is assessed through elements of the
-algorithm's confusion matrix and its \ac{ROC} curve. For example, given a positive \tocheck{\sout{prediction} candidate detection}, the \ac{LVK} collaborations define a ``score'' that this 	\tocheck{\sout{prediction} candidate detection} is correct as the
+algorithm's confusion matrix and its \ac{ROC} curve\tocheck{, which illustrates the performance of the algorithm by plotting the \ac{TPR} against the \ac{FPR} at different threshold values.} For example, given a positive \tocheck{\sout{prediction} candidate detection}, the \ac{LVK} collaborations define a ``score'' that this 	\tocheck{\sout{prediction} candidate detection} is correct as the
 \ac{TPR} for the given data set. However, there is no quantity in the algorithm's confusion matrix that defines a probability in the strictest sense. A second limitation of the current
 \hasns\ and \hasrem\ classification implementation is the fact that the \hasns\ and \hasrem\ labels are treated as independent variables. In reality, the probability of the formation of
 tidally disrupted matter, i.e. an \ac{EM} bright event, is always smaller than the probability of the system hosting a \ac{NS}. Therefore, the \hasns\ and \hasrem\ labels cannot be
