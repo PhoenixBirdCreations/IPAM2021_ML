@@ -69,8 +69,8 @@ curves based on the ground truth using Bayesian probability (rather than score) 
 present separate \ac{ROC} curves for these pipelines. 
 
 In the case of \hasns, \ac{KNN} yields a \ac{TPR} between 0.95 and 0.98 and an \ac{FPR} smaller than 0.20 for a probability threshold of 0.5 across all pipelines, with the exception of
-SPIIR. It is not surprising that our classifier performs poorly on SPIIR triggers. A similar result has been reported by other investigations~\cite{Chaudhary:2023vec}. Because the
-algorithm was not trained on multiple pipelines, a decrease in performance on triggers recovered by pipelines other than the training pipeline is to be expected. Even though the \ac{ML}
+SPIIR. It is not surprising that our classifier performs poorly on SPIIR triggers. A similar result has been reported by other investigations~\cite{Chaudhary:2023vec}. \tocheck{\sout{Because the
+algorithm was not trained on multiple pipelines, a decrease in performance on triggers recovered by pipelines other than the training pipeline is to be expected.}} Even though the \ac{ML}
 algorithms are generally portable across pipelines and data sets, accurate results critically depend on the training set's faithful representation of the observations. \tocheck{The suboptimal performance of the pipelines, especially SPIIR, can be explained by considering that we only used GstLAL to train the algorithms. The inclusion of the other pipelines in the training phase is deferred to future work, when, hopefully, more injections will be available. We believe that this will improve the results on the other pipelines.In spite of the restriction to GstLAL triggers, our implementations still perform remarkably well when applied to other pipelines.} 
 
 In regard to
