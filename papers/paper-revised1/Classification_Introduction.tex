@@ -3,13 +3,12 @@
 The first detection of a \ac{GW} signal from a pair of coalescing black holes in 2015 and the first observation of a coalescing binary neutron star system two years later have established
 \ac{MMA} as a powerful tool for the exploration of the cosmos~\cite{LIGOScientific:2016aoc,LIGOScientific:2017vwq,LIGOScientific:2018cki}. The third \ac{LVK} catalog of transient \ac{GW}
 signals \ac{GWTC3}~\cite{LIGOScientific:2021djp} has shown that \ac{GW} astronomy has entered its mature phase, becoming a true observational branch of astronomy. \ac{MMA} allows
-scientists to explore in depth the origin and structure of \acp{BH} \tocheck{through the observation of their progenitors}~\cite{Schmidt:2020ekt,Nitz:2021zwj,Barack:2018yly}, \acp{NS}~\cite{Ruiz:2021gsv,Baiotti:2016qnr,Lasky:2015uia} and
-\acp{GRB}~\cite{Murase:2019tjj,Ciolfi:2018tal}, test general relativity~\cite{LIGOScientific:2021sio,Berti:2018cxi,Berti:2018vdi,Isi:2019aib}, probe the fundamental nature of
+scientists to explore in depth the origin and structure of  \tocheck{\acp{NS}~\cite{Ruiz:2021gsv,Baiotti:2016qnr,Lasky:2015uia},
+\acp{GRB}~\cite{Murase:2019tjj,Ciolfi:2018tal}, and \acp{BH} through the observation of their progenitors}~\cite{Schmidt:2020ekt,Nitz:2021zwj,Barack:2018yly}, test general relativity~\cite{LIGOScientific:2021sio,Berti:2018cxi,Berti:2018vdi,Isi:2019aib}, probe the fundamental nature of
 gravity~\cite{LISA:2022yao,Barausse:2020rsu,Piorkowska-Kurpas:2022idw}, and measure the evolution of the universe~\cite{LIGOScientific:2021psn,LIGOScientific:2021aug}.
 
 A wealth of new detections is being amassed to achieve these science goals~\cite{LIGOScientific:2014pky,VIRGO:2014yos}. The rate of detections in \ac{LVK}'s \ac{O4} is close to one per
-day and is expected to further increase in the \ac{O5}~\cite{KAGRA:2013rdx}. Over the course of \ac{O4} and the next observing runs, the \ac{LVK} collaboration will analyze hundreds of
-\ac{BBH} and dozens of \ac{BNS} and \ac{NSBH} detections, \tocheck{\sout{several of which} and several of the latter case} could be \ac{MMA} sources. Among the challenges that this new phase of \ac{GW} astronomy brings is the necessity
+day and is expected to further increase in the \ac{O5}~\cite{KAGRA:2013rdx}. Over the course of \ac{O4} and the next observing runs, \tocheck{the LVK collaboration will analyze hundreds of binary black hole (BBH) candidate detections, as well as dozens of binary neutron star (BNS) and neutron star and black hole (NSBH) merger events that could potentially be MMA sources.} Among the challenges that this new phase of \ac{GW} astronomy brings is the necessity
 to coordinate the activities of \ac{EM} and \ac{GW} observatories in real time. 
 
 One of the most interesting areas of study in \ac{MMA} is the physics of gravity-matter interaction in \ac{GW} sources. Tidally disrupted matter in systems with a \ac{NS} may form a
@@ -37,9 +36,8 @@ scheme relies on its capability to handle the statistical systematic uncertainti
 speed compared to the semi-analytic effective Fisher formalism method that was deployed in \ac{O2}.
 
 In this work, we revisit the problem of the real-time production of \hasns\ and \hasrem\ \emph{probability} metrics with the aim of further improving the latency and performance of the
-current \ac{LVK} \ac{ML}-based scheme~\cite{Chatterjee:2019avs}. In the current implementation, the validity of the classification outcome for an event is assessed through elements of the
-algorithm's confusion matrix and its \ac{ROC} curve\tocheck{, which illustrates the performance of the algorithm by plotting the \ac{TPR} against the \ac{FPR} at different threshold values.} For example, given a positive \tocheck{\sout{prediction} candidate detection}, the \ac{LVK} collaborations define a ``score'' that this 	\tocheck{\sout{prediction} candidate detection} is correct as the
-\ac{TPR} for the given data set. However, there is no quantity in the algorithm's confusion matrix that defines a probability in the strictest sense. A second limitation of the current
+current \ac{LVK} \ac{ML}-based scheme~\cite{Chatterjee:2019avs}. \tocheck{In the current \ac{LVK} implementation, the validity of the classification outcome for an event is assessed through elements of the
+algorithm's confusion matrix and its \ac{ROC} curve, which is typically used to evaluate an algorithm's performance by plotting the \ac{TPR} against the \ac{FPR} at various threshold values. However, there is no element in the algorithm's confusion matrix that can be used to define a probability for a single event in the strictest sense.} A second limitation of the current
 \hasns\ and \hasrem\ classification implementation is the fact that the \hasns\ and \hasrem\ labels are treated as independent variables. In reality, the probability of the formation of
 tidally disrupted matter, i.e. an \ac{EM} bright event, is always smaller than the probability of the system hosting a \ac{NS}. Therefore, the \hasns\ and \hasrem\ labels cannot be
 treated as disjoint. In the current \ac{LVK} implementation, this physical condition is data-based rather than being mathematically defined, i.e., the algorithm potentially allows for
