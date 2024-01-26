@@ -2,17 +2,17 @@
 
 Let us define the probability of a system having a \ac{NS} (\hasns:\true) and being \ac{EM} bright (\hasrem:\true), given an event $X$ and the classifier outcome on the detection pipeline
 output, ${\bf A}_{\bf X}$, as $P(\hasns|{\bf A}_{\bf X})$ and $P(\hasrem|{\bf A}_{\bf X})$, respectively. The classifier outcome can be understood as a map $A:{\bf X}\to {\bf A}_{\bf X}$,
-where $\bf X$ is a vector that identifies the output of the detection pipeline and ${\bf A}_{\bf X}$ is a vector that uniquely identifies the algorithm's output for $\bf X$. 
+where \tocheck{\sout{$\bf X$} ${\bf X}(X)$} is a vector that identifies the output of the detection pipeline and ${\bf A}_{\bf X}$ is a vector that uniquely identifies the algorithm's output for $\bf X$. 
 
 Since a system can be EM-bright only when a \ac{NS} is present in the system, the condition $P(\hasrem|{\bf A}_{\bf X})\le P(\hasns|{\bf A}_{\bf X})$ must hold. However, if the
 probabilities are calculated disjointly, this condition may be violated because of statistical and systematic errors in the pipeline's reconstructed signal parameters, as well as bias and
 limited accuracy of the \ac{ML} algorithm. The approach discussed below avoids the occurrence of this inconsistency.
 
-The \tocheck{\sout{ground truth} true nature} of observed events is unknown. Therefore, the probabilities $P(\hasns|{\bf A}_{\bf X})$ and $P(\hasrem|{\bf A}_{\bf X})$ cannot be calculated from observations. However,
+The \tocheck{\sout{ground truth} true nature (ground truth)} of observed events is unknown. Therefore, the probabilities $P(\hasns|{\bf A}_{\bf X})$ and $P(\hasrem|{\bf A}_{\bf X})$ cannot be calculated from observations. However,
 estimators for $P(\hasns|{\bf A}_{\bf X})$ and $P(\hasrem|{\bf A}_{\bf X})$ can be calculated from synthetic events under the assumption that these events are a faithful representation of
 real observations.
 
-Consider a data set of $N$ simulated events ${\bf X}'_i$, $D=\{{\bf X}'_i\otimes{\bf L}({\bf X}'_i)\}$, where $i=1\dots N$ and ${\bf L}$ is a map from ${\bf X}'$ to a vector space
+Consider a data set of $N$ simulated events \tocheck{\sout{${\bf X}'_i$, $D=\{{\bf X}'_i\otimes{\bf L}({\bf X}'_i)\}$} ${X}'_i$, $D=\{{X}'_i\otimes{\bf L}({X}'_i)\}$}, where $i=1\dots N$ and ${\bf L}$ is a map from \tocheck{\sout{${\bf X}'$} ${X}'$} to a vector space
 that defines labels for the \hasns\ and \hasrem\ \tocheck{\sout{ground truths} true events}. According to Bayes' theorem, $P(\hasns|{\bf A}_{\bf X})$  can be written as 
 %
 \begin{equation}
@@ -29,7 +29,7 @@ P(\hasns|{\bf A}_{\bf X})&\simeq P(\hasns_+|{\bf A}_{{\bf X}'}) \nonumber \\
 &=\frac{P({\bf A}_{{\bf X}'}|\hasns_+)P(\hasns_+)}{P({\bf A}_{{\bf X}'})},
 \end{align}
 %
-where $\hasns_+={\bf L}[{\bf X}'(\hbox{\hasns:\true})]$ is a label that uniquely identifies elements in $D$ \tocheck{as true events} with positive \tocheck{(+)} \hasns\ \tocheck{\sout{ground truth}}, ${\bf X}'$ is an element in $D$, and ${\bf A}_{{\bf X}'}$ is the outcome of the classifier on ${\bf X}'$. \tocheck{The label $\hasns_+$ is given by the matched filtering pipeline,  and therefore we are assuming that the output of the pipeline is accurate.} The probability $P(\hasrem|{\bf A}_{\bf X})$ can be approximated as:
+where $\hasns_+={\bf L}[{\bf X}'(\hbox{\hasns:\true})]$ is a label that uniquely identifies elements in $D$ \tocheck{as true events} with positive \tocheck{(+)} \hasns\ \tocheck{\sout{ground truth}}, \tocheck{\sout{${\bf X}'$}${X}'$ } is an element in $D$, and ${\bf A}_{{\bf X}'}$ is the outcome of the classifier on \tocheck{\sout{${\bf X}'$} ${X}'$}. \tocheck{The label $\hasns_+$  is assigned using the values of the parameters of the events $X'$ that are injected into the matched filtering pipeline.} The probability $P(\hasrem|{\bf A}_{\bf X})$ can be approximated as:
 %
 \begin{align}
 \label{bayes-hasrem}
@@ -38,7 +38,7 @@ P(&\hasrem|{\bf A}_{\bf X}) \nonumber  \\
 %&\simeq P(\hasrem_+|\hasns_+,A_{{\bf X}'})P(\hasns_+|A_{X'})\nonumber\\
 &\simeq P(\hasrem_+|{\bf A}_{{\bf X}''})P(\hasns_+|{\bf A}_{{\bf X}'}),
 \end{align}
-where $\hasrem_+={\bf L}[{\bf X}'(\hbox{\hasrem:\true})]$ is a label that uniquely identifies elements in $D$ \tocheck{as true events} with positive \tocheck{(+)} \hasrem\ \tocheck{\sout{ground truth}} and ${\bf X}''= {\bf X}'(\hbox{\hasns:\true})$.
+where \tocheck{\sout{$\hasrem_+={\bf L}[{\bf X}'(\hbox{\hasrem:\true})]$} $\hasrem_+={\bf L}[{X}'(\hbox{\hasrem:\true})]$} is a label that uniquely identifies elements in $D$ \tocheck{as true events} with positive \tocheck{(+)} \hasrem\ \tocheck{\sout{ground truth}} and ${\bf X}''= {\bf X}'(\hbox{\hasns:\true})$.
 
 To evaluate Eqs.~\eqref{bayes-hasns} and~\eqref{bayes-hasrem} with an \ac{ML} classifier, the synthetic data set is divided into two subsets, $D=D_R\oplus D_S$\tocheck{, where the $\oplus$ sign indicates complementary  subsets} . The $D_R$ subset is used
 for algorithm training and validation. The $D_S$ subset is used to estimate the probabilities. Following customary practice, throughout this paper we use a 70\% -- 30\% split for $D_R$
@@ -49,11 +49,13 @@ where each element in $D$ is classified into $n$ mutually exclusive categories t
 chosen as a \tocheck{\sout{two-dimensional vector space} vector in a two-dimensional slice of the vector space ${\bf A}_{{\bf X}'}\subset \mathbb{R}^n$}. This scheme allows the calculation of Eqs.~\eqref{bayes-hasns} and \eqref{bayes-hasrem} with a single
 training process. In the problem at hand, there are three possible physical states. A suitable labeling is
 %
+\tocheck{
 \begin{align}
-&{\bf L}[{\bf X}'(\hbox{\hasns:\false})]=0\,\nonumber\\
-&{\bf L}[{\bf X}'(\hbox{\hasns:\true},\hbox{\hasrem:\false})]=1\,\\
-&{\bf L}[{\bf X}'(\hbox{\hasns:\true},\hbox{\hasrem:\true})]=2\,.\nonumber
+&{\bf L}[{X}'(\hbox{\hasns:\false})]=0\,\nonumber\\
+&{\bf L}[{X}'(\hbox{\hasns:\true},\hbox{\hasrem:\false})]=1\,\\
+&{\bf L}[{X}'(\hbox{\hasns:\true},\hbox{\hasrem:\true})]=2\,.\nonumber
 \end{align}
+}
 %
 With this labeling, \hasrem$_+=2$ and \hasns$_+=1\cup 2$. Therefore a natural choice for the algorithm outcome is
 %
