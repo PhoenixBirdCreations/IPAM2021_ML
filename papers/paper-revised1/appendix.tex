@@ -6,7 +6,7 @@ To obtain the optimal hyperparameters of our \ac{ML} algorithms, we perform a cr
 
 \subsection{K-Nearest Neighbors}
 
-Regarding the \ac{KNN} algorithm, $k$-fold cross validation implemented in scikit-learn~\cite{Pedregosa:2011ork} was used, with $k = 10$ folds, . as this choice is commonly used in applied machine learning. As consistency checks, we also applied different numbers of folds ($k = 4$ and $k=5$) and obtained consistent results for all the cases.  The dataset employed to cross validate is $D=D_R\oplus D_S$. 
+Regarding the \ac{KNN} algorithm, $k$-fold cross validation implemented in scikit-learn~\cite{Pedregosa:2011ork} was used, with $k = 10$ folds, . as this choice is commonly used in applied machine learning. As consistency checks, we also applied different numbers of folds ($k = 4$ and $k=5$) and obtained consistent results for all the cases, giving an accuracy in the range. between $0.9449$ and $0.9517$.  The dataset employed to cross validate is $D=D_R\oplus D_S$. 
 
 The characteristic hyperparameters of the \ac{KNN} algorithm are the number of neighbors ($K$), the metric used distance computation, the algorithm to obtain the nearest neigbors, and the weight function for prediction. In table~\ref{tab:KNN_crossval_tab} we depict several combinations of these parameters and the resulting accuracy after cross validating. One can note that the accuracy is practically insensitive to the choice of hyperparameters.
 

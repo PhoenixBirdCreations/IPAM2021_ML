@@ -3,7 +3,7 @@
 In this section, we first discuss the performance of the trained \ac{RF} and \ac{KNN} classifiers on the testing data set $D_S$ and use the latter to calculate the Bayesian probabilities
 $P_M(I|{\bf A})$. Then we evaluate $P_M(I|{\bf A})$ on two independent data sets. The first set includes a population of simulated \ac{CBC} events that were injected in the real-time
 replay of \ac{O3} data and was used for the \ac{LVK} \ac{MDC}~\cite{Chaudhary:2023vec}. The second set contains the confident \ac{LVK} \ac{O3} detections that are reported in \ac{LVK}'s
-\ac{GWTC3} catalog~\cite{LIGOScientific:2021djp}.
+\tocheck{\sout{\ac{GWTC3}}\ac{GWTC}} catalog~\tocheck{\sout{\cite{LIGOScientific:2021djp}}\cite{2023ApJS..267...29A}}.
 
 \subsection{Performance on the O2 Testing Set}
 
@@ -11,7 +11,7 @@ We assess the performance of the classifiers by measuring the \ac{TPR} and the \
 varies for various score thresholds as a function of the \ac{FPR}.
 
 \begin{figure*}%[h]
-\includegraphics[width=0.47\linewidth]{roc_testing_KNN_NS}
+\includegraphics[width=0.45\linewidth]{roc_testing_KNN_NS}
 \includegraphics[width=0.45\linewidth]{roc_testing_KNN_REM}
 \caption{\ac{ROC} curves obtained from the \ac{O2} testing data set $D_S$ for the \ac{KNN} classifier (left: \hasns, right: \hasrem). The curves for the 23 different \ac{EOS}s are displayed in
 gray, with the curves for {\tt BHF\_BBB2}, {\tt MS1\_PP}, and {\tt SLy} highlighted in red, green, and blue, respectively. The circle, triangle, and square markers denote score thresholds of
@@ -20,7 +20,7 @@ $0.1$, $0.5$, and $0.9$, respectively.}
 \end{figure*}
 
 \begin{figure*}%[h]
-\includegraphics[width=0.47\linewidth]{roc_testing_RF_NS}
+\includegraphics[width=0.45\linewidth]{roc_testing_RF_NS}
 \includegraphics[width=0.45\linewidth]{roc_testing_RF_REM}
 \caption{\ac{ROC} curves obtained from the \ac{O2} testing data set $D_S$ for the \ac{RF} classifier (left: \hasns, right: \hasrem). The curves for the 23 different \ac{EOS}s are displayed in
 gray, with the curves for {\tt BHF\_BBB2}, {\tt MS1\_PP}, and {\tt SLy} highlighted in red, green, and blue, respectively. The circle, triangle, and square markers denote score thresholds of
@@ -97,8 +97,8 @@ which the algorithms have been trained, both algorithms exhibit comparable (high
 \label{fig:rocMDC_RF}
 \end{figure*}
 
-Finally, we apply the method to derive Bayesian probabilities for the events in the \ac{LVK} \ac{GWTC3} catalog~\cite{LIGOScientific:2021djp}.  In Table~\ref{tab:real_data_bayesian} we
-report the results for some of the most significant \ac{GWTC3} events, labeled with their event ID. The $P_M(\hasns |\bf{A_E})$ and $P_M(\hasrem |\bf{A_E})$ probabilities for GW170817 and
+Finally, we apply the method to derive Bayesian probabilities for the events in the \ac{LVK} \tocheck{\sout{\ac{GWTC3}}\ac{GWTC}} catalog~\tocheck{\sout{\cite{LIGOScientific:2021djp}}\cite{2021SoftX..1300658A,2023ApJS..267...29A}.}  In Table~\ref{tab:real_data_bayesian} we
+report the results for some of the most significant \ac{GWTC} events, labeled with their event ID\tocheck{, and with their \hasns\ and \hasrem\ probabilities given in their \ac{GCN} Circulars\footnote{\url{https://gcn.nasa.gov}}}. The $P_M(\hasns |\bf{A_E})$ and $P_M(\hasrem |\bf{A_E})$ probabilities for GW170817 and
 GW190425, the two confirmed \ac{BNS} detections are $\sim 1$ as expected.  The probabilities for GW190426 and GW200115 (\ac{NSBH} mergers) are $P_M(\hasns |{\bf{A_E}}) \sim 1$ and
 $P_M(\hasrem |{\bf{A_E}}) < 10^{-3}$. The two remaining significant events with non-zero probabilities are GW190814 and GW190924. These events were reported as high mass-ratio BBH
 mergers. 
@@ -109,22 +109,22 @@ between \ac{RF} and \ac{KNN} for GW190814 can be understood from the different w
 since the region of the parameter space close to the mass gap, i.e., the region between high \ac{NS} masses and low \ac{BH} masses, is not well covered in the \ac{O2} training data set,
 \ac{KNN} overestimates the effect of the three \ac{EOS} predicting a secondary mass in the \ac{NS} region. 
 
-\begin{table}[]
-\begin{tabular}{c|cc|cc}
+\begin{table*}[]
+\begin{tabular}{c|cc|cc|cc}
 \hline
-\multicolumn{1}{c|}{}      & \multicolumn{2}{c|}{$P_M(\hasns|{\bf A}_{\bf E})$}                                                & \multicolumn{2}{c}{$P_M(\hasrem|{\bf A}_{\bf E})$}                                                \\ \hline
-\multicolumn{1}{c|}{event ID}   & \multicolumn{1}{c}{RF} & \multicolumn{1}{c}{KNN}  & \multicolumn{1}{c}{RF} & \multicolumn{1}{c}{KNN} \\ \hline
-GW170817                                   & 0.998                   & 0.989                    & 0.997                   & 0.985                                  \\
-GW190425                                   & 0.998                   & 0.989                    & 0.997                   & 0.985                            \\
-GW190426                                   & 0.997                   & 0.985                    & $< 10^{-3}$             & $< 10^{-3}$                    \\
-GW190814                                   & 0.042                   & 0.567                   & $< 10^{-3}$              & $< 10^{-3}$                      \\
-GW190924                                   & 0.012                   & 0.054                   & $< 10^{-3}$              & $< 10^{-3}$                       \\               
-GW200115                                   & 0.998                   & 0.989                   & $< 10^{-3}$              & $< 10^{-3}$                           \\
+\multicolumn{1}{c|}{}  &  \multicolumn{2}{c|}{GCN Circular probability}                                                & \multicolumn{2}{c|}{$P_M(\hasns|{\bf A}_{\bf E})$}                                                & \multicolumn{2}{c}{$P_M(\hasrem|{\bf A}_{\bf E})$}                                                \\ \hline
+\multicolumn{1}{c|}{event ID}  & \multicolumn{1}{c}{$P(\hasns)$} & \multicolumn{1}{c}{$P(\hasrem)$}  & \multicolumn{1}{c}{RF} & \multicolumn{1}{c}{KNN}  & \multicolumn{1}{c}{RF} & \multicolumn{1}{c}{KNN} \\ \hline
+GW170817      &  &                            & $>0.99$                 & 0.99                    & $>0.99$                   & 0.99                                \\
+GW190425    & $>0.99$      & $>0.99$~\cite{2019GCN.24168....1L}                         & $>0.99$                  & 0.99                    & $>0.99$                   & 0.99                          \\
+GW190426        &     $>0.99$      & $>0.99$~\cite{2019GCN.24237....1L}                        & $>0.99$                   & 0.99                    & $< 0.01$             & $< 0.01$                    \\
+GW190814          &   $< 0.01$ & $<0.01$~\cite{2019GCN.25324....1L}                         & 0.04                   & 0.57                   & $< 0.01$              & $< 0.01$                      \\
+GW190924      &   $0.30$ & $<0.01$~\cite{2019GCN.25829....1L}                                                     & 0.01                  & 0.05                   & $< 0.01$              & $< 0.01$                       \\               
+GW200115       &     $>0.99$      & $0.09$~\cite{2020GCN.26759....1L}                                                   & $>0.99$                   & 0.99                   & $< 0.01$              & $< 0.01$                           \\
 \hline
 \end{tabular}
-\caption{Bayesian probabilities of a few significant \ac{GW} events from the \ac{GWTC3} catalog. GW170817 and GW190425, GW190426 and GW200115, and GW190814 and GW190924 were determined to be \ac{BNS}, \ac{NSBH}, and \ac{BBH} mergers, respectively. The probability values in the table are rounded to three decimal figures.}
+\caption{Bayesian probabilities of a few significant \ac{GW} events from the \ac{GWTC} catalog. GW170817 and GW190425, GW190426 and GW200115, and GW190814 and GW190924 were determined to be \ac{BNS}, \ac{NSBH}, and \ac{BBH} mergers, respectively\tocheck{, as stated by the second and third columns.} The probability values in the table are rounded to \tocheck{\sout{three} two} decimal figures.}
 \label{tab:real_data_bayesian}
-\end{table}
+\end{table*}
 
 Figures~\ref{fig:param_sweep_KNN} and~\ref{fig:param_sweep_RF} show parameter sweeps in the space of the binary component masses for the \ac{KNN} and \ac{RF} Bayesian probabilities,
 respectively. Different rows correspond to different values of the component spins. Both algorithms perform in a similar way for $P_M(\hasns |\bf{A_E})$. However, the parameter sweeps for
