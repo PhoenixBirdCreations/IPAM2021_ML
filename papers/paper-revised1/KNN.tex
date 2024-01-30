@@ -7,7 +7,7 @@ testing point. By choosing the top $K$ neighbors from the sorted array, \ac{KNN}
 
 In this work, we use the open-source Python \ac{KNN} implementation of scikit-learn~\cite{Pedregosa:2011ork}. We fix the algorithm hyperparameters by cross-validating over the data set
 and obtain the highest accuracy. Throughout our analysis we use $K = 8$ neighbors, the Manhattan metric, the BallTree algorithm and the neighbors are weighted by the inverse of their
-distance to the event. \tocheck{ For further details about how we fix these parameters, we refer the reader to the Appendix~\ref{app:crossval}.}This configuration differs from the \ac{LVK}'s current implementation, which employs the Mahalanobis metric and $K = 2n + 1 = 11$ neighbors, where $n$ is the number
+distance to the event. \tocheck{Further details on hyperparameter tuning are given in Appendix~\ref{app:crossval}.} This configuration differs from the \ac{LVK}'s current implementation, which employs the Mahalanobis metric and $K = 2n + 1 = 11$ neighbors, where $n$ is the number
 of features. Our configuration is the optimal choice for the new labeling scheme that is presented in Sect.~\ref{labelingscheme}).
 
 

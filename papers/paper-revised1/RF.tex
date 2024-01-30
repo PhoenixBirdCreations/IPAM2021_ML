@@ -9,6 +9,6 @@ the input hyperparameters.
 
 In this work, we use the open-source Python \ac{RF} implementation of scikit-learn~\cite{Pedregosa:2011ork}. The main tunable hyperparameters are the number of trees, the maximum allowed
 depth, and the information gain criteria used at splitting. Similar to \ac{KNN}, we choose the algorithm's optimal hyperparameters by measuring the accuracy in the testing set. We use 50
-trees in the forest, with a maximum depth of 15, and the maximum number of features considered in a node is the square root of the total number of features. \tocheck{Please check the Appendix~\ref{app:crossval} for more information about the cross-validation process used to obtain these hyperparameters.}
+trees in the forest, with a maximum depth of 15, and the maximum number of features considered in a node is the square root of the total number of features. \tocheck{Appendix~\ref{app:crossval} provides details on the cross-validation method used to determine these hyperparameters.}
 
 

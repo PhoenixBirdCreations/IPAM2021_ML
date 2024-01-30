@@ -2,14 +2,13 @@
 
 \section{Cross validation of the ML algorithms}  \label{app:crossval}
 
-To obtain the optimal hyperparameters of our \ac{ML} algorithms, we perform a cross validation across different values of the algorihtms' parameters. We apply the algorithms on our O2 dataset for different choices of parameters, and we select the combination that gives the highest accuracy. 
+To obtain the optimal hyperparameters of our \ac{ML} algorithms, we perform cross-validation across different values of the algorithm parameters. We apply the algorithms to the \ac{O2} data set for different choices of parameters, and we select the combination that gives the highest accuracy.
 
 \subsection{K-Nearest Neighbors}
 
-Regarding the \ac{KNN} algorithm, $k$-fold cross validation implemented in scikit-learn~\cite{Pedregosa:2011ork} was used, with $k = 10$ folds, . as this choice is commonly used in applied machine learning. As consistency checks, we also applied different numbers of folds ($k = 4$ and $k=5$) and obtained consistent results for all the cases, giving an accuracy in the range. between $0.9449$ and $0.9517$.  The dataset employed to cross validate is $D=D_R\oplus D_S$. 
+We utilize the $k$-fold cross validation implemented in scikit-learn~\cite{Pedregosa:2011ork} with $k = 10$ folds, which is a common choice in applied machine learning. As consistency checks, we use different numbers of folds ($k = 4$ and $k=5$) and achieve consistent results in all cases, with an accuracy ranging between 0.9449 and 0.9517. The dataset used for cross-validation is $D=D_R\oplus D_S$.
 
-The characteristic hyperparameters of the \ac{KNN} algorithm are the number of neighbors ($K$), the metric used distance computation, the algorithm to obtain the nearest neigbors, and the weight function for prediction. In table~\ref{tab:KNN_crossval_tab} we depict several combinations of these parameters and the resulting accuracy after cross validating. One can note that the accuracy is practically insensitive to the choice of hyperparameters.
-
+The \ac{KNN} algorithm's hyperparameters include the number of neighbors ($K$), distance metric, nearest neighbor method, and prediction weight function. Table ~\ref{tab:KNN_crossval_tab} displays many combinations of these parameters and the resulting accuracy following cross-validation. It is worth noting that the choice of hyperparameters has little to no impact on accuracy.
 
 \begin{table}[h]
 \begin{tabular}{c|c|c|c|c}
@@ -30,16 +29,15 @@ Neighbors   & Metric & Weights & Algorithm & \multicolumn{1}{|c}{Accuracy} \\ \h
 \label{tab:KNN_crossval_tab}
 \end{table}
 
-In Figure~\ref{fig:crossvalKNN} we show the dependence of the accuracy on different choices of hyperparameters, keeping fixed the algorithm used to compute the nearest neighbors, which is the BallTree.
+Figure~\ref{fig:crossvalKNN} illustrates the accuracy dependence on different hyperparameter options while keeping the algorithm used to compute nearest neighbors, the BallTree, constant.
 
 \begin{figure*}%[h]
 \includegraphics[width=\linewidth]{cross_val_KNN}
-\caption{Dependence of the accuracy of the KNN algorithm with the number of neighbors. The red (blue) color corresponds to the Euclidean (Manhattan) metric and the dots (crosses), to uniform (distance) weights.  The algorithm to compute the closest neighbors is fixed to the BallTree. algorithm.  There is not a strong dependence with the number of neighbors when considering more than 5 neighbors. }
+\caption{Accuracy of the \ac{KNN} algorithm as a function of the number of neighbors. The color red (blue) denotes the Euclidean (Manhattan) metric, and the dots (crosses) denote uniform (distance) weights. The BallTree algorithm is used to find the nearest neighbors. The accuracy does not significantly change when more than 5 neighbors are considered.}
 \label{fig:crossvalKNN}
 \end{figure*}
 
-We found that the optimal hyperparameters were the same for all the equations of state, except of the number of neighbors, which changed between 6 and 12. We margilanize over all the equations of state using the Bayes' factors presented in~\cite{Ghosh:2021eqv}. The marginalised optimal number of neighbors turns out to be 8. However, as one can see in Fig.~\ref{fig:crossvalKNN}, there is not a considerable change in accuracy when a larger number of neighbors is used. The fixed hyperparameters used for our KNN implementation are shown in Table~\ref{tab:KNN_opt_params}.
-
+The ideal hyperparameters are the same for all state equations, with the exception of the number of neighbors, which varies between 6 and 12.  We use the Bayes factors described in~\cite{Ghosh:2021eqv} to marginalize over all state equations. The marginalized optimal number of neighbors is 8. However, as illustrated in Fig.~\ref{fig:crossvalKNN}, there is no significant change in accuracy when a higher number of neighbors is used. Table~\ref{tab:KNN_opt_params} shows the fixed hyperparameters used in our KNN implementation.
 
 \begin{table}[h]
 \begin{tabular}{c|c|c|c}
@@ -48,17 +46,18 @@ Nº of neighbors   & Metric & Weights & Algorithm  \\ \hline
 8  & Manhattan  & Distance & BallTree \\ 
 \hline
 \end{tabular}
-\caption{Table with the optimal hyperparameters for the KNN algorithm. These values are the ones with which we train and test the algorithm, and build the Bayesian probabilities.} \label{tab:KNN_opt_params}
+\caption{Optimal hyperparameters for the \ac{KNN} algorithm. These are the values we use to train and test the algorithm, as well as to calculate Bayesian probabilities.} \label{tab:KNN_opt_params}
 \end{table}
 
 
 \subsection{Random Forest}
 
-In order to apply the crossvalidation to the Random Forest algorithm, we use the training ($D_R$) and testing ($D_S$) data sets presented in Section~\ref{probability}. We select possible values for the different hyperparameters and compare the accuracies of the resulting forests. Differently from KNN, in RF we do not use the $k$-fold crossvalidation technique. This is because the implementation of RF we use admits the bootstrap technique in the training: each tree in the forest access a random subset of the training data, therefore achieving the same effect.
+To apply cross-validation to the \ac{RF} algorithm, we use the training ($D_R$) and testing ($D_S$) data sets presented in Section~\ref{probability}. We choose possible values for the various hyperparameters and compare the accuracy of the generated forests. Unlike \ac{KNN}, \ac{RF} does not apply the $k$-fold cross-validation procedure. This is because the implementation of \ac{RF} we employ admits the bootstrap technique in the training. Each tree in the forest accesses a random subset of the training data, thus achieving the same effect.
 
-The hyperparameters studied are the number of trees in the forest, the method to compute the information gain after each node split (the options are gini or entropy),the maximum number of features that are considered in each node (we use the square root of the total number of features, or all of them) and the maximum depth that the trees can reach. For the depth of the trees we consider two different options: None, which consists in letting the trees grow until isolating data points at the leaves, and 15. We choose this number because it is half of the average depth obtained with the None option.
+We investigate the effect on accuracy by varying the number of trees in the forest, the method used to compute the information gain after each node split (gini or entropy), the maximum number of features considered in each node (the square root of the total number of features, or all of them), and the maximum depth that the trees can reach. For tree depth, we explore two options: None, which consists of allowing the trees to grow until data points are isolated at the leaves, and 15. We chose this figure since it is half the average depth obtained with the None option.
 
-Taking the configuration leading to the highest score for every EOS we marginalize the best options using the Bayes factors. We obtain that for all EoS we should use 81.017 trees, "entropy" criterium, the square root of the number of features at split and depth equal to 15.
+We use the Bayes factors to marginalize on the configurations that lead to the highest score for each \ac{EOS}. We conclude that for all \ac{EOS}, we should employ 81.017 trees, the ``entropy'' criterion, the square root of the number of features at split, and a depth equal to 15.
+
 
 \begin{table}[h]
 \begin{tabular}{|l|c|}
@@ -68,28 +67,27 @@ Criteria (0-gini, 1-entropy)& 0.9577 \\
 Features (0-sqrt, 1-All)& 0.3902  \\
 Depth (0-15 depth, 1-None)& 0.0000 \\ \hline
 \end{tabular}
-\caption{Table with the optimal hyperparameters for the RF algorithm. \label{tab:RF_cross_params}}
+\caption{Optimal hyperparameters for the \ac{RF} algorithm. \label{tab:RF_cross_params}}
 \end{table}
 
-In table \ref{tab:RF_cross_params} we present the results of the marginalization of the hyperparameters over the EOS. Notice that for all EOS and independently of the values of the other hyperparameters, we always obtain a higher accuracy with depth equal to 15. The "entropy" criterium is chosen for almost all EOS, while the decision of the quantity of features to consider is more tight.
+Table \ref{tab:RF_cross_params} displays the results of hyperparameter marginalization over the \ac{EOS}. For any \ac{EOS}, regardless of other hyperparameters, a depth of 15 yields higher accuracy. The "entropy" criterion is adopted for practically every \ac{EOS}, whereas the number of features to consider is more tightly restricted.
 
-In Figure~\ref{fig:crossvalRF} we plot the scores obtained during crossvalidation, fixing the depth equal to 15. Notice that higher scores are obtained with the higher number of trees. Nonetheless, the idea to make this algorithm run in low-latency favors smaller files (with fewer trees information) that can be loaded fast. Giving the difference in accuracy and in size of the trained model, we restrict ourselves to 50 trees.
+Figure~\ref{fig:crossvalRF} displays the scores obtained during cross-validation, with the depth fixed to 15. It is worth noting that using more trees results in higher scores. Nonetheless, the goal of making this method run in low latency favors smaller files (with less tree information) that can be loaded rapidly. Therefore, given the difference in accuracy and size of the trained models, we limit ourselves to 50 trees.
 
 \begin{figure*}%[h]
 \includegraphics[width=\linewidth]{cross_val_RF}
-\caption{Dependence of the accuracy of the RF algorithm with the number of trees. The red (blue) color corresponds to "sqrt" ("all") features and the dots (crosses), to "entropy" ("gini") criteria.  The depth of the trees is fixed to 15.  The accuracy lays between 0.960 and 0.965 in all cases.}
+\caption{Accuracy of the \ac{RF} algorithm as a function of the number of trees.  The color red (blue) denotes ``sqrt'' (``all'') features, while the dots (crosses) denote ``entropy'' (``gini'') criteria. The depth of the trees is set at 15. All cases have an accuracy range of 0.960 to 0.965.}
 \label{fig:crossvalRF}
 \end{figure*}
 
 \section{Comparison between our algorithms and the current LVK implementation}  \label{app:comparison}
 
-To make a comparison between the current \ac{KNN} implementation~\cite{Chatterjee:2019avs} with our multi-label \ac{KNN} and \ac{RF} schemes, we depict in Figure~\ref{fig:rocO2_all} the ROC curves for the three algorithms. For fair comparison,  we trained the LVK's \ac{KNN} classifier for two cases (\hasns and \hasrem) independently., resulting in a binary label approach.  In this case, we use the hyperparameters currently set in the low-latency implementation: $K = 2n + 1 = 11$ neighbors, (where $n$ is the number of features), the Mahalanobis metric and the neighbors are weighted by the inverse of their distance.  These two classifiers were trained in the same 70$\%$ of the O2 dataset\footnote{In the current LVK implementation, the algorithm is trained on the entirety of the dataset $D$, which leaves us without enough testing. Here, we chose a 70$\%$-30$\%$ split and hence made a comparison accordingly. } (the $D_R$ subset) as our multi-label approaches. The ROC curve below is made on the remaining 30$\%$ of the dataset (the $D_S$ subset). As expected,  the multi-label RF approach has a high TPR across the range of FPR for both \hasns and \hasrem . Both multi-label KNN and binary label KNN perform similarly for both scenarios.Please note that these ROC curves comparison is done in the same was as in Figures~\ref{fig:rocO2_KNN} and~\ref{fig:rocO2_RF}, before defining Bayesian probabilities since they are constructed from the testing set. 
+To compare the existing \ac{LVK} implementation of \ac{KNN}~\cite{Chatterjee:2019avs} with our multi-label \ac{KNN} and \ac{RF} schemes, we show the \ac{ROC} curves for the three methods in Fig.~\ref{fig:rocO2_all}. To provide a fair comparison, we trained the LVK's \ac{KNN} classifier for two cases (\hasns and \hasrem) separately, resulting in a binary label method. In this instance, we use the hyperparameters that are currently configured in the low-latency implementation: $K = 2n + 1 = 11$ neighbors (where $n$ is the number of features), the Mahalanobis metric, and neighbor weighting by the inverse of distance. Both classifiers were trained using the same 70\% of the \ac{O2} dataset (the $D_R$ subset). \footnote{The current LVK implementation trains the \ac{KNN} algorithm on the entire dataset $D$. This leaves no events to test. Therefore, to ensure a fair comparison, we use a 70\%-30\% split.} The ROC curve below was generated using the remaining 30\% of the dataset (the $D_S$ subset). The multi-label RF method achieves a high \ac{TPR} across the entire range of \ac{FPR} for both \hasns and \hasrem. Both multi-label and binary-label \ac{KNN} methods perform similarly. These \ac{ROC} curve comparisons were done in the same way as in Figures~\ref{fig:rocO2_KNN} and~\ref{fig:rocO2_RF} before defining Bayesian probabilities, as they were generated from the testing set.
 
 \begin{figure*}%[h]
 \includegraphics[width=0.47\linewidth]{ROC_O2testing_all_impl-NS}
 \includegraphics[width=0.45\linewidth]{ROC_O2testing_all_impl-REM}
-\caption{\ac{ROC} curves obtained from the \ac{O2} testing data set $D_S$ for the \ac{RF} classifier (solid lines), our \ac{KNN} implementatin (dashed lines) and the \ac{KNN} approach currently used by the \ac{LVK} Collaboration (dotted lines). The curves for {\tt BHF\_BBB2}, {\tt MS1\_PP}, and {\tt SLy} are colored in red, green, and blue, respectively. The circle, triangle, and square markers denote score thresholds of
-$0.1$, $0.5$, and $0.9$, respectively.}
+\caption{\ac{ROC} curves derived from the \ac{O2} testing data set $D_S$ for the \ac{RF} classifier (solid lines), the \ac{KNN} implementation presented in this paper (dashed lines), and the \ac{KNN} approach currently used by the \ac{LVK} Collaborations (dotted lines). The curves for {\tt BHF\_BBB2}, {\tt MS1\_PP}, and {\tt SLy} are colored red, green, and blue, respectively. The circle, triangle, and square marks represent score thresholds of 0.1, 0.5, and 0.9, respectively.}
 \label{fig:rocO2_all}
 \end{figure*}
 
