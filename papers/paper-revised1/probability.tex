@@ -31,7 +31,7 @@ P(\hasns|{\bf A}_{\bf X})&\simeq P(\hasns_+|{\bf A}_{{\bf X}'}) \nonumber \\
 \end{align}
 %
 where \tocheck{$\hasns_+=\{E'\,|\,E'(\hasns)=\true\}$ identifies the elements in $D$ with positive (+) \hasns\ true property, i.e., the subset of synthetic events that have
-been simulated to contain a \ac{NS}, and ${\bf A}_{{\bf X}'}$ is the outcome of the classifier on ${\bf X}(E')$. The label $\hasns_+$ is determined by the values of the simulated
+been simulated to contain a \ac{NS}, and ${\bf A}_{{\bf X}'}$ is the outcome of the classifier on ${\bf X}' = {\bf X}(E')$. The label $\hasns_+$ is determined by the values of the simulated
 parameters of the events $E'$ before they are injected into the detection pipeline. Therefore, the classification label does not depend on the pipeline's outcome.} The probability $P(\hasrem|{\bf A}_{\bf X})$ can be approximated as:
 %
 \begin{align}
@@ -43,7 +43,7 @@ P(&\hasrem|{\bf A}_{\bf X}) \nonumber  \\
 \end{align}
 %
 where \tocheck{$\hasrem_+=\{E'\,|\,E'(\hasrem)=\true\}$ identifies the elements in $D$ with positive (+) \hasrem\ true property, i.e., the subset of synthetic events that have
-been simulated to be \ac{EM}-bright, and ${\bf X}$ is the algorithm's outcome on the subset of events with property $E'(\hasns)=\true$,  ${\bf X}''= {\bf X}'(\hasns_+)$.}
+been simulated to be \ac{EM}-bright, and ${\bf A}_{{\bf X}''}$ is the algorithm's outcome on the subset of events with property $E'(\hasns)=\true$,  ${\bf X}''= {\bf X}'(\hasns_+)$.}
 
 To evaluate Eqs.~\eqref{bayes-hasns} and~\eqref{bayes-hasrem} with an \ac{ML} classifier, the synthetic data set is divided into two subsets, $D=D_R\oplus D_S$\tocheck{, where the $\oplus$ sign indicates complementary  subsets} . The $D_R$ subset is used
 for algorithm training and validation. The $D_S$ subset is used to estimate the probabilities. Throughout this paper we use a 70\% -- 30\% split for $D_R$
@@ -56,8 +56,8 @@ training process. In the problem at hand, there are three possible physical stat
 \tocheck{
 \begin{align}
 &{\bf L}[E'(\hasns)=\false]=0\,\nonumber\\
-&{\bf L}[E'(\hasns=\true,\,\hasrem=\false)]=1\,\\
-&{\bf L}[E'(\hasns=\true,\,\hasrem=\true)]=2\,.\nonumber
+&{\bf L}[E'(\hasns)=\true,\,(\hasrem)=\false]=1\,\\
+&{\bf L}[E'(\hasns)=\true,\,(\hasrem)=\true]=2\,.\nonumber
 \end{align}
 }
 %

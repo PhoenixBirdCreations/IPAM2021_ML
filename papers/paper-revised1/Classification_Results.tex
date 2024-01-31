@@ -3,7 +3,7 @@
 In this section, we first discuss the performance of the trained \ac{RF} and \ac{KNN} classifiers on the testing data set $D_S$ and use the latter to calculate the Bayesian probabilities
 $P_M(I|{\bf A})$. Then we evaluate $P_M(I|{\bf A})$ on two independent data sets. The first set includes a population of simulated \ac{CBC} events that were injected in the real-time
 replay of \ac{O3} data and was used for the \ac{LVK} \ac{MDC}~\cite{Chaudhary:2023vec}. The second set contains the confident \ac{LVK} \ac{O3} detections that are reported in \ac{LVK}'s
-\tocheck{\ac{GWTC}} catalog~\tocheck{\cite{2023ApJS..267...29A}}.
+\tocheck{\ac{GWTC}}~\tocheck{\cite{2023ApJS..267...29A}}.
 
 \subsection{Performance on the O2 Testing Set}
 
@@ -69,9 +69,9 @@ curves based on the ground truth using Bayesian probability (rather than score) 
 present separate \ac{ROC} curves for these pipelines. 
 
 In the case of \hasns, \ac{KNN} yields a \ac{TPR} between 0.95 and 0.98 and an \ac{FPR} smaller than 0.20 for a probability threshold of 0.5 across all pipelines, with the exception of
-SPIIR. It is not surprising that our classifier performs poorly on SPIIR triggers. A similar result has been reported by other investigations~\cite{Chaudhary:2023vec}. \tocheck{\sout{Because the
+SPIIR. \tocheck{\sout{It is not surprising that our classifier performs poorly on SPIIR triggers. A similar result has been reported by other investigations~\cite{Chaudhary:2023vec}. Because the
 algorithm was not trained on multiple pipelines, a decrease in performance on triggers recovered by pipelines other than the training pipeline is to be expected.}} Even though the \ac{ML}
-algorithms are generally portable across pipelines and data sets, accurate results critically depend on the training set's faithful representation of the observations. \tocheck{The pipelines' suboptimal performance, particularly SPIIR, can be explained by the fact that we only employed GstLAL to train the algorithms. Unfortunately, the inclusion of the other pipelines in the training phase requires the generation of additional injections by the \ac{LVK} and is deferred to a future publication. Despite the restriction on GstLAL triggers, our approaches perform exceptionally well when applied to other pipelines. We believe that an increased injection set will further improve the performance of all pipelines.} 
+algorithms are generally portable across pipelines and data sets, accurate results critically depend on the training set's faithful representation of the observations. \tocheck{The pipelines’ sub optimal performance, particularly SPIIR, can be explained by the fact that we only employed GstLAL to train the algorithms. SPIIR's interesting performance can also be seen in current LVK implementation~\cite{Chaudhary:2023vec}. Unfortunately, the inclusion of the other pipelines in the training phase requires the generation of additional injections by the LVK and is deferred to a future publication. Despite the restriction on GstLAL triggers, our approaches perform exceptionally well when applied to other pipelines. We believe that an increased injection set will further improve the performance of all pipelines. } 
 
 In regard to
 \hasrem, \ac{KNN} yields a \ac{TPR} around 0.975 and an \ac{FPR} slightly higher than 0.2 for the same threshold across all pipelines, with the exception of GstLAL. \ac{RF}'s results are
@@ -97,7 +97,7 @@ which the algorithms have been trained, both algorithms exhibit comparable (high
 \label{fig:rocMDC_RF}
 \end{figure*}
 
-Finally, we apply the method to derive Bayesian probabilities for the events in the \ac{LVK} \tocheck{\ac{GWTC}} catalog~\tocheck{\cite{2021SoftX..1300658A,2023ApJS..267...29A}.}  In Table~\ref{tab:real_data_bayesian} we
+Finally, we apply the method to derive Bayesian probabilities for the events in the \ac{LVK} \tocheck{\ac{GWTC}}~\tocheck{\cite{2021SoftX..1300658A,2023ApJS..267...29A}.}  In Table~\ref{tab:real_data_bayesian} we
 report the results for some of the most significant \ac{GWTC} events, labeled with their event ID\tocheck{, and with their \hasns\ and \hasrem\ probabilities given in their \ac{GCN} Circulars\footnote{\url{https://gcn.nasa.gov}}}. The $P_M(\hasns |\bf{A_E})$ and $P_M(\hasrem |\bf{A_E})$ probabilities for GW170817 and
 GW190425, the two confirmed \ac{BNS} detections are $\sim 1$ as expected.  The probabilities for GW190426 and GW200115 (\ac{NSBH} mergers) are $P_M(\hasns |{\bf{A_E}}) \sim 1$ and
 $P_M(\hasrem |{\bf{A_E}}) < 10^{-3}$. The two remaining significant events with non-zero probabilities are GW190814 and GW190924. These events were reported as high mass-ratio BBH
